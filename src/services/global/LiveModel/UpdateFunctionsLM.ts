@@ -1,4 +1,4 @@
-import { EdgeMonotonicity, type UpdateFunction, type UpdateFunctionMetadata } from "../../types";
+import { EdgeMonotonicity, type UpdateFunction, type UpdateFunctionMetadata } from "../../../types";
 import type { LiveModelClass } from "./LiveModel";
 
 import {

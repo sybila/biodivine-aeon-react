@@ -1,11 +1,11 @@
-import { EdgeMonotonicity } from "../../types";
+import { EdgeMonotonicity } from "../../../types";
+import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
 import {
   Warning,
   ModelEditor,
   Results,
-  CytoscapeEditor,
   UI,
   Strings,
 } from "./Todo-imports";
@@ -285,7 +285,7 @@ class ImportLM {
     );
     this._insertNotConnected(positions, control);
 
-    CytoscapeEditor.fit();
+    CytoscapeME.fit();
 
     // Re-enable server checks and run them.
     this._liveModel._disable_dynamic_validation = false;

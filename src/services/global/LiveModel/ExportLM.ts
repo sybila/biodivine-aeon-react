@@ -1,7 +1,8 @@
-import type { Variable } from "../../types";
+import type { Variable } from "../../../types";
+import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import { ModelEditor, CytoscapeEditor, Results, hasLocalStorage } from "./Todo-import";
+import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
 class ExportLM {
   private _liveModel: LiveModelClass;
@@ -75,7 +76,7 @@ class ExportLM {
     for (const variable of variables) {
       const varName = variable?.name;
 
-      const position = CytoscapeEditor.getNodePosition(variable.id);
+      const position = CytoscapeME.getNodePosition(variable.id);
       if (position !== undefined) {
         result += `#position:${varName}:${position}\n`;
       }

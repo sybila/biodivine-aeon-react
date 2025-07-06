@@ -11,7 +11,7 @@ import { ModelEditor, PhenotypeEditor, ControllableEditor  } from "./Todo-import
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
 	you want to modify the model, not the editor or graph directly.
 
-	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `CytoscapeEditor`
+	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `CytoscapeME`
 	to reflect the current state of the model.
 */
 class LiveModelClass {

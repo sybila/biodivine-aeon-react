@@ -1,7 +1,8 @@
-import type { Position, Variable } from "../../types";
+import type { Position, Variable } from "../../../types";
+import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import { CytoscapeEditor, ModelEditor, ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
+import { ModelEditor, ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
 
 class VariablesLM {
   private _idCounter = 0;
@@ -36,7 +37,7 @@ class VariablesLM {
 
     this._variables.set(id, variable);
 
-    CytoscapeEditor.addNode(id, variableName, position);
+    CytoscapeME.addNode(id, variableName, position);
     ModelEditor.addVariable(id, variableName);
     ControllableEditor.addVariable(variable);
     ComputeEngine.Computation.Control.setMaxSize(true);
@@ -73,7 +74,7 @@ class VariablesLM {
       this._variables.delete(id);
       this._liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
-      CytoscapeEditor.removeNode(id);
+      CytoscapeME.removeNode(id);
       ModelEditor.removeVariable(id);
       ModelEditor.updateStats();
 
@@ -110,7 +111,7 @@ class VariablesLM {
     const oldName = variable.name;
     variable.name = newName;
 
-    CytoscapeEditor.renameNode(id, newName);
+    CytoscapeME.renameNode(id, newName);
     ControllableEditor.renameVariable(id, newName);
     PhenotypeEditor.renameVariable(id, newName);
     ModelEditor.renameVariable(id, newName, oldName);
