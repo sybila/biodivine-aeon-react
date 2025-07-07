@@ -34,9 +34,9 @@ export class IconButton extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
-      height: var(--icon-button-comp-height, fit-content);
+      height: var(--icon-button-comp-height, 60px);
       width: var(--icon-button-comp-width, fit-content);
-      max-height: var(--icon-button-comp-height, fit-content);
+      max-height: var(--icon-button-comp-height, 60px);
       max-width: var(--icon-button-comp-width, fit-content);
     }
 
@@ -53,17 +53,17 @@ export class IconButton extends LitElement {
     }
 
     div.size-by-height {
-      height: var(--icon-button-size, 30px);
-      max-height: var(--icon-button-size, 30px);
+      height: var(--icon-button-size, 100%);
+      max-height: var(--icon-button-size, 100%);
     }
 
     div.size-by-width {
-      width: var(--icon-button-size, 30px);
+      width: var(--icon-button-size, 100%);
     }
 
     div.has-tag:has(button:hover) {
       aspect-ratio: none;
-      width: var(--icon-button-tag-width, fit-content);
+      width: var(--icon-button-tag-width, 300px);
     }
 
     button {
@@ -103,11 +103,11 @@ export class IconButton extends LitElement {
       box-sizing: border-box;
       opacity: 0;
       height: 100%;
-      width: var(--icon-button-tag-width, fit-content);
+      width: var(--icon-button-tag-width, 300px);
       padding-left: var(--icon-button-tag-padx, 10px);
       padding-right: var(--icon-button-tag-padx, 10px);
       pointer-events: none;
-      font-size: var(--icon-button-tag-font-size, 90%);
+      font-size: var(--icon-button-tag-font-size, 20px);
       font-weight: var(--icon-button-tag-font-weight, bold);
       font-family: var(
         --icon-button-tag-font-family,
@@ -141,10 +141,10 @@ export class IconButton extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update("compHeight", "--icon-button-comp-height", "fit-content");
+    update("compHeight", "--icon-button-comp-height", "60px");
     update("compWidth", "--icon-button-comp-width", "fit-content");
 
-    update("buttonSize", "--icon-button-size", "30px");
+    update("buttonSize", "--icon-button-size", "100%");
     update("buttonBorderRadius", "--icon-button-border-radius", "24px");
     update("buttonColor", "--icon-button-bg-color", "#eceff1");
     update("buttonHoverColor", "--icon-button-hover-bg-color", "#cfd8dc");
@@ -152,9 +152,9 @@ export class IconButton extends LitElement {
     update("iconSize", "--icon-button-icon-size", "70%");
 
     update("tagPadX", "--icon-button-tag-padx", "10px");
-    update("tagWidth", "--icon-button-tag-width", "fit-content");
+    update("tagWidth", "--icon-button-tag-width", "300px");
 
-    update("tagTextFontSize", "--icon-button-tag-font-size", "90%");
+    update("tagTextFontSize", "--icon-button-tag-font-size", "20px");
     update("tagTextFontWeight", "--icon-button-tag-font-weight", "bold");
     update(
       "tagTextFontFamily",
