@@ -11,6 +11,7 @@ export class IconButton extends LitElement {
   @property({ type: String }) declare buttonBorderRadius?: string;
   @property({ type: String }) declare buttonColor?: string;
   @property({ type: String }) declare buttonHoverColor?: string;
+  @property({ type: String }) declare buttonActiveColor?: string;
   @property({ type: String }) declare buttonShadow?: string;
   @property({ type: String }) declare iconSize?: string;
   @property({ type: Function }) declare onClick?: () => void;
@@ -31,6 +32,8 @@ export class IconButton extends LitElement {
   @property({ type: String }) declare tagTextAlign?: string;
   @property({ type: String }) declare tagTextDelay?: string;
 
+  @property({ type: Boolean }) declare isActive?: boolean;
+
   static styles = css`
     :host {
       display: inline-block;
@@ -46,7 +49,7 @@ export class IconButton extends LitElement {
       aspect-ratio: 1 / 1;
       border: none;
       box-shadow: var(--icon-button-shadow, 0px 2px 5px #d0d0d0);
-      border-radius: var(--icon-button-border-radius, 24px); 
+      border-radius: var(--icon-button-border-radius, 24px);
       background-color: var(--icon-button-bg-color, #eceff1);
       transition: width 0.5s ease;
       overflow: hidden;
@@ -61,7 +64,7 @@ export class IconButton extends LitElement {
       width: var(--icon-button-size, 100%);
     }
 
-    div.has-tag:has(button:hover) {
+    div.has-tag:has(button:not(.active):hover) {
       aspect-ratio: none;
       width: var(--icon-button-tag-width, 300px);
     }
@@ -78,6 +81,10 @@ export class IconButton extends LitElement {
       cursor: pointer;
     }
 
+    button.active {
+      background-color: var(--icon-button-active-bg-color, #cfd8dc);
+    }
+
     button.size-by-height {
       height: 100%;
     }
@@ -87,7 +94,7 @@ export class IconButton extends LitElement {
     }
 
     button:hover {
-      background-color: var(--icon-button-hover-bg-color, #cfd8dc);
+      background-color: var(--icon-button-hover-bg-color, #b0bec5);
     }
 
     img {
@@ -120,7 +127,7 @@ export class IconButton extends LitElement {
       text-transform: var(--icon-button-tag-text-transform, none);
     }
 
-    button:hover + span {
+    button:not(.active):hover + span {
       opacity: 1;
       transition: opacity 0.3s ease;
       transition-delay: var(--icon-button-tag-text-delay, 0.1s);
@@ -147,7 +154,8 @@ export class IconButton extends LitElement {
     update("buttonSize", "--icon-button-size", "100%");
     update("buttonBorderRadius", "--icon-button-border-radius", "24px");
     update("buttonColor", "--icon-button-bg-color", "#eceff1");
-    update("buttonHoverColor", "--icon-button-hover-bg-color", "#cfd8dc");
+    update("buttonHoverColor", "--icon-button-hover-bg-color", "#B0BEC5");
+    update("buttonActiveColor", "--icon-button-active-bg-color", "#cfd8dc");
     update("buttonShadow", "--icon-button-shadow", "0px 2px 5px #d0d0d0");
     update("iconSize", "--icon-button-icon-size", "70%");
 
@@ -176,10 +184,15 @@ export class IconButton extends LitElement {
     const sizeClass =
       this.sizeBy === "width" ? "size-by-width" : "size-by-height";
     const hasTagClass = this.showTag ? "has-tag" : "";
+    const active = this.isActive ? "active" : "";
 
     return html`
-      <div class="${hasTagClass} ${sizeClass}">
-        <button part="button" class="${sizeClass}" @click=${this.onClick}>
+      <div class="${hasTagClass} ${sizeClass} ">
+        <button
+          part="button"
+          class="${sizeClass} ${active}"
+          @click=${this.onClick}
+        >
           ${this.iconSrc
             ? html`<img
                 part="icon"

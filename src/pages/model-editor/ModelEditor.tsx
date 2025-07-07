@@ -13,46 +13,58 @@ import ControlIcon from "../../assets/icons/control-enabled-48px.svg";
 import PhenotypeIcon from "../../assets/icons/phenotype-48px.svg";
 import DockIcon from "../../assets/icons/dock-arrow.svg";
 
-const ModelEditor: React.FC = () => {
-  const [showTab, setShowTab] = useState<boolean>(false);
+type TabTypeME = "StartC" | "Imp/Exp" | "ModEd" | "ContrEd" | "PhenEd" | null;
 
-  const toggleTab = () => {
-    setShowTab(!showTab);
+const ModelEditor: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+
+  const showHideTab = (tabType: TabTypeME) => {
+    if (activeTab === tabType) {
+      setActiveTab(null);
+      return;
+    }
+
+    setActiveTab(tabType);
   };
 
   return (
     <>
       <SideButtonMenu>
         <IconButtonReact
-          onClick={toggleTab}
+          isActive={activeTab === "StartC"}
+          onClick={() => showHideTab("StartC")}
           iconSrc={PlayIcon}
           iconAlt="Play"
           showTag={true}
           tagText="Start Computation"
         ></IconButtonReact>
         <IconButtonReact
-          onClick={toggleTab}
+          isActive={activeTab === "Imp/Exp"}
+          onClick={() => showHideTab("Imp/Exp")}
           iconSrc={FileIcon}
           iconAlt="File"
           showTag={true}
           tagText="Import/Export"
         ></IconButtonReact>
         <IconButtonReact
-          onClick={toggleTab}
+          isActive={activeTab === "ModEd"}
+          onClick={() => showHideTab("ModEd")}
           iconSrc={ModelIcon}
           iconAlt="Model"
           showTag={true}
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
-          onClick={toggleTab}
+          isActive={activeTab === "ContrEd"}
+          onClick={() => showHideTab("ContrEd")}
           iconSrc={ControlIcon}
           iconAlt="Control"
           showTag={true}
           tagText="Control-Enabled Editor"
         ></IconButtonReact>
         <IconButtonReact
-          onClick={toggleTab}
+          isActive={activeTab === "PhenEd"}
+          onClick={() => showHideTab("PhenEd")}
           iconSrc={PhenotypeIcon}
           iconAlt="Phenotype"
           showTag={true}
@@ -60,7 +72,7 @@ const ModelEditor: React.FC = () => {
         ></IconButtonReact>
       </SideButtonMenu>
 
-      <ContentTab showTab={showTab}>
+      <ContentTab showTab={activeTab !== null}>
         <div className="h-[600px] w-[300px]"></div>
       </ContentTab>
 
