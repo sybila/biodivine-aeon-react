@@ -1,11 +1,11 @@
 import { EdgeMonotonicity, type UpdateFunction, type UpdateFunctionMetadata } from "../../../types";
 import type { LiveModelClass } from "./LiveModel";
 
-import {
-  ModelEditor,
-  ComputeEngine,
-  Strings,
-} from "./Todo-imports";
+// import {
+//   ModelEditor,
+//   ComputeEngine,
+//   Strings,
+// } from "./Todo-imports";
 
 class UpdateFunctionsLM {
   private _updateFunctions: Map<number, UpdateFunction> = new Map();
@@ -27,7 +27,7 @@ class UpdateFunctionsLM {
 
     const check = this._checkUpdateFunction(id, functionString);
     if (typeof check === "string") {
-      return Strings.invalidUpdateFunction(variable.name) + " " + check;
+      return variable.name + " " + check; //Strings.invalidUpdateFunction(variable.name)
     }
 
     if (functionString.length === 0) {
@@ -39,7 +39,7 @@ class UpdateFunctionsLM {
       });
     }
 
-    ModelEditor.updateStats();
+    //ModelEditor.updateStats();
     this._validateUpdateFunction(id);
     this._liveModel.Export.saveModel();
     return undefined;
@@ -83,14 +83,14 @@ class UpdateFunctionsLM {
 
     const modelFragment = this._updateFunctionModelFragment(id);
     if (!modelFragment) {
-      ModelEditor.setUpdateFunctionStatus(id, "", false);
+      //ModelEditor.setUpdateFunctionStatus(id, "", false);
       return;
     }
 
     //Todo fix type
-    ComputeEngine.validateUpdateFunction(modelFragment, (error: string, result: any) => {
+    /*ComputeEngine.validateUpdateFunction(modelFragment, (error: string, result: any) => {
       if (error !== undefined) {
-        ModelEditor.setUpdateFunctionStatus(id, `Error: ${error}`, true);
+        //ModelEditor.setUpdateFunctionStatus(id, `Error: ${error}`, true);
       } else {
         ModelEditor.setUpdateFunctionStatus(
           id,
@@ -98,7 +98,7 @@ class UpdateFunctionsLM {
           false
         );
       }
-    });
+    });*/
   }
 
   public _checkUpdateFunction(

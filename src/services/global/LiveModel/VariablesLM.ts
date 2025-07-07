@@ -2,7 +2,7 @@ import type { Position, Variable } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import { ModelEditor, ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
+//import { ModelEditor , ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
 
 class VariablesLM {
   private _idCounter = 0;
@@ -38,12 +38,12 @@ class VariablesLM {
     this._variables.set(id, variable);
 
     CytoscapeME.addNode(id, variableName, position);
-    ModelEditor.addVariable(id, variableName);
-    ControllableEditor.addVariable(variable);
-    ComputeEngine.Computation.Control.setMaxSize(true);
-    PhenotypeEditor.addVariable(variable);
-    ModelEditor.updateStats();
-    UI.Visible.setQuickHelpVisible(false);
+    //ModelEditor.addVariable(id, variableName);
+    //ControllableEditor.addVariable(variable);
+    //ComputeEngine.Computation.Control.setMaxSize(true);
+    //PhenotypeEditor.addVariable(variable);
+    //ModelEditor.updateStats();
+    //UI.Visible.setQuickHelpVisible(false);
 
     this._liveModel.UpdateFunctions._validateUpdateFunction(id);
     this._liveModel.Export.saveModel();
@@ -56,7 +56,7 @@ class VariablesLM {
     const variable = this._variables.get(id);
     if (!variable) return;
 
-    if (force || confirm(Strings.removeNodeCheck(variable.name))) {
+    if (force || confirm(variable.name)) { //Strings.removeNodeCheck(variable.name)
       const updateTargets: number[] = [];
       const toRemove = this._liveModel.Regulations.getAllRegulations().filter(
         (reg) => reg.regulator === id || reg.target === id
@@ -67,19 +67,19 @@ class VariablesLM {
         updateTargets.push(reg.target);
       }
 
-      ControllableEditor.removeVariable(variable);
-      ComputeEngine.Computation.Control.setMaxSize(true);
-      PhenotypeEditor.removeVariable(variable);
+      //ControllableEditor.removeVariable(variable);
+      //ComputeEngine.Computation.Control.setMaxSize(true);
+      //PhenotypeEditor.removeVariable(variable);
 
       this._variables.delete(id);
       this._liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
       CytoscapeME.removeNode(id);
-      ModelEditor.removeVariable(id);
-      ModelEditor.updateStats();
+      //ModelEditor.removeVariable(id);
+      //ModelEditor.updateStats();
 
       if (this._liveModel.isEmpty()) {
-        UI.Visible.setQuickHelpVisible(true);
+        //UI.Visible.setQuickHelpVisible(true);
       }
 
       this._liveModel.Export.saveModel();
@@ -105,16 +105,16 @@ class VariablesLM {
 
     const error = this._checkVariableName(id, newName);
     if (error !== undefined) {
-      return `${Strings.invalidVariableName(newName)} ${error}`;
+      return `${newName} ${error}`; //Strings.invalidVariableName(newName)
     }
 
     const oldName = variable.name;
     variable.name = newName;
 
     CytoscapeME.renameNode(id, newName);
-    ControllableEditor.renameVariable(id, newName);
-    PhenotypeEditor.renameVariable(id, newName);
-    ModelEditor.renameVariable(id, newName, oldName);
+    //ControllableEditor.renameVariable(id, newName);
+    //PhenotypeEditor.renameVariable(id, newName);
+    //ModelEditor.renameVariable(id, newName, oldName);
 
     for (const reg of this._liveModel.Regulations.getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {

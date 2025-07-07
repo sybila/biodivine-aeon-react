@@ -2,7 +2,7 @@ import type { Variable } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
+//import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
 class ExportLM {
   private _liveModel: LiveModelClass;
@@ -67,10 +67,10 @@ class ExportLM {
     const variables: Variable[] = this._liveModel.Variables.getAllVariables();
     if (!emptyPossible && variables.length === 0) return undefined;
 
-    const name = ModelEditor.getModelName();
+    const name = "Todo-name"; //ModelEditor.getModelName();
     if (name !== undefined) result += `#name:${name}\n`;
 
-    const description = ModelEditor.getModelDescription();
+    const description = "Todo-description"; //ModelEditor.getModelDescription();
     if (description !== undefined) result += `#description:${description}\n`;
 
     for (const variable of variables) {
@@ -97,7 +97,7 @@ class ExportLM {
     }
 
     if (withResults) {
-      result += Results.exportResults();
+      result += "Todo-results"//Results.exportResults();
     }
 
     return result;
@@ -116,7 +116,7 @@ class ExportLM {
     }
     this._liveModel.modelSave = modelString;
 
-    if (!hasLocalStorage) return;
+    if (!true) return; //!hasLocalStorage
     try {
       if (!this._liveModel.isEmpty()) {
         localStorage.setItem("last_model", modelString);

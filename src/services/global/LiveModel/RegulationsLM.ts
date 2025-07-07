@@ -2,7 +2,7 @@ import { EdgeMonotonicity, type Regulation } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import { ModelEditor } from "./Todo-imports";
+//import { ModelEditor } from "./Todo-imports";
 
 class RegulationsLM {
   private _regulations: Regulation[] = [];
@@ -37,7 +37,7 @@ class RegulationsLM {
 
     this._regulations.push(regulation);
     this._regulationChanged(regulation);
-    ModelEditor.updateStats();
+    //ModelEditor.updateStats();
     return true;
   }
 
@@ -61,8 +61,8 @@ class RegulationsLM {
     if (index > -1) {
       this._regulations.splice(index, 1);
       CytoscapeME.removeRegulation(regulation.regulator, regulation.target);
-      ModelEditor.removeRegulation(regulation.regulator, regulation.target);
-      ModelEditor.updateStats();
+      //ModelEditor.removeRegulation(regulation.regulator, regulation.target);
+      //ModelEditor.updateStats();
       this._liveModel.Export.saveModel();
       return true;
     }
@@ -156,7 +156,7 @@ class RegulationsLM {
 
   //Todo update _
   public _regulationChanged(regulation: Regulation): void {
-    ModelEditor.ensureRegulation(regulation);
+    //ModelEditor.ensureRegulation(regulation);
     CytoscapeME.ensureRegulation(regulation);
     this._liveModel.UpdateFunctions._validateUpdateFunction(regulation.target);
     this._liveModel.Export.saveModel();

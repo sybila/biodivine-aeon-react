@@ -1,6 +1,6 @@
 import type { LiveModelClass } from "./LiveModel";
 
-import { PhenotypeEditor, ControllableEditor, ComputeEngine } from "./Todo-imports";
+//import { PhenotypeEditor, ControllableEditor, ComputeEngine } from "./Todo-imports";
 
 class ControlLM {
   private _liveModel: LiveModelClass;
@@ -16,7 +16,7 @@ class ControlLM {
     }
 
     const variable = this._liveModel.Variables.variableFromId(id);
-    PhenotypeEditor.changeVarPhenotype(variable, phenValue);
+    //PhenotypeEditor.changeVarPhenotype(variable, phenValue);
   }
 
   /** Change variable with id defined by id param to contrValue (true, false) */
@@ -26,8 +26,8 @@ class ControlLM {
     }
 
     const variable = this._liveModel.Variables.variableFromId(id);
-    ControllableEditor.changeVarControllable(variable, contrValue);
-    ComputeEngine.Computation.Control.setMaxSize(true);
+    //ControllableEditor.changeVarControllable(variable, contrValue);
+    //ComputeEngine.Computation.Control.setMaxSize(true);
   }
 }
 

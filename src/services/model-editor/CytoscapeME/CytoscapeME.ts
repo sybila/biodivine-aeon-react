@@ -1,8 +1,9 @@
 import cytoscape from "cytoscape";
+import edgehandles from 'cytoscape-edgehandles';
 import { EdgeMonotonicity } from "../../../types";
 import { LiveModel } from "../../global/LiveModel/LiveModel";
 
-import { ModelEditor, UI } from "./Todo-imports";
+//import { //ModelEditor, //UI } from "./Todo-imports";
 
 const DOUBLE_CLICK_DELAY = 400;
 
@@ -27,7 +28,14 @@ class CytoscapeMEClass {
   // True if show phenotype button is in effect.
   private _phenotypeShown: boolean | undefined = undefined;
 
-  init() {
+  private _container: HTMLElement | null = null;
+
+  init(container: HTMLElement) {
+
+    cytoscape.use(edgehandles);
+
+    this._container = container;
+
     this._cytoscape = cytoscape(this._initOptions());
     this._edgehandles = this._cytoscape.edgehandles(this._edgeOptions());
     // When the user moves or zooms the graph, position of menu must update as well.
@@ -158,11 +166,11 @@ class CytoscapeMEClass {
 
     node.on("mouseover", (e: any) => {
       node.addClass("hover");
-      ModelEditor.hoverVariable(id, true);
+      ////ModelEditor.hoverVariable(id, true);
     });
     node.on("mouseout", (e: any) => {
       node.removeClass("hover");
-      ModelEditor.hoverVariable(id, false);
+      ////ModelEditor.hoverVariable(id, false);
     });
     node.on("select", (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
@@ -172,11 +180,11 @@ class CytoscapeMEClass {
         }
       }
       this._renderMenuForSelectedNode(node);
-      ModelEditor.selectVariable(id, true);
+      ////ModelEditor.selectVariable(id, true);
     });
     node.on("unselect", (e: any) => {
-      UI.Visible.toggleNodeMenu();
-      ModelEditor.selectVariable(id, false);
+      ////UI.Visible.toggleNodeMenu();
+      ////ModelEditor.selectVariable(id, false);
     });
     node.on("click", (e: any) => {
       this._lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
@@ -358,7 +366,7 @@ class CytoscapeMEClass {
     let zoom = this._cytoscape.zoom();
     let position = node.renderedPosition();
     let height = node.height() * zoom;
-    UI.Visible.toggleNodeMenu([position["x"], position["y"]], zoom);
+    //UI.Visible.toggleNodeMenu([position["x"], position["y"]], zoom);
   }
 
   // Update the edge menu to be shown exactly for the currently selected edge.
@@ -374,7 +382,7 @@ class CytoscapeMEClass {
       (boundingBox.x1 + boundingBox.x2) / 2,
       (boundingBox.y1 + boundingBox.y2) / 2,
     ];
-    UI.Visible.toggleEdgeMenu(edge.data(), position, zoom);
+    //UI.Visible.toggleEdgeMenu(edge.data(), position, zoom);
   }
 
   // Implements functionality of buttons responsible for highlighting of nodes in the graph.
@@ -449,25 +457,25 @@ class CytoscapeMEClass {
       this._renderMenuForSelectedEdge(edge);
     });
     edge.on("unselect", (e: any) => {
-      UI.Visible.toggleEdgeMenu(); // hide menu
+      //UI.Visible.toggleEdgeMenu(); // hide menu
     });
     edge.on("mouseover", (e: any) => {
       edge.addClass("hover");
-      ModelEditor.hoverRegulation(edge.data().source, edge.data().target, true);
+      //ModelEditor.hoverRegulation(edge.data().source, edge.data().target, true);
     });
     edge.on("mouseout", (e: any) => {
       edge.removeClass("hover");
-      ModelEditor.hoverRegulation(
+      /*ModelEditor.hoverRegulation(
         edge.data().source,
         edge.data().target,
         false
-      );
+      );*/
     });
   }
 
   private _initOptions() {
     return {
-      container: UI.cytoscapeEditor,
+      container: this._container, //UI.cytoscapeEditor,
       // Some sensible default auto-layout algorithm
       layout: {
         animate: true,

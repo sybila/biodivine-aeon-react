@@ -5,7 +5,7 @@ import RegulationsLM from "./RegulationsLM";
 import UpdateFunctionsLM from "./UpdateFunctionsLM";
 import VariablesLM from "./VariablesLM";
 
-import { ModelEditor, PhenotypeEditor, ControllableEditor  } from "./Todo-imports";
+//import { ModelEditor, PhenotypeEditor, ControllableEditor  } from "./Todo-imports";
 
 /**
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
@@ -50,10 +50,10 @@ class LiveModelClass {
   public clear(): void {
     LiveModel.Variables.clear();
 
-    ModelEditor.setModelName("");
-    ModelEditor.setModelDescription("");
-    ControllableEditor.clear();
-    PhenotypeEditor.clear();
+    //ModelEditor.setModelName("");
+    //ModelEditor.setModelDescription("");
+    //ControllableEditor.clear();
+    //PhenotypeEditor.clear();
   }
 
   // Todo update or remove

@@ -2,13 +2,13 @@ import { EdgeMonotonicity } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
-import {
-  Warning,
-  ModelEditor,
-  Results,
-  UI,
-  Strings,
-} from "./Todo-imports";
+// import {
+//   Warning,
+//   ModelEditor,
+//   Results,
+//   UI,
+//   Strings,
+// } from "./Todo-imports";
 
 class ImportLM {
   private _liveModel: LiveModelClass;
@@ -114,13 +114,13 @@ class ImportLM {
       }
 
       // We actually have to also set the function in the model because we don't update it from the set method...
-      ModelEditor.setUpdateFunction(variable, updateFunctions[key]);
+      //ModelEditor.setUpdateFunction(variable, updateFunctions[key]);
       let error = this._liveModel.UpdateFunctions.setUpdateFunction(
         variable,
         updateFunctions[key]
       );
       if (error !== undefined) {
-        Warning.displayWarning(error);
+        //Warning.displayWarning(error);
       }
     }
   }
@@ -244,7 +244,7 @@ class ImportLM {
       (!erasePossible && !this._liveModel._modelModified()) ||
       (!this._liveModel.isEmpty() &&
         !erasePossible &&
-        !confirm(Strings.modelWillBeErased))
+        !confirm("Model erased")) //Strings.modelWillBeErased)
     ) {
       // If there is some model loaded, let the user know it will be
       // overwritten. If he decides not to do it, just return...
@@ -273,9 +273,9 @@ class ImportLM {
     this._liveModel.clear();
 
     // Set model metadata
-    ModelEditor.setModelName(modelName);
-    ModelEditor.setModelDescription(modelDescription);
-    Results.importResults(results);
+    //ModelEditor.setModelName(modelName);
+    //ModelEditor.setModelDescription(modelDescription);
+    //Results.importResults(results);
 
     this._setRegulations(regulations, positions, control);
     this._liveModel.Import._setUpdateFunctions(
@@ -293,7 +293,7 @@ class ImportLM {
       this._liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
 
-    UI.Visible.closeContent();
+    //UI.Visible.closeContent();
 
     return undefined; // no error
   }
@@ -310,9 +310,9 @@ class ImportLM {
         this.importAeon(modelString);
       }
     } catch (e) {
-      Warning.displayWarning(
+      /*Warning.displayWarning(
         "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
-      );
+      );*/
       console.log(e);
     }
   }
