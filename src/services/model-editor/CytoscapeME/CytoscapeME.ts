@@ -1,11 +1,14 @@
-import cytoscape from "cytoscape";
-import edgehandles from 'cytoscape-edgehandles';
+// import cytoscape, { type CytoscapeOptions } from "cytoscape";
+// import edgehandles from "cytoscape-edgehandles";
+import { type CytoscapeOptions } from "cytoscape";
 import { EdgeMonotonicity } from "../../../types";
 import { LiveModel } from "../../global/LiveModel/LiveModel";
 
 //import { //ModelEditor, //UI } from "./Todo-imports";
 
 const DOUBLE_CLICK_DELAY = 400;
+
+declare const cytoscape: any;
 
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
 const _add_box_svg =
@@ -31,13 +34,17 @@ class CytoscapeMEClass {
   private _container: HTMLElement | null = null;
 
   init(container: HTMLElement) {
-
-    cytoscape.use(edgehandles);
+    if (this._cytoscape) {
+      return;
+    }
 
     this._container = container;
 
     this._cytoscape = cytoscape(this._initOptions());
     this._edgehandles = this._cytoscape.edgehandles(this._edgeOptions());
+
+    console.log("Edgehandles loaded:", this._edgehandles);
+
     // When the user moves or zooms the graph, position of menu must update as well.
     this._cytoscape.on("zoom", (e: any) => {
       this._renderMenuForSelectedNode();
@@ -214,10 +221,8 @@ class CytoscapeMEClass {
       if (node.selected()) node.unselect(); // ensure menu is hidden, etc.
       this._cytoscape.remove(node);
     } else {
-		//Todo-error
-      console.log(
-        "[CytoscapeME] Cannot remove " + id + " - node not found."
-      );
+      //Todo-error
+      console.log("[CytoscapeME] Cannot remove " + id + " - node not found.");
     }
   }
 
@@ -473,7 +478,7 @@ class CytoscapeMEClass {
     });
   }
 
-  private _initOptions() {
+  private _initOptions(): CytoscapeOptions {
     return {
       container: this._container, //UI.cytoscapeEditor,
       // Some sensible default auto-layout algorithm
@@ -491,7 +496,7 @@ class CytoscapeMEClass {
         nodeDimensionsIncludeLabels: true,
       },
       boxSelectionEnabled: false,
-      selectionType: "single" as "single",
+      selectionType: "single",
       style: [
         {
           // Style of the graph nodes
@@ -504,11 +509,11 @@ class CytoscapeMEClass {
             width: "label",
             height: "label",
             // a rectangle with slightly sloped edges
-            shape: "round-rectangle",
+            shape: "roundrectangle",
             // when selecting, do not display any overlay
             "overlay-opacity": 0,
             // other visual styles
-            padding: 12,
+            padding: "12",
             "background-color": "#dddddd",
             "font-family": "FiraMono",
             "font-size": "12pt",
@@ -606,7 +611,7 @@ class CytoscapeMEClass {
           style: {
             width: "32px",
             height: "32px",
-            shape: "square",
+            shape: "rectangle",
             "background-opacity": 0,
             "background-image": function (e: any) {
               return (
@@ -615,7 +620,7 @@ class CytoscapeMEClass {
             },
             "background-width": "32px",
             "background-height": "32px",
-            padding: 0,
+            padding: "0%",
             "overlay-opacity": 0,
             "border-width": 0,
             "border-opacity": 0,
@@ -636,7 +641,7 @@ class CytoscapeMEClass {
           selector: ".eh-ghost-edge.eh-preview-active",
           style: { opacity: 0 },
         },
-      ] as any,
+      ],
     };
   }
 
