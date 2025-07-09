@@ -17,10 +17,13 @@ const ImportExportTabContent: React.FC = () => {
     ['.BNET', 'Boolnet Text Format'],
   ];
 
-  const exampleModelsButtons: Array<[string, string]> = [
+  const exampleFirstColButtons: Array<[string, string]> = [
     ['G2A', 'Cell Division'],
-    ['Orlando', 'Budding Yeast'],
     ['G2B', 'Cell Division'],
+  ];
+
+  const exampleSecondColButtons: Array<[string, string]> = [
+    ['Orlando', 'Budding Yeast'],
     ['Irons', 'Budding Yeast'],
   ];
 
@@ -41,18 +44,39 @@ const ImportExportTabContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-full">
-      <section className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
-        <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">
-          <SimpleHeaderReact headerText='Import' />
-          {renderButtons('import', importButtons)}
-        </section>
+    <div className="flex flex-col items-center justify-center w-full h-fit gap-4">
+      <div className="flex flex-col items-center justify-center w-full h-fit">
+        <div className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
+          <section
+            id="import"
+            className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
+          >
+            <SimpleHeaderReact className="m-2" headerText="Import" />
+            {renderButtons('import', importButtons)}
+          </section>
 
-        <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">
-          <SimpleHeaderReact headerText='Export' />
-          {renderButtons('export', exportButtons)}
-        </section>
-      </section>
+          <section
+            id="export"
+            className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
+          >
+            <SimpleHeaderReact className="m-2" headerText="Export" />
+            {renderButtons('export', exportButtons)}
+          </section>
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-center items-center w-full h-fit gap-4">
+        <SimpleHeaderReact headerText="Example Models" />
+
+        <div className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
+          <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">
+            {renderButtons('example1', exampleFirstColButtons)}
+          </section>
+          <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">
+            {renderButtons('example2', exampleSecondColButtons)}
+          </section>
+        </div>
+      </div>
     </div>
   );
 };
