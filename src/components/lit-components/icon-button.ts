@@ -1,13 +1,13 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("icon-button")
+@customElement('icon-button')
 export class IconButton extends LitElement {
   @property({ type: String }) declare compHeight?: string;
   @property({ type: String }) declare compWidth?: string;
 
   @property({ type: String }) declare buttonSize?: string;
-  @property({ type: String }) declare sizeBy?: "height" | "width";
+  @property({ type: String }) declare sizeBy?: 'height' | 'width';
   @property({ type: String }) declare buttonBorderRadius?: string;
   @property({ type: String }) declare buttonColor?: string;
   @property({ type: String }) declare buttonHoverColor?: string;
@@ -22,7 +22,7 @@ export class IconButton extends LitElement {
   @property({ type: String }) declare tagText?: string;
   @property({ type: String }) declare tagWidth?: string;
   @property({ type: String }) declare tagPadX?: string;
-
+  @property({ type: String }) declare tagLineHeight?: string;
   @property({ type: String }) declare tagTextFontSize?: string;
   @property({ type: String }) declare tagTextFontWeight?: string;
   @property({ type: String }) declare tagTextFontFamily?: string;
@@ -66,7 +66,7 @@ export class IconButton extends LitElement {
 
     div.has-tag:has(button:not(.active):hover) {
       aspect-ratio: none;
-      width: var(--icon-button-tag-width, 300px);
+      width: var(--icon-button-tag-width, 272px);
     }
 
     button {
@@ -104,22 +104,24 @@ export class IconButton extends LitElement {
 
     span {
       display: flex;
-      justify-content: var(--icon-button-tag-text-align, center);
+      justify-content: center;
+      line-height: var(--icon-button-tag-line-height, 25px);
       align-items: center;
       overflow: hidden;
       box-sizing: border-box;
       opacity: 0;
       height: 100%;
-      width: var(--icon-button-tag-width, 300px);
+      width: var(--icon-button-tag-width, 272px);
       padding-left: var(--icon-button-tag-padx, 10px);
       padding-right: var(--icon-button-tag-padx, 10px);
       pointer-events: none;
+      text-align: var(--icon-button-tag-text-align, center);
       font-size: var(--icon-button-tag-font-size, 20px);
       font-weight: var(--icon-button-tag-font-weight, bold);
       font-family: var(
         --icon-button-tag-font-family,
-        "Helvetica",
-        "Arial",
+        'Helvetica',
+        'Arial',
         sans-serif
       );
       text-shadow: var(--icon-button-tag-text-shadow, 0px 2px 5px #d0d0d0);
@@ -148,43 +150,44 @@ export class IconButton extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update("compHeight", "--icon-button-comp-height", "60px");
-    update("compWidth", "--icon-button-comp-width", "fit-content");
+    update('compHeight', '--icon-button-comp-height', '60px');
+    update('compWidth', '--icon-button-comp-width', 'fit-content');
 
-    update("buttonSize", "--icon-button-size", "100%");
-    update("buttonBorderRadius", "--icon-button-border-radius", "24px");
-    update("buttonColor", "--icon-button-bg-color", "#eceff1");
-    update("buttonHoverColor", "--icon-button-hover-bg-color", "#B0BEC5");
-    update("buttonActiveColor", "--icon-button-active-bg-color", "#cfd8dc");
-    update("buttonShadow", "--icon-button-shadow", "0px 2px 5px #d0d0d0");
-    update("iconSize", "--icon-button-icon-size", "70%");
+    update('buttonSize', '--icon-button-size', '100%');
+    update('buttonBorderRadius', '--icon-button-border-radius', '24px');
+    update('buttonColor', '--icon-button-bg-color', '#eceff1');
+    update('buttonHoverColor', '--icon-button-hover-bg-color', '#B0BEC5');
+    update('buttonActiveColor', '--icon-button-active-bg-color', '#cfd8dc');
+    update('buttonShadow', '--icon-button-shadow', '0px 2px 5px #d0d0d0');
+    update('iconSize', '--icon-button-icon-size', '70%');
 
-    update("tagPadX", "--icon-button-tag-padx", "10px");
-    update("tagWidth", "--icon-button-tag-width", "300px");
+    update('tagLineHeight', '--icon-button-tag-line-height', '25px');
+    update('tagPadX', '--icon-button-tag-padx', '10px');
+    update('tagWidth', '--icon-button-tag-width', '272px');
 
-    update("tagTextFontSize", "--icon-button-tag-font-size", "20px");
-    update("tagTextFontWeight", "--icon-button-tag-font-weight", "bold");
+    update('tagTextFontSize', '--icon-button-tag-font-size', '20px');
+    update('tagTextFontWeight', '--icon-button-tag-font-weight', 'bold');
     update(
-      "tagTextFontFamily",
-      "--icon-button-tag-font-family",
+      'tagTextFontFamily',
+      '--icon-button-tag-font-family',
       `'Helvetica', 'Arial', sans-serif`
     );
-    update("tagTextColor", "--icon-button-tag-color", "black");
+    update('tagTextColor', '--icon-button-tag-color', 'black');
     update(
-      "tagTextShadow",
-      "--icon-button-tag-text-shadow",
-      "0px 2px 5px #d0d0d0"
+      'tagTextShadow',
+      '--icon-button-tag-text-shadow',
+      '0px 2px 5px #d0d0d0'
     );
-    update("tagTextTransform", "--icon-button-tag-text-transform", "none");
-    update("tagTextAlign", "--icon-button-tag-text-align", "center");
-    update("tagTextDelay", "--icon-button-tag-text-delay", "0.1s");
+    update('tagTextTransform', '--icon-button-tag-text-transform', 'none');
+    update('tagTextAlign', '--icon-button-tag-text-align', 'center');
+    update('tagTextDelay', '--icon-button-tag-text-delay', '0.1s');
   }
 
   render() {
     const sizeClass =
-      this.sizeBy === "width" ? "size-by-width" : "size-by-height";
-    const hasTagClass = this.showTag ? "has-tag" : "";
-    const active = this.isActive ? "active" : "";
+      this.sizeBy === 'width' ? 'size-by-width' : 'size-by-height';
+    const hasTagClass = this.showTag ? 'has-tag' : '';
+    const active = this.isActive ? 'active' : '';
 
     return html`
       <div class="${hasTagClass} ${sizeClass} ">
@@ -197,13 +200,13 @@ export class IconButton extends LitElement {
             ? html`<img
                 part="icon"
                 src="${this.iconSrc}"
-                alt="${this.iconAlt ?? "icon"}"
+                alt="${this.iconAlt ?? 'icon'}"
               />`
-            : ""}
+            : ''}
         </button>
         ${this.showTag
-          ? html`<span part="tag-text">${this.tagText ?? ""}</span>`
-          : ""}
+          ? html`<span part="tag-text">${this.tagText ?? ''}</span>`
+          : ''}
       </div>
     `;
   }
