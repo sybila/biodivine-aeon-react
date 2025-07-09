@@ -1,8 +1,6 @@
-// import cytoscape, { type CytoscapeOptions } from "cytoscape";
-// import edgehandles from "cytoscape-edgehandles";
-import { type CytoscapeOptions } from "cytoscape";
-import { EdgeMonotonicity } from "../../../types";
-import { LiveModel } from "../../global/LiveModel/LiveModel";
+import { type CytoscapeOptions } from 'cytoscape';
+import { EdgeMonotonicity } from '../../../types';
+import { LiveModel } from '../../global/LiveModel/LiveModel';
 
 //import { //ModelEditor, //UI } from "./Todo-imports";
 
@@ -10,6 +8,7 @@ const DOUBLE_CLICK_DELAY = 400;
 
 declare const cytoscape: any;
 
+// Todo-have locally
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
 const _add_box_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 4h16v16H4z"/><path fill="#6a7ea5" d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -43,26 +42,24 @@ class CytoscapeMEClass {
     this._cytoscape = cytoscape(this._initOptions());
     this._edgehandles = this._cytoscape.edgehandles(this._edgeOptions());
 
-    console.log("Edgehandles loaded:", this._edgehandles);
-
     // When the user moves or zooms the graph, position of menu must update as well.
-    this._cytoscape.on("zoom", (e: any) => {
+    this._cytoscape.on('zoom', (e: any) => {
       this._renderMenuForSelectedNode();
       this._renderMenuForSelectedEdge();
     });
-    this._cytoscape.on("pan", (e: any) => {
+    this._cytoscape.on('pan', (e: any) => {
       this._renderMenuForSelectedNode();
       this._renderMenuForSelectedEdge();
     });
-    this._cytoscape.on("click", (e: any) => {
+    this._cytoscape.on('click', (e: any) => {
       let now = new Date().getTime();
       if (
         this._lastClickTimestamp &&
         now - this._lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
         LiveModel.Variables.addVariable(false, [
-          e.position["x"],
-          e.position["y"],
+          e.position['x'],
+          e.position['y'],
         ]);
       }
       this._lastClickTimestamp = now;
@@ -75,7 +72,7 @@ class CytoscapeMEClass {
   layoutCose() {
     this._cytoscape
       .layout({
-        name: "cose",
+        name: 'cose',
         padding: 50,
         animate: true,
         animationDuration: 3000,
@@ -90,9 +87,9 @@ class CytoscapeMEClass {
   layoutDagre() {
     this._cytoscape
       .layout({
-        name: "dagre",
-        acyclicer: "greedy",
-        ranker: "network-simplex",
+        name: 'dagre',
+        acyclicer: 'greedy',
+        ranker: 'network-simplex',
         padding: 50,
         animate: true,
         animationDuration: 300,
@@ -123,7 +120,7 @@ class CytoscapeMEClass {
 
     nodesCol
       .layout({
-        name: "concentric",
+        name: 'concentric',
         concentric: function (node: any) {
           return variables[node.id()];
         },
@@ -152,7 +149,7 @@ class CytoscapeMEClass {
 
   // Return an id of the selected node, or undefined if nothing is selected.
   public getSelectedNodeId(): string | undefined {
-    let node = this._cytoscape.nodes(":selected");
+    let node = this._cytoscape.nodes(':selected');
     if (node.length == 0) return undefined; // nothing selected
     return node.id();
   }
@@ -171,17 +168,17 @@ class CytoscapeMEClass {
 
     this.highlightControllable([LiveModel.Variables.variableFromId(id)]);
 
-    node.on("mouseover", (e: any) => {
-      node.addClass("hover");
+    node.on('mouseover', (e: any) => {
+      node.addClass('hover');
       ////ModelEditor.hoverVariable(id, true);
     });
-    node.on("mouseout", (e: any) => {
-      node.removeClass("hover");
+    node.on('mouseout', (e: any) => {
+      node.removeClass('hover');
       ////ModelEditor.hoverVariable(id, false);
     });
-    node.on("select", (e: any) => {
+    node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
-      for (let selected of this._cytoscape.$(":selected")) {
+      for (let selected of this._cytoscape.$(':selected')) {
         if (selected.data().id != id) {
           selected.unselect();
         }
@@ -189,14 +186,14 @@ class CytoscapeMEClass {
       this._renderMenuForSelectedNode(node);
       ////ModelEditor.selectVariable(id, true);
     });
-    node.on("unselect", (e: any) => {
+    node.on('unselect', (e: any) => {
       ////UI.Visible.toggleNodeMenu();
       ////ModelEditor.selectVariable(id, false);
     });
-    node.on("click", (e: any) => {
+    node.on('click', (e: any) => {
       this._lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
     });
-    node.on("drag", (e: any) => {
+    node.on('drag', (e: any) => {
       if (node.selected()) this._renderMenuForSelectedNode(node);
       this._renderMenuForSelectedEdge();
     });
@@ -204,7 +201,7 @@ class CytoscapeMEClass {
 
   // Set the given node as selected.
   public selectNode(id: number) {
-    let selected = this._cytoscape.$(":selected"); // node or edge that are selected
+    let selected = this._cytoscape.$(':selected'); // node or edge that are selected
     if (selected.length == 1) {
       selected.unselect();
     }
@@ -222,7 +219,7 @@ class CytoscapeMEClass {
       this._cytoscape.remove(node);
     } else {
       //Todo-error
-      console.log("[CytoscapeME] Cannot remove " + id + " - node not found.");
+      console.log('[CytoscapeME] Cannot remove ' + id + ' - node not found.');
     }
   }
 
@@ -231,7 +228,7 @@ class CytoscapeMEClass {
     let node = this._cytoscape.getElementById(id);
     if (node !== undefined) {
       let data = node.data();
-      data["name"] = newName;
+      data['name'] = newName;
       this._cytoscape.style().update(); //redraw graph
     }
   }
@@ -240,9 +237,9 @@ class CytoscapeMEClass {
   public hoverNode(id: number, isHover: boolean) {
     let node = this._cytoscape.getElementById(id);
     if (isHover) {
-      node.addClass("hover");
+      node.addClass('hover');
     } else {
-      node.removeClass("hover");
+      node.removeClass('hover');
     }
   }
 
@@ -251,9 +248,9 @@ class CytoscapeMEClass {
     let edge = this._findRegulationEdge(regulatorId, targetId);
     if (edge !== undefined) {
       if (isHover) {
-        edge.addClass("hover");
+        edge.addClass('hover');
       } else {
-        edge.removeClass("hover");
+        edge.removeClass('hover');
       }
     }
   }
@@ -285,7 +282,7 @@ class CytoscapeMEClass {
   public getSelectedRegulationPair():
     | { regulator: string; target: string }
     | undefined {
-    let edge = this._cytoscape.edges(":selected");
+    let edge = this._cytoscape.edges(':selected');
     if (edge.length == 0) return undefined; // nothing selected
     return { regulator: edge.data().source, target: edge.data().target };
   }
@@ -309,7 +306,7 @@ class CytoscapeMEClass {
     } else {
       // Edge does not exist - create a new one
       let edge = this._cytoscape.add({
-        group: "edges",
+        group: 'edges',
         data: {
           source: regulation.regulator,
           target: regulation.target,
@@ -365,7 +362,7 @@ class CytoscapeMEClass {
   // (element?)
   private _renderMenuForSelectedNode(node?: any) {
     if (node === undefined) {
-      node = this._cytoscape.nodes(":selected");
+      node = this._cytoscape.nodes(':selected');
       if (node.length == 0) return; // nothing selected
     }
     let zoom = this._cytoscape.zoom();
@@ -378,7 +375,7 @@ class CytoscapeMEClass {
   // If edge is undefined, try to obtain the selected edge.
   private _renderMenuForSelectedEdge(edge?: any) {
     if (edge === undefined) {
-      edge = this._cytoscape.edges(":selected");
+      edge = this._cytoscape.edges(':selected');
       if (edge.length == 0) return; // nothing selected
     }
     let zoom = this._cytoscape.zoom();
@@ -394,13 +391,13 @@ class CytoscapeMEClass {
   public highlightButton(button: any, highlightPhenotype: boolean) {
     if (highlightPhenotype) {
       button.style.backgroundColor = this._phenotypeShown
-        ? "#ECEFF1"
-        : "#B0BEC5";
+        ? '#ECEFF1'
+        : '#B0BEC5';
       this.highlightPhenotype();
     } else {
       button.style.backgroundColor = this._controllableShown
-        ? "#ECEFF1"
-        : "#B0BEC5";
+        ? '#ECEFF1'
+        : '#B0BEC5';
       this.highlightControllable();
     }
   }
@@ -418,17 +415,17 @@ class CytoscapeMEClass {
 
     nodes.forEach((node: any) => {
       if (this._phenotypeShown && node.phenotype == true) {
-        this._cytoscape.getElementById(node.id).style("border-color", "green");
-        this._cytoscape.getElementById(node.id).style("color", "green");
-        this._cytoscape.getElementById(node.id).style("border-width", "2px");
+        this._cytoscape.getElementById(node.id).style('border-color', 'green');
+        this._cytoscape.getElementById(node.id).style('color', 'green');
+        this._cytoscape.getElementById(node.id).style('border-width', '2px');
       } else if (this._phenotypeShown && node.phenotype == false) {
-        this._cytoscape.getElementById(node.id).style("border-color", "red");
-        this._cytoscape.getElementById(node.id).style("color", "red");
-        this._cytoscape.getElementById(node.id).style("border-width", "2px");
+        this._cytoscape.getElementById(node.id).style('border-color', 'red');
+        this._cytoscape.getElementById(node.id).style('color', 'red');
+        this._cytoscape.getElementById(node.id).style('border-width', '2px');
       } else {
-        this._cytoscape.getElementById(node.id).style("border-color", "");
-        this._cytoscape.getElementById(node.id).style("color", "black");
-        this._cytoscape.getElementById(node.id).style("border-width", "1px");
+        this._cytoscape.getElementById(node.id).style('border-color', '');
+        this._cytoscape.getElementById(node.id).style('color', 'black');
+        this._cytoscape.getElementById(node.id).style('border-width', '1px');
       }
     });
   }
@@ -448,9 +445,9 @@ class CytoscapeMEClass {
       if (this._controllableShown && node.controllable) {
         this._cytoscape
           .getElementById(node.id)
-          .style("background-color", "#FFFF66");
+          .style('background-color', '#FFFF66');
       } else {
-        this._cytoscape.getElementById(node.id).style("background-color", "");
+        this._cytoscape.getElementById(node.id).style('background-color', '');
       }
     });
   }
@@ -458,18 +455,18 @@ class CytoscapeMEClass {
   // Helper function to initialize new edge object, since edges can appear explicitly
   // or from the edgehandles plugin.
   private _initEdge(edge: any) {
-    edge.on("select", (e: any) => {
+    edge.on('select', (e: any) => {
       this._renderMenuForSelectedEdge(edge);
     });
-    edge.on("unselect", (e: any) => {
+    edge.on('unselect', (e: any) => {
       //UI.Visible.toggleEdgeMenu(); // hide menu
     });
-    edge.on("mouseover", (e: any) => {
-      edge.addClass("hover");
+    edge.on('mouseover', (e: any) => {
+      edge.addClass('hover');
       //ModelEditor.hoverRegulation(edge.data().source, edge.data().target, true);
     });
-    edge.on("mouseout", (e: any) => {
-      edge.removeClass("hover");
+    edge.on('mouseout', (e: any) => {
+      edge.removeClass('hover');
       /*ModelEditor.hoverRegulation(
         edge.data().source,
         edge.data().target,
@@ -488,7 +485,7 @@ class CytoscapeMEClass {
         animationThreshold: 250,
         refresh: 20,
         fit: true,
-        name: "cose",
+        name: 'cose',
         padding: 250,
         nodeRepulsion: function (node: any) {
           return 100000;
@@ -496,149 +493,149 @@ class CytoscapeMEClass {
         nodeDimensionsIncludeLabels: true,
       },
       boxSelectionEnabled: false,
-      selectionType: "single",
+      selectionType: 'single',
       style: [
         {
           // Style of the graph nodes
-          selector: "node[name]",
+          selector: 'node[name]',
           style: {
             //
-            label: "data(name)",
+            label: 'data(name)',
             // put label in the middle of the node (vertically)
-            "text-valign": "center",
-            width: "label",
-            height: "label",
+            'text-valign': 'center',
+            width: 'label',
+            height: 'label',
             // a rectangle with slightly sloped edges
-            shape: "roundrectangle",
+            shape: 'roundrectangle',
             // when selecting, do not display any overlay
-            "overlay-opacity": 0,
+            'overlay-opacity': 0,
             // other visual styles
-            padding: "12",
-            "background-color": "#dddddd",
-            "font-family": "FiraMono",
-            "font-size": "12pt",
-            "border-width": "1px",
-            "border-color": "#bbbbbb",
-            "border-style": "solid",
+            padding: '12',
+            'background-color': '#dddddd',
+            'font-family': 'FiraMono',
+            'font-size': '12pt',
+            'border-width': '1px',
+            'border-color': '#bbbbbb',
+            'border-style': 'solid',
           },
         },
         {
           // When a node is highlighted by mouse, show it with a dashed blue border.
-          selector: "node.hover",
+          selector: 'node.hover',
           style: {
-            "border-width": "2.0px",
-            "border-color": "#6a7ea5",
-            "border-style": "dashed",
+            'border-width': '2.0px',
+            'border-color': '#6a7ea5',
+            'border-style': 'dashed',
           },
         },
         {
           // When a node is selected, show it with a thick blue border.
-          selector: "node:selected",
+          selector: 'node:selected',
           style: {
-            "border-width": "2.0px",
-            "border-color": "#6a7ea5",
-            "border-style": "solid",
+            'border-width': '2.0px',
+            'border-color': '#6a7ea5',
+            'border-style': 'solid',
           },
         },
         {
           // General style of the graph edge
-          selector: "edge",
+          selector: 'edge',
           style: {
             width: 3.0,
-            "curve-style": "bezier",
-            "loop-direction": "-15deg",
-            "loop-sweep": "30deg",
-            "text-outline-width": 2.3,
-            "text-outline-color": "#cacaca",
-            "font-family": "FiraMono",
+            'curve-style': 'bezier',
+            'loop-direction': '-15deg',
+            'loop-sweep': '30deg',
+            'text-outline-width': 2.3,
+            'text-outline-color': '#cacaca',
+            'font-family': 'FiraMono',
           },
         },
         {
-          selector: "edge.hover",
-          style: { "overlay-opacity": 0.1 },
+          selector: 'edge.hover',
+          style: { 'overlay-opacity': 0.1 },
         },
         {
           // Show non-observable edges as dashed
-          selector: "edge[observable]",
+          selector: 'edge[observable]',
           style: {
-            "line-style": (edge: any) => {
+            'line-style': (edge: any) => {
               if (edge.data().observable) {
-                return "solid";
+                return 'solid';
               } else {
-                return "dashed";
+                return 'dashed';
               }
             },
-            "line-dash-pattern": [8, 3],
+            'line-dash-pattern': [8, 3],
           },
         },
         {
           // When the edge is an activation, show it as green with normal arrow
           selector: 'edge[monotonicity="activation"]',
           style: {
-            "line-color": "#4abd73",
-            "target-arrow-color": "#4abd73",
-            "target-arrow-shape": "triangle",
+            'line-color': '#4abd73',
+            'target-arrow-color': '#4abd73',
+            'target-arrow-shape': 'triangle',
           },
         },
         {
           // When the edge is an inhibition, show it as red with a `tee` arrow
           selector: 'edge[monotonicity="inhibition"]',
           style: {
-            "line-color": "#d05d5d",
-            "target-arrow-color": "#d05d5d",
-            "target-arrow-shape": "tee",
+            'line-color': '#d05d5d',
+            'target-arrow-color': '#d05d5d',
+            'target-arrow-shape': 'tee',
           },
         },
         {
           // When the edge has unspecified monotonicity, show it as grey with normal arrow
           selector: 'edge[monotonicity="unspecified"]',
           style: {
-            "line-color": "#797979",
-            "target-arrow-color": "#797979",
-            "target-arrow-shape": "triangle",
+            'line-color': '#797979',
+            'target-arrow-color': '#797979',
+            'target-arrow-shape': 'triangle',
           },
         },
         {
           // A selected edge should be drawn with an overlay
-          selector: "edge:selected",
+          selector: 'edge:selected',
           style: {
-            "overlay-opacity": 0.1,
+            'overlay-opacity': 0.1,
           },
         },
         {
           // Edge handles pseudo-node for adding
-          selector: ".eh-handle",
+          selector: '.eh-handle',
           style: {
-            width: "32px",
-            height: "32px",
-            shape: "rectangle",
-            "background-opacity": 0,
-            "background-image": function (e: any) {
+            width: '32px',
+            height: '32px',
+            shape: 'rectangle',
+            'background-opacity': 0,
+            'background-image': function (e: any) {
               return (
-                "data:image/svg+xml;utf8," + encodeURIComponent(_add_box_svg)
+                'data:image/svg+xml;utf8,' + encodeURIComponent(_add_box_svg)
               );
             },
-            "background-width": "32px",
-            "background-height": "32px",
-            padding: "0%",
-            "overlay-opacity": 0,
-            "border-width": 0,
-            "border-opacity": 0,
+            'background-width': '32px',
+            'background-height': '32px',
+            padding: '0%',
+            'overlay-opacity': 0,
+            'border-width': 0,
+            'border-opacity': 0,
           },
         },
         {
           // Change ghost edge preview colors
-          selector: ".eh-preview, .eh-ghost-edge",
+          selector: '.eh-preview, .eh-ghost-edge',
           style: {
-            "background-color": "#797979",
-            "line-color": "#797979",
-            "target-arrow-color": "#797979",
-            "target-arrow-shape": "triangle",
+            'background-color': '#797979',
+            'line-color': '#797979',
+            'target-arrow-color': '#797979',
+            'target-arrow-shape': 'triangle',
           },
         },
         {
           // Hide ghost edge when a snapped preview is visible
-          selector: ".eh-ghost-edge.eh-preview-active",
+          selector: '.eh-ghost-edge.eh-preview-active',
           style: { opacity: 0 },
         },
       ],
@@ -649,7 +646,7 @@ class CytoscapeMEClass {
     return {
       preview: true, // whether to show added edges preview before releasing selection
       hoverDelay: 150, // time spent hovering over a target node before it is considered selected
-      handleNodes: "node", // selector/filter function for whether edges can be made from a given node
+      handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
       snap: false,
       snapThreshold: 50,
       snapFrequency: 15,
@@ -658,11 +655,11 @@ class CytoscapeMEClass {
       nodeLoopOffset: -50,
       // The `+` button should be drawn on top of each node
       handlePosition: function (node: any) {
-        return "middle top";
+        return 'middle top';
       },
       handleInDrawMode: false,
       edgeType: function (sourceNode: any, targetNode: any) {
-        return "flat";
+        return 'flat';
       },
       // Loops are always allowed
       loopAllowed: function (node: any) {
