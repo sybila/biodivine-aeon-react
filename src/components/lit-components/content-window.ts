@@ -87,7 +87,7 @@ export class ContentWindow extends LitElement {
 
     #header-text {
       margin: 0;
-      font-size: var(--content-window-tag-font-size, 40px);
+      font-size: var(--content-window-tag-font-size, 20px);
       font-weight: var(--content-window-tag-font-weight, bold);
       font-family: var(
         --content-window-tag-font-family,
@@ -167,7 +167,7 @@ export class ContentWindow extends LitElement {
     update('headerWidth', '--content-window-header-width', 'fit-content');
     update('headerGap', '--content-window-header-gap', '5px');
 
-    update('headerTextFontSize', '--content-window-tag-font-size', '40px');
+    update('headerTextFontSize', '--content-window-tag-font-size', '20px');
     update('headerTextFontWeight', '--content-window-tag-font-weight', 'bold');
     update(
       'headerTextFontFamily',
@@ -230,8 +230,12 @@ export class ContentWindow extends LitElement {
         ${this.showHeader
           ? html`<div id="header" part="header">
               ${this.showCloseButton
-                ? html`<div id="close-button" part="close-button" @click=${this.onCloseClick}>
-                    <img id="close-button-icon" part="close-button-icon" src=${this.closeButtonSrc ?? ContentWindow.closeIcon} ></img>
+                ? html`<div id="close-button" part="close-button" @click=${
+                    this.onCloseClick
+                  }>
+                    <img id="close-button-icon" part="close-button-icon" src=${
+                      this.closeButtonSrc ?? ContentWindow.closeIcon
+                    } ></img>
                 </div>`
                 : html`<div></div>`}
               <p id="header-text" part="header-text">
