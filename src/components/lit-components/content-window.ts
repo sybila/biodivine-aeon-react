@@ -52,9 +52,9 @@ export class ContentWindow extends LitElement {
     :host {
       display: inline-block;
       height: var(--content-window-comp-height, fit-content);
-      width: var(--content-window-comp-width, fit-content);
+      width: var(--content-window-comp-width, 505px);
       max-height: var(--content-window-comp-height, fit-content);
-      max-width: var(--content-window-comp-width, fit-content);
+      max-width: var(--content-window-comp-width, 100%);
     }
 
     #window {
@@ -63,9 +63,9 @@ export class ContentWindow extends LitElement {
       justify-content: start;
       align-items: center;
       height: var(--content-window-height, fit-content);
-      width: var(--content-window-width, fit-content);
-      max-height: var(--content-window-max-height, fit-content);
-      max-width: var(--content-window-max-width, fit-content);
+      width: var(--content-window-width, 100%);
+      max-height: var(--content-window-max-height, 100%);
+      max-width: var(--content-window-max-width, 100%);
       padding: var(--content-window-padding, 8px);
       gap: var(--content-window-gap, 5px);
       border-radius: 8px;
@@ -81,13 +81,13 @@ export class ContentWindow extends LitElement {
       justify-content: space-between;
       align-items: center;
       height: var(--content-window-header-height, fit-content);
-      width: var(--content-window-header-width, fit-content);
+      width: var(--content-window-header-width, 100%);
       gap: var(--content-window-header-gap, 5px);
     }
 
     #header-text {
       margin: 0;
-      font-size: var(--content-window-tag-font-size, 20px);
+      font-size: var(--content-window-tag-font-size, 24px);
       font-weight: var(--content-window-tag-font-weight, bold);
       font-family: var(
         --content-window-tag-font-family,
@@ -128,9 +128,9 @@ export class ContentWindow extends LitElement {
       justify-content: var(--content-window-content-justify-content, start);
       align-items: var(--content-window-content-align-items, center);
       height: var(--content-window-content-height, fit-content);
-      width: var(--content-window-content-width, fit-content);
-      max-height: var(--content-window-content-max-height, fit-content);
-      max-width: var(--content-window-content-max-width, fit-content);
+      width: var(--content-window-content-width, 100%);
+      max-height: var(--content-window-content-max-height, 100%);
+      max-width: var(--content-window-content-max-width, 100%);
       gap: var(--content-window-content-gap, 5px);
     }
   `;
@@ -149,12 +149,12 @@ export class ContentWindow extends LitElement {
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--content-window-comp-height', 'fit-content');
-    update('compWidth', '--content-window-comp-width', 'fit-content');
+    update('compWidth', '--content-window-comp-width', '505px');
 
     update('windHeight', '--content-window-height', 'fit-content');
-    update('windWidth', '--content-window-width', 'fit-content');
-    update('windMaxHeight', '--content-window-max-height', 'fit-content');
-    update('windMaxWidth', '--content-window-max-width', 'fit-content');
+    update('windWidth', '--content-window-width', '100%');
+    update('windMaxHeight', '--content-window-max-height', '100%');
+    update('windMaxWidth', '--content-window-max-width', '100%');
     update('windPad', '--content-window-padding', '8px');
     update('gapSize', '--content-window-gap', '5px');
     update('windColor', '--content-window-bg-color', '#f5f5f5');
@@ -164,10 +164,10 @@ export class ContentWindow extends LitElement {
     update('windResize', '--content-window-resize', 'none');
 
     update('headerHeight', '--content-window-header-height', 'fit-content');
-    update('headerWidth', '--content-window-header-width', 'fit-content');
+    update('headerWidth', '--content-window-header-width', '100%');
     update('headerGap', '--content-window-header-gap', '5px');
 
-    update('headerTextFontSize', '--content-window-tag-font-size', '20px');
+    update('headerTextFontSize', '--content-window-tag-font-size', '24px');
     update('headerTextFontWeight', '--content-window-tag-font-weight', 'bold');
     update(
       'headerTextFontFamily',
@@ -201,16 +201,16 @@ export class ContentWindow extends LitElement {
     );
 
     update('contentHeight', '--content-window-content-height', 'fit-content');
-    update('contentWidth', '--content-window-content-width', 'fit-content');
+    update('contentWidth', '--content-window-content-width', '100%');
     update(
       'contentMaxHeight',
       '--content-window-content-max-height',
-      'fit-content'
+      '100%'
     );
     update(
       'contentMaxWidth',
       '--content-window-content-max-width',
-      'fit-content'
+      '100%'
     );
     update(
       'contentJustifyC',
