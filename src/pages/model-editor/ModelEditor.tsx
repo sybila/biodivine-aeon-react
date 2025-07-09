@@ -12,11 +12,35 @@ import ModelIcon from "../../assets/icons/model-48px.svg";
 import ControlIcon from "../../assets/icons/control-enabled-48px.svg";
 import PhenotypeIcon from "../../assets/icons/phenotype-48px.svg";
 import DockIcon from "../../assets/icons/dock-arrow.svg";
+import ImportExportTabContent from "../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent";
 
-type TabTypeME = "StartC" | "Imp/Exp" | "ModEd" | "ContrEd" | "PhenEd" | null;
+type TabTypeME =
+  | "Start Computation"
+  | "Import/Export"
+  | "Model Editor"
+  | "Control-Enabled Editor"
+  | "Phenotype Editor"
+  | null;
 
 const ModelEditor: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "Start Computation":
+        return <div>Start Computation Content</div>;
+      case "Import/Export":
+        return <ImportExportTabContent />;
+      case "Model Editor":
+        return <div>Model Editor Content</div>;
+      case "Control-Enabled Editor":
+        return <div>Control-Enabled Editor Content</div>;
+      case "Phenotype Editor":
+        return <div>Phenotype Editor Content</div>;
+      default:
+        return null;
+    }
+  };
 
   const showHideTab = (tabType: TabTypeME) => {
     if (activeTab === tabType) {
@@ -31,40 +55,40 @@ const ModelEditor: React.FC = () => {
     <>
       <SideButtonMenu>
         <IconButtonReact
-          isActive={activeTab === "StartC"}
-          onClick={() => showHideTab("StartC")}
+          isActive={activeTab === "Start Computation"}
+          onClick={() => showHideTab("Start Computation")}
           iconSrc={PlayIcon}
           iconAlt="Play"
           showTag={true}
           tagText="Start Computation"
         ></IconButtonReact>
         <IconButtonReact
-          isActive={activeTab === "Imp/Exp"}
-          onClick={() => showHideTab("Imp/Exp")}
+          isActive={activeTab === "Import/Export"}
+          onClick={() => showHideTab("Import/Export")}
           iconSrc={FileIcon}
           iconAlt="File"
           showTag={true}
           tagText="Import/Export"
         ></IconButtonReact>
         <IconButtonReact
-          isActive={activeTab === "ModEd"}
-          onClick={() => showHideTab("ModEd")}
+          isActive={activeTab === "Model Editor"}
+          onClick={() => showHideTab("Model Editor")}
           iconSrc={ModelIcon}
           iconAlt="Model"
           showTag={true}
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
-          isActive={activeTab === "ContrEd"}
-          onClick={() => showHideTab("ContrEd")}
+          isActive={activeTab === "Control-Enabled Editor"}
+          onClick={() => showHideTab("Control-Enabled Editor")}
           iconSrc={ControlIcon}
           iconAlt="Control"
           showTag={true}
           tagText="Control-Enabled Editor"
         ></IconButtonReact>
         <IconButtonReact
-          isActive={activeTab === "PhenEd"}
-          onClick={() => showHideTab("PhenEd")}
+          isActive={activeTab === "Phenotype Editor"}
+          onClick={() => showHideTab("Phenotype Editor")}
           iconSrc={PhenotypeIcon}
           iconAlt="Phenotype"
           showTag={true}
@@ -72,8 +96,12 @@ const ModelEditor: React.FC = () => {
         ></IconButtonReact>
       </SideButtonMenu>
 
-      <ContentTab showTab={activeTab !== null}>
-        <div className="h-[600px] w-[300px]"></div>
+      <ContentTab
+        showTab={activeTab !== null}
+        onClose={() => showHideTab(null)}
+        headerText={activeTab ?? ""}
+      >
+        {renderTabContent()}
       </ContentTab>
 
       <PopUpBarReact
