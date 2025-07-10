@@ -10,6 +10,7 @@ export class TextInput extends LitElement {
   @property({ type: String }) declare inputHeight?: string;
   @property({ type: String }) declare inputWidth?: string;
   @property({ type: String }) declare inputPlaceholder?: string;
+  @property({ type: String }) declare inputBorderColor?: string;
   @property({ type: String }) declare inputBorderRadius?: string;
   @property({ type: String }) declare inputColor?: string;
   @property({ type: String }) declare onKeyup?: (value: string) => void;
@@ -33,6 +34,7 @@ export class TextInput extends LitElement {
       height: var(--text-input-height, 100%);
       width: var(--text-input-width, 100%);
       box-sizing: border-box;
+      border-color: var(--text-input-border-color, #cfd8dc);
       border-radius: var(--text-input-border-radius, 8px);
       background-color: var(--text-input-background-color, #fafafa);
     color: var(--text-input-text-color, #333);
@@ -66,6 +68,7 @@ export class TextInput extends LitElement {
 
     update('inputHeight', '--text-input-height', '100%');
     update('inputWidth', '--text-input-width', '100%');
+    update('inputBorderColor', '--text-input-border-color', '#cfd8dc');
     update('inputBorderRadius', '--text-input-border-radius', '8px');
     update('inputColor', '--text-input-background-color', '#fafafa');
 
@@ -83,7 +86,7 @@ export class TextInput extends LitElement {
     return html`<input
       @onKeyup=${(e: KeyboardEvent) => this.keyupHandler(e)}
       type="text"
-      placeholder=${this.placeholder ?? ''}
+      placeholder=${this.inputPlaceholder ?? ''}
     />`;
   }
 }
