@@ -13,6 +13,7 @@ import ControlIcon from "../../assets/icons/control-enabled-48px.svg";
 import PhenotypeIcon from "../../assets/icons/phenotype-48px.svg";
 import DockIcon from "../../assets/icons/dock-arrow.svg";
 import ImportExportTabContent from "../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent";
+import ModelEditorTabContent from "../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent";
 
 type TabTypeME =
   | "Start Computation"
@@ -32,7 +33,7 @@ const ModelEditor: React.FC = () => {
       case "Import/Export":
         return <ImportExportTabContent />;
       case "Model Editor":
-        return <div>Model Editor Content</div>;
+        return <ModelEditorTabContent />;
       case "Control-Enabled Editor":
         return <div>Control-Enabled Editor Content</div>;
       case "Phenotype Editor":
