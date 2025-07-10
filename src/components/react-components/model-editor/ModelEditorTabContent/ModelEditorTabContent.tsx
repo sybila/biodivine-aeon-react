@@ -2,6 +2,7 @@ import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import type { ModelStats } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
+import TextInputReact from '../../lit-wrappers/TextInputReact';
 
 const ModelEditorTabContent: React.FC = () => {
   const insertStats = () => {
@@ -39,7 +40,7 @@ const ModelEditorTabContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-fit">
+    <div className="flex flex-col items-center w-full h-fit gap-3">
       <section className="flex flex-col items-center w-full h-fit gap-1">
         <DotHeaderReact
           compWidth="100%"
@@ -49,6 +50,16 @@ const ModelEditorTabContent: React.FC = () => {
 
         {insertStats()}
       </section>
+
+      <section className="flex flex-row items-around w-full h-fit gap-1">
+        <DotHeaderReact
+          compWidth="50%"
+          headerText="Variables"
+          justifyHeader="start"
+        />
+      </section>
+
+      <TextInputReact compWidth="95%" inputPlaceholder="Search variables..." onWrite={console.log}/>
     </div>
   );
 };
