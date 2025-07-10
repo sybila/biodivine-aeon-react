@@ -37,13 +37,13 @@ export class DotHeader extends LitElement {
       justify-content: center;
       height: fit-content;
       width: fit-content;
-      line-height: var(--dot-header-line-height, 20px);
+      line-height: var(--dot-header-line-height, 22px);
       align-items: center;
       overflow: hidden;
       box-sizing: border-box;
       pointer-events: none;
       text-align: var(--dot-header-text-align, center);
-      font-size: var(--dot-header-font-size, 19px);
+      font-size: var(--dot-header-font-size, 21px);
       font-weight: var(--dot-header-font-weight, normal);
       font-family: var(--dot-header-font-family, 'FiraMono', sans-serif);
       text-shadow: var(--dot-header-text-shadow, 0px 2px 5px #d0d0d0);
@@ -70,8 +70,8 @@ export class DotHeader extends LitElement {
     update('justifyHeader', '--dot-header-justify-content', 'center');
     update('alignHeader', '--dot-header-align-items', 'center');
     update('dotTextGap', '--dot-header-dot-text-gap', '7px');
-    update('lineHeight', '--dot-header-line-height', '20px');
-    update('textFontSize', '--dot-header-font-size', '19px');
+    update('lineHeight', '--dot-header-line-height', '22px');
+    update('textFontSize', '--dot-header-font-size', '21px');
     update('textFontWeight', '--dot-header-font-weight', 'normal');
     update(
       'textFontFamily',
