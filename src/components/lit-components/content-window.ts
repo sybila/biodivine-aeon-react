@@ -98,6 +98,7 @@ export class ContentWindow extends LitElement {
       text-shadow: var(--content-window-tag-text-shadow, 0px 2px 5px #d0d0d0);
       color: var(--content-window-tag-color, black);
       text-transform: var(--content-window-tag-text-transform, none);
+      cursor: default;
     }
 
     #close-button {
@@ -202,16 +203,8 @@ export class ContentWindow extends LitElement {
 
     update('contentHeight', '--content-window-content-height', 'fit-content');
     update('contentWidth', '--content-window-content-width', '100%');
-    update(
-      'contentMaxHeight',
-      '--content-window-content-max-height',
-      '100%'
-    );
-    update(
-      'contentMaxWidth',
-      '--content-window-content-max-width',
-      '100%'
-    );
+    update('contentMaxHeight', '--content-window-content-max-height', '100%');
+    update('contentMaxWidth', '--content-window-content-max-width', '100%');
     update(
       'contentJustifyC',
       '--content-window-content-justify-content',

@@ -6,22 +6,31 @@ export class StatEntry extends LitElement {
   @property({ type: String }) declare compHeight?: string;
   @property({ type: String }) declare compWidth?: string;
 
-  @property({ type: String }) declare justifyContent?: string;
-  @property({ type: String }) declare alignItems?: string;
+  @property({ type: String }) declare contHeight?: string;
+  @property({ type: String }) declare contWidth?: string;
+  @property({ type: String }) declare contJustify?: string;
+  @property({ type: String }) declare contAlign?: string;
+  @property({ type: String }) declare contPadX?: string;
+  @property({ type: String }) declare contBgColor?: string;
+  @property({ type: String }) declare contBorderRadius?: string;
 
   @property({ type: String }) declare valNameGap?: string;
   @property({ type: String }) declare statName?: string;
   @property({ type: String }) declare statValue?: string;
 
   @property({ type: String }) declare nameHeight?: string;
+  @property({ type: String }) declare nameMaxHeight?: string;
   @property({ type: String }) declare nameWidth?: string;
+  @property({ type: String }) declare nameMaxWidth?: string;
   @property({ type: String }) declare nameAlign?: string;
   @property({ type: String }) declare nameOverflowX?: string;
 
   @property({ type: String }) declare addColon?: boolean;
 
   @property({ type: String }) declare valueHeight?: string;
+  @property({ type: String }) declare valueMaxHeight?: string;
   @property({ type: String }) declare valueWidth?: string;
+  @property({ type: String }) declare valueMaxWidth?: string;
   @property({ type: String }) declare valueAlign?: string;
   @property({ type: String }) declare valueOverflowX?: string;
 
@@ -35,14 +44,24 @@ export class StatEntry extends LitElement {
 
   static styles = css`
     :host {
-      display: flex;
-      justify-content: var(--stat-entry-justify-content, center);
-      align-items: var(--stat-entry-align-items, center);
+      display: inline-block;
       height: var(--stat-entry-comp-height, fit-content);
-      width: var(--stat-entry-comp-width, fit-content);
+      width: var(--stat-entry-comp-width, 50px);
       max-height: var(--stat-entry-comp-height, fit-content);
-      max-width: var(--stat-entry-comp-width, fit-content);
+      max-width: var(--stat-entry-comp-width, 50px);
+    }
+
+    div {
+      display: flex;
+      width: var(--stat-entry-cont-width, 100%);
+      height: var(--stat-entry-cont-height, fit-content);
+      justify-content: var(--stat-entry-justify-content, space-between);
+      align-items: var(--stat-entry-align-items, space-between);
+      box-sizing: border-box;
       gap: var(--stat-entry-name-value-gap, 15px);
+      padding-inline: var(--stat-entry-padding-x, 5px);
+      background-color: var(--stat-entry-bg-color, #cfd8dc);
+      border-radius: var(--stat-entry-border-radius, 3px);
     }
 
     span {
@@ -50,30 +69,31 @@ export class StatEntry extends LitElement {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-
-      line-height: var(--stat-entry-line-height, 18px);
+      white-space: nowrap;
+      line-height: var(--stat-entry-line-height, 20px);
       font-size: var(--stat-entry-font-size, 17px);
       font-weight: var(--stat-entry-font-weight, normal);
       font-family: var(--stat-entry-font-family, 'FiraMono', sans-serif);
       text-shadow: var(--stat-entry-text-shadow, 0px 2px 5px #d0d0d0);
       color: var(--stat-entry-color, black);
       text-transform: var(--stat-entry-text-transform, none);
+      cursor: default;
     }
 
     #name {
       height: var(--stat-entry-name-height, fit-content);
       width: var(--stat-entry-name-width, fit-content);
-      max-height: var(--stat-entry-name-height, fit-content);
-      max-width: var(--stat-entry-name-width, fit-content);
-      text-align: var(--stat-entry-name-align, center);
+      max-height: var(--stat-entry-name-max-height, fit-content);
+      max-width: var(--stat-entry-name-max-width, 50%);
+      text-align: var(--stat-entry-name-align, fit-content);
       overflow-x: var(--stat-entry-name-overflow-x, hidden);
     }
 
     #value {
       height: var(--stat-entry-value-height, fit-content);
       width: var(--stat-entry-value-width, fit-content);
-      max-height: var(--stat-entry-value-height, fit-content);
-      max-width: var(--stat-entry-value-width, fit-content);
+      max-height: var(--stat-entry-value-max-height, fit-content);
+      max-width: var(--stat-entry-value-max-width, 50%);
       text-align: var(--stat-entry-value-align, center);
       overflow-x: var(--stat-entry-value-overflow-x, auto);
     }
@@ -93,26 +113,33 @@ export class StatEntry extends LitElement {
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--stat-entry-comp-height', 'fit-content');
-    update('compWidth', '--stat-entry-comp-width', 'fit-content');
+    update('compWidth', '--stat-entry-comp-width', '50px');
 
-    update('justifyContent', '--stat-entry-justify-content', 'center');
-    update('alignItems', '--stat-entry-align-items', 'center');
     update('valNameGap', '--stat-entry-name-value-gap', '15px');
 
-    update('statName', '--stat-entry-stat-name', '');
-    update('statValue', '--stat-entry-stat-value', '-');
+    update('contHeight', '--stat-entry-cont-height', 'fit-content');
+    update('contWidth', '--stat-entry-cont-width', '100%');
+    update('contJustify', '--stat-entry-justify-content', 'space-between');
+    update('contAlign', '--stat-entry-align-items', 'center');
+    update('contPadX', '--stat-entry-padding-x', '5px');
+    update('contBgColor', '--stat-entry-bg-color', '#cfd8dc');
+    update('contBorderRadius', '--stat-entry-border-radius', '3px');
 
     update('nameHeight', '--stat-entry-name-height', 'fit-content');
+    update('nameMaxHeight', '--stat-entry-name-max-height', 'fit-content');
     update('nameWidth', '--stat-entry-name-width', 'fit-content');
+    update('nameMaxWidth', '--stat-entry-name-max-width', '50%');
     update('nameAlign', '--stat-entry-name-align', 'center');
     update('nameOverflowX', '--stat-entry-name-overflow-x', 'hidden');
 
     update('valueHeight', '--stat-entry-value-height', 'fit-content');
+    update('valueMaxHeight', '--stat-entry-value-max-height', 'fit-content');
     update('valueWidth', '--stat-entry-value-width', 'fit-content');
+    update('valueMaxWidth', '--stat-entry-value-max-width', '50%');
     update('valueAlign', '--stat-entry-value-align', 'center');
     update('valueOverflowX', '--stat-entry-value-overflow-x', 'auto');
 
-    update('lineHeight', '--stat-entry-line-height', '18px');
+    update('lineHeight', '--stat-entry-line-height', '20px');
     update('textFontSize', '--stat-entry-font-size', '17px');
     update('textFontWeight', '--stat-entry-font-weight', 'normal');
     update(
@@ -126,10 +153,12 @@ export class StatEntry extends LitElement {
   }
 
   render() {
-    return html`<span id="name" part="name"
+    return html`<div>
+      <span id="name" part="name"
         >${(this.statName ?? '') + (this.addColon ? ' :' : '')}</span
       ><span id="value" part="value"
         >${this.statValue && this.statValue != '' ? this.statValue : '–'}</span
-      >`;
+      >
+    </div>`;
   }
 }
