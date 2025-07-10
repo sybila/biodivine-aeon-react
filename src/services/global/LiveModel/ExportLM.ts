@@ -1,4 +1,4 @@
-import type { Variable } from "../../../types";
+import type { ModelStats, Variable } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
 
@@ -12,7 +12,7 @@ class ExportLM {
   }
 
   /** Export stats object */
-  public stats() {
+  public stats(): ModelStats {
     let maxInDegree = 0;
     let maxOutDegree = 0;
     let variables: Variable[] = this._liveModel.Variables.getAllVariables();
