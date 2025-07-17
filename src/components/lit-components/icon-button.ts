@@ -14,7 +14,7 @@ export class IconButton extends LitElement {
   @property({ type: String }) declare buttonActiveColor?: string;
   @property({ type: String }) declare buttonShadow?: string;
   @property({ type: String }) declare iconSize?: string;
-  @property({ type: Function }) declare onClick?: () => void;
+  @property({ type: Function }) declare handleClick?: () => void;
   @property({ type: String }) declare iconSrc?: string;
   @property({ type: String }) declare iconAlt?: string;
 
@@ -194,7 +194,7 @@ export class IconButton extends LitElement {
         <button
           part="button"
           class="${sizeClass} ${active}"
-          @click=${this.onClick}
+          @click=${this.handleClick}
         >
           ${this.iconSrc
             ? html`<img
