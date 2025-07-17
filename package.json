@@ -12,7 +12,7 @@
   "dependencies": {
     "@lit/react": "^1.0.7",
     "@tailwindcss/vite": "^4.1.11",
-    "cytoscape": "^3.32.0",
+    "cytoscape": "^3.32.1",
     "cytoscape-dagre": "^2.5.0",
     "cytoscape-edgehandles": "^4.0.1",
     "cytoscape-tidytree": "^0.2.0",
