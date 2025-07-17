@@ -1,16 +1,36 @@
+import { useEffect, useState } from 'react';
 import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
 import type { ModelStats, Variable } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
 import VariableInfo from '../VariableInfo/VariableInfo';
 
 const ModelEditorTabContent: React.FC = () => {
+  const [variables, setVariables] = useState<Variable[]>(ModelEditor.getAllVariables());
+  const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
+
+  const reloadComponent = () => {
+    setStats(ModelEditor.getModelStats());
+    setVariables(ModelEditor.getAllVariables());
+  };
+
+  useEffect(() => {
+    ModelEditor.setReloadFunction(reloadComponent);
+  }, []);
+
   const insertVariables = () => {
-    const variables: Variable[] = ModelEditor.getAllVariables();
+    if (!variables || variables.length === 0) {
+      return (
+        <section className="flex h-[30px] w-[98%] justify-center items-center">
+          <SimpleHeaderReact headerText="No Variables"></SimpleHeaderReact>
+        </section>
+      );
+    }
 
     return (
-      <section className="h-fit w-[98%]">
+      <section className="flex flex-col h-fit w-[98%] ">
         {variables.map((variable: Variable) => (
           <VariableInfo {...{ varName: variable.name }}></VariableInfo>
         ))}
@@ -19,8 +39,6 @@ const ModelEditorTabContent: React.FC = () => {
   };
 
   const insertStats = () => {
-    const stats: ModelStats = ModelEditor.getModelStats();
-
     const statCells = [
       ['Variables', stats.variableCount.toString()],
       ['Regulations', stats.regulationCount.toString()],

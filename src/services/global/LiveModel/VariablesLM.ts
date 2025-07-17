@@ -1,5 +1,6 @@
 import type { Position, Variable } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
+import ModelEditor from "../../model-editor/ModelEditor/ModelEditor";
 import type { LiveModelClass } from "./LiveModel";
 
 //import { ModelEditor , ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
@@ -38,7 +39,7 @@ class VariablesLM {
     this._variables.set(id, variable);
 
     CytoscapeME.addNode(id, variableName, position);
-    //ModelEditor.addVariable(id, variableName);
+    ModelEditor.reloadModelEditorTab();
     //ControllableEditor.addVariable(variable);
     //ComputeEngine.Computation.Control.setMaxSize(true);
     //PhenotypeEditor.addVariable(variable);
