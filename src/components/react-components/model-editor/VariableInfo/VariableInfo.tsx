@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import ExtendableContentReact from '../../lit-wrappers/ExtendableContent';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import type { VariableInfoProps } from './VariableInfoProps';
+import type { Variable } from '../../../../types';
 
-const VariableInfo: React.FC<VariableInfoProps> = ({ varName }) => {
-  const [name, setName] = useState<string>(varName);
+const VariableInfo: React.FC<Variable> = ({ id, name, controllable, phenotype }) => {
+  const [varName, setVarName] = useState<string>(name);
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
 
-  const updateVariableName = (name: string) => {
-    if (!name || name === '') {
+  const updateVariableName = (newName: string) => {
+    if (!newName || newName === '') {
       setNameError(true);
       return;
     }
 
-    setName(name);
+    setVarName(newName);
     setNameError(false);
   };
 
@@ -25,7 +25,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({ varName }) => {
         slot="top-content"
         compHeight="100%"
         compWidth="60%"
-        value={name}
+        value={varName}
         placeholder="(variable name)"
         error={nameError}
         handleChange={updateVariableName}

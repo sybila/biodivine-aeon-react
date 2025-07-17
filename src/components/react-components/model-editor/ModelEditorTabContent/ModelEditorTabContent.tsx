@@ -8,7 +8,9 @@ import TextInputReact from '../../lit-wrappers/TextInputReact';
 import VariableInfo from '../VariableInfo/VariableInfo';
 
 const ModelEditorTabContent: React.FC = () => {
-  const [variables, setVariables] = useState<Variable[]>(ModelEditor.getAllVariables());
+  const [variables, setVariables] = useState<Variable[]>(
+    ModelEditor.getAllVariables()
+  );
   const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
 
   const reloadComponent = () => {
@@ -20,6 +22,20 @@ const ModelEditorTabContent: React.FC = () => {
     ModelEditor.setReloadFunction(reloadComponent);
   }, []);
 
+  const searchVariable = (varName: string) => {
+    const tempVars: Variable[] = ModelEditor.getAllVariables();
+
+    if (varName === '') {
+      setVariables(tempVars);
+    } else {
+      setVariables(
+        tempVars.filter((variable: Variable) =>
+          variable.name.startsWith(varName)
+        )
+      );
+    }
+  };
+
   const insertVariables = () => {
     if (!variables || variables.length === 0) {
       return (
@@ -30,9 +46,12 @@ const ModelEditorTabContent: React.FC = () => {
     }
 
     return (
-      <section className="flex flex-col h-fit w-[98%] ">
+      <section className="flex flex-col h-fit scroll-auto w-[98%] gap-1">
         {variables.map((variable: Variable) => (
-          <VariableInfo {...{ varName: variable.name }}></VariableInfo>
+          <VariableInfo
+            key={variable.id}
+            {...variable}
+          ></VariableInfo>
         ))}
       </section>
     );
@@ -93,7 +112,7 @@ const ModelEditorTabContent: React.FC = () => {
       <TextInputReact
         compWidth="95%"
         inputPlaceholder="Search variables..."
-        onWrite={console.log}
+        onWrite={searchVariable}
       />
 
       {insertVariables()}
