@@ -1,12 +1,25 @@
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import type { ModelStats } from '../../../../types';
+import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+import type { ModelStats, Variable } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
+import VariableInfo from '../VariableInfo/VariableInfo';
 
 const ModelEditorTabContent: React.FC = () => {
+  const insertVariables = () => {
+    const variables: Variable[] = ModelEditor.getAllVariables();
+
+    return (
+      <section className="h-fit w-[98%]">
+        {variables.map((variable: Variable) => (
+          <VariableInfo {...{ varName: variable.name }}></VariableInfo>
+        ))}
+      </section>
+    );
+  };
+
   const insertStats = () => {
-    const stats: ModelStats = LiveModel.Export.stats();
+    const stats: ModelStats = ModelEditor.getModelStats();
 
     const statCells = [
       ['Variables', stats.variableCount.toString()],
@@ -59,7 +72,13 @@ const ModelEditorTabContent: React.FC = () => {
         />
       </section>
 
-      <TextInputReact compWidth="95%" inputPlaceholder="Search variables..." onWrite={console.log}/>
+      <TextInputReact
+        compWidth="95%"
+        inputPlaceholder="Search variables..."
+        onWrite={console.log}
+      />
+
+      {insertVariables()}
     </div>
   );
 };
