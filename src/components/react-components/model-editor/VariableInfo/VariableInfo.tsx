@@ -37,6 +37,8 @@ const VariableInfo: React.FC<Variable> = ({
       topOverflowY="visible"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
+      handleMouseEnter={() => ModelEditor.hoverVariable(id, true)}
+      handleMouseLeave={() => ModelEditor.hoverVariable(id, false)}
     >
       <InvisibleInputReact
         slot="top-content"
