@@ -1,5 +1,6 @@
 import type { ModelStats, Variable } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
+import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
 /**
 	Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
@@ -19,6 +20,15 @@ class ModelEditorClass {
     if (this.reloadEditorTab) {
       this.reloadEditorTab();
     }
+  }
+
+  //Finds variable in the CytoscapeMe canvas nad zooms on it
+  public zoomOnVariable(id: number) {
+    CytoscapeME.showNode(id);
+  }
+
+  public removeVariable(id: number) {
+    LiveModel.Variables.removeVariable(id);
   }
 
   public getModelStats(): ModelStats {

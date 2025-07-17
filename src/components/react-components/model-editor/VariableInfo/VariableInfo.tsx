@@ -4,6 +4,8 @@ import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import type { Variable } from '../../../../types';
 import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 
+import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+
 import SearchIcon from '../../../../assets/icons/search-24px.svg';
 import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
 
@@ -46,13 +48,17 @@ const VariableInfo: React.FC<Variable> = ({
         handleChange={updateVariableName}
       ></InvisibleInputReact>
 
-      <section slot="top-content" className='flex justify-around items-center h-full w-[15%]'>
+      <section
+        slot="top-content"
+        className="flex justify-around items-center h-full w-[15%]"
+      >
         <IconButtonReact
           compHeight="100%"
           buttonBorderRadius="8px"
           iconSize="90%"
           iconSrc={SearchIcon}
           iconAlt="find"
+          handleClick={() => ModelEditor.zoomOnVariable(id)}
         ></IconButtonReact>
 
         <IconButtonReact
@@ -61,6 +67,7 @@ const VariableInfo: React.FC<Variable> = ({
           iconSize="90%"
           iconSrc={DeleteIcon}
           iconAlt="delete"
+          handleClick={() => ModelEditor.removeVariable(id)}
         ></IconButtonReact>
       </section>
     </ExtendableContentReact>
