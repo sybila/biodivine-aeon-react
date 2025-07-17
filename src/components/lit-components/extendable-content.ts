@@ -71,6 +71,7 @@ export class ExtendableContent extends LitElement {
 
   @property({ type: Boolean }) declare extended?: boolean;
   @property({ type: Boolean }) declare active?: boolean;
+  @property({ type: Boolean }) declare hover?: boolean;
 
   @property({ type: Function }) declare handleMouseEnter: () => void;
   @property({ type: Function }) declare handleMouseLeave: () => void;
@@ -108,7 +109,8 @@ export class ExtendableContent extends LitElement {
       gap: var(--extendable-content-top-bottom-gap, 5px);
     }
 
-    #container:hover {
+    #container:hover,
+    #container.hover {
       border: var(--extendable-content-cont-hover-border, 2px #6a7ea5 dashed);
       background-color: var(--extendable-content-hover-bg-color, #f5f5f5);
     }
@@ -434,12 +436,12 @@ export class ExtendableContent extends LitElement {
   render() {
     const extended = this.extended ? 'extended' : '';
     const active = this.active ? 'active' : '';
+    const hover = this.hover ? 'hover' : '';
 
     return html`<div
       id="container"
       part="container"
-      class=${extended}
-      ${active}
+      class="${extended} ${active} ${hover}"
       @mouseenter=${this.handleMouseEnter}
       @mouseleave=${this.handleMouseLeave}
     >

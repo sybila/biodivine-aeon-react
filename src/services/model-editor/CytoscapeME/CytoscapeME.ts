@@ -1,6 +1,7 @@
 import { type CytoscapeOptions } from 'cytoscape';
 import { EdgeMonotonicity } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
+import ModelEditor from '../ModelEditor/ModelEditor';
 
 //import { //ModelEditor, //UI } from "./Todo-imports";
 
@@ -170,11 +171,11 @@ class CytoscapeMEClass {
 
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
-      ////ModelEditor.hoverVariable(id, true);
+      ModelEditor.hoverVariable(id, true);
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
-      ////ModelEditor.hoverVariable(id, false);
+      ModelEditor.hoverVariable(id, false);
     });
     node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet

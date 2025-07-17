@@ -8,12 +8,14 @@ import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEdit
 
 import SearchIcon from '../../../../assets/icons/search-24px.svg';
 import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
+import type { VariableInfoProps } from './VariableInfoProps';
 
-const VariableInfo: React.FC<Variable> = ({
+const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
   name,
   controllable,
   phenotype,
+  hover,
 }) => {
   const [varName, setVarName] = useState<string>(name);
   const [nameError, setNameError] = useState<boolean>(
@@ -37,8 +39,9 @@ const VariableInfo: React.FC<Variable> = ({
       topOverflowY="visible"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
-      handleMouseEnter={() => ModelEditor.hoverVariable(id, true)}
-      handleMouseLeave={() => ModelEditor.hoverVariable(id, false)}
+      hover={hover}
+      handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
+      handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
     >
       <InvisibleInputReact
         slot="top-content"

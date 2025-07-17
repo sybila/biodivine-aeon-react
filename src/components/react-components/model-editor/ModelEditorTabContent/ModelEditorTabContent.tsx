@@ -12,13 +12,19 @@ const ModelEditorTabContent: React.FC = () => {
     ModelEditor.getAllVariables()
   );
   const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
+  const [hoverId, setHoverId] = useState<number | null>(null);
 
   const reloadComponent = () => {
     setStats(ModelEditor.getModelStats());
     setVariables(ModelEditor.getAllVariables());
   };
 
+  const hoverVariableInfo = (id: number, turnOnHover: boolean) => {
+    setHoverId(turnOnHover ? id : null);
+  };
+
   useEffect(() => {
+    ModelEditor.setHoverVariableFunction(hoverVariableInfo);
     ModelEditor.setReloadFunction(reloadComponent);
   }, []);
 
@@ -51,6 +57,7 @@ const ModelEditorTabContent: React.FC = () => {
           <VariableInfo
             key={variable.id}
             {...variable}
+            hover={hoverId === variable.id}
           ></VariableInfo>
         ))}
       </section>
