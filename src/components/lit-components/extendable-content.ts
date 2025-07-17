@@ -72,6 +72,9 @@ export class ExtendableContent extends LitElement {
   @property({ type: Boolean }) declare extended?: boolean;
   @property({ type: Boolean }) declare active?: boolean;
 
+  @property({ type: Function }) declare handleMouseEnter: () => void;
+  @property({ type: Function }) declare handleMouseLeave: () => void;
+
   static styles = css`
     :host {
       display: inline-block;
@@ -437,6 +440,8 @@ export class ExtendableContent extends LitElement {
       part="container"
       class=${extended}
       ${active}
+      @mouseenter=${this.handleMouseEnter}
+      @mouseleave=${this.handleMouseLeave}
     >
       <div id="top-container" part="top-container">
         <button
