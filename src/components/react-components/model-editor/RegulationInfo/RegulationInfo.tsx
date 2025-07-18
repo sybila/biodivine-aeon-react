@@ -4,6 +4,7 @@ import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEdit
 
 const RegulationInfo: React.FC<Regulation> = ({
   regulator,
+  target,
   observable,
   monotonicity,
 }) => {
@@ -27,42 +28,45 @@ const RegulationInfo: React.FC<Regulation> = ({
   };
 
   const getObservable = () => {
-    if (observable) {
-      return (
-        <span className="h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-black text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer">
-          observable
-        </span>
-      );
-    }
+    let color: string = observable ? 'text-black' : 'text-gray-400';
 
     return (
-      <span className="h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-gray-400 text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer">
-        non-observable
+      <span
+        className={`h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden ${color} text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        onClick={() => {
+          ModelEditor.toggleRegulationObservability(regulator, target);
+        }}
+      >
+        {observable ? 'observable' : 'non-observable'}
       </span>
     );
   };
 
   const getMonocity = () => {
+    let color: string = 'text-black';
+
     switch (monotonicity) {
       case 'activation':
-        return (
-          <span className="h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-green-400 text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer">
-            activation
-          </span>
-        );
+        color = 'text-green-400';
+        break;
       case 'inhibition':
-        return (
-          <span className="h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-red-500 text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer">
-            inhibition
-          </span>
-        );
+        color = 'text-red-500';
+        break;
       case 'unspecified':
-        return (
-          <span className="h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-gray-400 text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer">
-            unspecified
-          </span>
-        );
+        color = 'text-gray-400';
+        break;
     }
+
+    return (
+      <span
+        className={`h-full w-[30%] max-w-[30%] overflow-x-auto ${color} overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        onClick={() => {
+          ModelEditor.toggleRegulationMonocity(regulator, target);
+        }}
+      >
+        {monotonicity}
+      </span>
+    );
   };
 
   if (!regulatorVar) return;

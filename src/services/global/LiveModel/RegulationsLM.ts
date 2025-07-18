@@ -62,8 +62,7 @@ class RegulationsLM {
     if (index > -1) {
       this._regulations.splice(index, 1);
       CytoscapeME.removeRegulation(regulation.regulator, regulation.target);
-      //ModelEditor.removeRegulation(regulation.regulator, regulation.target);
-      //ModelEditor.updateStats();
+      ModelEditor.reloadModelEditorTab();
       this._liveModel.Export.saveModel();
       return true;
     }
@@ -159,7 +158,7 @@ class RegulationsLM {
 
   //Todo update _
   public _regulationChanged(regulation: Regulation): void {
-    //ModelEditor.ensureRegulation(regulation);
+    ModelEditor.reloadModelEditorTab();
     CytoscapeME.ensureRegulation(regulation);
     this._liveModel.UpdateFunctions._validateUpdateFunction(regulation.target);
     this._liveModel.Export.saveModel();

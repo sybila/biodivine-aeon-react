@@ -11,6 +11,7 @@ import type { VariableInfoProps } from './VariableInfoProps';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import type { Regulation } from '../../../../types';
 import RegulationInfo from '../RegulationInfo/RegulationInfo';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -38,14 +39,33 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const insertRegulators = () => {
     const regulations = ModelEditor.getVariableRegulators(id);
 
-    return (<section slot="extended-content" className="h-auto max-h-[100px] w-full overflow-auto">
-      {regulations.map((regulation: Regulation) => (
-        <RegulationInfo {...regulation}></RegulationInfo>
-      )
+    if (regulations.length === 0) {
+      return (
+        <section
+          slot="extended-content"
+          className="flex justify-center items-center h-[40px] max-h-[40px] w-full"
+        >
+          <SimpleHeaderReact
+            compHeight='20px'
+            headerText="No Regulators"
+            textFontSize='15px'
+            textFontFamily="FiraMono, monospace"
+            textFontWeight="normal"
+          ></SimpleHeaderReact>
+        </section>
+      );
+    }
 
-      )}
-    </section>
-    )
+    return (
+      <section
+        slot="extended-content"
+        className="h-auto max-h-[100px] w-full overflow-auto"
+      >
+        {regulations.map((regulation: Regulation) => (
+          <RegulationInfo {...regulation}></RegulationInfo>
+        ))}
+      </section>
+    );
   };
 
   return (
@@ -102,7 +122,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></DotHeaderReact>
 
       {insertRegulators()}
-      
     </ExtendableContentReact>
   );
 };

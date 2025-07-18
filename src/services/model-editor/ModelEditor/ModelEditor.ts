@@ -83,6 +83,14 @@ class ModelEditorClass {
     LiveModel.Variables.removeVariable(id);
   }
 
+  public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
+    LiveModel.Regulations.toggleMonotonicity(regulatorId, targetId);
+  }
+
+  public toggleRegulationObservability(regulatorId: number, targetId: number) {
+    LiveModel.Regulations.toggleObservability(regulatorId, targetId);
+  }
+
   public getModelStats(): ModelStats {
     return LiveModel.Export.stats();
   }
