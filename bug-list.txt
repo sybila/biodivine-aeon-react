@@ -1,1 +1,3 @@
 selected variable unselects after leaving (unmounting) the ModelEditorTabContent
+
+random occurence = Uncaught TypeError: can't access property "getElementById", this._cytoscape is undefined
