@@ -57,7 +57,7 @@ export class ContentWindow extends LitElement {
       width: var(--content-window-comp-width, 505px);
       max-height: var(--content-window-comp-max-height, 100%);
       max-width: var(--content-window-comp-max-width, 100%);
-      pointer-events:none
+      pointer-events: none;
     }
 
     #window {
