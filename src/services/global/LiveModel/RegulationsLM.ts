@@ -1,6 +1,7 @@
-import { EdgeMonotonicity, type Regulation } from "../../../types";
-import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
-import type { LiveModelClass } from "./LiveModel";
+import { EdgeMonotonicity, type Regulation } from '../../../types';
+import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import ModelEditor from '../../model-editor/ModelEditor/ModelEditor';
+import type { LiveModelClass } from './LiveModel';
 
 //import { ModelEditor } from "./Todo-imports";
 
@@ -37,7 +38,7 @@ class RegulationsLM {
 
     this._regulations.push(regulation);
     this._regulationChanged(regulation);
-    //ModelEditor.updateStats();
+    ModelEditor.reloadModelEditorTab();
     return true;
   }
 
@@ -140,16 +141,18 @@ class RegulationsLM {
     const regulatorName = this._liveModel.Variables.getVariableName(
       regulation.regulator
     );
-    const targetName = this._liveModel.Variables.getVariableName(regulation.target);
-    let arrow = "-";
+    const targetName = this._liveModel.Variables.getVariableName(
+      regulation.target
+    );
+    let arrow = '-';
 
-    if (regulation.monotonicity === EdgeMonotonicity.unspecified) arrow += "?";
+    if (regulation.monotonicity === EdgeMonotonicity.unspecified) arrow += '?';
     else if (regulation.monotonicity === EdgeMonotonicity.activation)
-      arrow += ">";
+      arrow += '>';
     else if (regulation.monotonicity === EdgeMonotonicity.inhibition)
-      arrow += "|";
+      arrow += '|';
 
-    if (!regulation.observable) arrow += "?";
+    if (!regulation.observable) arrow += '?';
 
     return `${regulatorName} ${arrow} ${targetName}`;
   }

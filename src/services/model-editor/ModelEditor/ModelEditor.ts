@@ -90,6 +90,14 @@ class ModelEditorClass {
   public getAllVariables(): Variable[] {
     return LiveModel.Variables.getAllVariables();
   }
+
+  public getVariableById(id: number): Variable | undefined {
+    return LiveModel.Variables.variableFromId(id);
+  }
+
+  public getVariableRegulators(id: number) {
+    return LiveModel.Regulations.regulationsOf(id);
+  }
 }
 
 const ModelEditor: ModelEditorClass = new ModelEditorClass();

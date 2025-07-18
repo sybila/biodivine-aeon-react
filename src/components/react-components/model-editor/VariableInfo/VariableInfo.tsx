@@ -8,6 +8,9 @@ import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEdit
 import SearchIcon from '../../../../assets/icons/search-24px.svg';
 import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
 import type { VariableInfoProps } from './VariableInfoProps';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import type { Regulation } from '../../../../types';
+import RegulationInfo from '../RegulationInfo/RegulationInfo';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -15,7 +18,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   controllable,
   phenotype,
   hover,
-  selected
+  selected,
 }) => {
   const [varName, setVarName] = useState<string>(name);
   const [nameError, setNameError] = useState<boolean>(
@@ -30,6 +33,19 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
     setVarName(newName);
     setNameError(false);
+  };
+
+  const insertRegulators = () => {
+    const regulations = ModelEditor.getVariableRegulators(id);
+
+    return (<section slot="extended-content" className="h-auto max-h-[100px] w-full overflow-auto">
+      {regulations.map((regulation: Regulation) => (
+        <RegulationInfo {...regulation}></RegulationInfo>
+      )
+
+      )}
+    </section>
+    )
   };
 
   return (
@@ -76,6 +92,17 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           handleClick={() => ModelEditor.removeVariable(id)}
         ></IconButtonReact>
       </section>
+
+      <DotHeaderReact
+        slot="extended-content"
+        headerText="Regulators"
+        compWidth="100%"
+        justifyHeader="start"
+        textFontSize="12px"
+      ></DotHeaderReact>
+
+      {insertRegulators()}
+      
     </ExtendableContentReact>
   );
 };

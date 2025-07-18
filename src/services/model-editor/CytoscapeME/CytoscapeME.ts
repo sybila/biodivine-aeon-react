@@ -680,8 +680,8 @@ class CytoscapeMEClass {
         if (
           !LiveModel.Regulations.addRegulation(
             false,
-            sourceNode.id(),
-            targetNode.id(),
+            Number(sourceNode.id()),
+            Number(targetNode.id()),
             true,
             EdgeMonotonicity.unspecified
           )
