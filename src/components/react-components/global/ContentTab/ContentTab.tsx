@@ -2,7 +2,6 @@ import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import type { ContentTabProps } from './ContentTabProps';
 
 const ContentTab: React.FC<ContentTabProps> = ({
-  maxHeight,
   children,
   headerText,
   showTab,
@@ -14,8 +13,9 @@ const ContentTab: React.FC<ContentTabProps> = ({
 
   return (
     <ContentWindowReact
-      className="absolute top-1.5 left-[85px] z-9"
+      className="absolute top-1.5 left-[85px] z-9 overflow-hidden"
       compMaxHeight="98%"
+      windHeight='auto'
       headerText={headerText ?? ''}
       showHeader={true}
       showCloseButton={true}
