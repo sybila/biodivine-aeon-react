@@ -46,9 +46,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           className="flex justify-center items-center h-[40px] max-h-[40px] w-full"
         >
           <SimpleHeaderReact
-            compHeight='20px'
+            compHeight="20px"
             headerText="No Regulators"
-            textFontSize='15px'
+            textFontSize="15px"
             textFontFamily="FiraMono, monospace"
             textFontWeight="normal"
           ></SimpleHeaderReact>
@@ -62,7 +62,10 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         className="h-auto max-h-[100px] w-full overflow-auto"
       >
         {regulations.map((regulation: Regulation) => (
-          <RegulationInfo {...regulation}></RegulationInfo>
+          <RegulationInfo
+            key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
+            {...regulation}
+          ></RegulationInfo>
         ))}
       </section>
     );
