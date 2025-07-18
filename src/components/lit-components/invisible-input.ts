@@ -24,10 +24,15 @@ export class InvisibleInput extends LitElement {
   @property({ type: String }) declare singleFontWeight?: string;
   @property({ type: String }) declare singleFontSize?: string;
   @property({ type: String }) declare singleTextColor?: string;
+  @property({ type: String }) declare singleTextAlign?: string;
 
   @property({ type: String }) declare singleFocusFontFamily?: string;
   @property({ type: String }) declare singleFocusFontWeight?: string;
   @property({ type: String }) declare singleFocusBgColor?: string;
+
+  @property({ type: String }) declare singlePlaceholderColor?: string;
+  @property({ type: String }) declare singlePlaceholderFontStyle?: string;
+  @property({ type: String }) declare singlePlaceholderFontFamily?: string;
 
   @property({ type: Boolean }) declare multiLine?: boolean;
 
@@ -43,10 +48,15 @@ export class InvisibleInput extends LitElement {
   @property({ type: String }) declare multiFontWeight?: string;
   @property({ type: String }) declare multiFontSize?: string;
   @property({ type: String }) declare multiTextColor?: string;
+  @property({ type: String }) declare multiTextAlign?: string;
 
   @property({ type: String }) declare multiFocusFontFamily?: string;
   @property({ type: String }) declare multiFocusFontWeight?: string;
   @property({ type: String }) declare multiFocusBgColor?: string;
+
+  @property({ type: String }) declare multiPlaceholderColor?: string;
+  @property({ type: String }) declare multiPlaceholderFontStyle?: string;
+  @property({ type: String }) declare multiPlaceholderFontFamily?: string;
 
   @property({ type: String }) declare hoverIconSrc?: string;
 
@@ -128,6 +138,20 @@ export class InvisibleInput extends LitElement {
       font-weight: var(--invisible-input-singleline-font-weight, normal);
       overflow-x: var(--invisible-input-cont-overflow-x, auto);
       overflow-y: var(--invisible-input-cont-overflow-y, auto);
+      text-align: var(--invisible-input-singleline-text-align, start);
+    }
+
+    #text-input::placeholder {
+      color: var(--invisible-input-singleline-placeholder-color, black);
+      font-style: var(
+        --invisible-input-singleline-placeholder-font-style,
+        normal
+      );
+      font-family: var(
+        --invisible-input-singleline-placeholder-font-family,
+        'FiraMono',
+        monospace
+      );
     }
 
     #text-input:focus {
@@ -160,6 +184,19 @@ export class InvisibleInput extends LitElement {
       word-break: break-all;
       overflow-x: var(--invisible-input-cont-overflow-x, auto);
       overflow-y: var(--invisible-input-cont-overflow-y, auto);
+      text-align: var(--invisible-input-multiline-text-align, center);
+    }
+
+    #multiline-text-input::placeholder {
+      color: var(--invisible-input-multiline-placeholder-color, grey);
+      font-style: var(
+        --invisible-input-multiline-placeholder-font-style,
+        italic
+      );
+      font-family: var(
+        --invisible-input-multiline-placeholder-font-family,
+        sans-serif
+      );
     }
 
     #multiline-text-input:focus {
@@ -261,6 +298,11 @@ export class InvisibleInput extends LitElement {
       'black'
     );
     update(
+      'singleTextAlign',
+      '--invisible-input-singleline-text-align',
+      'start'
+    );
+    update(
       'singleFocusFontFamily',
       '--invisible-input-singleline-focus-font-family',
       "'FiraMonoBold', monospace"
@@ -274,6 +316,21 @@ export class InvisibleInput extends LitElement {
       'singleFocusBgColor',
       '--invisible-input-singleline-focus-bg-color',
       'transparent'
+    );
+    update(
+      'singlePlaceholderColor',
+      '--invisible-input-singleline-placeholder-color',
+      'black'
+    );
+    update(
+      'singlePlaceholderFontStyle',
+      '--invisible-input-singleline-placeholder-font-style',
+      'normal'
+    );
+    update(
+      'singlePlaceholderFontFamily',
+      '--invisible-input-singleline-placeholder-font-family',
+      "'FiraMono', monospace"
     );
 
     update('multiHeight', '--invisible-input-multiline-height', '100%');
@@ -303,6 +360,11 @@ export class InvisibleInput extends LitElement {
       "'FiraMono', monospace"
     );
     update(
+      'multiTextAlign',
+      '--invisible-input-multiline-text-align',
+      'center'
+    );
+    update(
       'multiFocusFontWeight',
       '--invisible-input-multiline-focus-font-weight',
       'normal'
@@ -312,7 +374,21 @@ export class InvisibleInput extends LitElement {
       '--invisible-input-multiline-focus-bg-color',
       '#eceff1'
     );
-
+    update(
+      'multiPlaceholderColor',
+      '--invisible-input-multiline-placeholder-color',
+      'gray'
+    );
+    update(
+      'multiPlaceholderFontStyle',
+      '--invisible-input-multiline-placeholder-font-style',
+      'italic'
+    );
+    update(
+      'multiPlaceholderFontFamily',
+      '--invisible-input-multiline-placeholder-font-family',
+      'sans-serif'
+    );
     update(
       'errorBgColor',
       '--invisible-input-error-bg-color',

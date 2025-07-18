@@ -125,6 +125,16 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></DotHeaderReact>
 
       {insertRegulators()}
+
+      <DotHeaderReact
+        slot="extended-content"
+        headerText="Update Function"
+        compWidth="100%"
+        justifyHeader="start"
+        textFontSize="12px"
+      ></DotHeaderReact>
+
+      <InvisibleInputReact slot="extended-content" compHeight='28px' compWidth='100%' multiFontSize='16px' multiLine={true} placeholder={`$f_${name}(...)`}></InvisibleInputReact>
     </ExtendableContentReact>
   );
 };
