@@ -13,6 +13,7 @@ const ModelEditorTabContent: React.FC = () => {
   );
   const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
   const [hoverId, setHoverId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const reloadComponent = () => {
     setStats(ModelEditor.getModelStats());
@@ -23,7 +24,12 @@ const ModelEditorTabContent: React.FC = () => {
     setHoverId(turnOnHover ? id : null);
   };
 
+  const selectVariableInfo = (id: number, select: boolean) => {
+    setSelectedId(select ? id : null);
+  };
+
   useEffect(() => {
+    ModelEditor.setSelectVariableFunction(selectVariableInfo);
     ModelEditor.setHoverVariableFunction(hoverVariableInfo);
     ModelEditor.setReloadFunction(reloadComponent);
   }, []);
@@ -46,7 +52,10 @@ const ModelEditorTabContent: React.FC = () => {
     if (!variables || variables.length === 0) {
       return (
         <section className="flex h-[200px] w-[98%] justify-center items-center">
-          <SimpleHeaderReact headerText="No Variables" textFontWeight='normal'></SimpleHeaderReact>
+          <SimpleHeaderReact
+            headerText="No Variables"
+            textFontWeight="normal"
+          ></SimpleHeaderReact>
         </section>
       );
     }
@@ -58,6 +67,7 @@ const ModelEditorTabContent: React.FC = () => {
             key={variable.id}
             {...variable}
             hover={hoverId === variable.id}
+            selected={selectedId === variable.id}
           ></VariableInfo>
         ))}
       </section>

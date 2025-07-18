@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ExtendableContentReact from '../../lit-wrappers/ExtendableContent';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import type { Variable } from '../../../../types';
 import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 
 import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
@@ -16,6 +15,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   controllable,
   phenotype,
   hover,
+  selected
 }) => {
   const [varName, setVarName] = useState<string>(name);
   const [nameError, setNameError] = useState<boolean>(
@@ -40,6 +40,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       topContentOverflowX="visible"
       topContentOverflowY="visible"
       hover={hover}
+      active={selected}
       handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
     >

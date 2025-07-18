@@ -15,13 +15,17 @@ class ModelEditorClass {
     | ((id: number, turnOnHover: boolean) => void)
     | null = null;
 
+  /** Function for toggling selected state of variables in the ModelEditorTabContent.tsx component */
+  private selectVariableInfo: ((id: number, select: boolean) => void) | null =
+    null;
+
   /** Sets reload function for the ModelEditorTabContent.tsx (needs to be called before reloadModelEditorTab function) */
   public setReloadFunction(reloadFunction: () => void) {
     this.reloadEditorTab = reloadFunction;
   }
 
   /** Function which enforces reload of the ModelEditorTabContent.tsx component
-   * (you must first set reloadEditorTab with setReloadFunction brfore running this function) */
+   * (you must first set reloadEditorTab with setReloadFunction before running this function) */
   public reloadModelEditorTab() {
     if (this.reloadEditorTab) {
       this.reloadEditorTab();
@@ -35,9 +39,9 @@ class ModelEditorClass {
     this.hoverVariableInfo = hoverFunction;
   }
 
-  /** Toggles hover state on a variable node in the ModelEditorTabContent.tsx component
+  /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * Before running
+   * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
    */
   public hoverVariable(id: number, turnOnHover: boolean) {
     if (this.hoverVariableInfo) {
@@ -45,9 +49,26 @@ class ModelEditorClass {
     }
   }
 
+  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
+  public setSelectVariableFunction(
+    selectFunction: (id: number, selecte: boolean) => void
+  ) {
+    this.selectVariableInfo = selectFunction;
+  }
+
+  /** Toggles selected state on a variable in the ModelEditorTabContent.tsx component
+   * If `select` is true, it sets variable as selected; if false, it unselects it.
+   * (you must first set selectVariableInfo with setSelectVariableFunction before running this function)
+   */
+  public selectVariable(id: number, select: boolean) {
+    if (this.selectVariableInfo) {
+      this.selectVariableInfo(id, select);
+    }
+  }
+
   /** Toggles hover state on a variable node in the CytoscapeMe canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set reloadEditorTab with setReloadFunction brfore running this function)
+   * (you must first set reloadEditorTab with setReloadFunction before running this function)
    */
   public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
     CytoscapeME.hoverNode(id, turnOnHover);

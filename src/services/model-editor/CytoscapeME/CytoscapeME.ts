@@ -185,11 +185,11 @@ class CytoscapeMEClass {
         }
       }
       this._renderMenuForSelectedNode(node);
-      ////ModelEditor.selectVariable(id, true);
+      ModelEditor.selectVariable(id, true);
     });
     node.on('unselect', (e: any) => {
       ////UI.Visible.toggleNodeMenu();
-      ////ModelEditor.selectVariable(id, false);
+      ModelEditor.selectVariable(id, false);
     });
     node.on('click', (e: any) => {
       this._lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
