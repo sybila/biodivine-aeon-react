@@ -45,14 +45,14 @@ const ModelEditorTabContent: React.FC = () => {
   const insertVariables = () => {
     if (!variables || variables.length === 0) {
       return (
-        <section className="flex h-[30px] w-[98%] justify-center items-center">
-          <SimpleHeaderReact headerText="No Variables"></SimpleHeaderReact>
+        <section className="flex h-[200px] w-[98%] justify-center items-center">
+          <SimpleHeaderReact headerText="No Variables" textFontWeight='normal'></SimpleHeaderReact>
         </section>
       );
     }
 
     return (
-      <section className="flex flex-col h-fit scroll-auto w-[98%] gap-1">
+      <section className="flex flex-col min-h-[50px] h-auto max-h-[400px] overflow-auto w-[98%] gap-1">
         {variables.map((variable: Variable) => (
           <VariableInfo
             key={variable.id}
