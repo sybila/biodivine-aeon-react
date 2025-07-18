@@ -5,6 +5,8 @@ import { customElement, property } from 'lit/decorators.js';
 export class ContentWindow extends LitElement {
   @property({ type: String }) declare compHeight?: string;
   @property({ type: String }) declare compWidth?: string;
+  @property({ type: String }) declare compMaxHeight?: string;
+  @property({ type: String }) declare compMaxWidth?: string;
 
   @property({ type: String }) declare windHeight?: string;
   @property({ type: String }) declare windWidth?: string;
@@ -51,10 +53,11 @@ export class ContentWindow extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
-      height: var(--content-window-comp-height, fit-content);
+      height: var(--content-window-comp-height, 100%);
       width: var(--content-window-comp-width, 505px);
-      max-height: var(--content-window-comp-height, fit-content);
-      max-width: var(--content-window-comp-width, 100%);
+      max-height: var(--content-window-comp-max-height, 100%);
+      max-width: var(--content-window-comp-max-width, 100%);
+      pointer-events:none
     }
 
     #window {
@@ -74,6 +77,8 @@ export class ContentWindow extends LitElement {
       overflow-x: var(--content-window-overflow-x, auto);
       overflow-y: var(--content-window-overflow-y, auto);
       resize: var(--content-window-resize, none);
+      box-sizing: border-box;
+      pointer-events: auto;
     }
 
     #header {
@@ -149,8 +154,10 @@ export class ContentWindow extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update('compHeight', '--content-window-comp-height', 'fit-content');
+    update('compHeight', '--content-window-comp-height', '100%');
     update('compWidth', '--content-window-comp-width', '505px');
+    update('compMaxHeight', '--content-window-comp-max-height', '100%');
+    update('compMaxWidth', '--content-window-comp-max-width', '100%');
 
     update('windHeight', '--content-window-height', 'fit-content');
     update('windWidth', '--content-window-width', '100%');
