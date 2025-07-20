@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import ExtendableContentReact from '../../lit-wrappers/ExtendableContent';
-import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import IconButtonReact from '../../lit-wrappers/IconButtonReact';
+import ExtendableContentReact from '../../../lit-wrappers/ExtendableContent';
+import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
+import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
 
-import SearchIcon from '../../../../assets/icons/search-24px.svg';
-import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
+import SearchIcon from '../../../../../assets/icons/search-24px.svg';
+import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import type { VariableInfoProps } from './VariableInfoProps';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import type { Regulation } from '../../../../types';
-import RegulationInfo from '../RegulationInfo/RegulationInfo';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
+import type { Regulation } from '../../../../../types';
+import RegulationInfo from './RegulationInfo/RegulationInfo';
+import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,

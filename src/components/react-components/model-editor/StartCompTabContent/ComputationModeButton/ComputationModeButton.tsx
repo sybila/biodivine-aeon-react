@@ -1,8 +1,8 @@
-import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { ComputationModeButtonProps } from './ComputationModeButtonProps';
 
-import RightArrow from '../../../../assets/icons/arrow-right.svg';
-import LeftArrow from '../../../../assets/icons/arrow-left.svg';
+import RightArrow from '../../../../../assets/icons/arrow-right.svg';
+import LeftArrow from '../../../../../assets/icons/arrow-left.svg';
 
 const ComputationModeButton: React.FC<ComputationModeButtonProps> = ({
   active,

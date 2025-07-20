@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { Regulation, Variable } from '../../../../types';
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+import type { Regulation, Variable } from '../../../../../../types';
+import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
 
 const RegulationInfo: React.FC<Regulation> = ({
   regulator,

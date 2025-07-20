@@ -5,7 +5,7 @@ import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
-import VariableInfo from '../VariableInfo/VariableInfo';
+import VariableInfo from './VariableInfo/VariableInfo';
 import { useMemo } from 'react';
 
 const ModelEditorTabContent: React.FC = () => {
