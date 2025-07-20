@@ -13,7 +13,7 @@ const ContentTab: React.FC<ContentTabProps> = ({
 
   return (
     <ContentWindowReact
-      className="absolute top-1.5 left-[85px] z-9 overflow-hidden"
+      className="absolute top-1.5 left-[85px] z-9"
       compMaxHeight="98%"
       windHeight='auto'
       headerText={headerText ?? ''}
