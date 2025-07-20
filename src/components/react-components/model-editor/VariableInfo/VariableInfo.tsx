@@ -134,7 +134,20 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         textFontSize="12px"
       ></DotHeaderReact>
 
-      <InvisibleInputReact slot="extended-content" compHeight='28px' compWidth='100%' multiFontSize='16px' multiLine={true} placeholder={`$f_${name}(...)`}></InvisibleInputReact>
+      <InvisibleInputReact
+        slot="extended-content"
+        compHeight="28px"
+        compWidth="100%"
+        multiFontSize="16px"
+        multiLine={true}
+        placeholder={`$f_${name}(...)`}
+      ></InvisibleInputReact>
+      <span
+        slot="extended-content"
+        className="h-[20px] w-full max-w-full overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono)"
+      >
+        Error
+      </span>
     </ExtendableContentReact>
   );
 };
