@@ -34,7 +34,6 @@ class CytoscapeMEClass {
   private _container: HTMLElement | null = null;
 
   init(container: HTMLElement) {
-
     this._container = container;
 
     this._cytoscape = cytoscape(this._initOptions());
@@ -50,7 +49,10 @@ class CytoscapeMEClass {
       this._renderMenuForSelectedEdge();
     });
     this._cytoscape.on('click', (e: any) => {
+      if (e.target !== this._cytoscape) return;
+
       let now = new Date().getTime();
+
       if (
         this._lastClickTimestamp &&
         now - this._lastClickTimestamp < DOUBLE_CLICK_DELAY
