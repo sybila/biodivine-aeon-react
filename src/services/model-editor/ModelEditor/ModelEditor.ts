@@ -24,17 +24,43 @@ class ModelEditorClass {
     this.reloadEditorTab = reloadFunction;
   }
 
+  /** Currently selected variable in the ModelEditorCanvas.tsx component */
+  private selectedVariableId: number | null = null;
+
+  /** Currently searched variable name in the ModelEditorTabContent.tsx component */
+  private variableSearch: string = '';
+
+  /** Changes the name of a variable */
+  public changeVariableName(id: number, newName: string) {
+    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
+  }
+
+  /** Returns last selected variable id in the ModelEditorCanvas.tsx component. Returns null if no variable is selected */
+  public getSelectedVariableId(): number | null {
+    return this.selectedVariableId;
+  }
+
+  /** Sets currently selected variable id in the ModelEditorCanvas.tsx component. id is null if no variable is selected */
+  public setSelectedVariableId(id: number | null) {
+    this.selectedVariableId = id;
+  }
+
+  /** Returns last searched variable name in the ModelEditorTabContent.tsx component */
+  public getVariableSearch(): string {
+    return this.variableSearch;
+  }
+
+  /** Sets currently searched variable name in the ModelEditorTabContent.tsx component */
+  public setVariableSearch(name: string) {
+    this.variableSearch = name;
+  }
+
   /** Function which enforces reload of the ModelEditorTabContent.tsx component
    * (you must first set reloadEditorTab with setReloadFunction before running this function) */
   public reloadModelEditorTab() {
     if (this.reloadEditorTab) {
       this.reloadEditorTab();
     }
-  }
-
-  /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string) {
-    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
   }
 
   /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
@@ -54,9 +80,9 @@ class ModelEditorClass {
     }
   }
 
-  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
+  /** Sets select function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
   public setSelectVariableFunction(
-    selectFunction: (id: number, selecte: boolean) => void
+    selectFunction: (id: number, select: boolean) => void
   ) {
     this.selectVariableInfo = selectFunction;
   }
@@ -67,6 +93,7 @@ class ModelEditorClass {
    */
   public selectVariable(id: number, select: boolean) {
     if (this.selectVariableInfo) {
+      this.setSelectedVariableId(select ? id : null);
       this.selectVariableInfo(id, select);
     }
   }

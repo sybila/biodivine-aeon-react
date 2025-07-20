@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
 import type { ModelStats, Variable } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
@@ -6,6 +6,7 @@ import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
 import VariableInfo from '../VariableInfo/VariableInfo';
+import { useMemo } from 'react';
 
 const ModelEditorTabContent: React.FC = () => {
   const [variables, setVariables] = useState<Variable[]>(
@@ -13,62 +14,71 @@ const ModelEditorTabContent: React.FC = () => {
   );
   const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
   const [hoverId, setHoverId] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(
+    ModelEditor.getSelectedVariableId()
+  );
+  const [variableSearchText, setVariableSearchText] = useState<string>(
+    ModelEditor.getVariableSearch()
+  );
 
-  const reloadComponent = () => {
+  const reloadComponent = useCallback(() => {
     setStats(ModelEditor.getModelStats());
     setVariables(ModelEditor.getAllVariables());
-  };
+  }, []);
 
-  const hoverVariableInfo = (id: number, turnOnHover: boolean) => {
+  const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
     setHoverId(turnOnHover ? id : null);
-  };
+  }, []);
 
-  const selectVariableInfo = (id: number, select: boolean) => {
+  const selectVariableInfo = useCallback((id: number, select: boolean) => {
     setSelectedId(select ? id : null);
-  };
+  }, []);
 
   useEffect(() => {
     ModelEditor.setSelectVariableFunction(selectVariableInfo);
     ModelEditor.setHoverVariableFunction(hoverVariableInfo);
     ModelEditor.setReloadFunction(reloadComponent);
-  }, []);
+  }, [hoverVariableInfo, reloadComponent, selectVariableInfo]);
 
-  const searchVariable = (varName: string) => {
-    const tempVars: Variable[] = ModelEditor.getAllVariables();
-
-    if (varName === '') {
-      setVariables(tempVars);
-    } else {
-      setVariables(
-        tempVars.filter((variable: Variable) =>
-          variable.name.startsWith(varName)
-        )
-      );
+  const setVariableSearch = (name: string) => {
+    if (name !== variableSearchText) {
+      ModelEditor.setVariableSearch(name);
+      setVariableSearchText(name);
     }
   };
 
+  const filterVariable = (variable: Variable) => {
+    return (
+      variableSearchText === '' || variable.name.startsWith(variableSearchText)
+    );
+  };
+
+  const filteredVariables = useMemo(() => {
+    if (variableSearchText === '') return variables;
+    return variables.filter(filterVariable);
+  }, [variables, variableSearchText]);
+
   const insertVariables = () => {
-    if (!variables || variables.length === 0) {
+    if (!filteredVariables || filteredVariables.length === 0) {
       return (
         <section className="flex h-[200px] w-[98%] justify-center items-center">
           <SimpleHeaderReact
             headerText="No Variables"
             textFontWeight="normal"
-          ></SimpleHeaderReact>
+          />
         </section>
       );
     }
 
     return (
       <section className="flex flex-col min-h-[50px] h-auto max-h-[400px] overflow-auto w-[98%] gap-1">
-        {variables.map((variable: Variable) => (
+        {filteredVariables.map((variable: Variable) => (
           <VariableInfo
             key={variable.id}
             {...variable}
             hover={hoverId === variable.id}
             selected={selectedId === variable.id}
-          ></VariableInfo>
+          />
         ))}
       </section>
     );
@@ -129,7 +139,8 @@ const ModelEditorTabContent: React.FC = () => {
       <TextInputReact
         compWidth="95%"
         inputPlaceholder="Search variables..."
-        onWrite={searchVariable}
+        onWrite={setVariableSearch}
+        value={variableSearchText}
       />
 
       {insertVariables()}
