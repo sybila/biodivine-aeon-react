@@ -41,3 +41,5 @@ export type ModelStats = {
   regulationCount: number;
   explicitParameters: string[];
 };
+
+export type ComputationModes = 'Attractor Analysis' | 'Control';
