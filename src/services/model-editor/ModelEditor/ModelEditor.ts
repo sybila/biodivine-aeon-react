@@ -32,6 +32,11 @@ class ModelEditorClass {
     }
   }
 
+  /** Changes the name of a variable */
+  public changeVariableName(id: number, newName: string) {
+    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
+  }
+
   /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
   public setHoverVariableFunction(
     hoverFunction: (id: number, turnOnHover: boolean) => void

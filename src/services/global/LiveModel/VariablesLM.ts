@@ -114,6 +114,7 @@ class VariablesLM {
     variable.name = newName;
 
     CytoscapeME.renameNode(id, newName);
+    ModelEditor.reloadModelEditorTab();
     //ControllableEditor.renameVariable(id, newName);
     //PhenotypeEditor.renameVariable(id, newName);
     //ModelEditor.renameVariable(id, newName, oldName);

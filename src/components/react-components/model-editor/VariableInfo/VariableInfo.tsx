@@ -32,6 +32,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       return;
     }
 
+    ModelEditor.changeVariableName(id, newName);
     setVarName(newName);
     setNameError(false);
   };
@@ -43,7 +44,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       return (
         <section
           slot="extended-content"
-          className="flex justify-center items-center h-[40px] max-h-[40px] w-full"
+          className="flex justify-center items-center h-[77px] max-h-[77px] w-full"
         >
           <SimpleHeaderReact
             compHeight="20px"
@@ -59,7 +60,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     return (
       <section
         slot="extended-content"
-        className="h-auto max-h-[100px] w-full overflow-auto"
+        className="h-[77px] max-h-[77px] w-full overflow-auto"
       >
         {regulations.map((regulation: Regulation) => (
           <RegulationInfo
@@ -144,9 +145,10 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></InvisibleInputReact>
       <span
         slot="extended-content"
-        className="h-[20px] w-full max-w-full overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono)"
+        className="h-[20px] w-full max-w-full mt-1.5 overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] text-nowrap"
       >
-        Error
+        Error jjj
+        ggggGGGJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
       </span>
     </ExtendableContentReact>
   );
