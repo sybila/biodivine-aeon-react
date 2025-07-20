@@ -40,6 +40,15 @@ const StartCompTabContent: React.FC = () => {
     );
   };
 
+  const renderParams = () => {
+    switch (computationMode) {
+      case 'Control':
+        return <ControlCompParams />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-fit gap-5">
       <DotHeaderReact
@@ -50,7 +59,7 @@ const StartCompTabContent: React.FC = () => {
 
       {renderButtons()}
 
-      <ControlCompParams />
+      {renderParams()}
     </div>
   );
 };

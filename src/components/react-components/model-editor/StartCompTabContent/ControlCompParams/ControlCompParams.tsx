@@ -18,7 +18,7 @@ const ControlCompParams: React.FC = () => {
   return (
     <section className="flex flex-col w-full gap-3">
       <DotHeaderReact
-        headerText="Control Settings"
+        headerText="Control Computation Parameters"
         compWidth="100%"
         justifyHeader="start"
       />
