@@ -34,9 +34,6 @@ class CytoscapeMEClass {
   private _container: HTMLElement | null = null;
 
   init(container: HTMLElement) {
-    if (this._cytoscape) {
-      return;
-    }
 
     this._container = container;
 
