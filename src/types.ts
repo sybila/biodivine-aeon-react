@@ -43,3 +43,11 @@ export type ModelStats = {
 };
 
 export type ComputationModes = 'Attractor Analysis' | 'Control';
+
+export type ControlStats = {
+  controlEnabled: number;
+  notControlEnabled: number;
+  inPhenotypeTrue: number;
+  inPhenotypeFalse: number;
+  notInPhenotype: number;
+};
