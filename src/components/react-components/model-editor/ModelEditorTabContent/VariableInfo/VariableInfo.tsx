@@ -16,8 +16,6 @@ import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
   name,
-  controllable,
-  phenotype,
   hover,
   selected,
 }) => {
