@@ -15,6 +15,8 @@ import DockIcon from '../../assets/icons/dock-arrow.svg';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
+import OverlayWindowReact from '../../components/react-components/lit-wrappers/OverlayWindowReact';
+import ComputeEngineWindowContent from '../../components/react-components/global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 
 type TabTypeME =
   | 'Start Computation'
@@ -24,8 +26,12 @@ type TabTypeME =
   | 'Phenotype Editor'
   | null;
 
+type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
+
 const ModelEditor: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+  const [activeOverlayWindow, setActiveOverlayWindow] =
+    useState<OverlayWindowTypeME | null>(null);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -39,6 +45,17 @@ const ModelEditor: React.FC = () => {
         return <div>Control-Enabled Editor Content</div>;
       case 'Phenotype Editor':
         return <div>Phenotype Editor Content</div>;
+      default:
+        return null;
+    }
+  };
+
+  const renderOverlayWindowContent = () => {
+    switch (activeOverlayWindow) {
+      case 'Compute Engine':
+        return <ComputeEngineWindowContent />;
+      case 'Results':
+        return <div>Results Content</div>;
       default:
         return null;
     }
@@ -106,12 +123,32 @@ const ModelEditor: React.FC = () => {
         {renderTabContent()}
       </ContentTab>
 
+      {activeOverlayWindow !== null ? (
+        <OverlayWindowReact
+          compWidth="100%"
+          compHeight="100%"
+          showHeader={true}
+          showCloseButton={true}
+          headerText={activeOverlayWindow}
+          handleCloseClick={() => setActiveOverlayWindow(null)}
+          handleBackgroundClick={() => setActiveOverlayWindow(null)}
+        >
+          {renderOverlayWindowContent()}
+
+        </OverlayWindowReact>
+      ) : null}
+
       <PopUpBarReact
-        className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-10"
+        className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
         iconSrc={DockIcon}
         iconAlt="Dock"
       >
-        <NavigationDockContent />
+        <NavigationDockContent
+          handleComputeEngineClick={() =>
+            setActiveOverlayWindow('Compute Engine')
+          }
+          handleResultsClick={() => setActiveOverlayWindow('Results')}
+        />
       </PopUpBarReact>
 
       <ModelEditorCanvas />
