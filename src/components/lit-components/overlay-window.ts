@@ -58,7 +58,7 @@ export class OverlayWindow extends LitElement {
 
   static styles = css`
     :host {
-      display: inline-block;
+      display: block;
       position: fixed;
       top: 0;
       left: 0;
@@ -269,7 +269,11 @@ export class OverlayWindow extends LitElement {
         part="background"
         @click=${this.handleBackgroundClick}
       >
-        <div id="window" part="window" @click=${(e: Event) => e.stopPropagation()}>
+        <div
+          id="window"
+          part="window"
+          @click=${(e: Event) => e.stopPropagation()}
+        >
           ${this.showHeader
             ? html`<div id="header" part="header">
                 ${this.showCloseButton
