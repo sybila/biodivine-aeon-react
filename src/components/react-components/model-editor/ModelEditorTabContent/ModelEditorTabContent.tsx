@@ -7,6 +7,8 @@ import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
 import VariableInfo from './VariableInfo/VariableInfo';
 import { useMemo } from 'react';
+import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 
 const ModelEditorTabContent: React.FC = () => {
   const [variables, setVariables] = useState<Variable[]>(
@@ -20,6 +22,9 @@ const ModelEditorTabContent: React.FC = () => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     ModelEditor.getVariableSearch()
   );
+
+  const [showModelDescription, setShowModelDescription] =
+    useState<boolean>(false);
 
   const reloadComponent = useCallback(() => {
     setStats(ModelEditor.getModelStats());
@@ -118,12 +123,32 @@ const ModelEditorTabContent: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
-      <section className="flex flex-col items-center w-full h-fit gap-1">
-        <DotHeaderReact
+      {showModelDescription ? (
+        <InvisibleInputReact
+          compHeight="50px"
           compWidth="100%"
-          headerText="Overview"
-          justifyHeader="start"
+          placeholder="(model description)"
+          multiLine={true}
         />
+      ) : null}
+
+      <section className="flex flex-col items-center w-full h-fit gap-3">
+        <section className="flex flex-row items-center justify-between w-full h-fit gap-1">
+          <DotHeaderReact
+            compWidth="60%"
+            headerText="Model Statistics"
+            justifyHeader="start"
+          />
+
+          <TextButtonReact
+            className="mr-2"
+            compWidth="35%"
+            textFontSize='13px'
+            text={`${showModelDescription ? 'Hide' : 'Show'} Model description`}
+            handleClick={() => setShowModelDescription(!showModelDescription)}
+            active={showModelDescription}
+          />
+        </section>
 
         {insertStats()}
       </section>
