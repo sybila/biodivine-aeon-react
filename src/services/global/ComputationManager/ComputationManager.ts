@@ -1,20 +1,37 @@
 import type { ComputationModes } from '../../../types';
+import config from '../../../config';
+
+
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
 */
 class ComputationManagerClass {
+
+  /** URL of the compute engine*/
+  private computeEngineAddress: string =  config.computeEngine.defaultURL ?? 'http://localhost:8000';
+
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
 
   /** Minimum robustness for perturbations */
   private minRobustness: number = 0.01;
 
-  /** Maximum number of varaibles in a perturbation */
+  /** Maximum number of variables in a perturbation */
   private maxSize: number = 1000000;
 
   /** Maximum number of perturbations */
   private maxNumberOfResults: number = 1000000;
+
+  /** Sets the URL of the compute engine */
+  public setComputeEngineAddress(address: string) {
+    if (address) this.computeEngineAddress = address;
+  }
+
+  /** Returns the URL of the compute engine */
+  public getComputeEngineAddress() {
+    return this.computeEngineAddress;
+  }
 
   /** Sets maximum number of perturbations */
   public setMaxNumberOfResults(max: number | undefined) {
