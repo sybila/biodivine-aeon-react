@@ -14,6 +14,7 @@ import PhenotypeIcon from '../../assets/icons/phenotype-48px.svg';
 import DockIcon from '../../assets/icons/dock-arrow.svg';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
+import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 
 type TabTypeME =
   | 'Start Computation'
@@ -29,7 +30,7 @@ const ModelEditor: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Start Computation':
-        return <div>Start Computation Content</div>;
+        return <StartCompTabContent />;
       case 'Import/Export':
         return <ImportExportTabContent />;
       case 'Model Editor':
@@ -110,10 +111,10 @@ const ModelEditor: React.FC = () => {
         iconSrc={DockIcon}
         iconAlt="Dock"
       >
-        <NavigationDockContent></NavigationDockContent>
+        <NavigationDockContent />
       </PopUpBarReact>
 
-      <ModelEditorCanvas></ModelEditorCanvas>
+      <ModelEditorCanvas />
     </>
   );
 };
