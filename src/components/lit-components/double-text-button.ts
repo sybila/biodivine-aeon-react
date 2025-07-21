@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("double-text-button")
+@customElement('double-text-button')
 export class DoubleTextButton extends LitElement {
   @property({ type: String }) declare compHeight?: string;
   @property({ type: String }) declare compWidth?: string;
@@ -92,8 +92,8 @@ export class DoubleTextButton extends LitElement {
       font-weight: var(--double-text-button-left-font-weight, bold);
       font-family: var(
         --double-text-button-left-font-family,
-        "Helvetica",
-        "Arial",
+        'Helvetica',
+        'Arial',
         sans-serif
       );
       text-shadow: var(
@@ -115,8 +115,8 @@ export class DoubleTextButton extends LitElement {
       font-weight: var(--double-text-button-right-font-weight, bold);
       font-family: var(
         --double-text-button-right-font-family,
-        "Helvetica",
-        "Arial",
+        'Helvetica',
+        'Arial',
         sans-serif
       );
       text-shadow: var(
@@ -143,92 +143,92 @@ export class DoubleTextButton extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update("compHeight", "--double-text-button-comp-height", "60px");
-    update("compWidth", "--double-text-button-comp-width", "242px");
+    update('compHeight', '--double-text-button-comp-height', '60px');
+    update('compWidth', '--double-text-button-comp-width', '242px');
 
-    update("buttonHeight", "--double-text-button-height", "100%");
-    update("buttonWidth", "--double-text-button-width", "100%");
-    update("buttonBorderRadius", "--double-text-button-border-radius", "12px");
+    update('buttonHeight', '--double-text-button-height', '100%');
+    update('buttonWidth', '--double-text-button-width', '100%');
+    update('buttonBorderRadius', '--double-text-button-border-radius', '12px');
     update(
-      "buttonShadow",
-      "--double-text-button-shadow",
-      "0px 2px 5px #d0d0d0"
+      'buttonShadow',
+      '--double-text-button-shadow',
+      '0px 2px 5px #d0d0d0'
     );
 
-    update("leftColor", "--double-text-button-left-bg-color", "#eceff1");
+    update('leftColor', '--double-text-button-left-bg-color', '#eceff1');
     update(
-      "leftHoverColor",
-      "--double-text-button-left-hover-bg-color",
-      "#CFD8DC"
+      'leftHoverColor',
+      '--double-text-button-left-hover-bg-color',
+      '#CFD8DC'
     );
-    update("leftPadX", "--double-text-button-left-padx", "10px");
-    update("leftWidth", "--double-text-button-left-width", "300px");
-    update("leftTextFontSize", "--double-text-button-left-font-size", "16px");
+    update('leftPadX', '--double-text-button-left-padx', '10px');
+    update('leftWidth', '--double-text-button-left-width', '50%');
+    update('leftTextFontSize', '--double-text-button-left-font-size', '16px');
     update(
-      "leftTextFontWeight",
-      "--double-text-button-left-font-weight",
-      "bold"
+      'leftTextFontWeight',
+      '--double-text-button-left-font-weight',
+      'bold'
     );
     update(
-      "leftTextFontFamily",
-      "--double-text-button-left-font-family",
+      'leftTextFontFamily',
+      '--double-text-button-left-font-family',
       `'Helvetica', 'Arial', sans-serif`
     );
-    update("leftTextColor", "--double-text-button-left-color", "black");
+    update('leftTextColor', '--double-text-button-left-color', 'black');
     update(
-      "leftTextShadow",
-      "--double-text-button-left-text-shadow",
-      "0px 2px 5px #d0d0d0"
+      'leftTextShadow',
+      '--double-text-button-left-text-shadow',
+      '0px 2px 5px #d0d0d0'
     );
     update(
-      "leftTextTransform",
-      "--double-text-button-left-text-transform",
-      "none"
+      'leftTextTransform',
+      '--double-text-button-left-text-transform',
+      'none'
     );
-    update("leftTextAlign", "--double-text-button-left-text-align", "center");
-    update("leftLineHeight", "--double-text-button-left-line-height", "21px");
+    update('leftTextAlign', '--double-text-button-left-text-align', 'center');
+    update('leftLineHeight', '--double-text-button-left-line-height', '21px');
 
-    update("rightColor", "--double-text-button-right-bg-color", "#cfd8dc");
+    update('rightColor', '--double-text-button-right-bg-color', '#cfd8dc');
     update(
-      "rightHoverColor",
-      "--double-text-button-right-hover-bg-color",
-      "#B0BEC5"
+      'rightHoverColor',
+      '--double-text-button-right-hover-bg-color',
+      '#B0BEC5'
     );
-    update("rightPadX", "--double-text-button-right-padx", "10px");
-    update("rightWidth", "--double-text-button-right-width", "300px");
-    update("rightTextFontSize", "--double-text-button-right-font-size", "16px");
+    update('rightPadX', '--double-text-button-right-padx', '10px');
+    update('rightWidth', '--double-text-button-right-width', '50%');
+    update('rightTextFontSize', '--double-text-button-right-font-size', '16px');
     update(
-      "rightTextFontWeight",
-      "--double-text-button-right-font-weight",
-      "bold"
+      'rightTextFontWeight',
+      '--double-text-button-right-font-weight',
+      'bold'
     );
     update(
-      "rightTextFontFamily",
-      "--double-text-button-right-font-family",
+      'rightTextFontFamily',
+      '--double-text-button-right-font-family',
       `'Helvetica', 'Arial', sans-serif`
     );
-    update("rightTextColor", "--double-text-button-right-color", "black");
+    update('rightTextColor', '--double-text-button-right-color', 'black');
     update(
-      "rightTextShadow",
-      "--double-text-button-right-text-shadow",
-      "0px 2px 5px #d0d0d0"
+      'rightTextShadow',
+      '--double-text-button-right-text-shadow',
+      '0px 2px 5px #d0d0d0'
     );
     update(
-      "rightTextTransform",
-      "--double-text-button-right-text-transform",
-      "none"
+      'rightTextTransform',
+      '--double-text-button-right-text-transform',
+      'none'
     );
-    update("rightTextAlign", "--double-text-button-right-text-align", "center");
-    update("rightLineHeight", "--double-text-button-right-line-height", "21px");
+    update('rightTextAlign', '--double-text-button-right-text-align', 'center');
+    update('rightLineHeight', '--double-text-button-right-line-height', '21px');
   }
 
   render() {
     return html`<button part="button" @click="${this.onClick}">
       <span id="left-section" part="left-section">
-        ${this.leftText ? this.leftText : ""}
+        ${this.leftText ? this.leftText : ''}
       </span>
       <span id="right-section" part="right-section">
-        ${this.rightText ? this.rightText : ""}
+        ${this.rightText ? this.rightText : ''}
       </span>
     </button> `;
   }

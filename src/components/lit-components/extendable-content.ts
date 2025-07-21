@@ -150,7 +150,7 @@ export class ExtendableContent extends LitElement {
         --extendable-content-top-content-justify-content,
         space-between
       );
-      align-items: var(--extendable-content-top-content-aling-items, center);
+      align-items: var(--extendable-content-top-content-align-items, center);
 
       height: var(--extendable-content-top-content-height, 100%);
       width: var(--extendable-content-top-content-width, calc(100% - 30px));
@@ -173,7 +173,7 @@ export class ExtendableContent extends LitElement {
         start
       );
       align-items: var(
-        --extendable-content-extended-content-aling-items,
+        --extendable-content-extended-content-align-items,
         center
       );
 
@@ -247,7 +247,7 @@ export class ExtendableContent extends LitElement {
     update('compHeight', '--extendable-content-comp-height', 'fit-content');
     update('compWidth', '--extendable-content-comp-width', '500px');
 
-    update('contHeight', '--extendable-content-cont-height', '30px');
+    update('contHeight', '--extendable-content-cont-height', 'fit-content');
     update('contWidth', '--extendable-content-cont-width', '100%');
     update(
       'contMaxHeight',
@@ -308,7 +308,7 @@ export class ExtendableContent extends LitElement {
 
     update('topHeight', '--extendable-content-top-height', '25px');
     update('topWidth', '--extendable-content-top-width', '100%');
-    update('topMaxHeight', '--extendable-content-top-max-height', '20px');
+    update('topMaxHeight', '--extendable-content-top-max-height', '25px');
     update('topMaxWidth', '--extendable-content-top-max-width', '100%');
     update(
       'topJustifyC',
@@ -346,7 +346,7 @@ export class ExtendableContent extends LitElement {
     );
     update(
       'topContentAlignI',
-      '--extendable-content-top-content-aling-items',
+      '--extendable-content-top-content-align-items',
       'center'
     );
     update(
@@ -387,7 +387,7 @@ export class ExtendableContent extends LitElement {
     );
     update(
       'extendContentAlignI',
-      '--extendable-content-extended-content-aling-items',
+      '--extendable-content-extended-content-align-items',
       'center'
     );
     update(
@@ -401,10 +401,10 @@ export class ExtendableContent extends LitElement {
       'hidden'
     );
 
-    update('buttonHeight', '--extendable-content-button-height', '20px');
-    update('buttonWidth', '--extendable-content-button-width', '20px');
-    update('buttonMaxHeight', '--extendable-content-button-max-height', '20px');
-    update('buttonMaxWidth', '--extendable-content-button-max-width', '20px');
+    update('buttonHeight', '--extendable-content-button-height', '24px');
+    update('buttonWidth', '--extendable-content-button-width', '24px');
+    update('buttonMaxHeight', '--extendable-content-button-max-height', '24px');
+    update('buttonMaxWidth', '--extendable-content-button-max-width', '24px');
     update(
       'buttonBorderRadius',
       '--extendable-content-button-border-radius',
@@ -431,7 +431,7 @@ export class ExtendableContent extends LitElement {
   };
 
   static arrowIcon =
-    'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBVcGxvYWRlZCB0bzogU1ZHIFJlcG8sIHd3dy5zdmdyZXBvLmNvbSwgR2VuZXJhdG9yOiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4NCjxzdmcgZmlsbD0iIzAwMDAwMCIgaGVpZ2h0PSI4MDBweCIgd2lkdGg9IjgwMHB4IiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiANCgkgdmlld0JveD0iMCAwIDUxMi4wMDEgNTEyLjAwMSIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Zz4NCgkJPHBhdGggZD0iTTUwNS43NDksMzA0LjkxOEwyNzEuMDgzLDcwLjI1MWMtOC4zNDEtOC4zNDEtMjEuODI0LTguMzQxLTMwLjE2NSwwTDYuMjUxLDMwNC45MThDMi4yNCwzMDguOTA3LDAsMzE0LjMyNiwwLDMyMC4wMDENCgkJCXYxMDYuNjY3YzAsOC42MTksNS4xODQsMTYuNDI3LDEzLjE2MywxOS43MTJjNy45NzksMy4zMDcsMTcuMTUyLDEuNDcyLDIzLjI1My00LjYyOUwyNTYsMjIyLjE2Nkw0NzUuNTg0LDQ0MS43NQ0KCQkJYzQuMDc1LDQuMDc1LDkuNTM2LDYuMjUxLDE1LjA4Myw2LjI1MWMyLjc1MiwwLDUuNTI1LTAuNTEyLDguMTcxLTEuNjIxYzcuOTc5LTMuMjg1LDEzLjE2My0xMS4wOTMsMTMuMTYzLTE5LjcxMlYzMjAuMDAxDQoJCQlDNTEyLDMxNC4zMjYsNTA5Ljc2LDMwOC45MDcsNTA1Ljc0OSwzMDQuOTE4eiIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg==';
+    'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgLTQuNSAyMCAyMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4NCiAgICANCiAgICA8dGl0bGU+YXJyb3dfZG93biBbIzMzOF08L3RpdGxlPg0KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPg0KICAgIDxkZWZzPg0KDQo8L2RlZnM+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJEcmliYmJsZS1MaWdodC1QcmV2aWV3IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjIwLjAwMDAwMCwgLTY2ODQuMDAwMDAwKSIgZmlsbD0iIzAwMDAwMCI+DQogICAgICAgICAgICA8ZyBpZD0iaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDU2LjAwMDAwMCwgMTYwLjAwMDAwMCkiPg0KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNjQuMjkyMzA4LDY1MjQuMzY1ODMgTDE2NC4yOTIzMDgsNjUyNC4zNjU4MyBDMTYzLjkwMjU2NCw2NTI0Ljc3MDcxIDE2My45MDI1NjQsNjUyNS40MjYxOSAxNjQuMjkyMzA4LDY1MjUuODMwMDQgTDE3Mi41NTU4NzMsNjUzNC4zOTI2NyBDMTczLjMzNjM2LDY1MzUuMjAyNDQgMTc0LjYwMjUyOCw2NTM1LjIwMjQ0IDE3NS4zODMwMTQsNjUzNC4zOTI2NyBMMTgzLjcwNzU0LDY1MjUuNzY3OTEgQzE4NC4wOTMyODYsNjUyNS4zNjcxNiAxODQuMDk4MjgzLDY1MjQuNzE5OTcgMTgzLjcxNzUzMyw2NTI0LjMxNDA1IEMxODMuMzI4Nzg5LDY1MjMuODk5ODUgMTgyLjY4ODIxLDY1MjMuODk0NjcgMTgyLjI5MzQ3LDY1MjQuMzAyNjYgTDE3NC42NzY0NzksNjUzMi4xOTYzNiBDMTc0LjI4NTczNiw2NTMyLjYwMTI0IDE3My42NTMxNTIsNjUzMi42MDEyNCAxNzMuMjYyNDA5LDY1MzIuMTk2MzYgTDE2NS43MDUzNzksNjUyNC4zNjU4MyBDMTY1LjMxNTYzNSw2NTIzLjk2MDk0IDE2NC42ODMwNTEsNjUyMy45NjA5NCAxNjQuMjkyMzA4LDY1MjQuMzY1ODMiIGlkPSJhcnJvd19kb3duLVsjMzM4XSI+DQoNCjwvcGF0aD4NCiAgICAgICAgICAgIDwvZz4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==';
 
   render() {
     const extended = this.extended ? 'extended' : '';

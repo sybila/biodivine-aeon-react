@@ -31,6 +31,7 @@ export class PopUpBar extends LitElement {
       width: var(--pop-up-bar-comp-width, fit-content);
       max-height: var(--pop-up-bar-comp-height, fit-content);
       max-width: var(--pop-up-bar-comp-width, fit-content);
+      pointer-events: none;
     }
 
     #container {
@@ -38,6 +39,7 @@ export class PopUpBar extends LitElement {
       flex-direction: column-reverse;
       justify-content: end;
       align-items: center;
+      pointer-events: none;
     }
 
     #bar {
@@ -54,6 +56,7 @@ export class PopUpBar extends LitElement {
       border-radius: 10px;
       box-shadow: var(--pop-up-bar-shadow, 0px 2px 5px #d0d0d0);
       background-color: var(--pop-up-bar-color, #eceff1);
+      pointer-events: auto;
     }
 
     #bar-container {
@@ -91,6 +94,7 @@ export class PopUpBar extends LitElement {
       box-shadow: var(--pop-up-bar-button-shadow, 0px 2px 5px #d0d0d0);
       background-color: var(--pop-up-bar-button-color, #eceff1);
       cursor: pointer;
+      pointer-events: auto;
     }
 
     #display-button:hover {

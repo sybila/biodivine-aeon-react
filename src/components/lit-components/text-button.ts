@@ -10,35 +10,40 @@ export class TextButton extends LitElement {
   @property({ type: String }) declare buttonWidth?: string;
   @property({ type: String }) declare buttonColor?: string;
   @property({ type: String }) declare buttonHoverColor?: string;
+  @property({ type: String }) declare buttonActiveColor?: string;
   @property({ type: String }) declare buttonShadow?: string;
-  @property({ type: Function }) declare onClick?: () => void;
+  @property({ type: Function }) declare handleClick?: () => void;
 
-  @property({ type: String }) declare tagText?: string;
-  @property({ type: String }) declare tagWidth?: string;
+  @property({ type: String }) declare text?: string;
+  @property({ type: String }) declare textContainerHeight?: string;
+  @property({ type: String }) declare textContainerWidth?: string;
 
-  @property({ type: String }) declare tagTextFontSize?: string;
-  @property({ type: String }) declare tagTextFontWeight?: string;
-  @property({ type: String }) declare tagTextFontFamily?: string;
-  @property({ type: String }) declare tagTextColor?: string;
-  @property({ type: String }) declare tagTextShadow?: string;
-  @property({ type: String }) declare tagTextTransform?: string;
-  @property({ type: String }) declare tagTextAlign?: string;
+  @property({ type: String }) declare textFontSize?: string;
+  @property({ type: String }) declare textFontWeight?: string;
+  @property({ type: String }) declare textFontFamily?: string;
+  @property({ type: String }) declare textColor?: string;
+  @property({ type: String }) declare textShadow?: string;
+  @property({ type: String }) declare textTransform?: string;
+  @property({ type: String }) declare textAlign?: string;
+  @property({ type: String }) declare textLineHeight?: string;
+
+  @property({ type: Boolean }) declare active?: boolean;
 
   static styles = css`
     :host {
       display: inline-block;
-      height: var(--text-button-comp-height, fit-content);
-      width: var(--text-button-comp-width, fit-content);
-      max-height: var(--text-button-comp-height, fit-content);
-      max-width: var(--text-button-comp-width, fit-content);
+      height: var(--text-button-comp-height, 30px);
+      width: var(--text-button-comp-width, 60px);
+      max-height: var(--text-button-comp-height, 30px);
+      max-width: var(--text-button-comp-width, 60px);
     }
 
     button {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: var(--text-button-height, 30px);
-      width: var(--text-button-width, 30px);
+      height: var(--text-button-height, 100%);
+      width: var(--text-button-width, 100%);
       border: none;
       border-radius: 10px;
       box-shadow: 0px 2px 5px #d0d0d0;
@@ -48,29 +53,34 @@ export class TextButton extends LitElement {
     }
 
     button:hover {
-      background-color: var(--text-button-hover-bg-color, #cfd8dc);
+      background-color: var(--text-button-hover-bg-color, #b0bec5);
+    }
+
+    button.active {
+      background-color: var(--text-button-active-bg-color, #cfd8dc);
     }
 
     span {
       display: flex;
-      justify-content: var(--text-button-tag-text-align, center);
+      justify-content: var(--text-button-text-align, center);
       align-items: center;
       overflow: hidden;
       box-sizing: border-box;
-      height: var(--text-button-text-container-height, fit-content);
-      width: var(--text-button-text-container-width, fit-content);
+      height: var(--text-button-text-container-height, 100%);
+      width: var(--text-button-text-container-width, 100%);
       pointer-events: none;
-      font-size: var(--text-button-tag-font-size, 90%);
-      font-weight: var(--text-button-tag-font-weight, bold);
+      line-height: var(--text-button-line-height, 100%);
+      font-size: var(--text-button-font-size, 90%);
+      font-weight: var(--text-button-font-weight, bold);
       font-family: var(
-        --text-button-tag-font-family,
+        --text-button-font-family,
         'Helvetica',
         'Arial',
         sans-serif
       );
-      text-shadow: var(--text-button-tag-text-shadow, 0px 2px 5px #d0d0d0);
-      color: var(--text-button-tag-color, black);
-      text-transform: var(--text-button-tag-text-transform, none);
+      text-shadow: var(--text-button-text-shadow, 0px 2px 5px #d0d0d0);
+      color: var(--text-button-text-color, black);
+      text-transform: var(--text-button-text-transform, none);
     }
   `;
 
@@ -87,37 +97,41 @@ export class TextButton extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update('compHeight', '--text-button-comp-height', 'fit-content');
-    update('compWidth', '--text-button-comp-width', 'fit-content');
+    update('compHeight', '--text-button-comp-height', '30px');
+    update('compWidth', '--text-button-comp-width', '60px');
 
-    update('buttonHeight', '--text-button-height', '30px');
-    update('buttonWidth', '--text-button-width', '30px');
+    update('buttonHeight', '--text-button-height', '100%');
+    update('buttonWidth', '--text-button-width', '100%');
     update('buttonColor', '--text-button-bg-color', '#eceff1');
-    update('buttonHoverColor', '--text-button-hover-bg-color', '#cfd8dc');
+    update('buttonHoverColor', '--text-button-hover-bg-color', '#b0bec5');
+    update('buttonActiveColor', '--text-button-active-bg-color', '#cfd8dc');
     update('buttonShadow', '--text-button-shadow', '0px 2px 5px #d0d0d0');
 
-    update('tagTextColor', '--text-button-tag-color', 'black');
-    update('tagTextFontSize', '--text-button-tag-font-size', '90%');
-    update('tagTextFontWeight', '--text-button-tag-font-weight', 'bold');
+    update('textColor', '--text-button-text-color', 'black');
+    update('textFontSize', '--text-button-font-size', '90%');
+    update('textFontWeight', '--text-button-font-weight', 'bold');
     update(
-      'tagTextFontFamily',
-      '--text-button-tag-font-family',
+      'textFontFamily',
+      '--text-button-font-family',
       'Helvetica, Arial, sans-serif'
     );
+    update('textShadow', '--text-button-text-shadow', '0px 2px 5px #d0d0d0');
+    update('textTransform', '--text-button-text-transform', 'none');
+    update('textAlign', '--text-button-text-align', 'center');
+    update('textLineHeight', '--text-button-line-height', '100%');
     update(
-      'tagTextShadow',
-      '--text-button-tag-text-shadow',
-      '0px 2px 5px #d0d0d0'
+      'textContainerHeight',
+      '--text-button-text-container-height',
+      '100%'
     );
-    update('tagTextTransform', '--text-button-tag-text-transform', 'none');
-    update('tagTextAlign', '--text-button-tag-text-align', 'center');
-    update('tagWidth', '--text-button-text-container-width', 'fit-content');
+    update('textContainerWidth', '--text-button-text-container-width', '100%');
   }
 
   render() {
+    const active = this.active ? 'active' : '';
     return html`
-      <button part="button" @click=${this.onClick}>
-        <span part="tag-text">${this.tagText ?? ''}</span>
+      <button part="button" class=${active} @click=${this.handleClick}>
+        <span part="text">${this.text ?? ''}</span>
       </button>
     `;
   }

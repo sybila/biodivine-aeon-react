@@ -66,12 +66,12 @@ export class InvisibleInput extends LitElement {
   @property({ type: String }) declare errorBgColor?: string;
 
   @property({ type: String }) declare value?: string;
-  @property({ type: String }) declare error?: boolean;
+  @property({ type: Boolean }) declare error?: boolean;
   @property({ type: String }) declare placeholder?: string;
 
-  @property({ type: String }) declare handleChange?: (value: string) => void;
-  @property({ type: String }) declare handleBlur?: (value: string) => void;
-  @property({ type: String }) declare handleKeyUp?: (value: string) => void;
+  @property({ type: Function }) declare handleChange?: (value: string) => void;
+  @property({ type: Function }) declare handleBlur?: (value: string) => void;
+  @property({ type: Function }) declare handleKeyUp?: (value: string) => void;
 
   static styles = css`
     :host {
@@ -403,35 +403,41 @@ export class InvisibleInput extends LitElement {
     const multiLine = this.multiLine ? 'multiline' : '';
 
     const initialValue = this.value ?? '';
+    const error = this.error ? 'error' : '';
     return html`<div
       id="container"
-      class="${multiLine} ${this.error ? 'error' : ''}"
+      class="${multiLine} ${error}"
+      part="container"
     >
       ${!this.multiLine
         ? html`<input
             id="text-input"
-            class="${this.error}"
+            class="${error}"
             .value="${initialValue}"
             placeholder=${this.placeholder}
             type="text"
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
+            part="singleline-text-input"
           />`
         : html`<textarea
             id="multiline-text-input"
-            class="${this.error}"
+            class="${error}"
             .value=${initialValue}
             placeholder=${this.placeholder}
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
+            part="multiline-text-input"
           >
           </textarea>`}
 
       <img
         id="hover-icon"
         src="${this.hoverIconSrc ?? InvisibleInput.defaultIconSrc}"
+        alt="hover icon"
+        part="hover-icon"
       />
     </div>`;
   }

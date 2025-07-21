@@ -86,6 +86,6 @@ export class SimpleHeader extends LitElement {
   }
 
   render() {
-    return html`<span>${this.headerText ?? ''}</span>`;
+    return html`<span part="header-text">${this.headerText ?? ''}</span>`;
   }
 }

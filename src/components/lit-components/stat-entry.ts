@@ -25,7 +25,7 @@ export class StatEntry extends LitElement {
   @property({ type: String }) declare nameAlign?: string;
   @property({ type: String }) declare nameOverflowX?: string;
 
-  @property({ type: String }) declare addColon?: boolean;
+  @property({ type: Boolean }) declare addColon?: boolean;
 
   @property({ type: String }) declare valueHeight?: string;
   @property({ type: String }) declare valueMaxHeight?: string;
@@ -56,7 +56,7 @@ export class StatEntry extends LitElement {
       width: var(--stat-entry-cont-width, 100%);
       height: var(--stat-entry-cont-height, fit-content);
       justify-content: var(--stat-entry-justify-content, space-between);
-      align-items: var(--stat-entry-align-items, space-between);
+      align-items: var(--stat-entry-align-items, center);
       box-sizing: border-box;
       gap: var(--stat-entry-name-value-gap, 15px);
       padding-inline: var(--stat-entry-padding-x, 5px);
@@ -85,7 +85,7 @@ export class StatEntry extends LitElement {
       width: var(--stat-entry-name-width, fit-content);
       max-height: var(--stat-entry-name-max-height, fit-content);
       max-width: var(--stat-entry-name-max-width, 50%);
-      text-align: var(--stat-entry-name-align, fit-content);
+      text-align: var(--stat-entry-name-align, center);
       overflow-x: var(--stat-entry-name-overflow-x, hidden);
     }
 
