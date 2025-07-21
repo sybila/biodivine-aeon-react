@@ -138,7 +138,7 @@ const ModelEditorTabContent: React.FC = () => {
 
       <TextInputReact
         compWidth="95%"
-        inputPlaceholder="Search variables..."
+        placeholder="Search variables..."
         onWrite={setVariableSearch}
         value={variableSearchText}
       />
