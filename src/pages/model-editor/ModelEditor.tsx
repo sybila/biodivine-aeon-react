@@ -127,6 +127,8 @@ const ModelEditor: React.FC = () => {
         <OverlayWindowReact
           compWidth="100%"
           compHeight="100%"
+          windWidth='550px'
+          windMaxWidth='550px'
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}
