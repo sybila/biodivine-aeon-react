@@ -10,8 +10,20 @@
   src: url('./font/FiraMono-Bold.ttf');
 }
 
+@font-face {
+  font-family: 'FiraMonoBold';
+  src: url('./font/FiraMono-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'BaileyBold';
+  src: url('./font/BaileyBold.ttf');
+}
+
 :root {
   --color-bg-base: #fff;
+
+  --color-red: #d05d5d;
 
   --font-family-fira-mono: 'FiraMono', 'monospace';
   --font-family-fira-bold: 'FiraMonoBold', 'monospace';
