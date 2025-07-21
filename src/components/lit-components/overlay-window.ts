@@ -59,6 +59,9 @@ export class OverlayWindow extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
+      position: fixed;
+      top: 0;
+      left: 0;
       height: var(--overlay-window-comp-height, 100vh);
       width: var(--overlay-window-comp-width, 100vw);
       max-height: var(--overlay-window-comp-max-height, 100vh);
