@@ -16,8 +16,13 @@
 }
 
 @font-face {
+  font-family: 'BaileyReg';
+  src: url('./font/Bailey-Regular.ttf');
+}
+
+@font-face {
   font-family: 'BaileyBold';
-  src: url('./font/BaileyBold.ttf');
+  src: url('./font/Bailey-Bold.ttf');
 }
 
 :root {
