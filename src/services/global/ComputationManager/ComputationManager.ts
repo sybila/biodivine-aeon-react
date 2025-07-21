@@ -17,8 +17,10 @@ class ComputationManagerClass {
   private maxNumberOfResults: number = 1000000;
 
   /** Sets maximum number of perturbations */
-  public setMaxNumberOfResults(max: number) {
-    if (max > 0) this.maxNumberOfResults = max;
+  public setMaxNumberOfResults(max: number | undefined) {
+    if (!max) this.maxNumberOfResults = 1000000;
+    else if (max < 1) this.maxNumberOfResults = 1;
+    else this.maxNumberOfResults = max;
   }
 
   /** Returns maximum number of perturbations */
@@ -27,8 +29,10 @@ class ComputationManagerClass {
   }
 
   /** Sets maximum size of a perturbation */
-  public setMaxSize(max: number) {
-    if (max > 0) this.maxSize = max;
+  public setMaxSize(max: number | undefined) {
+    if (!max) this.maxSize = 1000000;
+    else if (max < 1) this.maxSize = 1;
+    else this.maxSize = max;
   }
 
   /** Returns maximum size of a perturbation */
@@ -37,8 +41,9 @@ class ComputationManagerClass {
   }
 
   /** Sets minimum robustness for perturbations */
-  public setMinRobustness(min: number) {
-    if (min >= 0) this.minRobustness = min;
+  public setMinRobustness(min: number | undefined) {
+    if (!min || min < 0) this.minRobustness = 0.01;
+    else this.minRobustness = min;
   }
 
   /** Returns minimum robustness for perturbations */
