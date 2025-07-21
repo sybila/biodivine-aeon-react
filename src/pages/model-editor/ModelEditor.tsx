@@ -17,6 +17,7 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import OverlayWindowReact from '../../components/react-components/lit-wrappers/OverlayWindowReact';
 import ComputeEngineWindowContent from '../../components/react-components/global/ComputeEngineWindowContent/ComputeEngineWindowContent';
+import TwoSidedTextReact from '../../components/react-components/lit-wrappers/TwoSidedTextReact';
 
 type TabTypeME =
   | 'Start Computation'
@@ -72,6 +73,12 @@ const ModelEditor: React.FC = () => {
 
   return (
     <>
+      <TwoSidedTextReact
+        className="absolute top-1 right-3 z-10 select-none pointer-events-none"
+        rightText="Aeon/"
+        leftText="BIODIVINE"
+      />
+
       <SideButtonMenu>
         <IconButtonReact
           isActive={activeTab === 'Start Computation'}
@@ -127,8 +134,8 @@ const ModelEditor: React.FC = () => {
         <OverlayWindowReact
           compWidth="100%"
           compHeight="100%"
-          windWidth='550px'
-          windMaxWidth='550px'
+          windWidth="550px"
+          windMaxWidth="550px"
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}
@@ -136,7 +143,6 @@ const ModelEditor: React.FC = () => {
           handleBackgroundClick={() => setActiveOverlayWindow(null)}
         >
           {renderOverlayWindowContent()}
-
         </OverlayWindowReact>
       ) : null}
 
