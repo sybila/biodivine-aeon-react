@@ -52,7 +52,8 @@ export class TextButton extends LitElement {
       cursor: pointer;
     }
 
-    button:hover {
+    button:hover,
+    button.active:hover {
       background-color: var(--text-button-hover-bg-color, #b0bec5);
     }
 
