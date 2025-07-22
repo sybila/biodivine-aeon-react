@@ -21,9 +21,6 @@ class ModelEditorClass {
   private selectVariableInfo: ((id: number, select: boolean) => void) | null =
     null;
 
-  /** Function for setting the model description in the ModelEditorTabContent.tsx component */
-  private changeModelDescription: ((description: string) => void) | null = null;
-
   /** Currently selected variable in the ModelEditorCanvas.tsx component */
   private selectedVariableId: number | null = null;
 
@@ -47,13 +44,6 @@ class ModelEditorClass {
     selectFunction: (id: number, select: boolean) => void
   ) {
     this.selectVariableInfo = selectFunction;
-  }
-
-  /** Sets function for setting the model description in the ModelEditorTabContent.tsx (needs to be called before setModelDescription function) */
-  public setModelDescriptionFunction(
-    setDescriptionFunction: (description: string) => void
-  ) {
-    this.setModelDescription = setDescriptionFunction;
   }
 
   // #endregion
@@ -119,13 +109,14 @@ class ModelEditorClass {
 
   // #region --- Model Description ---
 
-  /** Sets the model description in the ModelEditorTabContent.tsx component.
-   * (you must first set changeModelDescription with setModelDescriptionFunction before running this function)
-   */
+  /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
-    if (this.changeModelDescription) {
-      this.changeModelDescription(description);
-    }
+    LiveModel.Info.setModelDescription(description);
+  }
+
+  /**  Returns the current model description from the LiveModel */
+  public getModelDescription(): string {
+    return LiveModel.Info.getModelDescription();
   }
 
   // #endregion
