@@ -3,10 +3,12 @@ import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
 /**
-	Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
-	right elements when needed, etc.
+    Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
+    right elements when needed, etc.
 */
 class ModelEditorClass {
+  // #region --- State and Setter Functions ---
+
   /** Function for reloading the ModelEditorTabContent.tsx component */
   private reloadEditorTab: (() => void) | null = null;
 
@@ -19,10 +21,8 @@ class ModelEditorClass {
   private selectVariableInfo: ((id: number, select: boolean) => void) | null =
     null;
 
-  /** Sets reload function for the ModelEditorTabContent.tsx (needs to be called before reloadModelEditorTab function) */
-  public setReloadFunction(reloadFunction: () => void) {
-    this.reloadEditorTab = reloadFunction;
-  }
+  /** Function for setting the model description in the ModelEditorTabContent.tsx component */
+  private changeModelDescription: ((description: string) => void) | null = null;
 
   /** Currently selected variable in the ModelEditorCanvas.tsx component */
   private selectedVariableId: number | null = null;
@@ -30,10 +30,35 @@ class ModelEditorClass {
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
 
-  /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string) {
-    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
+  /** Sets reload function for the ModelEditorTabContent.tsx (needs to be called before reloadModelEditorTab function) */
+  public setReloadFunction(reloadFunction: () => void) {
+    this.reloadEditorTab = reloadFunction;
   }
+
+  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
+  public setHoverVariableFunction(
+    hoverFunction: (id: number, turnOnHover: boolean) => void
+  ) {
+    this.hoverVariableInfo = hoverFunction;
+  }
+
+  /** Sets select function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
+  public setSelectVariableFunction(
+    selectFunction: (id: number, select: boolean) => void
+  ) {
+    this.selectVariableInfo = selectFunction;
+  }
+
+  /** Sets function for setting the model description in the ModelEditorTabContent.tsx (needs to be called before setModelDescription function) */
+  public setModelDescriptionFunction(
+    setDescriptionFunction: (description: string) => void
+  ) {
+    this.setModelDescription = setDescriptionFunction;
+  }
+
+  // #endregion
+
+  // #region --- Variable Selection/Search ---
 
   /** Returns last selected variable id in the ModelEditorCanvas.tsx component. Returns null if no variable is selected */
   public getSelectedVariableId(): number | null {
@@ -55,19 +80,18 @@ class ModelEditorClass {
     this.variableSearch = name;
   }
 
-  /** Function which enforces reload of the ModelEditorTabContent.tsx component
-   * (you must first set reloadEditorTab with setReloadFunction before running this function) */
-  public reloadModelEditorTab() {
-    if (this.reloadEditorTab) {
-      this.reloadEditorTab();
-    }
+  // #endregion
+
+  // #region --- Variable Actions ---
+
+  /** Changes the name of a variable */
+  public changeVariableName(id: number, newName: string) {
+    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
   }
 
-  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
-  public setHoverVariableFunction(
-    hoverFunction: (id: number, turnOnHover: boolean) => void
-  ) {
-    this.hoverVariableInfo = hoverFunction;
+  /** Removes a variable */
+  public removeVariable(id: number) {
+    LiveModel.Variables.removeVariable(id);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
@@ -80,13 +104,6 @@ class ModelEditorClass {
     }
   }
 
-  /** Sets select function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
-  public setSelectVariableFunction(
-    selectFunction: (id: number, select: boolean) => void
-  ) {
-    this.selectVariableInfo = selectFunction;
-  }
-
   /** Toggles selected state on a variable in the ModelEditorTabContent.tsx component
    * If `select` is true, it sets variable as selected; if false, it unselects it.
    * (you must first set selectVariableInfo with setSelectVariableFunction before running this function)
@@ -97,6 +114,35 @@ class ModelEditorClass {
       this.selectVariableInfo(id, select);
     }
   }
+
+  // #endregion
+
+  // #region --- Model Description ---
+
+  /** Sets the model description in the ModelEditorTabContent.tsx component.
+   * (you must first set changeModelDescription with setModelDescriptionFunction before running this function)
+   */
+  public setModelDescription(description: string) {
+    if (this.changeModelDescription) {
+      this.changeModelDescription(description);
+    }
+  }
+
+  // #endregion
+
+  // #region --- UI Reloading ---
+
+  /** Function which enforces reload of the ModelEditorTabContent.tsx component
+   * (you must first set reloadEditorTab with setReloadFunction before running this function) */
+  public reloadModelEditorTab() {
+    if (this.reloadEditorTab) {
+      this.reloadEditorTab();
+    }
+  }
+
+  // #endregion
+
+  // #region --- Cytoscape Actions ---
 
   /** Toggles hover state on a variable node in the CytoscapeMe canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
@@ -111,9 +157,9 @@ class ModelEditorClass {
     CytoscapeME.showNode(id);
   }
 
-  public removeVariable(id: number) {
-    LiveModel.Variables.removeVariable(id);
-  }
+  // #endregion
+
+  // #region --- Regulation Actions ---
 
   public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
     LiveModel.Regulations.toggleMonotonicity(regulatorId, targetId);
@@ -122,6 +168,10 @@ class ModelEditorClass {
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
     LiveModel.Regulations.toggleObservability(regulatorId, targetId);
   }
+
+  // #endregion
+
+  // #region --- Update Functions ---
 
   /** Sets update function for a variable in the ModelEditorTabContent.tsx component */
   public setUpdateFunction(
@@ -140,6 +190,10 @@ class ModelEditorClass {
     return updateFunction.functionString;
   }
 
+  // #endregion
+
+  // #region --- Model Info ---
+
   public getModelStats(): ModelStats {
     return LiveModel.Export.stats();
   }
@@ -155,6 +209,8 @@ class ModelEditorClass {
   public getVariableRegulators(id: number) {
     return LiveModel.Regulations.regulationsOf(id);
   }
+
+  // #endregion
 }
 
 const ModelEditor: ModelEditorClass = new ModelEditorClass();
