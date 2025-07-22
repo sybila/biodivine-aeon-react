@@ -1,30 +1,114 @@
+import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 
+import { ExampleModels } from '../../../../ExampleModels';
+import { Message } from '../../../lit-components/message-wrapper';
+
 // This component is used to display the Import/Export tab content in the Model Editor
 const ImportExportTabContent: React.FC = () => {
-  const importButtons: Array<[string, string]> = [
-    ['Last Model', 'Browser Storage'],
-    ['.AEON', 'Simple Text Format'],
-    ['.SBML', 'Standard SBML L3'],
-    ['.BNET', 'Boolnet Text Format'],
+  const handleImport = (importFunction: () => string | undefined) => {
+    const error: string | undefined = importFunction();
+
+    if (error) Message.showError(error);
+  };
+
+  const importButtons: Array<[string, string, () => string | undefined]> = [
+    [
+      'Last Model',
+      'Browser Storage',
+      () => {
+        return 'Last Model from Browser Storage';
+      },
+    ],
+    [
+      '.AEON',
+      'Simple Text Format',
+      () => {
+        return 'Import AEON Model';
+      },
+    ],
+    [
+      '.SBML',
+      'Standard SBML L3',
+      () => {
+        return 'Import Standard SBML L3 Model';
+      },
+    ],
+    [
+      '.BNET',
+      'Boolnet Text Format',
+      () => {
+        return 'Import Boolnet Text Format Model';
+      },
+    ],
   ];
 
-  const exportButtons: Array<[string, string]> = [
-    ['.AEON', 'Simple Text Format'],
-    ['.SBML (Parametrized)', 'Parametrized Model'],
-    ['.SBML (Instantiated)', 'Wittness Model'],
-    ['.BNET', 'Boolnet Text Format'],
+  const exportButtons: Array<[string, string, () => string | undefined]> = [
+    [
+      '.AEON',
+      'Simple Text Format',
+      () => {
+        return 'Export AEON Model';
+      },
+    ],
+    [
+      '.SBML (Parametrized)',
+      'Parametrized Model',
+      () => {
+        return 'Export Parametrized Model';
+      },
+    ],
+    [
+      '.SBML (Instantiated)',
+      'Wittness Model',
+      () => {
+        return 'Export Wittness Model';
+      },
+    ],
+    [
+      '.BNET',
+      'Boolnet Text Format',
+      () => {
+        return 'Export Boolnet Text Format Model';
+      },
+    ],
   ];
 
-  const exampleFirstColButtons: Array<[string, string]> = [
-    ['G2A', 'Cell Division'],
-    ['G2B', 'Cell Division'],
+  const exampleFirstColButtons: Array<
+    [string, string, () => string | undefined]
+  > = [
+    [
+      'G2A',
+      'Cell Division',
+      () => {
+        return LiveModel.Import.importAeon(ExampleModels.g2a);
+      },
+    ],
+    [
+      'G2B',
+      'Cell Division',
+      () => {
+        return LiveModel.Import.importAeon(ExampleModels.g2b);
+      },
+    ],
   ];
 
-  const exampleSecondColButtons: Array<[string, string]> = [
-    ['Orlando', 'Budding Yeast'],
-    ['Irons', 'Budding Yeast'],
+  const exampleSecondColButtons: Array<[string, string, () => string | undefined]> = [
+    [
+      'Orlando',
+      'Budding Yeast',
+      () => {
+        return LiveModel.Import.importAeon(ExampleModels.buddingYeastOrlando);
+      },
+    ],
+    [
+      'Irons',
+      'Budding Yeast',
+      () => {
+        return LiveModel.Import.importAeon(ExampleModels.buddingYeastIrons);
+      },
+    ],
   ];
 
   // This function renders the buttons for import and export sections
@@ -32,13 +116,14 @@ const ImportExportTabContent: React.FC = () => {
   // of button texts as input, and returns a list of DoubleTextButtonReact components
   const renderButtons = (
     buttonType: string,
-    buttonArray: Array<[string, string]>
+    buttonArray: Array<[string, string, () => string | undefined]>
   ) => {
-    return buttonArray.map(([leftText, rightText], index) => (
+    return buttonArray.map(([leftText, rightText, onClick], index) => (
       <DoubleTextButtonReact
         key={index + buttonType}
         leftText={leftText}
         rightText={rightText}
+        onClick={() => handleImport(onClick)}
       />
     ));
   };
