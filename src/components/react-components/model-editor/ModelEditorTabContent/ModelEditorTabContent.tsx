@@ -22,12 +22,16 @@ const ModelEditorTabContent: React.FC = () => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     ModelEditor.getVariableSearch()
   );
+  const [modelDescription, setModelDescription] = useState<string>(
+    ModelEditor.getModelDescription()
+  );
 
   const [showModelDescription, setShowModelDescription] =
     useState<boolean>(false);
 
   const reloadComponent = useCallback(() => {
     setStats(ModelEditor.getModelStats());
+    setModelDescription(ModelEditor.getModelDescription());
     setVariables(ModelEditor.getAllVariables());
   }, []);
 
@@ -125,10 +129,16 @@ const ModelEditorTabContent: React.FC = () => {
     <div className="flex flex-col items-center w-full h-fit gap-3">
       {showModelDescription ? (
         <InvisibleInputReact
-          compHeight="50px"
+          compHeight="200px"
           compWidth="100%"
           placeholder="(model description)"
+          multiTextAlign='start'
+          multiFontSize='14px'
           multiLine={true}
+          value={modelDescription}
+          handleChange={(value) => {
+            ModelEditor.setModelDescription(value);
+          }}
         />
       ) : null}
 
@@ -143,7 +153,7 @@ const ModelEditorTabContent: React.FC = () => {
           <TextButtonReact
             className="mr-2"
             compWidth="35%"
-            textFontSize='13px'
+            textFontSize="13px"
             text={`${showModelDescription ? 'Hide' : 'Show'} Model description`}
             handleClick={() => setShowModelDescription(!showModelDescription)}
             active={showModelDescription}
