@@ -1,9 +1,10 @@
-import ControlLM from "./ControlLM";
-import ExportLM from "./ExportLM";
-import ImportLM from "./ImportLM";
-import RegulationsLM from "./RegulationsLM";
-import UpdateFunctionsLM from "./UpdateFunctionsLM";
-import VariablesLM from "./VariablesLM";
+import ControlLM from './ControlLM';
+import ExportLM from './ExportLM';
+import ImportLM from './ImportLM';
+import InfoLM from './InfoLM';
+import RegulationsLM from './RegulationsLM';
+import UpdateFunctionsLM from './UpdateFunctionsLM';
+import VariablesLM from './VariablesLM';
 
 //import { ModelEditor, PhenotypeEditor, ControllableEditor  } from "./Todo-imports";
 
@@ -21,7 +22,10 @@ class LiveModelClass {
 	Currently we use this only in import. */
   public _disable_dynamic_validation: boolean = false;
   /** Stores model in the AEON string format. */
-  public modelSave: string = "";
+  public modelSave: string = '';
+
+  /** Functions and properties for managing model information such as name and description. */
+  Info: InfoLM = new InfoLM(this);
 
   /** Functions and properties used for operations with variables of the model. (adding, removing, renaming, getting all,...)*/
   Variables: VariablesLM = new VariablesLM(this);

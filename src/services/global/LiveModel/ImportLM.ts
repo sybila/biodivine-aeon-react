@@ -1,5 +1,6 @@
 import { EdgeMonotonicity } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
+import ModelEditor from "../../model-editor/ModelEditor/ModelEditor";
 import type { LiveModelClass } from "./LiveModel";
 
 // import {
@@ -250,6 +251,7 @@ class ImportLM {
       // overwritten. If he decides not to do it, just return...
       return undefined;
     }
+
     // Disable on-the-fly server checks.
     this._liveModel._disable_dynamic_validation = true;
 
@@ -274,7 +276,7 @@ class ImportLM {
 
     // Set model metadata
     //ModelEditor.setModelName(modelName);
-    //ModelEditor.setModelDescription(modelDescription);
+    ModelEditor.setModelDescription(modelDescription);
     //Results.importResults(results);
 
     this._setRegulations(regulations, positions, control);
