@@ -12,6 +12,7 @@ import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import type { Regulation } from '../../../../../types';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import { update } from 'lodash';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -23,6 +24,10 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
+  const [updateFunction, setUpdateFunction] = useState<string>(
+    ModelEditor.getUpdateFunction(id) ?? ''
+  );
+  const [updateFunctionInfo, setUpdateFunctionInfo] = useState<string>('');
 
   const updateVariableName = (newName: string) => {
     if (!newName || newName === '') {
@@ -33,6 +38,21 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     ModelEditor.changeVariableName(id, newName);
     setVarName(newName);
     setNameError(false);
+  };
+
+  const changeUpdateFunction = (newFunction: string) => {
+    const updateFunction: string = newFunction ?? '';
+
+    const error: string | undefined = ModelEditor.setUpdateFunction(
+      id,
+      updateFunction
+    );
+
+    if (error) {
+      setUpdateFunctionInfo(error);
+    } else {
+      setUpdateFunctionInfo('');
+    }
   };
 
   const insertRegulators = () => {
@@ -140,13 +160,14 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         multiFontSize="16px"
         multiLine={true}
         placeholder={`$f_${name}(...)`}
+        value={updateFunction}
+        handleChange={changeUpdateFunction}
       ></InvisibleInputReact>
       <span
         slot="extended-content"
         className="h-[20px] w-full max-w-full mt-1.5 overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] text-nowrap"
       >
-        Error jjj
-        ggggGGGJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        {updateFunctionInfo}
       </span>
     </ExtendableContentReact>
   );

@@ -1,4 +1,5 @@
 import { EdgeMonotonicity, type UpdateFunction, type UpdateFunctionMetadata } from "../../../types";
+import ModelEditor from "../../model-editor/ModelEditor/ModelEditor";
 import type { LiveModelClass } from "./LiveModel";
 
 // import {
@@ -39,7 +40,7 @@ class UpdateFunctionsLM {
       });
     }
 
-    //ModelEditor.updateStats();
+    ModelEditor.reloadModelEditorTab();
     this._validateUpdateFunction(id);
     this._liveModel.Export.saveModel();
     return undefined;

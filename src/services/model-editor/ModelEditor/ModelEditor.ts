@@ -123,6 +123,23 @@ class ModelEditorClass {
     LiveModel.Regulations.toggleObservability(regulatorId, targetId);
   }
 
+  /** Sets update function for a variable in the ModelEditorTabContent.tsx component */
+  public setUpdateFunction(
+    id: number,
+    updateFunction: string
+  ): string | undefined {
+    return LiveModel.UpdateFunctions.setUpdateFunction(id, updateFunction);
+  }
+
+  /**  Returns update function for a variable in the ModelEditorTabContent.tsx component. */
+  public getUpdateFunction(id: number): string | undefined {
+    const updateFunction = LiveModel.UpdateFunctions.getUpdateFunctionId(id);
+
+    if (!updateFunction) return undefined;
+
+    return updateFunction.functionString;
+  }
+
   public getModelStats(): ModelStats {
     return LiveModel.Export.stats();
   }
