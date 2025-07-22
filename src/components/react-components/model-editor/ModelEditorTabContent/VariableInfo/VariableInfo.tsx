@@ -12,7 +12,6 @@ import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import type { Regulation } from '../../../../../types';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import { update } from 'lodash';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
