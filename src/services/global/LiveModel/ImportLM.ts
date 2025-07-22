@@ -1,7 +1,6 @@
-import { EdgeMonotonicity } from "../../../types";
-import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
-import ModelEditor from "../../model-editor/ModelEditor/ModelEditor";
-import type { LiveModelClass } from "./LiveModel";
+import { EdgeMonotonicity } from '../../../types';
+import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import { LiveModel, type LiveModelClass } from './LiveModel';
 
 // import {
 //   Warning,
@@ -78,7 +77,7 @@ class ImportLM {
         control[template.targetName]
       );
 
-      if (!target || !regulator) {
+      if (target === undefined || regulator === undefined) {
         //Todo-error
         continue;
       }
@@ -140,7 +139,7 @@ class ImportLM {
     updateFunctions: Record<string, string>,
     results: Record<string, any>
   ): [string, string] | string {
-    let lines = modelString.split("\n");
+    let lines = modelString.split('\n');
     // name1 -> name2
     let regulationRegex =
       /^\s*([a-zA-Z0-9_{}]+)\s*-([>|?])(\??)\s*([a-zA-Z0-9_{}]+)\s*$/;
@@ -160,8 +159,8 @@ class ImportLM {
     // #...
     let commentRegex = /^\s*#.*?$/;
 
-    let modelName = "";
-    let modelDescription = "";
+    let modelName = '';
+    let modelDescription = '';
 
     for (let line of lines) {
       line = line.trim();
@@ -169,8 +168,8 @@ class ImportLM {
       let match = line.match(regulationRegex);
       if (match !== null) {
         let monotonicity: EdgeMonotonicity = EdgeMonotonicity.unspecified;
-        if (match[2] == ">") monotonicity = EdgeMonotonicity.activation;
-        if (match[2] == "|") monotonicity = EdgeMonotonicity.inhibition;
+        if (match[2] == '>') monotonicity = EdgeMonotonicity.activation;
+        if (match[2] == '|') monotonicity = EdgeMonotonicity.inhibition;
         regulations.push({
           regulatorName: match[1],
           targetName: match[4],
@@ -208,8 +207,8 @@ class ImportLM {
       match = line.match(controlRegex);
       if (match !== null) {
         control[match[1]] = [
-          match[2] == "true" ? true : false,
-          match[3] == "true" ? true : match[3] == "false" ? false : null,
+          match[2] == 'true' ? true : false,
+          match[3] == 'true' ? true : match[3] == 'false' ? false : null,
         ];
         continue;
       }
@@ -220,16 +219,17 @@ class ImportLM {
           results.type = match[1];
           results.data = JSON.parse(match[2]);
         } catch (e) {
-          console.log("Results are invalid: " + e);
+          console.log('Results are invalid: ' + e);
         }
       }
 
       if (line.match(commentRegex) === null) {
-        return "Unexpected line in file: " + line;
+        // todeo-error
+        return 'Unexpected line in file: ' + line;
       }
     }
 
-    return [modelName, modelDescription];
+    return [modelName, modelDescription.replace(/\\n/g, '\n')];
   }
 
   /**
@@ -243,9 +243,7 @@ class ImportLM {
   ): string | undefined {
     if (
       (!erasePossible && !this._liveModel._modelModified()) ||
-      (!this._liveModel.isEmpty() &&
-        !erasePossible &&
-        !confirm("Model erased")) //Strings.modelWillBeErased)
+      (!this._liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
     ) {
       // If there is some model loaded, let the user know it will be
       // overwritten. If he decides not to do it, just return...
@@ -255,8 +253,8 @@ class ImportLM {
     // Disable on-the-fly server checks.
     this._liveModel._disable_dynamic_validation = true;
 
-    let modelName = "";
-    let modelDescription = "";
+    let modelName = '';
+    let modelDescription = '';
     let regulations: any[] = [];
     let positions: Record<string, any> = {};
     let control: Record<string, any> = {};
@@ -272,11 +270,13 @@ class ImportLM {
       results
     ) as [string, string];
 
+    console.log(regulations);
+
     this._liveModel.clear();
 
     // Set model metadata
-    //ModelEditor.setModelName(modelName);
-    ModelEditor.setModelDescription(modelDescription);
+    LiveModel.Info.setModelName(modelName);
+    LiveModel.Info.setModelDescription(modelDescription);
     //Results.importResults(results);
 
     this._setRegulations(regulations, positions, control);
@@ -303,7 +303,7 @@ class ImportLM {
   /** Loads model saved in the local storage of the browser. */
   public loadFromLocalStorage(): void {
     try {
-      let modelString = localStorage.getItem("last_model");
+      let modelString = localStorage.getItem('last_model');
       if (
         modelString !== undefined &&
         modelString !== null &&
