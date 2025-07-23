@@ -49,7 +49,9 @@ class ImportLM {
   ): void {
     const vars = Object.keys(positions);
     for (let variable of vars) {
-      const variableId = useVariablesStore.getState().variableFromName(variable)?.id;
+      const variableId = useVariablesStore
+        .getState()
+        .variableFromName(variable)?.id;
       if (variableId !== undefined) {
         continue;
       }
@@ -275,8 +277,6 @@ class ImportLM {
       updateFunctions,
       results
     ) as [string, string];
-
-    console.log(regulations);
 
     this._liveModel.clear();
 
