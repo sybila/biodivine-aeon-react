@@ -59,9 +59,10 @@ class VariablesLM {
     if (force || confirm(variable.name)) {
       //Strings.removeNodeCheck(variable.name)
       const updateTargets: number[] = [];
-      const toRemove = useRegulationsStore.getState().getAllRegulations().filter(
-        (reg) => reg.regulator === id || reg.target === id
-      );
+      const toRemove = useRegulationsStore
+        .getState()
+        .getAllRegulations()
+        .filter((reg) => reg.regulator === id || reg.target === id);
 
       for (const reg of toRemove) {
         this._liveModel.Regulations._removeRegulation(reg);
@@ -96,7 +97,6 @@ class VariablesLM {
         this._liveModel.UpdateFunctions._validateUpdateFunction(affectedId);
       }
     }
-
   }
 
   public renameVariable(id: number, newName: string): string | undefined {
@@ -176,7 +176,9 @@ class VariablesLM {
   }
 
   public clear() {
-    return useVariablesStore.getState().clear();
+    for (const variable of useVariablesStore.getState().getAllVariables()) {
+      this.removeVariable(variable.id, true);
+    }
   }
 
   private _checkVariableName(id: number, name: string): string | undefined {

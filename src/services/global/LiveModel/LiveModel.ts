@@ -53,8 +53,6 @@ class LiveModelClass {
   /** Erase the whole model */
   public clear(): void {
     LiveModel.Variables.clear();
-    LiveModel.Info.setModelDescription('');
-    LiveModel.Info.setModelName('');
     //ModelEditor.setModelDescription("");
     //ControllableEditor.clear();
     //PhenotypeEditor.clear();
