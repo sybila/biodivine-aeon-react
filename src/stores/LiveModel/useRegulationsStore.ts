@@ -15,13 +15,11 @@ type RegulationsState = {
     targetId: number,
     isObservable: boolean
   ) => void;
-  toggleObservability: (regulatorId: number, targetId: number) => void;
   setMonotonicity: (
     regulatorId: number,
     targetId: number,
     monotonicity: EdgeMonotonicity
   ) => void;
-  toggleMonotonicity: (regulatorId: number, targetId: number) => void;
   getRegulationId: (
     regulatorId: number,
     targetId: number
@@ -68,13 +66,6 @@ const useRegulationsStore = create<RegulationsState>((set, get) => ({
     }));
   },
 
-  toggleObservability: (regulatorId, targetId) => {
-    const regulation = get().getRegulationId(regulatorId, targetId);
-    if (regulation) {
-      get().setObservability(regulatorId, targetId, !regulation.observable);
-    }
-  },
-
   setMonotonicity: (regulatorId, targetId, monotonicity) => {
     const regulationId: string = `${regulatorId}-${targetId}`;
     set((state) => ({
@@ -86,18 +77,6 @@ const useRegulationsStore = create<RegulationsState>((set, get) => ({
         },
       },
     }));
-  },
-
-  toggleMonotonicity: (regulatorId, targetId) => {
-    const regulation = get().getRegulationId(regulatorId, targetId);
-    if (regulation) {
-      let next = EdgeMonotonicity.unspecified;
-      if (regulation.monotonicity === EdgeMonotonicity.unspecified)
-        next = EdgeMonotonicity.activation;
-      else if (regulation.monotonicity === EdgeMonotonicity.activation)
-        next = EdgeMonotonicity.inhibition;
-      get().setMonotonicity(regulatorId, targetId, next);
-    }
   },
 
   getRegulationId: (regulatorId, targetId) =>

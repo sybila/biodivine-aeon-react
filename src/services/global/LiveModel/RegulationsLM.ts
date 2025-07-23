@@ -74,7 +74,7 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setObservability(regulatorId, targetId, isObservable);
-      this._regulationChanged(regulation);
+      this._regulationChanged({ ...regulation, observable: isObservable });
     }
   }
 
@@ -85,8 +85,10 @@ class RegulationsLM {
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation) {
-      useRegulationsStore.getState().toggleObservability(regulatorId, targetId);
-      this._regulationChanged(regulation);
+      useRegulationsStore
+        .getState()
+        .setObservability(regulatorId, targetId, !regulation.observable);
+      this._regulationChanged({ ...regulation, observable: !regulation.observable });
     }
   }
 
@@ -102,7 +104,7 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, monotonicity);
-      this._regulationChanged(regulation);
+      this._regulationChanged({ ...regulation, monotonicity: monotonicity });
     }
   }
 
@@ -113,8 +115,15 @@ class RegulationsLM {
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation) {
-      useRegulationsStore.getState().toggleMonotonicity(regulatorId, targetId);
-      this._regulationChanged(regulation);
+      let next = EdgeMonotonicity.unspecified;
+      if (regulation.monotonicity === EdgeMonotonicity.unspecified)
+        next = EdgeMonotonicity.activation;
+      else if (regulation.monotonicity === EdgeMonotonicity.activation)
+        next = EdgeMonotonicity.inhibition;
+      useRegulationsStore
+        .getState()
+        .setMonotonicity(regulatorId, targetId, next);
+      this._regulationChanged({ ...regulation, monotonicity: next });
     }
   }
 
