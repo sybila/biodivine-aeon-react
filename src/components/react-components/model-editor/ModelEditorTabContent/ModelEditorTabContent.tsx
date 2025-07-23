@@ -1,20 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
-import type { ModelStats, Variable } from '../../../../types';
+import type { Variable } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
 import VariableInfo from './VariableInfo/VariableInfo';
 import { useMemo } from 'react';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
+import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
+import useModelInfoStore from '../../../../stores/LiveModel/useModelInfoStore';
 
 const ModelEditorTabContent: React.FC = () => {
-  const [variables, setVariables] = useState<Variable[]>(
-    ModelEditor.getAllVariables()
-  );
-  const [stats, setStats] = useState<ModelStats>(ModelEditor.getModelStats());
   const [hoverId, setHoverId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(
     ModelEditor.getSelectedVariableId()
@@ -22,18 +20,16 @@ const ModelEditorTabContent: React.FC = () => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     ModelEditor.getVariableSearch()
   );
-  const [modelDescription, setModelDescription] = useState<string>(
-    ModelEditor.getModelDescription()
-  );
 
   const [showModelDescription, setShowModelDescription] =
     useState<boolean>(false);
 
-  const reloadComponent = useCallback(() => {
-    setStats(ModelEditor.getModelStats());
-    setModelDescription(ModelEditor.getModelDescription());
-    setVariables(ModelEditor.getAllVariables());
-  }, []);
+  const modelDescription = useModelInfoStore((state) =>
+    state.getModelDescription()
+  );
+
+  const variablesObj = useVariablesStore((state) => state.variables);
+  const variables = Object.values(variablesObj);
 
   const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
     setHoverId(turnOnHover ? id : null);
@@ -46,8 +42,7 @@ const ModelEditorTabContent: React.FC = () => {
   useEffect(() => {
     ModelEditor.setSelectVariableFunction(selectVariableInfo);
     ModelEditor.setHoverVariableFunction(hoverVariableInfo);
-    ModelEditor.setReloadFunction(reloadComponent);
-  }, [hoverVariableInfo, reloadComponent, selectVariableInfo]);
+  }, [hoverVariableInfo, selectVariableInfo]);
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
@@ -93,38 +88,6 @@ const ModelEditorTabContent: React.FC = () => {
     );
   };
 
-  const insertStats = () => {
-    const statCells = [
-      ['Variables', stats.variableCount.toString()],
-      ['Regulations', stats.regulationCount.toString()],
-      ['Max. in-degree', stats.maxInDegree.toString()],
-      ['Parameter space size', '2^' + stats.parameterVariables],
-      ['State space size', '2^' + stats.variableCount],
-      ['Max. out-degree', stats.maxOutDegree.toString()],
-      [
-        'Explicit parameters',
-        stats.explicitParameters.length === 0
-          ? '(none)'
-          : stats.explicitParameters.join(', '),
-      ],
-    ];
-
-    return (
-      <section className="flex flex-col justify-center items-start w-[94%] h-fit gap-0.5">
-        {statCells.map(([name, value]) => (
-          <StatEntryReact
-            key={name}
-            compHeight="100%"
-            compWidth="100%"
-            statName={name}
-            statValue={value}
-            addColon={true}
-          />
-        ))}{' '}
-      </section>
-    );
-  };
-
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
       {showModelDescription ? (
@@ -132,8 +95,8 @@ const ModelEditorTabContent: React.FC = () => {
           compHeight="200px"
           compWidth="100%"
           placeholder="(model description)"
-          multiTextAlign='start'
-          multiFontSize='14px'
+          multiTextAlign="start"
+          multiFontSize="14px"
           multiLine={true}
           value={modelDescription}
           handleChange={(value) => {
@@ -160,7 +123,7 @@ const ModelEditorTabContent: React.FC = () => {
           />
         </section>
 
-        {insertStats()}
+        <ModelStatsTable />
       </section>
 
       <section className="flex flex-row items-around w-full h-fit gap-1">

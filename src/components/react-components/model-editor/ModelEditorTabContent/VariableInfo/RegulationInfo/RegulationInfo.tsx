@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import type { Regulation, Variable } from '../../../../../../types';
+import type { Regulation, } from '../../../../../../types';
 import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
+import useVariablesStore from '../../../../../../stores/LiveModel/useVariablesStore';
 
 const RegulationInfo: React.FC<Regulation> = ({
   regulator,
@@ -8,13 +8,7 @@ const RegulationInfo: React.FC<Regulation> = ({
   observable,
   monotonicity,
 }) => {
-  const [regulatorVar, setRegulatorVar] = useState<Variable | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    setRegulatorVar(ModelEditor.getVariableById(regulator));
-  }, [regulator]);
+  const regulatorVar = useVariablesStore(state => state.variableFromId(regulator));
 
   const getRegulationIcon = () => {
     switch (monotonicity) {

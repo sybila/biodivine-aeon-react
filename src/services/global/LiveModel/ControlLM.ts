@@ -1,3 +1,4 @@
+import useVariablesStore from "../../../stores/LiveModel/useVariablesStore";
 import type { LiveModelClass } from "./LiveModel";
 
 //import { PhenotypeEditor, ControllableEditor, ComputeEngine } from "./Todo-imports";
@@ -15,7 +16,7 @@ class ControlLM {
       return;
     }
 
-    const variable = this._liveModel.Variables.variableFromId(id);
+    const variable = useVariablesStore.getState().variableFromId(id);
     //PhenotypeEditor.changeVarPhenotype(variable, phenValue);
   }
 
@@ -25,7 +26,7 @@ class ControlLM {
       return;
     }
 
-    const variable = this._liveModel.Variables.variableFromId(id);
+    const variable = useVariablesStore.getState().variableFromId(id);
     //ControllableEditor.changeVarControllable(variable, contrValue);
     //ComputeEngine.Computation.Control.setMaxSize(true);
   }

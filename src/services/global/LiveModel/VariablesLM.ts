@@ -1,13 +1,14 @@
+import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type { Position, Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
-import ModelEditor from '../../model-editor/ModelEditor/ModelEditor';
 import type { LiveModelClass } from './LiveModel';
+import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 
 //import { ModelEditor , ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
 
 class VariablesLM {
   private _idCounter = 0;
-  private _variables: Map<number, Variable> = new Map();
 
   private _liveModel: LiveModelClass;
 
@@ -36,10 +37,9 @@ class VariablesLM {
       phenotype,
     };
 
-    this._variables.set(id, variable);
+    useVariablesStore.getState().addVariable(variable);
 
     CytoscapeME.addNode(id, variableName, position);
-    ModelEditor.reloadModelEditorTab();
     //ControllableEditor.addVariable(variable);
     //ComputeEngine.Computation.Control.setMaxSize(true);
     //PhenotypeEditor.addVariable(variable);
@@ -53,13 +53,13 @@ class VariablesLM {
   public removeVariable(id: number, force = false): void {
     if (!force && !this._liveModel._modelModified()) return;
 
-    const variable = this._variables.get(id);
+    const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
 
     if (force || confirm(variable.name)) {
       //Strings.removeNodeCheck(variable.name)
       const updateTargets: number[] = [];
-      const toRemove = this._liveModel.Regulations.getAllRegulations().filter(
+      const toRemove = useRegulationsStore.getState().getAllRegulations().filter(
         (reg) => reg.regulator === id || reg.target === id
       );
 
@@ -72,7 +72,7 @@ class VariablesLM {
       //ComputeEngine.Computation.Control.setMaxSize(true);
       //PhenotypeEditor.removeVariable(variable);
 
-      this._variables.delete(id);
+      useVariablesStore.getState().removeVariable(id);
       this._liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
       CytoscapeME.removeNode(id);
@@ -84,8 +84,9 @@ class VariablesLM {
       this._liveModel.Export.saveModel();
 
       for (const affectedId of updateTargets) {
-        const fn =
-          this._liveModel.UpdateFunctions.getUpdateFunctionId(affectedId);
+        const fn = useUpdateFunctionsStore
+          .getState()
+          .getUpdateFunctionId(affectedId);
         if (fn !== undefined) {
           this._liveModel.UpdateFunctions.setUpdateFunction(
             affectedId,
@@ -96,13 +97,12 @@ class VariablesLM {
       }
     }
 
-    ModelEditor.reloadModelEditorTab();
   }
 
   public renameVariable(id: number, newName: string): string | undefined {
     if (!this._liveModel._modelModified()) return;
 
-    const variable = this._variables.get(id);
+    const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
 
     const error = this._checkVariableName(id, newName);
@@ -110,16 +110,14 @@ class VariablesLM {
       return `${newName} ${error}`; //Strings.invalidVariableName(newName)
     }
 
-    const oldName = variable.name;
-    variable.name = newName;
+    useVariablesStore.getState().renameVariable(id, newName);
 
     CytoscapeME.renameNode(id, newName);
-    ModelEditor.reloadModelEditorTab();
     //ControllableEditor.renameVariable(id, newName);
     //PhenotypeEditor.renameVariable(id, newName);
     //ModelEditor.renameVariable(id, newName, oldName);
 
-    for (const reg of this._liveModel.Regulations.getAllRegulations()) {
+    for (const reg of useRegulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
         this._liveModel.Regulations._regulationChanged(reg);
       }
@@ -131,12 +129,14 @@ class VariablesLM {
 
   public pruneConstants(force = false): number {
     const toRemove: number[] = [];
+    const variables = useVariablesStore.getState().getAllVariables();
 
-    for (const [id, variable] of this._variables) {
+    for (const variable of variables) {
+      const id = variable.id;
       const isConstant =
-        this._liveModel.Regulations.regulationsOf(id).length === 0 &&
+        useRegulationsStore.getState().regulationsOf(id).length === 0 &&
         (force ||
-          this._liveModel.UpdateFunctions.getUpdateFunctionId(id) ===
+          useUpdateFunctionsStore.getState().getUpdateFunctionId(id) ===
             undefined);
 
       if (isConstant) {
@@ -154,9 +154,11 @@ class VariablesLM {
 
   public pruneOutputs(): number {
     const toRemove: number[] = [];
+    const variables = useVariablesStore.getState().getAllVariables();
 
-    for (const [id] of this._variables) {
-      if (this._liveModel.Regulations.regulationsFrom(id).length === 0) {
+    for (const variable of variables) {
+      const id = variable.id;
+      if (useRegulationsStore.getState().regulationsFrom(id).length === 0) {
         toRemove.push(id);
       }
     }
@@ -169,33 +171,12 @@ class VariablesLM {
     return toRemove.length;
   }
 
-  public getAllVariables(): Variable[] {
-    return Array.from(this._variables.values());
-  }
-
   public isEmpty(): boolean {
-    return this._variables.size === 0;
-  }
-
-  public getVariableName(id: number): string | undefined {
-    return this._variables.get(id)?.name;
-  }
-
-  public variableFromId(id: number): Variable | undefined {
-    return this._variables.get(id);
-  }
-
-  public variableFromName(name: string): Variable | undefined {
-    for (const variable of this._variables.values()) {
-      if (variable.name === name) return variable;
-    }
-    return undefined;
+    return useVariablesStore.getState().isEmpty();
   }
 
   public clear() {
-    for (const id of this._variables.keys()) {
-      this.removeVariable(id, true);
-    }
+    return useVariablesStore.getState().clear();
   }
 
   private _checkVariableName(id: number, name: string): string | undefined {
@@ -203,7 +184,7 @@ class VariablesLM {
     if (!/^[a-z0-9{}_]+$/i.test(name)) {
       return 'Name can only contain letters, numbers and `_`, `{`, `}`.';
     }
-    const existing = this.variableFromName(name);
+    const existing = useVariablesStore.getState().variableFromName(name);
     if (existing && existing.id !== id) {
       return 'Variable with this name already exists';
     }

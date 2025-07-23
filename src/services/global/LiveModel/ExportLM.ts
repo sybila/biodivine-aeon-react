@@ -1,6 +1,9 @@
 import type { ModelStats, Variable } from "../../../types";
 import CytoscapeME from "../../model-editor/CytoscapeME/CytoscapeME";
 import type { LiveModelClass } from "./LiveModel";
+import useVariablesStore from "../../../stores/LiveModel/useVariablesStore";
+import useUpdateFunctionsStore from "../../../stores/LiveModel/useUpdateFunctionsStore";
+import useRegulationsStore from "../../../stores/LiveModel/useRegulationsStore";
 
 //import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
@@ -15,7 +18,7 @@ class ExportLM {
   public stats(): ModelStats {
     let maxInDegree = 0;
     let maxOutDegree = 0;
-    let variables: Variable[] = this._liveModel.Variables.getAllVariables();
+    let variables: Variable[] = useVariablesStore.getState().getAllVariables();
     let explicitParameterNames = new Set<string>();
     let parameterVars = 0;
 
@@ -23,7 +26,7 @@ class ExportLM {
       let regulators = 0;
       let targets = 0;
 
-      for (let r of this._liveModel.Regulations.getAllRegulations()) {
+      for (let r of useRegulationsStore.getState().getAllRegulations()) {
         if (r.target == variable.id) regulators += 1;
         if (r.regulator == variable.id) targets += 1;
       }
@@ -31,7 +34,7 @@ class ExportLM {
       if (regulators > maxInDegree) maxInDegree = regulators;
       if (targets > maxOutDegree) maxOutDegree = targets;
 
-      const updateFunction = this._liveModel.UpdateFunctions.getUpdateFunctionId(variable.id);
+      const updateFunction = useUpdateFunctionsStore.getState().getUpdateFunctionId(variable.id);
       if (updateFunction === undefined) {
         parameterVars += 1 << regulators;
       } else {
@@ -53,7 +56,7 @@ class ExportLM {
       maxOutDegree,
       variableCount: variables.length,
       parameterVariables: parameterVars,
-      regulationCount: this._liveModel.Regulations.getAllRegulations().length,
+      regulationCount: useRegulationsStore.getState().getAllRegulations().length,
       explicitParameters,
     };
   }
@@ -64,7 +67,7 @@ class ExportLM {
    */
   public exportAeon(emptyPossible = false, withResults = true): string | undefined {
     let result = "";
-    const variables: Variable[] = this._liveModel.Variables.getAllVariables();
+    const variables: Variable[] = useVariablesStore.getState().getAllVariables();
     if (!emptyPossible && variables.length === 0) return undefined;
 
     const name = "Todo-name"; //ModelEditor.getModelName();
@@ -85,12 +88,12 @@ class ExportLM {
         result += `#!control:${varName}:${variable.controllable},${variable.phenotype}\n`;
       }
 
-      const fun = this._liveModel.UpdateFunctions.getUpdateFunctionId(variable.id);
+      const fun = useUpdateFunctionsStore.getState().getUpdateFunctionId(variable.id);
       if (fun !== undefined) {
         result += `$${varName}:${fun.functionString}\n`;
       }
 
-      const regulations = this._liveModel.Regulations.regulationsOf(variable.id);
+      const regulations = useRegulationsStore.getState().regulationsOf(variable.id);
       for (let reg of regulations) {
         result += this._liveModel.Regulations._regulationToString(reg) + "\n";
       }

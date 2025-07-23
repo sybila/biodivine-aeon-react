@@ -1,5 +1,7 @@
-import { EdgeMonotonicity, type UpdateFunction, type UpdateFunctionMetadata } from "../../../types";
-import ModelEditor from "../../model-editor/ModelEditor/ModelEditor";
+import useRegulationsStore from "../../../stores/LiveModel/useRegulationsStore";
+import useUpdateFunctionsStore from "../../../stores/LiveModel/useUpdateFunctionsStore";
+import useVariablesStore from "../../../stores/LiveModel/useVariablesStore";
+import { EdgeMonotonicity, type UpdateFunctionMetadata } from "../../../types";
 import type { LiveModelClass } from "./LiveModel";
 
 // import {
@@ -9,8 +11,6 @@ import type { LiveModelClass } from "./LiveModel";
 // } from "./Todo-imports";
 
 class UpdateFunctionsLM {
-  private _updateFunctions: Map<number, UpdateFunction> = new Map();
-
   private _liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
@@ -21,7 +21,7 @@ class UpdateFunctionsLM {
     id: number,
     functionString: string
   ): string | undefined {
-    const variable = this._liveModel.Variables.variableFromId(id);
+    const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) {
       return `Unknown variable '${id}'.`;
     }
@@ -32,31 +32,30 @@ class UpdateFunctionsLM {
     }
 
     if (functionString.length === 0) {
-      this._updateFunctions.delete(id);
+      useUpdateFunctionsStore.getState().deleteUpdateFunctionId(id);
     } else {
-      this._updateFunctions.set(id, {
+      useUpdateFunctionsStore.getState().setUpdateFunction(id, {
         functionString: functionString.replace(/\s+/, " "),
         metadata: check,
       });
     }
 
-    ModelEditor.reloadModelEditorTab();
     this._validateUpdateFunction(id);
     this._liveModel.Export.saveModel();
     return undefined;
   }
 
   private _updateFunctionModelFragment(id: number): string | undefined {
-    const name = this._liveModel.Variables.getVariableName(id);
+    const name = useVariablesStore.getState().getVariableName(id);
     let fragment = "";
-    const regulations = this._liveModel.Regulations.regulationsOf(id);
+    const regulations = useRegulationsStore.getState().regulationsOf(id);
     const varNames = new Set<string>();
 
     if (regulations.length === 0) return undefined;
 
     for (const reg of regulations) {
       if (reg.regulator !== id) {
-        varNames.add(this._liveModel.Variables.getVariableName(reg.regulator)!);
+        varNames.add(useVariablesStore.getState().getVariableName(reg.regulator)!);
       }
       fragment += this._liveModel.Regulations._regulationToString(reg) + "\n";
     }
@@ -65,7 +64,7 @@ class UpdateFunctionsLM {
       fragment += `$${name}: false\n`;
     }
 
-    const fun = this._updateFunctions.get(id);
+    const fun = useUpdateFunctionsStore.getState().getUpdateFunctionId(id);
     if (fun) {
       fragment += `$${name}: ${fun.functionString}\n`;
     }
@@ -74,7 +73,7 @@ class UpdateFunctionsLM {
   }
 
   public validateAllUpdateFunctions(): void {
-    for (const variable of this._liveModel.Variables.getAllVariables()) {
+    for (const variable of useVariablesStore.getState().getAllVariables()) {
       this._validateUpdateFunction(variable.id);
     }
   }
@@ -119,7 +118,7 @@ class UpdateFunctionsLM {
 
     const parameters = new Set<{ name: string; cardinality: number }>();
     for (const item of names) {
-      const variable = this._liveModel.Variables.variableFromName(item.name);
+      const variable = useVariablesStore.getState().variableFromName(item.name);
       if (!variable) {
         for (const existing of parameters) {
           if (
@@ -137,12 +136,12 @@ class UpdateFunctionsLM {
       }
 
       if (variable) {
-        const regulation = this._liveModel.Regulations.findRegulation(
+        const regulation = useRegulationsStore.getState().getRegulationId(
           variable.id,
           id
         );
         if (!regulation) {
-          const myName = this._liveModel.Variables.getVariableName(id);
+          const myName = useVariablesStore.getState().getVariableName(id);
           const message = `Variable '${variable.name}' does not regulate '${myName}'.`;
           if (confirm(message + " Do you want to create the regulation now?")) {
             this._liveModel.Regulations.addRegulation(
@@ -159,8 +158,9 @@ class UpdateFunctionsLM {
       }
     }
 
-    for (const [k, existing] of this._updateFunctions) {
-      if (k === id) continue;
+    for (const [k, existing] of useUpdateFunctionsStore.getState().getAllUpdateFunctions() ) {
+      const functionVariableId: number = parseInt(k, 10);
+      if (functionVariableId === id) continue;
 
       for (const parameter of existing.metadata.parameters) {
         for (const myParam of parameters) {
@@ -170,8 +170,8 @@ class UpdateFunctionsLM {
           ) {
             return `Parameter '${myParam.name}' used with ${
               myParam.cardinality
-            } args, but '${this._liveModel.Variables.getVariableName(
-              k
+            } args, but '${useVariablesStore.getState().getVariableName(
+              functionVariableId
             )}' uses it with ${parameter.cardinality}.`;
           }
         }
@@ -181,12 +181,8 @@ class UpdateFunctionsLM {
     return { parameters };
   }
 
-  public getUpdateFunctionId(id: number): UpdateFunction | undefined {
-    return this._updateFunctions.get(id);
-  }
-
-  public deleteUpdateFunctionId(id: number): boolean {
-    return this._updateFunctions.delete(id);
+  public deleteUpdateFunctionId(id: number): void {
+    useUpdateFunctionsStore.getState().deleteUpdateFunctionId(id);
   }
 
   private _process_function_calls(tokens: any[]): string | any[] {
@@ -212,7 +208,7 @@ class UpdateFunctionsLM {
               return `Expected name, but found '${arg.text}'.`;
             }
 
-            const variable = this._liveModel.Variables.variableFromName(
+            const variable = useVariablesStore.getState().variableFromName(
               arg.data
             );
             if (!variable) {

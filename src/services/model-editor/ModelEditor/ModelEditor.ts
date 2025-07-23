@@ -1,4 +1,4 @@
-import type { ModelStats, Variable } from '../../../types';
+import type { ModelStats } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
@@ -8,9 +8,6 @@ import CytoscapeME from '../CytoscapeME/CytoscapeME';
 */
 class ModelEditorClass {
   // #region --- State and Setter Functions ---
-
-  /** Function for reloading the ModelEditorTabContent.tsx component */
-  private reloadEditorTab: (() => void) | null = null;
 
   /** Function for toggling hover state of variables in the ModelEditorTabContent.tsx component */
   private hoverVariableInfo:
@@ -26,11 +23,6 @@ class ModelEditorClass {
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
-
-  /** Sets reload function for the ModelEditorTabContent.tsx (needs to be called before reloadModelEditorTab function) */
-  public setReloadFunction(reloadFunction: () => void) {
-    this.reloadEditorTab = reloadFunction;
-  }
 
   /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
   public setHoverVariableFunction(
@@ -114,24 +106,8 @@ class ModelEditorClass {
     LiveModel.Info.setModelDescription(description);
   }
 
-  /**  Returns the current model description from the LiveModel */
-  public getModelDescription(): string {
-    return LiveModel.Info.getModelDescription();
-  }
-
   // #endregion
 
-  // #region --- UI Reloading ---
-
-  /** Function which enforces reload of the ModelEditorTabContent.tsx component
-   * (you must first set reloadEditorTab with setReloadFunction before running this function) */
-  public reloadModelEditorTab() {
-    if (this.reloadEditorTab) {
-      this.reloadEditorTab();
-    }
-  }
-
-  // #endregion
 
   // #region --- Cytoscape Actions ---
 
@@ -172,33 +148,12 @@ class ModelEditorClass {
     return LiveModel.UpdateFunctions.setUpdateFunction(id, updateFunction);
   }
 
-  /**  Returns update function for a variable in the ModelEditorTabContent.tsx component. */
-  public getUpdateFunction(id: number): string | undefined {
-    const updateFunction = LiveModel.UpdateFunctions.getUpdateFunctionId(id);
-
-    if (!updateFunction) return undefined;
-
-    return updateFunction.functionString;
-  }
-
   // #endregion
 
   // #region --- Model Info ---
 
   public getModelStats(): ModelStats {
     return LiveModel.Export.stats();
-  }
-
-  public getAllVariables(): Variable[] {
-    return LiveModel.Variables.getAllVariables();
-  }
-
-  public getVariableById(id: number): Variable | undefined {
-    return LiveModel.Variables.variableFromId(id);
-  }
-
-  public getVariableRegulators(id: number) {
-    return LiveModel.Regulations.regulationsOf(id);
   }
 
   // #endregion

@@ -1,4 +1,5 @@
-import { EdgeMonotonicity } from '../../../types';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import { LiveModel, type LiveModelClass } from './LiveModel';
 
@@ -19,7 +20,7 @@ class ImportLM {
 
   /** Add variable for importAeon function, returns id of the variable. */
   private _addVariableImport(
-    variable: any,
+    variable: Variable | undefined,
     name: string,
     position: any,
     control: any
@@ -48,8 +49,13 @@ class ImportLM {
   ): void {
     const vars = Object.keys(positions);
     for (let variable of vars) {
+      const variableId = useVariablesStore.getState().variableFromName(variable)?.id;
+      if (variableId !== undefined) {
+        continue;
+      }
+
       this._addVariableImport(
-        this._liveModel.Variables.variableFromName(variable),
+        useVariablesStore.getState().variableFromName(variable),
         variable,
         positions[variable],
         control[variable]
@@ -65,13 +71,13 @@ class ImportLM {
   ): void {
     for (const template of regulations) {
       const regulator = this._addVariableImport(
-        this._liveModel.Variables.variableFromName(template.regulatorName),
+        useVariablesStore.getState().variableFromName(template.regulatorName),
         template.regulatorName,
         positions[template.regulatorName],
         control[template.regulatorName]
       );
       const target = this._addVariableImport(
-        this._liveModel.Variables.variableFromName(template.targetName),
+        useVariablesStore.getState().variableFromName(template.targetName),
         template.targetName,
         positions[template.targetName],
         control[template.targetName]
@@ -102,7 +108,7 @@ class ImportLM {
     let keys = Object.keys(updateFunctions);
     for (let key of keys) {
       const variable = this._addVariableImport(
-        this._liveModel.Variables.variableFromName(key),
+        useVariablesStore.getState().variableFromName(key),
         key,
         positions[key],
         control[key]
@@ -291,7 +297,7 @@ class ImportLM {
 
     // Re-enable server checks and run them.
     this._liveModel._disable_dynamic_validation = false;
-    for (const { id } of this._liveModel.Variables.getAllVariables()) {
+    for (const { id } of useVariablesStore.getState().getAllVariables()) {
       this._liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
 

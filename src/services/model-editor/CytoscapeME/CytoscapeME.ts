@@ -2,6 +2,7 @@ import { type CytoscapeOptions } from 'cytoscape';
 import { EdgeMonotonicity } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import ModelEditor from '../ModelEditor/ModelEditor';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 
 //import { //ModelEditor, //UI } from "./Todo-imports";
 
@@ -105,7 +106,7 @@ class CytoscapeMEClass {
     const nodes: any[] = [];
     const variables: Record<string, number> = {};
 
-    LiveModel.Variables.getAllVariables().forEach((variable: any) => {
+    useVariablesStore.getState().getAllVariables().forEach((variable: any) => {
       nodes.push(this._cytoscape.getElementById(variable.id));
 
       if (phenotype == true) {
@@ -166,7 +167,7 @@ class CytoscapeMEClass {
       position: { x: position[0], y: position[1] },
     });
 
-    this.highlightControllable([LiveModel.Variables.variableFromId(id)]);
+    this.highlightControllable([useVariablesStore.getState().variableFromId(id)]);
 
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
@@ -407,7 +408,7 @@ class CytoscapeMEClass {
     var nodes: any[] | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = LiveModel.Variables.getAllVariables();
+      nodes = useVariablesStore.getState().getAllVariables();
       this._phenotypeShown = !this._phenotypeShown;
     } else {
       nodes = inputNodes;
@@ -435,7 +436,7 @@ class CytoscapeMEClass {
     var nodes: any[] | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = LiveModel.Variables.getAllVariables();
+      nodes = useVariablesStore.getState().getAllVariables();
       this._controllableShown = !this._controllableShown;
     } else {
       nodes = inputNodes;

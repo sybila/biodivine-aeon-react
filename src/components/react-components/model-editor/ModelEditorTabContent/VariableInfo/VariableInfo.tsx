@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ExtendableContentReact from '../../../lit-wrappers/ExtendableContent';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
@@ -12,6 +12,8 @@ import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import type { Regulation } from '../../../../../types';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import useUpdateFunctionsStore from '../../../../../stores/LiveModel/useUpdateFunctionsStore';
+import useRegulationsStore from '../../../../../stores/LiveModel/useRegulationsStore';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -23,10 +25,19 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
-  const [updateFunction, setUpdateFunction] = useState<string>(
-    ModelEditor.getUpdateFunction(id) ?? ''
-  );
+
   const [updateFunctionInfo, setUpdateFunctionInfo] = useState<string>('');
+
+  const regulationsObj = useRegulationsStore((state) => state.regulations);
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === id),
+    [regulationsObj, id]
+  );
+
+  const updateFunction = useUpdateFunctionsStore((state) =>
+    state.getUpdateFunctionId(id)?.functionString ?? ''
+  );
 
   const updateVariableName = (newName: string) => {
     if (!newName || newName === '') {
@@ -55,7 +66,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   };
 
   const insertRegulators = () => {
-    const regulations = ModelEditor.getVariableRegulators(id);
 
     if (regulations.length === 0) {
       return (
