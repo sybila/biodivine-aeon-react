@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { LiveModel } from '../../services/global/LiveModel/LiveModel';
 
 /**
  * Zustand store for model meta-information (name and description).
@@ -45,6 +44,5 @@ const useModelInfoStore = create<InfoState>((set, get) => ({
     set({ modelName: '', modelDescription: '' });
   },
 }));
-
 
 export default useModelInfoStore;
