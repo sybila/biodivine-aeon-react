@@ -267,13 +267,13 @@ export class OverlayWindow extends LitElement {
       <div
         id="background"
         part="background"
-        @click=${this.handleBackgroundClick}
+        @click=${(e: Event) => {
+          if (e.target === e.currentTarget && this.handleBackgroundClick) {
+            this.handleBackgroundClick();
+          }
+        }}
       >
-        <div
-          id="window"
-          part="window"
-          @click=${(e: Event) => e.stopPropagation()}
-        >
+        <div id="window" part="window">
           ${this.showHeader
             ? html`<div id="header" part="header">
                 ${this.showCloseButton
