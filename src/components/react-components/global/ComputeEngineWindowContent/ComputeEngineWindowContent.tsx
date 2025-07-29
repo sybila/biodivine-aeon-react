@@ -1,35 +1,33 @@
-import { useState } from 'react';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-
-type ComputationStatus = 'Connected' | 'Disconnected' | 'Running' | 'Finnished';
 
 const ComputeEngineWindowContent = () => {
-  const [computationStatus, setComputationStatus] =
-    useState<ComputationStatus>('Disconnected');
+  const computeEngineStatus: string = useComputeEngineStatus(
+    (state) => state.computeEngineStatus
+  );
+  const color: string = useComputeEngineStatus((state) => state.statusColor);
+
 
   const renderComputationStatus = () => {
-    let color = 'black';
-    switch (computationStatus) {
-      case 'Connected':
-        color = 'green';
-        break;
-      case 'Disconnected':
-        color = 'var(--color-red)';
-        break;
-    }
-
     return (
-      <section className="h-[50px] w-full flex flex-row items-center justify-between px-4">
-        <DotHeaderReact textColor={color} headerText={computationStatus} />
-        <button className="h-full w-fit bg-red-500">Placeholder Button</button>
+      <section className="h-[50px] w-full flex flex-row items-center justify-between px-4 pointer-events-auto">
+        <DotHeaderReact textColor={color} headerText={computeEngineStatus} />
+        <button
+          className="h-full w-[100px] bg-red-500 pointer-events-auto pointer-coarse cursor-pointer rounded-lg text-white font-bold text-sm"
+          onClick={() => {
+            ComputationManager.toggleConnection();
+          }}
+        >
+          {computeEngineStatus === 'Connected' ? 'Disconnect' : 'Connect'}
+        </button>
       </section>
     );
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-[60px] gap-3">
+    <div className="flex flex-col items-center w-full h-[60px] gap-3 pointer-events-auto">
       <InvisibleInputReact
         compHeight="20px"
         compWidth="100%"
