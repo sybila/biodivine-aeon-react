@@ -1,0 +1,30 @@
+import type { ComputationStatus } from "../../../../types";
+
+export type AttractorResponse = {
+  timestamp: number | undefined;
+  is_canceled: boolean;
+  // Todo - Ask Sam, maybe not used
+  running: boolean;
+
+  progress: string;
+  error: string | undefined;
+  num_classes: number | undefined;
+  version: string;
+  is_running: boolean | undefined;
+};
+
+export type ControlResponse = {
+  isRunning: boolean;
+  computationStarted: number;
+  eplapsed: number;
+  computationCancelled: boolean;
+  error?: string | undefined;
+  version: string;
+}
+
+export type ComputationInfo = {
+  computeEngineStatus: string;
+  computationStatus: ComputationStatus;
+  statusColor: string;
+}
+
