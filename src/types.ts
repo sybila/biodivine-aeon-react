@@ -51,3 +51,16 @@ export type ControlStats = {
   inPhenotypeFalse: number;
   notInPhenotype: number;
 };
+
+export type pingInfo = {
+  timestamp: number | undefined;
+  
+}
+
+export type ComputationStatus = {
+  status: string;
+  /** timestamp of the computation, if there is error is set to undefined */
+  timestamp?: number | undefined;
+  computationMode?: ComputationModes;
+  additionalInfo?: Array<string>;
+}
