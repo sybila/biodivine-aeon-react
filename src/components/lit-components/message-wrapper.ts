@@ -59,9 +59,12 @@ export class MessageWrapper extends LitElement {
 
   @property({ type: String }) declare wrapperHeight?: string;
   @property({ type: String }) declare wrapperWidth?: string;
+  @property({ type: String }) declare wrapperOverflowX?: string;
+  @property({ type: String }) declare wrapperOverflowY?: string;
 
   @property({ type: String }) declare messageHeight?: string;
   @property({ type: String }) declare messageWidth?: string;
+  @property({ type: String }) declare messageLineHeight?: string;
   @property({ type: String }) declare messagePad?: string;
   @property({ type: String }) declare messageTop?: string;
   @property({ type: String }) declare messageBottom?: string;
@@ -80,13 +83,17 @@ export class MessageWrapper extends LitElement {
   @property({ type: String }) declare successColor?: string;
   @property({ type: String }) declare errorColor?: string;
 
+  @property({ type: String }) declare contentHeight?: string;
+  @property({ type: String }) declare contentWidth?: string;
+  @property({ type: String }) declare contentZindex?: string;
+
   @state() declare type?: MessageType;
   @state() declare message?: string;
   @state() declare visible?: boolean;
 
   static styles = css`
     :host {
-      display: inline-block;
+      display: block;
       height: var(--message-wrapper-comp-height, 100%);
       width: var(--message-wrapper-comp-width, 100%);
       max-height: var(--message-wrapper-comp-height, 100%);
@@ -98,16 +105,18 @@ export class MessageWrapper extends LitElement {
       height: var(--message-wrapper-height, 100%);
       width: var(--message-wrapper-width, 100%);
       position: relative;
+      overflow-x: var(--message-wrapper-overflow-x, hidden);
+      overflow-y: var(--message-wrapper-overflow-y, hidden);
     }
 
     #message-container {
       opacity: 0;
       display: flex;
-      justify-content: var(--message-wrapper-message-align, start);
+      justify-content: var(--message-wrapper-message-align, center);
       align-items: center;
       height: var(--message-wrapper-message-height, fit-content);
-      width: var(--message-wrapper-message-width, fit-content);
-      padding: var(--message-wrapper-message-padding, 5px);
+      width: var(--message-wrapper-message-width, 250px);
+      padding: var(--message-wrapper-message-padding, 15px);
       box-sizing: border-box;
       position: absolute;
       top: var(--message-wrapper-message-top, 20px);
@@ -118,9 +127,8 @@ export class MessageWrapper extends LitElement {
       box-shadow: var(--message-wrapper-message-shadow, 0px 2px 5px #d0d0d0);
       background-color: var(--message-wrapper-message-color, #eceff1);
       transition: opacity 0.4s ease, transform 0.4s ease;
-      transform: translateY(-10px);
       pointer-events: none;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%);
       z-index: var(--message-wrapper-z-index, 1000000000);
     }
 
@@ -130,7 +138,7 @@ export class MessageWrapper extends LitElement {
 
     #message {
       margin: 0;
-      font-size: var(--message-wrapper-message-font-size, 90%);
+      font-size: var(--message-wrapper-message-font-size, 14px);
       font-weight: var(--message-wrapper-message-font-weight, bold);
       font-family: var(
         --message-wrapper-message-font-family,
@@ -138,6 +146,7 @@ export class MessageWrapper extends LitElement {
         'Arial',
         sans-serif
       );
+      line-height: var(--message-wrapper-message-line-height, 18px);
       text-shadow: var(
         --message-wrapper-message-text-shadow,
         0px 2px 5px #d0d0d0
@@ -157,6 +166,14 @@ export class MessageWrapper extends LitElement {
 
     #message.error {
       color: var(--message-wrapper-error-color, red);
+    }
+
+    #content {
+      display: block;
+      height: var(--message-wrapper-content-height, 100%);
+      width: var(--message-wrapper-content-width, 100%);
+      position: relative;
+      z-index: var(--message-wrapper-content-z-index, 1);
     }
   `;
 
@@ -189,14 +206,21 @@ export class MessageWrapper extends LitElement {
 
     update('wrapperHeight', '--message-wrapper-height', '100%');
     update('wrapperWidth', '--message-wrapper-width', '100%');
+    update('wrapperOverflowX', '--message-wrapper-overflow-x', 'hidden');
+    update('wrapperOverflowY', '--message-wrapper-overflow-y', 'hidden');
 
     update('messageHeight', '--message-wrapper-message-height', 'fit-content');
-    update('messageWidth', '--message-wrapper-message-width', 'fit-content');
-    update('messagePad', '--message-wrapper-message-padding', '5px');
+    update('messageWidth', '--message-wrapper-message-width', '250px');
+    update(
+      'messageLineHeight',
+      '--message-wrapper-message-line-height',
+      '18px'
+    );
+    update('messagePad', '--message-wrapper-message-padding', '15px');
     update('messageTop', '--message-wrapper-message-top', '20px');
     update('messageBottom', '--message-wrapper-message-bottom', 'auto');
-    update('messageLeft', '--message-wrapper-message-left', 'auto');
-    update('messageRight', '--message-wrapper-message-right', 'auto');
+    update('messageLeft', '--message-wrapper-message-left', '50%');
+    update('messageRight', '--message-wrapper-message-right', '50%');
 
     update('messageColor', '--message-wrapper-message-color', '#eceff1');
     update(
@@ -205,7 +229,7 @@ export class MessageWrapper extends LitElement {
       '0px 2px 5px #d0d0d0'
     );
 
-    update('messageFontSize', '--message-wrapper-message-font-size', '90%');
+    update('messageFontSize', '--message-wrapper-message-font-size', '14px');
     update(
       'messageFontWeight',
       '--message-wrapper-message-font-weight',
@@ -221,11 +245,15 @@ export class MessageWrapper extends LitElement {
       '--message-wrapper-message-text-transform',
       'none'
     );
-    update('messageAlign', '--message-wrapper-message-align', 'start');
+    update('messageAlign', '--message-wrapper-message-align', 'center');
 
     update('infoColor', '--message-wrapper-info-color', 'black');
     update('successColor', '--message-wrapper-success-color', 'green');
     update('errorColor', '--message-wrapper-error-color', 'red');
+
+    update('contentHeight', '--message-wrapper-content-height', '100%');
+    update('contentWidth', '--message-wrapper-content-width', '100%');
+    update('contentZindex', '--message-wrapper-content-z-index', '1');
   }
 
   render() {
@@ -241,7 +269,7 @@ export class MessageWrapper extends LitElement {
           </p>
         </div>
 
-        <slot></slot>
+        <slot id="content" part="content"></slot>
       </div>
     `;
   }

@@ -70,8 +70,8 @@ export class TextButton extends LitElement {
       height: var(--text-button-text-container-height, 100%);
       width: var(--text-button-text-container-width, 100%);
       pointer-events: none;
-      line-height: var(--text-button-line-height, 100%);
-      font-size: var(--text-button-font-size, 90%);
+      line-height: var(--text-button-line-height, 20px);
+      font-size: var(--text-button-font-size, 16px)
       font-weight: var(--text-button-font-weight, bold);
       font-family: var(
         --text-button-font-family,
@@ -109,7 +109,7 @@ export class TextButton extends LitElement {
     update('buttonShadow', '--text-button-shadow', '0px 2px 5px #d0d0d0');
 
     update('textColor', '--text-button-text-color', 'black');
-    update('textFontSize', '--text-button-font-size', '90%');
+    update('textFontSize', '--text-button-font-size', '16px');
     update('textFontWeight', '--text-button-font-weight', 'bold');
     update(
       'textFontFamily',
@@ -119,7 +119,7 @@ export class TextButton extends LitElement {
     update('textShadow', '--text-button-text-shadow', '0px 2px 5px #d0d0d0');
     update('textTransform', '--text-button-text-transform', 'none');
     update('textAlign', '--text-button-text-align', 'center');
-    update('textLineHeight', '--text-button-line-height', '100%');
+    update('textLineHeight', '--text-button-line-height', '20px');
     update(
       'textContainerHeight',
       '--text-button-text-container-height',
