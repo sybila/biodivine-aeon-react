@@ -2,6 +2,9 @@ import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
+import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
+
+import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
 
 const ComputeEngineWindowContent = () => {
   const computeEngineStatus: string = useComputeEngineStatus(
@@ -9,19 +12,17 @@ const ComputeEngineWindowContent = () => {
   );
   const color: string = useComputeEngineStatus((state) => state.statusColor);
 
-
   const renderComputationStatus = () => {
     return (
       <section className="h-[50px] w-full flex flex-row items-center justify-between px-4 pointer-events-auto">
         <DotHeaderReact textColor={color} headerText={computeEngineStatus} />
-        <button
-          className="h-full w-[100px] bg-red-500 pointer-events-auto pointer-coarse cursor-pointer rounded-lg text-white font-bold text-sm"
-          onClick={() => {
-            ComputationManager.toggleConnection();
-          }}
-        >
-          {computeEngineStatus === 'Connected' ? 'Disconnect' : 'Connect'}
-        </button>
+        <TextIconButtonReact
+          text={computeEngineStatus === 'Connected' ? 'Disconnect' : 'Connect'}
+          compHeight="100%"
+          compWidth="150px"
+          iconSrc={CloudIcon}
+          handleClick={() => ComputationManager.toggleConnection()}
+        />
       </section>
     );
   };
