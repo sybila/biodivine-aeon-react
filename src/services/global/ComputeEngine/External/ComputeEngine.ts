@@ -163,7 +163,7 @@ class ComputeEngine {
     if (callback !== undefined) {
       callback(
         versionWarning,
-        undefined,
+        response.error ?? undefined,
         statusInfo.computeEngineStatus,
         statusInfo.computationStatus,
         statusInfo.statusColor
@@ -323,37 +323,69 @@ class ComputeEngine {
 
   private startAnalysisCallback(
     error: string | undefined,
-    response: AttractorResponse
-  ): number {
-    if (error !== undefined) {
+    response: AttractorResponse | undefined,
+    callback:
+      | ((
+          warning: string | undefined,
+          error: string | undefined,
+          engineStatus: string | undefined,
+          compStatus: ComputationStatus | undefined,
+          color: string | undefined
+        ) => void)
+      | undefined = undefined
+  ): void {
+    if (error !== undefined || response === undefined) {
       this.waitingForResults = false;
-      throw new Error(`Computation error: ${error}`);
+      if (callback) {
+        callback(
+          undefined,
+          error ?? 'Internal Compute Engine error',
+          'Connected',
+          {
+            status: `Error: ${error ?? 'Internal Compute Engine error'}`,
+            computationMode: 'Attractor Analysis',
+          },
+          'green'
+        );
+      }
+      return;
     }
 
-    if (response === undefined || response.timestamp === undefined) {
-      this.waitingForResults = false;
-      throw new Error(
-        'Computation error: Internal Compute Engine error (no timestamp returned).'
-      );
-    }
+    this.lastComputationType = 'Attractor Analysis';
+    const statusInfo = this.createComputationStatus(response);
 
-    console.log('Started computation ', response.timestamp);
+    callback?.(
+      undefined,
+      undefined,
+      undefined,
+      statusInfo.computationStatus,
+      statusInfo.statusColor
+    );
+
     this.ping();
-    return response.timestamp;
   }
 
-  public startAttractorAnalysis(model: string): number {
+  public startAttractorAnalysis(
+    model: string,
+    callback:
+      | ((
+          warning: string | undefined,
+          error: string | undefined,
+          engineStatus: string | undefined,
+          compStatus: ComputationStatus | undefined,
+          color: string | undefined
+        ) => void)
+      | undefined = undefined
+  ): void {
     this.waitingForResults = true;
 
-    let timestamp: number = 0;
-
-    const callback = (error: string, response: AttractorResponse) => {
-      timestamp = this.startAnalysisCallback(error, response);
-    };
-
-    this.backendRequest('/start_computation', callback, 'POST', model);
-
-    return timestamp;
+    this.backendRequest(
+      '/start_computation',
+      (error: string | undefined, response: AttractorResponse | undefined) =>
+        this.startAnalysisCallback(error, response, callback),
+      'POST',
+      model
+    );
   }
 
   private cancelAnalysisCallback(error: string | undefined) {
@@ -412,7 +444,7 @@ class ComputeEngine {
       }
     };
 
-    req.onerror = function (e) {
+    req.onerror = function () {
       if (callback !== undefined) {
         callback('Connection error', undefined);
       }

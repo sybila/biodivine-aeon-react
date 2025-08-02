@@ -112,7 +112,7 @@ class ComputationManagerClass {
 
   // #region --- Computation Status ---
 
-  private computationCanStart(model: string | undefined): void {
+  private computationCanStart(model: string | undefined): asserts model is string {
     if (!model) {
       throw new Error('Cannot start computation: Model is empty.');
     }
@@ -144,6 +144,7 @@ class ComputationManagerClass {
     if (color) useComputeEngineStatus.getState().setStatusColor(color);
 
     if (error) {
+      console.log("Error starting computation hahha:", error);
       Message.showError(error);
     }
 
@@ -268,21 +269,43 @@ class ComputationManagerClass {
 
   // #region --- Attractor Analysis Computation ---
 
+  private startAttractorAnalysisCallback = (
+    warning: string | undefined,
+    error: string | undefined,
+    computeEngineStatus: string | undefined = undefined,
+    computationStatus: ComputationStatus | undefined = undefined,
+    color: string | undefined = undefined
+  ): void => {
+    this.lastComputationTimestamp = computationStatus?.timestamp ?? -1;
+
+    this.lastComputationMode = 'Attractor Analysis';
+
+    this.setComputationStatus(
+      warning,
+      error,
+      computeEngineStatus,
+      computationStatus,
+      color
+    );
+  };
+
   public startAttractorAnalysis(): void {
     const model = LiveModel.Export.exportAeon();
 
-    this.computationCanStart(model);
+    try {
+      this.computationCanStart(model);
+    } catch (error: any) {
+      console.log("Error starting computation:", error.message);
+      Message.showError(error.message);
+      return;
+    }
+    
 
     // Todo delete old results
-
-    // this.computationCanStart ensures that model is string
-    const returnValue = this.computeEngine.startAttractorAnalysis(
-      model as string
+    this.computeEngine.startAttractorAnalysis(
+      model,
+      this.startAttractorAnalysisCallback
     );
-
-    this.lastComputationTimestamp = returnValue;
-
-    this.lastComputationMode = 'Attractor Analysis';
   }
 
   // #endregion
