@@ -4,6 +4,7 @@ import ComputationModeButton from './ComputationModeButton/ComputationModeButton
 import type { ComputationModes } from '../../../../types';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import ControlCompParams from './ControlCompParams/ControlCompParams';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 
 const StartCompTabContent: React.FC = () => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
@@ -60,6 +61,13 @@ const StartCompTabContent: React.FC = () => {
       {renderButtons()}
 
       {renderParams()}
+
+      <TextButtonReact
+        text="Start Computation"
+        onClick={() => ComputationManager.startAttractorAnalysis()}
+        compHeight='40px'
+        compWidth='100%'
+      />
     </div>
   );
 };
