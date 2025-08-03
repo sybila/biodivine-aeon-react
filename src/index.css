@@ -30,6 +30,7 @@
 
   --color-red: #d05d5d;
 
+  --base-font-family: 'Helvetica', 'Arial', sans-serif;
   --font-family-fira-mono: 'FiraMono', 'monospace';
   --font-family-fira-bold: 'FiraMonoBold', 'monospace';
 
@@ -41,7 +42,7 @@
   background-color: #242424;
   transition: 0.03s;
 
-  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-family: var(--base-font-family);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
