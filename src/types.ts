@@ -54,13 +54,18 @@ export type ControlStats = {
 
 export type pingInfo = {
   timestamp: number | undefined;
-  
-}
+};
 
 export type ComputationStatus = {
   status: string;
-  /** timestamp of the computation, if there is error is set to undefined */
+  /** Indicates if the computation is currently running */
+  running: boolean;
+  /**
+   * Time information for the computation.
+   * - If there's an error: undefined or -1.
+   * - If computation is running: contains elapsed time.
+   */
   timestamp?: number | undefined;
   computationMode?: ComputationModes;
   additionalInfo?: Array<string>;
-}
+};

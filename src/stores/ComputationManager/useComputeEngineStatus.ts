@@ -19,7 +19,7 @@ type ComputeEngineStatusState = {
 
 const useComputeEngineStatus = create<ComputeEngineStatusState>()((set) => ({
   computeEngineStatus: config.computeEngine.initialStatus ?? 'Disconnected',
-  computationStatus: { status: 'No computation' } as ComputationStatus,
+  computationStatus: { status: 'No computation', running: false } as ComputationStatus,
   statusColor: config.computeEngine.initialStatusColor ?? 'red',
   setStatusColor: (color) => set({ statusColor: color }),
   setComputeEngineStatus: (status) => set({ computeEngineStatus: status }),
@@ -27,7 +27,7 @@ const useComputeEngineStatus = create<ComputeEngineStatusState>()((set) => ({
   clear: () =>
     set({
       computeEngineStatus: config.computeEngine.initialStatus ?? 'Disconnected',
-      computationStatus: { status: 'No computation' } as ComputationStatus,
+      computationStatus: { status: 'No computation', running: false } as ComputationStatus,
       statusColor: config.computeEngine.initialStatusColor ?? 'red',
     }),
 }));
