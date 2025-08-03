@@ -122,7 +122,7 @@ const ComputeEngineWindowContent = () => {
                   compWidth="100%"
                   headerText={info}
                   justifyHeader="start"
-                  lineHeight='22px'
+                  lineHeight="22px"
                   textFontSize="19px"
                   textFontWeight="normal"
                   textFontFamily="FiraMono, monospace"
