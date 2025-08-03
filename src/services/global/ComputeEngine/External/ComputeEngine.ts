@@ -76,7 +76,7 @@ class ComputeEngine {
           undefined,
           'Compute Engine Adress not set',
           'Disconnected',
-          { status: 'No computation' },
+          { status: 'No computation', running: false },
           'red'
         );
 
@@ -109,7 +109,7 @@ class ComputeEngine {
         undefined,
         undefined,
         'Disconnected',
-        { status: 'No computation' },
+        { status: 'No computation', running: false },
         'red'
       );
     }
@@ -137,7 +137,7 @@ class ComputeEngine {
           undefined,
           error ?? 'Connection error',
           'Disconnected',
-          { status: `Error: ${error ?? 'Connection error'}` },
+          { status: `Error: ${error ?? 'Connection error'}`, running: false },
           'red'
         );
       this.closeConnection(undefined);
@@ -217,7 +217,11 @@ class ComputeEngine {
   private proccessControlStatus(response: ControlResponse): ComputationInfo {
     const compStatus: ComputationInfo = {
       computeEngineStatus: 'Connected',
-      computationStatus: { status: 'No computation' },
+      computationStatus: {
+        status: 'No computation',
+        computationMode: 'Control',
+        running: false,
+      },
       statusColor: 'green',
     };
 
@@ -230,18 +234,17 @@ class ComputeEngine {
     if (response.isRunning) {
       compStatus.computationStatus.status = 'Running';
       compStatus.statusColor = 'orange';
+      compStatus.computationStatus.timestamp = response.elapsed ?? -1;
+      compStatus.computationStatus.running = true;
     } else {
       compStatus.computationStatus.status = response.computationCancelled
         ? 'Cancelled'
         : 'Done';
       compStatus.statusColor = 'green';
-    }
-
-    if (response.computationStarted && response.eplapsed) {
       compStatus.computationStatus.timestamp =
-        response.computationStarted + response.eplapsed;
-    } else {
-      compStatus.computationStatus.timestamp = undefined;
+        response.computationStarted && response.elapsed
+          ? response.computationStarted + response.elapsed
+          : -1;
     }
 
     return compStatus;
@@ -253,7 +256,11 @@ class ComputeEngine {
   ): ComputationInfo {
     const compStatus: ComputationInfo = {
       computeEngineStatus: 'Connected',
-      computationStatus: { status: 'No computation' },
+      computationStatus: {
+        status: 'No computation',
+        computationMode: 'Attractor Analysis',
+        running: false,
+      },
       statusColor: 'green',
     };
 
@@ -266,11 +273,20 @@ class ComputeEngine {
     if (response.is_running) {
       compStatus.computationStatus.status = 'Running';
       compStatus.statusColor = 'orange';
+      compStatus.computationStatus.timestamp = response.timestamp
+        ? Date.now() - response.timestamp
+        : -1;
+      compStatus.computationStatus.running = true;
+      compStatus.computationStatus.additionalInfo = [
+        `Num Classes: ${response.num_classes}`,
+        `Progress: ${response.progress}`,
+      ];
     } else {
       compStatus.computationStatus.status = response.is_canceled
         ? 'Cancelled'
         : 'Done';
       compStatus.statusColor = 'green';
+      compStatus.computationStatus.timestamp = response.timestamp ?? -1;
     }
 
     return compStatus;
@@ -298,7 +314,7 @@ class ComputeEngine {
 
     return {
       computeEngineStatus: 'Connected',
-      computationStatus: { status: 'No computation' },
+      computationStatus: { status: 'No computation', running: false },
       statusColor: 'green',
     };
   }
@@ -344,6 +360,7 @@ class ComputeEngine {
           {
             status: `Error: ${error ?? 'Internal Compute Engine error'}`,
             computationMode: 'Attractor Analysis',
+            running: false,
           },
           'green'
         );
@@ -390,7 +407,6 @@ class ComputeEngine {
 
   private cancelAnalysisCallback(error: string | undefined) {
     if (error !== undefined) {
-      console.log(error);
       throw new Error(`Error: ${error}`);
     }
 

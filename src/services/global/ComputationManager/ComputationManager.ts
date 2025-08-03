@@ -13,12 +13,6 @@ class ComputationManagerClass {
   /** Currently used compute engine comunicator */
   private computeEngine = new ComputeEngine();
 
-  /** Timestamp of the last started/ended computation */
-  private lastComputationTimestamp: number | undefined = undefined;
-
-  /** Computation type of the last started/ended computation */
-  private lastComputationMode: ComputationModes | undefined = undefined;
-
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
 
@@ -112,7 +106,9 @@ class ComputationManagerClass {
 
   // #region --- Computation Status ---
 
-  private computationCanStart(model: string | undefined): asserts model is string {
+  private computationCanStart(
+    model: string | undefined
+  ): asserts model is string {
     if (!model) {
       throw new Error('Cannot start computation: Model is empty.');
     }
@@ -144,7 +140,6 @@ class ComputationManagerClass {
     if (color) useComputeEngineStatus.getState().setStatusColor(color);
 
     if (error) {
-      console.log("Error starting computation hahha:", error);
       Message.showError(error);
     }
 
@@ -153,141 +148,9 @@ class ComputationManagerClass {
     }
   };
 
-  // public updateComputeStatus(status: string | void, color: string, data: any): void {
-  //     this.setComputeEngineStatus(status);
-
-  // 		if (status == "connected") {
-  // 			if (data !== undefined) {
-  // 				// data about computation available
-  // 				let status = "(none)";
-  // 				// If there is a computation, it is probably running...
-  // 				if (data["timestamp"] !== null) {
-  // 					status = "running";
-  // 					// ...but, if it is cancelled, we are awaiting cancellation...
-  // 					if (data["is_cancelled"]) {
-  // 						status = "awaiting cancellation";
-  // 					}
-  // 					// ...but, if it is not running and it is not cancelled, then it must be done...
-  // 					if (!data["is_running"] && !data["is_cancelled"]) {
-  // 						status = "done";
-  // 					}
-  // 					// ...and, if it is not running and it is cancelled, the it is actualy cancelled.
-  // 					if (!data["is_running"] && data["is_cancelled"]) {
-  // 						status = "cancelled";
-  // 					}
-  // 				}
-  // 				// Update server status color depending on current computation status.
-  // 				if (status == "(none)" || status == "done" || status == "cancelled") {
-  // 					statusBar.classList.add("green");
-  // 					statusComp.classList.add("green");
-  // 					dot.classList.add("green");
-  // 				} else {
-  // 					statusBar.classList.add("orange");
-  // 					statusComp.classList.add("orange");
-  // 					dot.classList.add("orange");
-  // 				}
-  // 				// Make status green/orange depending on state of computation.
-  // 				if (status == "done") {
-  // 					cmpStatus.classList.add("green");
-  // 				} else if (status != "(none)") {
-  // 					cmpStatus.classList.add("orange");
-  // 				}
-
-  // 				if (data.error !== undefined && data.error !== null) {
-  // 					status += ", error: "+ data.error;
-  // 				}
-
-  // 				// Progress is only shown when we are running...
-  // 				if (data["is_running"] && data.progress != undefined) {
-  // 					statusBar.textContent = status + " " + data.progress.slice(0, 6);
-  // 					cmpStatus.innerHTML = status;
-  // 					cmpProgress.parentElement.classList.remove("gone");
-  // 				} else {
-  // 					if (status != "(none)") {
-  // 						const timeStatus = status + " " + this._getTime(data.timestamp, data["is_running"] == true);
-  // 						cmpStatus.innerHTML = timeStatus;
-  // 						statusBar.textContent = timeStatus;
-  // 					} else {
-  // 						cmpStatus.innerHTML = status;
-  // 						statusBar.textContent = " ● Connected";
-  // 					}
-
-  // 					cmpProgress.parentElement.classList.add("gone");
-  // 				}
-  // 				cmp.classList.remove("gone");
-
-  // 				if (data.progress != undefined) {
-  // 					cmpProgress.textContent = data.progress;
-  // 				}
-
-  // 				if (data.num_classes !== null) {
-  // 					cmpClasses.textContent = data.num_classes;
-  // 				} else {
-  // 					cmpClasses.textContent = "-";
-  // 				}
-  // 				// Show cancel button if job is running and not cancelled
-  // 				if (data["is_running"] && !data["is_cancelled"]) {
-  // 					cmpCancel.classList.remove("gone");
-  // 				} else {
-  // 					cmpCancel.classList.add("gone");
-  // 				}
-
-  // 				this._toggleResultsDownload(status, data);
-
-  // 				if (data["timestamp"] !== undefined && Results.hasResults()) {
-  // 					// show warning if data is out of date
-  // 					ComputeEngine.Computation.setActiveComputation(data["timestamp"]);
-  // 					if (ComputeEngine.Computation.hasActiveComputation()) {
-  // 						document.getElementById("results-expired").classList.add("gone");
-  // 					} else {
-  // 						document.getElementById("results-expired").classList.remove("gone");
-  // 					}
-  // 				} else {
-  // 					document.getElementById("results-expired").classList.add("gone");
-  // 				}
-
-  // 				if (status == "done" && ComputeEngine.Computation.waitingForResult) {
-  // 					ComputeEngine.Computation.waitingForResult = false;
-  // 					Results.download();
-  // 				}
-  // 			}
-  // 		} else {
-  // 			addressInput.removeAttribute("disabled");
-  // 			addressInput.parentElement.removeAttribute("disabled");
-  // 			statusBar.textContent = " ● Disconnected";
-  // 			statusBar.classList.add("red");
-  // 			statusComp.textContent = " ● Disconnected";
-  // 			statusComp.classList.add("red");
-  // 			dot.classList.add("red");
-  // 			connectButton.innerHTML = "Connect <img src='img/cloud-24px.svg'>";
-  // 			cmp.classList.add("gone");
-  // 		}
-  // 	},
-  // },
-
   // #endregion
 
   // #region --- Attractor Analysis Computation ---
-
-  private startAttractorAnalysisCallback = (
-    warning: string | undefined,
-    error: string | undefined,
-    computeEngineStatus: string | undefined = undefined,
-    computationStatus: ComputationStatus | undefined = undefined,
-    color: string | undefined = undefined
-  ): void => {
-    this.lastComputationTimestamp = computationStatus?.timestamp ?? -1;
-
-    this.lastComputationMode = 'Attractor Analysis';
-
-    this.setComputationStatus(
-      warning,
-      error,
-      computeEngineStatus,
-      computationStatus,
-      color
-    );
-  };
 
   public startAttractorAnalysis(): void {
     const model = LiveModel.Export.exportAeon();
@@ -295,17 +158,13 @@ class ComputationManagerClass {
     try {
       this.computationCanStart(model);
     } catch (error: any) {
-      console.log("Error starting computation:", error.message);
+      console.log('Error starting computation:', error.message);
       Message.showError(error.message);
       return;
     }
-    
 
     // Todo delete old results
-    this.computeEngine.startAttractorAnalysis(
-      model,
-      this.startAttractorAnalysisCallback
-    );
+    this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
   }
 
   // #endregion
