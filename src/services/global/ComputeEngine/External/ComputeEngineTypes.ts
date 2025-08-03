@@ -16,7 +16,7 @@ export type AttractorResponse = {
 export type ControlResponse = {
   isRunning: boolean;
   computationStarted: number;
-  eplapsed: number;
+  elapsed: number;
   computationCancelled: boolean;
   error?: string | undefined;
   version: string;
