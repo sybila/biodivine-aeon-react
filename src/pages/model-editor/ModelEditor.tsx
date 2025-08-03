@@ -18,6 +18,7 @@ import StartCompTabContent from '../../components/react-components/model-editor/
 import OverlayWindowReact from '../../components/react-components/lit-wrappers/OverlayWindowReact';
 import ComputeEngineWindowContent from '../../components/react-components/global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import TwoSidedTextReact from '../../components/react-components/lit-wrappers/TwoSidedTextReact';
+import ResultsWindowContent from '../../components/react-components/global/ResultsWindowContent/ResultsWindowContent';
 
 type TabTypeME =
   | 'Start Computation'
@@ -56,7 +57,7 @@ const ModelEditor: React.FC = () => {
       case 'Compute Engine':
         return <ComputeEngineWindowContent />;
       case 'Results':
-        return <div>Results Content</div>;
+        return <ResultsWindowContent />;
       default:
         return null;
     }
@@ -134,8 +135,8 @@ const ModelEditor: React.FC = () => {
         <OverlayWindowReact
           compWidth="100%"
           compHeight="100%"
-          windWidth="650px"
-          windMaxWidth="800px"
+          windWidth="fit-content"
+          windMaxWidth="80%"
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}

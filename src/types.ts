@@ -69,3 +69,26 @@ export type ComputationStatus = {
   computationMode?: ComputationModes;
   additionalInfo?: Array<string>;
 };
+
+export type AttractorBehavior = 'Stability' | 'Oscillation' | 'Disorder';
+
+export type AttractorResult = {
+  sat_count: number;
+  phenotype: Array<AttractorBehavior>;
+};
+
+export type AttractorResults = {
+  isPartial: boolean;
+  data: Array<AttractorResult>;
+  elapsed: number;
+};
+
+export type Perturbation = Record<string, number>;
+
+export type ControlResult = {
+  color_count: number;
+  robustness: number;
+  perturbation: Perturbation;
+};
+
+export type ControlResults = Array<ControlResult>;
