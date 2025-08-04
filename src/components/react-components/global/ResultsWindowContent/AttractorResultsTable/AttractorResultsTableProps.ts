@@ -1,6 +1,5 @@
-import type { AttractorResults } from "../../../../../types";
+import type { AttractorResults } from '../../../../../types';
 
 export type AttractorResultsTableProps = {
-    // Todo remove ?
-  results?: AttractorResults;
+  results: AttractorResults;
 };

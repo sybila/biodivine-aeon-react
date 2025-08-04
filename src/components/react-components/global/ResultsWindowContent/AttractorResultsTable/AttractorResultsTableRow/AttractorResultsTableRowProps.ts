@@ -1,4 +1,4 @@
-import type { AttractorBehavior } from "../../../../../../types";
+import type { AttractorBehavior } from '../../../../../../types';
 
 export type AttractorResultsTableRowProps = {
   interpretationCount: number;
