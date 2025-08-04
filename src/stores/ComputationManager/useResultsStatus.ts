@@ -10,6 +10,7 @@ type ResultsState = {
   type: ComputationModes | undefined;
   /** Currently active results */
   results: AttractorResults | ControlResults | undefined;
+  setType(type: ComputationModes | undefined): void;
   setResults: (results: AttractorResults | ControlResults | undefined) => void;
   clear: () => void;
 };
@@ -20,6 +21,7 @@ type ResultsState = {
 const useResultsStatus = create<ResultsState>()((set) => ({
   type: undefined,
   results: undefined,
+  setType: (type) => set({ type }),
   setResults: (results) => set({ results }),
   clear: () => set({ type: undefined, results: undefined }),
 }));
