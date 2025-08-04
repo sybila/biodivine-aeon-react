@@ -1,8 +1,14 @@
-import type { ComputationModes, ComputationStatus } from '../../../types';
+import type {
+  AttractorResults,
+  ComputationModes,
+  ComputationStatus,
+  ControlResults,
+} from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -11,7 +17,7 @@ class ComputationManagerClass {
   // #region --- Properties ---
 
   /** Currently used compute engine comunicator */
-  private computeEngine = new ComputeEngine();
+  private computeEngine = new ComputeEngine(this.setResults);
 
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
@@ -84,7 +90,7 @@ class ComputationManagerClass {
 
   // #region --- Computation Mode Setters/Getters ---
 
-  /** Retutns currently set computation mode */
+  /** Returns currently set computation mode */
   public getComputationMode() {
     return this.computationMode;
   }
@@ -165,6 +171,33 @@ class ComputationManagerClass {
 
     // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
+  }
+
+  // #endregion
+
+  // #region --- Results ---
+
+  public setResults(
+    warning: string | undefined,
+    error: string | undefined,
+    type: ComputationModes | undefined,
+    results: AttractorResults | ControlResults | undefined
+  ): void {
+    if (type) {
+      useResultsStatus.getState().setType(type);
+    }
+
+    if (results) {
+      useResultsStatus.getState().setResults(results);
+    }
+
+    if (error) {
+      Message.showError(error);
+    }
+
+    if (warning) {
+      Message.showInfo(warning);
+    }
   }
 
   // #endregion

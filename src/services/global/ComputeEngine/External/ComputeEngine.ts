@@ -1,5 +1,10 @@
 import config from '../../../../config';
-import type { ComputationModes, ComputationStatus } from '../../../../types';
+import type {
+  AttractorResults,
+  ComputationModes,
+  ComputationStatus,
+  ControlResults,
+} from '../../../../types';
 import type {
   AttractorResponse,
   ComputationInfo,
@@ -19,6 +24,24 @@ class ComputeEngine {
   private waitingForResults: boolean = false;
 
   private lastComputationType: ComputationModes | undefined = undefined;
+
+  private setResults: (
+    warning: string | undefined,
+    error: string | undefined,
+    type: ComputationModes | undefined,
+    results: any | undefined
+  ) => void;
+
+  constructor(
+    setResults: (
+      warning: string | undefined,
+      error: string | undefined,
+      type: ComputationModes | undefined,
+      results: AttractorResults | ControlResults | undefined
+    ) => void
+  ) {
+    this.setResults = setResults;
+  }
 
   // #endregion
 
@@ -159,6 +182,14 @@ class ComputeEngine {
     this.connected = true;
 
     const statusInfo: ComputationInfo = this.createComputationStatus(response);
+
+    if (
+      this.waitingForResults &&
+      statusInfo.computationStatus.status === 'Done'
+    ) {
+      this.waitingForResults = false;
+      this.getResults();
+    }
 
     if (callback !== undefined) {
       callback(
@@ -432,6 +463,30 @@ class ComputeEngine {
 
   // #endregion
 
+  // #region --- Results ---
+
+  private getResults() {
+    if (this.lastComputationType === 'Attractor Analysis') {
+      this.backendRequest(
+        '/get_results',
+        (error: string | undefined, response: AttractorResults) => {
+          if (error !== undefined || !response) {
+            this.setResults(
+              undefined,
+              error ?? 'Internal Compute Engine Error',
+              undefined,
+              undefined
+            );
+            return;
+          }
+          this.setResults(undefined, undefined, 'Attractor Analysis', response);
+        },
+        'GET'
+      );
+    }
+  }
+
+  // #endregion
   /** Build and return an asynchronous request with given parameters. */
   private backendRequest(
     url: string,
