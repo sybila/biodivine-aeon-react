@@ -32,6 +32,8 @@
 
 :root {
   --color-bg-base: #fff;
+  --color-secondary: #e7ecee;
+  --color-highlight: #cfd8dc;
 
   --color-red: #d05d5d;
 
