@@ -1,12 +1,12 @@
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
-import type { Position, Variable } from '../../../types';
+import type { ControlInfo, Position, Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import type { LiveModelClass } from './LiveModel';
 import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
+import useControlStore from '../../../stores/LiveModel/useControlStore';
 
-//import { ModelEditor , ControllableEditor, ComputeEngine, PhenotypeEditor, UI, Strings } from "./Todo-imports"
-
+/** Manage variables in the live model */
 class VariablesLM {
   private _idCounter = 0;
 
@@ -16,6 +16,7 @@ class VariablesLM {
     this._liveModel = liveModel;
   }
 
+  /** Add a variable to the model */
   public addVariable(
     modAllowed: boolean,
     position: Position = [0.0, 0.0],
@@ -33,16 +34,20 @@ class VariablesLM {
     const variable: Variable = {
       id,
       name: variableName,
-      controllable,
-      phenotype,
+    };
+
+    const controlInfo: ControlInfo = {
+      controlEnabled: controllable,
+      phenotype: phenotype,
     };
 
     useVariablesStore.getState().addVariable(variable);
+    useControlStore.getState().addInfo(id, controlInfo);
 
     CytoscapeME.addNode(id, variableName, position);
-    //ControllableEditor.addVariable(variable);
+
+    // Todo
     //ComputeEngine.Computation.Control.setMaxSize(true);
-    //PhenotypeEditor.addVariable(variable);
     //UI.Visible.setQuickHelpVisible(false);
 
     this._liveModel.UpdateFunctions._validateUpdateFunction(id);
@@ -50,6 +55,7 @@ class VariablesLM {
     return id;
   }
 
+  /** Remove a variable by its ID */
   public removeVariable(id: number, force = false): void {
     if (!force && !this._liveModel._modelModified()) return;
 
@@ -69,11 +75,10 @@ class VariablesLM {
         updateTargets.push(reg.target);
       }
 
-      //ControllableEditor.removeVariable(variable);
       //ComputeEngine.Computation.Control.setMaxSize(true);
-      //PhenotypeEditor.removeVariable(variable);
 
       useVariablesStore.getState().removeVariable(id);
+      this._liveModel.Control.removeControlInfo(id);
       this._liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
       CytoscapeME.removeNode(id);
@@ -99,6 +104,7 @@ class VariablesLM {
     }
   }
 
+  /** Rename a variable by its ID */
   public renameVariable(id: number, newName: string): string | undefined {
     if (!this._liveModel._modelModified()) return;
 
@@ -181,6 +187,7 @@ class VariablesLM {
     }
   }
 
+  /** Check if a variable name is valid */
   private _checkVariableName(id: number, name: string): string | undefined {
     if (typeof name !== 'string') return 'Name must be a string.';
     if (!/^[a-z0-9{}_]+$/i.test(name)) {

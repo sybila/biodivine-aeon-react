@@ -1,8 +1,8 @@
-import useVariablesStore from "../../../stores/LiveModel/useVariablesStore";
-import type { LiveModelClass } from "./LiveModel";
+import useControlStore from '../../../stores/LiveModel/useControlStore';
+import type { Phenotype } from '../../../types';
+import type { LiveModelClass } from './LiveModel';
 
-//import { PhenotypeEditor, ControllableEditor, ComputeEngine } from "./Todo-imports";
-
+/** Class to manage control information for live model variables */
 class ControlLM {
   private _liveModel: LiveModelClass;
 
@@ -10,25 +10,31 @@ class ControlLM {
     this._liveModel = liveModel;
   }
 
-  /** Change variable (with id defined by id param) phenotype value defined by phenValue (true, false, null) */
-  public changePhenotypeById(id: number, phenValue: boolean | null): void {
-    if (!this._liveModel._modelModified()) {
+  /** Remove control information for a variable by its ID */
+  public removeControlInfo(id: number, force = false): void {
+    if (!force && !this._liveModel._modelModified()) {
       return;
     }
 
-    const variable = useVariablesStore.getState().variableFromId(id);
-    //PhenotypeEditor.changeVarPhenotype(variable, phenValue);
+    useControlStore.getState().removeInfo(id, force);
   }
 
-  /** Change variable with id defined by id param to contrValue (true, false) */
-  public changeControllableById(id: number, contrValue: boolean): void {
+  /** Change control information for a variable by its ID */
+  public changePhenotypeById(id: number, phenotype: Phenotype): void {
     if (!this._liveModel._modelModified()) {
       return;
     }
 
-    const variable = useVariablesStore.getState().variableFromId(id);
-    //ControllableEditor.changeVarControllable(variable, contrValue);
-    //ComputeEngine.Computation.Control.setMaxSize(true);
+    useControlStore.getState().setPhenotype(id, phenotype);
+  }
+
+  /** Change variable control enabled state by its ID */
+  public changeControlEnabledById(id: number, controlEnabled: boolean): void {
+    if (!this._liveModel._modelModified()) {
+      return;
+    }
+
+    useControlStore.getState().setControlEnabled(id, controlEnabled);
   }
 }
 

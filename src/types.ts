@@ -1,13 +1,16 @@
 export type Variable = {
   id: number;
   name: string;
-  controllable: boolean;
-  phenotype: boolean | null;
 };
 
 export type Position = [number, number];
 
 export type Phenotype = boolean | null;
+
+export type ControlInfo = {
+  controlEnabled: boolean;
+  phenotype: Phenotype;
+};
 
 export type UpdateFunctionMetadata = {
   parameters: Set<{ name: string; cardinality: number }>;
