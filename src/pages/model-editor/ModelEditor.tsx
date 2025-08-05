@@ -10,7 +10,6 @@ import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
-import PhenotypeIcon from '../../assets/icons/phenotype-48px.svg';
 import DockIcon from '../../assets/icons/dock-arrow.svg';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
@@ -24,8 +23,7 @@ type TabTypeME =
   | 'Start Computation'
   | 'Import/Export'
   | 'Model Editor'
-  | 'Control-Enabled Editor'
-  | 'Phenotype Editor'
+  | 'Control Editor'
   | null;
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
@@ -43,10 +41,8 @@ const ModelEditor: React.FC = () => {
         return <ImportExportTabContent />;
       case 'Model Editor':
         return <ModelEditorTabContent />;
-      case 'Control-Enabled Editor':
-        return <div>Control-Enabled Editor Content</div>;
-      case 'Phenotype Editor':
-        return <div>Phenotype Editor Content</div>;
+      case 'Control Editor':
+        return <div>Control Editor Content</div>;
       default:
         return null;
     }
@@ -106,20 +102,12 @@ const ModelEditor: React.FC = () => {
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
-          isActive={activeTab === 'Control-Enabled Editor'}
-          onClick={() => showHideTab('Control-Enabled Editor')}
+          isActive={activeTab === 'Control Editor'}
+          onClick={() => showHideTab('Control Editor')}
           iconSrc={ControlIcon}
           iconAlt="Control"
           showTag={true}
-          tagText="Control-Enabled Editor"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Phenotype Editor'}
-          onClick={() => showHideTab('Phenotype Editor')}
-          iconSrc={PhenotypeIcon}
-          iconAlt="Phenotype"
-          showTag={true}
-          tagText="Phenotype Editor"
+          tagText="Control Editor"
         ></IconButtonReact>
       </SideButtonMenu>
 
