@@ -509,24 +509,52 @@ class ComputeEngine {
 
   // #region --- Results ---
 
-  private getResults() {
-    if (this.lastComputationType === 'Attractor Analysis') {
-      this.backendRequest(
-        '/get_results',
-        (error: string | undefined, response: AttractorResults) => {
-          if (error !== undefined || !response) {
-            this.setResults(
-              undefined,
-              error ?? 'Internal Compute Engine Error',
-              undefined,
-              undefined
-            );
-            return;
-          }
-          this.setResults(undefined, undefined, 'Attractor Analysis', response);
-        },
-        'GET'
+  private getResultsCallback(
+    error: string | undefined,
+    response: AttractorResults | ControlResults | undefined,
+    mode: ComputationModes
+  ) {
+    if (error !== undefined || !response) {
+      this.setResults(
+        undefined,
+        error ?? 'Internal Compute Engine Error',
+        undefined,
+        undefined
       );
+      return;
+    }
+    this.setResults(undefined, undefined, mode, response);
+    ``;
+  }
+
+  private getAttractorResults() {
+    this.backendRequest(
+      '/get_results',
+      (error: string | undefined, response: AttractorResults) => {
+        this.getResultsCallback(error, response, 'Attractor Analysis');
+      },
+      'GET'
+    );
+  }
+
+  private getControlResults() {
+    this.backendRequest(
+      '/get_control_results',
+      (error: string | undefined, response: ControlResults) => {
+        this.getResultsCallback(error, response, 'Control');
+      },
+      'GET'
+    );
+  }
+
+  private getResults() {
+    switch (this.lastComputationType) {
+      case 'Attractor Analysis':
+        this.getAttractorResults();
+        break;
+      case 'Control':
+        this.getControlResults();
+        break;
     }
   }
 
