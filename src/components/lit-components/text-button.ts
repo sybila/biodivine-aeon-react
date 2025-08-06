@@ -71,7 +71,7 @@ export class TextButton extends LitElement {
       width: var(--text-button-text-container-width, 100%);
       pointer-events: none;
       line-height: var(--text-button-line-height, 20px);
-      font-size: var(--text-button-font-size, 16px)
+      font-size: var(--text-button-font-size, 16px);
       font-weight: var(--text-button-font-weight, bold);
       font-family: var(
         --text-button-font-family,
