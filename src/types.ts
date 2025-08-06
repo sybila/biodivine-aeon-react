@@ -55,6 +55,14 @@ export type ControlStats = {
   notInPhenotype: number;
 };
 
+export type ControlComputationParams = {
+  minRobustness: number;
+  maxSize: number | undefined;
+  maxNumberOfResults: number;
+};
+
+export type Oscillation = 'allowed' | 'forbidden' | 'required';
+
 export type pingInfo = {
   timestamp: number | undefined;
 };

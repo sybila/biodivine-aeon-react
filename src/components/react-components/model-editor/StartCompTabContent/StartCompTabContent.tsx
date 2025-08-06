@@ -16,6 +16,15 @@ const StartCompTabContent: React.FC = () => {
     setComputationMode(mode);
   };
 
+  const callComputationFunction = () => {
+    switch (computationMode) {
+      case 'Attractor Analysis':
+        return ComputationManager.startAttractorAnalysis();
+      case 'Control':
+        return ComputationManager.startControlComputation();
+    }
+  };
+
   const renderButtons = () => {
     const firstCol: Array<ComputationModes> = ['Attractor Analysis'];
     const secondCol: Array<ComputationModes> = ['Control'];
@@ -64,9 +73,9 @@ const StartCompTabContent: React.FC = () => {
 
       <TextButtonReact
         text="Start Computation"
-        onClick={() => ComputationManager.startAttractorAnalysis()}
-        compHeight='40px'
-        compWidth='100%'
+        onClick={() => callComputationFunction()}
+        compHeight="40px"
+        compWidth="100%"
       />
     </div>
   );

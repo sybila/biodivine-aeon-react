@@ -2,8 +2,18 @@ import ComputationManager from '../../../../../services/global/ComputationManage
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import useControlStore from '../../../../../stores/LiveModel/useControlStore';
+import type { ControlInfo } from '../../../../../types';
 
 const ControlCompParams: React.FC = () => {
+  const controlInfo: Record<number, ControlInfo> = useControlStore(
+    (state) => state.controlInfo
+  );
+
+  const numberOfEnabled = Object.values(controlInfo).filter(
+    (info) => info.controlEnabled
+  ).length;
+
   const headers: Array<string> = [
     'Min Robustness (%)',
     'Max Size',
@@ -30,7 +40,7 @@ const ControlCompParams: React.FC = () => {
       () => ComputationManager.getMaxSize(),
       (v) => ComputationManager.setMaxSize(v),
       1,
-      1000,
+      numberOfEnabled,
       1,
     ],
     [

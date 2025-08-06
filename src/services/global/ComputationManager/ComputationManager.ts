@@ -2,6 +2,7 @@ import type {
   AttractorResults,
   ComputationModes,
   ComputationStatus,
+  ControlComputationParams,
   ControlResults,
 } from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
@@ -22,14 +23,15 @@ class ComputationManagerClass {
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
 
-  /** Minimum robustness for perturbations */
-  private minRobustness: number = 0.01;
-
-  /** Maximum number of variables in a perturbation */
-  private maxSize: number = 1000000;
-
-  /** Maximum number of perturbations */
-  private maxNumberOfResults: number = 1000000;
+  /** Control computation parameters
+   * - minRobustness: Minimum robustness for perturbations in %.
+   * - maxSize: Maximum size of a perturbation (max number of perturbed variables).
+   * - maxNumberOfResults: Maximum number of perturbations to return. */
+  private controlComputationParams: ControlComputationParams = {
+    minRobustness: 0.01,
+    maxSize: undefined,
+    maxNumberOfResults: 1000000,
+  };
 
   // #endregion
 
@@ -53,37 +55,55 @@ class ComputationManagerClass {
 
   /** Sets maximum number of perturbations */
   public setMaxNumberOfResults(max: number | undefined) {
-    if (!max) this.maxNumberOfResults = 1000000;
-    else if (max < 1) this.maxNumberOfResults = 1;
-    else this.maxNumberOfResults = max;
+    if (!max) this.controlComputationParams.maxNumberOfResults = 1000000;
+    else if (max < 1) this.controlComputationParams.maxNumberOfResults = 1;
+    else this.controlComputationParams.maxNumberOfResults = max;
   }
 
   /** Returns maximum number of perturbations */
   public getMaxNumberOfResults() {
-    return this.maxNumberOfResults;
+    return this.controlComputationParams.maxNumberOfResults;
+  }
+
+  /** Resets the maximum size of a perturbation.
+   * After calling this, the next call to getMaxSize() will set it to the current number of Control-Enabled variables in the model.
+   */
+  public resetMaxSize() {
+    this.controlComputationParams.maxSize = undefined;
   }
 
   /** Sets maximum size of a perturbation */
   public setMaxSize(max: number | undefined) {
-    if (!max) this.maxSize = 1000000;
-    else if (max < 1) this.maxSize = 1;
-    else this.maxSize = max;
+    const numberOfEnabled = LiveModel.Control.getNumberOfSetControl()[0];
+
+    if (!max || max > numberOfEnabled) {
+      this.controlComputationParams.maxSize = numberOfEnabled;
+    } else if (max < 1) {
+      this.controlComputationParams.maxSize = 1;
+    } else {
+      this.controlComputationParams.maxSize = max;
+    }
   }
 
   /** Returns maximum size of a perturbation */
   public getMaxSize() {
-    return this.maxSize;
+    if (this.controlComputationParams.maxSize === undefined) {
+      this.controlComputationParams.maxSize =
+        LiveModel.Control.getNumberOfSetControl()[0];
+    }
+
+    return this.controlComputationParams.maxSize;
   }
 
-  /** Sets minimum robustness for perturbations */
+  /** Sets minimum robustness for perturbations in %*/
   public setMinRobustness(min: number | undefined) {
-    if (!min || min < 0) this.minRobustness = 0.01;
-    else this.minRobustness = min;
+    if (!min || min < 0) this.controlComputationParams.minRobustness = 0.01;
+    else this.controlComputationParams.minRobustness = min;
   }
 
   /** Returns minimum robustness for perturbations */
   public getMinRobustness() {
-    return this.minRobustness;
+    return this.controlComputationParams.minRobustness;
   }
 
   // #endregion
@@ -122,7 +142,20 @@ class ComputationManagerClass {
     this.computeEngine.computationCanStart();
 
     if (this.computationMode === 'Control') {
-      // Todo add control computation errors
+      const [controlEnabled, inPhenotype] =
+        LiveModel.Control.getNumberOfSetControl();
+
+      if (controlEnabled === 0) {
+        throw new Error(
+          'Cannot start control computation: No variables are set as Control-Enabled.'
+        );
+      }
+
+      if (inPhenotype === 0) {
+        throw new Error(
+          'Cannot start control computation: No variables are set in Phenotype.'
+        );
+      }
     }
 
     return;
@@ -171,6 +204,34 @@ class ComputationManagerClass {
 
     // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
+  }
+
+  // #endregion
+
+  // #region --- Control Computation ---
+
+  public startControlComputation(): void {
+    const model = LiveModel.Export.exportAeon();
+
+    const oscillation = LiveModel.Control.getOscillation() ?? 'Allowed';
+
+    try {
+      this.computationCanStart(model);
+    } catch (error: any) {
+      console.log('Error starting computation:', error.message);
+      Message.showError(error.message);
+      return;
+    }
+
+    // Todo delete old results
+    this.computeEngine.startControlComputation(
+      model,
+      oscillation,
+      this.getMinRobustness(),
+      this.getMaxSize(),
+      this.getMaxNumberOfResults(),
+      this.setComputationStatus
+    );
   }
 
   // #endregion

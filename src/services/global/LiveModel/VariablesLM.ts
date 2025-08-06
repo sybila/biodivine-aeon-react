@@ -5,6 +5,7 @@ import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import type { LiveModelClass } from './LiveModel';
 import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
+import ComputationManager from '../ComputationManager/ComputationManager';
 
 /** Manage variables in the live model */
 class VariablesLM {
@@ -15,6 +16,8 @@ class VariablesLM {
   constructor(liveModel: LiveModelClass) {
     this._liveModel = liveModel;
   }
+
+  // #region --- Variable Actions ---
 
   /** Add a variable to the model */
   public addVariable(
@@ -46,8 +49,9 @@ class VariablesLM {
 
     CytoscapeME.addNode(id, variableName, position);
 
+    ComputationManager.resetMaxSize();
+
     // Todo
-    //ComputeEngine.Computation.Control.setMaxSize(true);
     //UI.Visible.setQuickHelpVisible(false);
 
     this._liveModel.UpdateFunctions._validateUpdateFunction(id);
@@ -75,7 +79,7 @@ class VariablesLM {
         updateTargets.push(reg.target);
       }
 
-      //ComputeEngine.Computation.Control.setMaxSize(true);
+      ComputationManager.resetMaxSize();
 
       useVariablesStore.getState().removeVariable(id);
       this._liveModel.Control.removeControlInfo(id);
@@ -132,6 +136,8 @@ class VariablesLM {
     this._liveModel.Export.saveModel();
     return undefined;
   }
+
+  // #endregion
 
   public pruneConstants(force = false): number {
     const toRemove: number[] = [];

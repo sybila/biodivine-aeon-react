@@ -366,11 +366,12 @@ class ComputeEngine {
 
   // #endregion
 
-  // #region --- Attractor Analysis Computation ---
+  // #region --- Start Computation ---
 
-  private startAnalysisCallback(
+  private startComputationCallback(
     error: string | undefined,
-    response: AttractorResponse | undefined,
+    response: AttractorResponse | ControlResponse | undefined,
+    computationMode: ComputationModes,
     callback:
       | ((
           warning: string | undefined,
@@ -390,7 +391,7 @@ class ComputeEngine {
           'Connected',
           {
             status: `Error: ${error ?? 'Internal Compute Engine error'}`,
-            computationMode: 'Attractor Analysis',
+            computationMode: computationMode,
             running: false,
           },
           'green'
@@ -399,7 +400,7 @@ class ComputeEngine {
       return;
     }
 
-    this.lastComputationType = 'Attractor Analysis';
+    this.lastComputationType = computationMode;
     const statusInfo = this.createComputationStatus(response);
 
     callback?.(
@@ -412,6 +413,10 @@ class ComputeEngine {
 
     this.ping();
   }
+
+  // #endregion
+
+  // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis(
     model: string,
@@ -430,7 +435,12 @@ class ComputeEngine {
     this.backendRequest(
       '/start_computation',
       (error: string | undefined, response: AttractorResponse | undefined) =>
-        this.startAnalysisCallback(error, response, callback),
+        this.startComputationCallback(
+          error,
+          response,
+          'Attractor Analysis',
+          callback
+        ),
       'POST',
       model
     );
@@ -458,6 +468,40 @@ class ComputeEngine {
       },
       'POST',
       ''
+    );
+  }
+
+  // #endregion
+
+  // #region --- Control Computation ---
+
+  public startControlComputation(
+    model: string,
+    oscillation: string,
+    minRobustness: number,
+    maxSize: number,
+    maxNumberResults: number,
+    callback:
+      | ((
+          warning: string | undefined,
+          error: string | undefined,
+          engineStatus: string | undefined,
+          compStatus: ComputationStatus | undefined,
+          color: string | undefined
+        ) => void)
+      | undefined = undefined
+  ): void {
+    this.waitingForResults = true;
+
+    this.backendRequest(
+      `/start_control_computation/${oscillation}/${
+        minRobustness / 100
+      }/${maxSize}/${maxNumberResults}`,
+      (error: string | undefined, response: ControlResponse | undefined) => {
+        this.startComputationCallback(error, response, 'Control', callback);
+      },
+      'POST',
+      model
     );
   }
 

@@ -1,13 +1,55 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
-import type { ControlInfo, ControlStats, Phenotype } from '../../../types';
+import type {
+  ControlInfo,
+  ControlStats,
+  Oscillation,
+  Phenotype,
+} from '../../../types';
+import ComputationManager from '../ComputationManager/ComputationManager';
 import type { LiveModelClass } from './LiveModel';
 
 /** Class to manage control information for live model variables */
 class ControlLM {
+  // #region --- Properties ---`
+
+  /** Reference to the live model instance */
   private _liveModel: LiveModelClass;
+
+  private oscillation: Oscillation = 'allowed';
+
+  // #endregion
 
   constructor(liveModel: LiveModelClass) {
     this._liveModel = liveModel;
+  }
+
+  // #region --- Oscillation ---
+
+  public setOscillation(oscillation: Oscillation): void {
+    this.oscillation = oscillation;
+  }
+
+  public getOscillation(): Oscillation {
+    return this.oscillation;
+  }
+
+  // #endregion
+
+  /** Returns the number of variables set as Control-Enabled and in Phenotype .
+   * @returns A tuple with the first element being the count of Control-Enabled variables,
+   * and the second element being the count of variables in Phenotype.
+   */
+  public getNumberOfSetControl(): [number, number] {
+    const controlInfo: ControlInfo[] = useControlStore.getState().getAllInfo();
+    const [controlEnabled, inPhenotype] = controlInfo.reduce(
+      (acc: [number, number], info: ControlInfo) => {
+        if (info.controlEnabled) acc[0]++;
+        if (info.phenotype != null) acc[1]++;
+        return acc;
+      },
+      [0, 0]
+    );
+    return [controlEnabled, inPhenotype];
   }
 
   /** Remove control information for a variable by its ID */
@@ -58,6 +100,7 @@ class ControlLM {
     }
 
     useControlStore.getState().setControlEnabled(id, controlEnabled);
+    ComputationManager.resetMaxSize();
   }
 }
 
