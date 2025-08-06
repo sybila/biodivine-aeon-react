@@ -7,6 +7,7 @@ import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
 import type { ComputationStatus } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import Time from '../../../../services/utilities/Time';
 
 const ComputeEngineWindowContent = () => {
   const computeEngineStatus: string = useComputeEngineStatus(
@@ -16,34 +17,6 @@ const ComputeEngineWindowContent = () => {
   const computationStatus: ComputationStatus = useComputeEngineStatus(
     (state) => state.computationStatus
   );
-
-  const getTime = (timestamp: number | undefined): string => {
-    if (timestamp === undefined || timestamp < 0) return 'Not available';
-
-    const date = new Date(timestamp);
-
-    const addZero = function (num: number): string {
-      return num < 10 ? '0' + num : num.toString();
-    };
-
-    if (!computationStatus.running) {
-      return (
-        addZero(date.getHours()) +
-        ':' +
-        addZero(date.getMinutes()) +
-        ':' +
-        addZero(date.getSeconds())
-      );
-    }
-
-    return (
-      addZero(date.getUTCHours()) +
-      ':' +
-      addZero(date.getUTCMinutes()) +
-      ':' +
-      addZero(date.getUTCSeconds())
-    );
-  };
 
   const renderStatus = () => {
     const compStatusInfo: Array<{
@@ -64,7 +37,7 @@ const ComputeEngineWindowContent = () => {
             },
             {
               label: computationStatus.running ? 'Elapsed:' : 'Ended At:',
-              value: getTime(computationStatus.timestamp),
+              value: Time.getTime(computationStatus.timestamp, computationStatus.running),
             },
           ]
         : []),
