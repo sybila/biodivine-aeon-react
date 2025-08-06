@@ -11,6 +11,9 @@ import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
 import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 import useModelInfoStore from '../../../../stores/LiveModel/useModelInfoStore';
+import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
+
+import AddIcon from '../../../../assets/icons/add_box.svg';
 
 const ModelEditorTabContent: React.FC = () => {
   const [hoverId, setHoverId] = useState<number | null>(null);
@@ -114,7 +117,7 @@ const ModelEditorTabContent: React.FC = () => {
           />
 
           <TextButtonReact
-            className="mr-2"
+            className="mr-1"
             compWidth="35%"
             textFontSize="13px"
             text={`${showModelDescription ? 'Hide' : 'Show'} Model description`}
@@ -126,11 +129,24 @@ const ModelEditorTabContent: React.FC = () => {
         <ModelStatsTable />
       </section>
 
-      <section className="flex flex-row items-around w-full h-fit gap-1">
+      <section className="flex flex-row justify-between w-full h-[30px] gap-1">
         <DotHeaderReact
+          compHeight="99%"
           compWidth="50%"
           headerText="Variables"
           justifyHeader="start"
+        />
+        <TextIconButtonReact
+          className="mr-1"
+          compHeight="90%"
+          compWidth="30%"
+          iconSrc={AddIcon}
+          iconAlt="Add"
+          iconHeight="19px"
+          text="Add Variable"
+          handleClick={() => {
+            ModelEditor.addVariable();
+          }}
         />
       </section>
 

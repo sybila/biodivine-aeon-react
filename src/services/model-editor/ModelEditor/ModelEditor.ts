@@ -66,6 +66,14 @@ class ModelEditorClass {
 
   // #region --- Variable Actions ---
 
+  /** Adds a new variable and zooms on it */
+  public addVariable() {
+    const newVariableId = LiveModel.Variables.addVariable(true);
+    if (newVariableId) {
+      this.zoomOnVariable(newVariableId);
+    }
+  }
+
   /** Changes the name of a variable */
   public changeVariableName(id: number, newName: string) {
     if (newName != '') LiveModel.Variables.renameVariable(id, newName);
