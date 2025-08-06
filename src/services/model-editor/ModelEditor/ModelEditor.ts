@@ -69,7 +69,7 @@ class ModelEditorClass {
   /** Adds a new variable and zooms on it */
   public addVariable() {
     const newVariableId = LiveModel.Variables.addVariable(true);
-    if (newVariableId) {
+    if (newVariableId !== undefined) {
       this.zoomOnVariable(newVariableId);
     }
   }
