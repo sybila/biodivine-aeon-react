@@ -19,6 +19,7 @@ import ComputeEngineWindowContent from '../../components/react-components/global
 import TwoSidedTextReact from '../../components/react-components/lit-wrappers/TwoSidedTextReact';
 import ResultsWindowContent from '../../components/react-components/global/ResultsWindowContent/ResultsWindowContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
+import StatusBar from '../../components/react-components/global/StatusBar/StatusBar';
 
 type TabTypeME =
   | 'Start Computation'
@@ -71,11 +72,10 @@ const ModelEditor: React.FC = () => {
 
   return (
     <>
-      <TwoSidedTextReact
-        className="absolute top-1 right-3 z-10 select-none pointer-events-none"
-        rightText="Aeon/"
-        leftText="BIODIVINE"
-      />
+      <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
+        <StatusBar />
+        <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
+      </section>
 
       <SideButtonMenu>
         <IconButtonReact
