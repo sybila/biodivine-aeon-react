@@ -3,6 +3,4 @@ export type VariableControlInfoProps = {
   name: string;
   hover: boolean;
   selected: boolean;
-  handleMouseEnter: () => void;
-  handleMouseLeave: () => void;
 };

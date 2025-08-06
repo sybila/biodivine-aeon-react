@@ -14,8 +14,6 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   name,
   hover,
   selected,
-  handleMouseEnter,
-  handleMouseLeave,
 }) => {
   const controlInfo: ControlInfo | undefined = useControlStore((state) =>
     state.getVariableControlInfo(id)
@@ -52,8 +50,8 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       contentOverflowY="visible"
       hover={hover}
       active={selected}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => ControlEditor.hoverVariableCytoscape(id, true)}
+      onMouseLeave={() => ControlEditor.hoverVariableCytoscape(id, false)}
     >
       <span className="h-full w-[60%] max-w-[60%] select-none overflow-auto text-[100%] font-(family-name:--font-family-fira-mono)">
         {name}

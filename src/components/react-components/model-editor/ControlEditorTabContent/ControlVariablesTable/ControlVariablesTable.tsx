@@ -58,8 +58,6 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           name={variable.name ?? 'Unknown Variable'}
           hover={hoverId === variable.id}
           selected={selectedId === variable.id}
-          handleMouseEnter={() => hoverVariableInfo(variable.id, true)}
-          handleMouseLeave={() => hoverVariableInfo(variable.id, false)}
         />
       ))}
     </section>
