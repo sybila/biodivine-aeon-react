@@ -53,8 +53,10 @@ const useControlStore = create<ControlState>((set, get) => ({
       const controlInfo = state.controlInfo[id];
       if (controlInfo) {
         return {
-          ...state.controlInfo,
-          [id]: { ...controlInfo, controlEnabled },
+          controlInfo: {
+            ...state.controlInfo,
+            [id]: { ...controlInfo, controlEnabled },
+          },
         };
       }
       return state;
@@ -66,8 +68,10 @@ const useControlStore = create<ControlState>((set, get) => ({
       const controlInfo = state.controlInfo[id];
       if (controlInfo) {
         return {
-          ...state.controlInfo,
-          [id]: { ...controlInfo, phenotype },
+          controlInfo: {
+            ...state.controlInfo,
+            [id]: { ...controlInfo, phenotype },
+          },
         };
       }
       return state;
