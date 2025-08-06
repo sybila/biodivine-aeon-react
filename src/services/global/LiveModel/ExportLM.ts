@@ -81,7 +81,8 @@ class ExportLM {
     if (name !== undefined) result += `#name:${name}\n`;
 
     const description = useModelInfoStore.getState().getModelDescription();
-    if (description !== undefined) result += `#description:${description}\n`;
+    if (description !== undefined)
+      result += `#description:${description.replace(/\n/g, '\\n')}\n`;
 
     for (const variable of variables) {
       const varName = variable?.name;
