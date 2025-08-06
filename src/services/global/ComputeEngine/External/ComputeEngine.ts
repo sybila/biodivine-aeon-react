@@ -6,6 +6,7 @@ import type {
   ControlComputationStats,
   ControlResult,
   ControlResults,
+  TimestampResponse,
 } from '../../../../types';
 import type {
   AttractorResponse,
@@ -370,9 +371,38 @@ class ComputeEngine {
 
   // #region --- Start Computation ---
 
+  private processTimestampResponse(
+    response: TimestampResponse | undefined,
+    computationMode: ComputationModes
+  ): ComputationInfo {
+    const compStatus: ComputationInfo = {
+      computeEngineStatus: 'Connected',
+      computationStatus: {
+        status: 'No computation',
+        running: false,
+      },
+      statusColor: 'green',
+    };
+
+    if (!response || !response.timestamp) {
+      compStatus.computationStatus.status =
+        'Error: Internal Compute Engine error';
+      compStatus.statusColor = 'red';
+      return compStatus;
+    }
+
+    compStatus.computationStatus.timestamp = 0;
+    compStatus.computationStatus.status = 'Running';
+    compStatus.computationStatus.running = true;
+    compStatus.computationStatus.computationMode = computationMode;
+    compStatus.statusColor = 'orange';
+
+    return compStatus;
+  }
+
   private startComputationCallback(
     error: string | undefined,
-    response: AttractorResponse | ControlResponse | undefined,
+    response: TimestampResponse | undefined,
     computationMode: ComputationModes,
     callback:
       | ((
@@ -403,7 +433,10 @@ class ComputeEngine {
     }
 
     this.lastComputationType = computationMode;
-    const statusInfo = this.createComputationStatus(response);
+    const statusInfo: ComputationInfo = this.processTimestampResponse(
+      response,
+      computationMode
+    );
 
     callback?.(
       undefined,
@@ -436,7 +469,7 @@ class ComputeEngine {
 
     this.backendRequest(
       '/start_computation',
-      (error: string | undefined, response: AttractorResponse | undefined) =>
+      (error: string | undefined, response: TimestampResponse | undefined) =>
         this.startComputationCallback(
           error,
           response,
@@ -499,7 +532,7 @@ class ComputeEngine {
       `/start_control_computation/${oscillation}/${
         minRobustness / 100
       }/${maxSize}/${maxNumberResults}`,
-      (error: string | undefined, response: ControlResponse | undefined) => {
+      (error: string | undefined, response: TimestampResponse | undefined) => {
         this.startComputationCallback(error, response, 'Control', callback);
       },
       'POST',

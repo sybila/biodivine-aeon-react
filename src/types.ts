@@ -86,7 +86,7 @@ export type ControlResults = {
 
 // #endregion
 
-export type pingInfo = {
+export type TimestampResponse = {
   timestamp: number | undefined;
 };
 
