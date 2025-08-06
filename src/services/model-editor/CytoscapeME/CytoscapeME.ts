@@ -3,10 +3,11 @@ import { EdgeMonotonicity } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import ModelEditor from '../ModelEditor/ModelEditor';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
-
-//import { //ModelEditor, //UI } from "./Todo-imports";
+import ControlEditor from '../ControlEditor/CotrolEditor';
 
 const DOUBLE_CLICK_DELAY = 400;
+
+//Todo UI functions + ModelEditor hover regulation
 
 declare const cytoscape: any;
 
@@ -106,16 +107,19 @@ class CytoscapeMEClass {
     const nodes: any[] = [];
     const variables: Record<string, number> = {};
 
-    useVariablesStore.getState().getAllVariables().forEach((variable: any) => {
-      nodes.push(this._cytoscape.getElementById(variable.id));
+    useVariablesStore
+      .getState()
+      .getAllVariables()
+      .forEach((variable: any) => {
+        nodes.push(this._cytoscape.getElementById(variable.id));
 
-      if (phenotype == true) {
-        variables[variable.id] =
-          variable.phenotype == null ? 0 : variable.phenotype ? 1 : 2;
-      } else {
-        variables[variable.id] = variable.controllable ? 0 : 1;
-      }
-    });
+        if (phenotype == true) {
+          variables[variable.id] =
+            variable.phenotype == null ? 0 : variable.phenotype ? 1 : 2;
+        } else {
+          variables[variable.id] = variable.controllable ? 0 : 1;
+        }
+      });
 
     const nodesCol = this._cytoscape.collection(nodes);
 
@@ -167,15 +171,19 @@ class CytoscapeMEClass {
       position: { x: position[0], y: position[1] },
     });
 
-    this.highlightControllable([useVariablesStore.getState().variableFromId(id)]);
+    this.highlightControllable([
+      useVariablesStore.getState().variableFromId(id),
+    ]);
 
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
       ModelEditor.hoverVariable(id, true);
+      ControlEditor.hoverVariable(id, true);
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
       ModelEditor.hoverVariable(id, false);
+      ControlEditor.hoverVariable(id, false);
     });
     node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
@@ -186,10 +194,12 @@ class CytoscapeMEClass {
       }
       this._renderMenuForSelectedNode(node);
       ModelEditor.selectVariable(id, true);
+      ControlEditor.selectVariable(id, true);
     });
     node.on('unselect', (e: any) => {
       ////UI.Visible.toggleNodeMenu();
       ModelEditor.selectVariable(id, false);
+      ControlEditor.selectVariable(id, false);
     });
     node.on('click', (e: any) => {
       this._lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
