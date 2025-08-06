@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ControlEditor from '../../../../../services/model-editor/ControlEditor/CotrolEditor';
+import ControlEditor from '../../../../../services/model-editor/ControlEditor/ControlEditor';
 import type { ControlVariablesTableProps } from './ControlVariablesTableProps';
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import type { Variable } from '../../../../../types';

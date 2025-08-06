@@ -2,7 +2,7 @@ import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import { useState } from 'react';
 import ControlStatsTable from './ControStatsTable/ControlStatsTable';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
-import ControlEditor from '../../../../services/model-editor/ControlEditor/CotrolEditor';
+import ControlEditor from '../../../../services/model-editor/ControlEditor/ControlEditor';
 import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
 
 const ControlEditorTabContent: React.FC = () => {

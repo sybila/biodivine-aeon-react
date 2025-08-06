@@ -7,7 +7,7 @@ import type { VariableControlInfoProps } from './VariableControlInfoProps';
 
 import ContrIcon from '../../../../../../assets/icons/control-enabled-button.svg';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';
-import ControlEditor from '../../../../../../services/model-editor/ControlEditor/CotrolEditor';
+import ControlEditor from '../../../../../../services/model-editor/ControlEditor/ControlEditor';
 
 const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   id,

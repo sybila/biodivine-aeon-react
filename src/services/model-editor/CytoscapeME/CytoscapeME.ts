@@ -3,7 +3,7 @@ import { EdgeMonotonicity } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import ModelEditor from '../ModelEditor/ModelEditor';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
-import ControlEditor from '../ControlEditor/CotrolEditor';
+import ControlEditor from '../ControlEditor/ControlEditor';
 
 const DOUBLE_CLICK_DELAY = 400;
 
