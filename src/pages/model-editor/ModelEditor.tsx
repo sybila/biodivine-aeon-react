@@ -18,6 +18,7 @@ import OverlayWindowReact from '../../components/react-components/lit-wrappers/O
 import ComputeEngineWindowContent from '../../components/react-components/global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import TwoSidedTextReact from '../../components/react-components/lit-wrappers/TwoSidedTextReact';
 import ResultsWindowContent from '../../components/react-components/global/ResultsWindowContent/ResultsWindowContent';
+import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 
 type TabTypeME =
   | 'Start Computation'
@@ -42,7 +43,7 @@ const ModelEditor: React.FC = () => {
       case 'Model Editor':
         return <ModelEditorTabContent />;
       case 'Control Editor':
-        return <div>Control Editor Content</div>;
+        return <ControlEditorTabContent />;
       default:
         return null;
     }

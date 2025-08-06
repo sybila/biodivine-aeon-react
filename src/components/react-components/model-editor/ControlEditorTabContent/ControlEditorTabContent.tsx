@@ -1,48 +1,50 @@
-
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import { useState } from 'react';
-import type { ControlStats } from '../../../../types';
-import StatEntryReact from '../../lit-wrappers/StatEntryReact';
-
+import ControlStatsTable from './ControStatsTable/ControlStatsTable';
+import TextInputReact from '../../lit-wrappers/TextInputReact';
+import ControlEditor from '../../../../services/model-editor/ControlEditor/CotrolEditor';
+import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
 
 const ControlEditorTabContent: React.FC = () => {
+  const [variableSearchText, setVariableSearchText] = useState<string>(
+    ControlEditor.getVariableSearch()
+  );
 
-    const [stats, setStats] = useState<ControlStats>();
-
-//   const insertStats = () => {
-//     const statCells = [
-//       ['Variables', stats.variableCount.toString()],
-//       ['Regulations', stats.regulationCount.toString()],
-//       ['Max. in-degree', stats.maxInDegree.toString()],
-//       ['Parameter space size', '2^' + stats.parameterVariables],
-//       ['State space size', '2^' + stats.variableCount],
-//       ['Max. out-degree', stats.maxOutDegree.toString()],
-//       [
-//         'Explicit parameters',
-//         stats.explicitParameters.length === 0
-//           ? '(none)'
-//           : stats.explicitParameters.join(', '),
-//       ],
-//     ];
-
-//     return (
-//       <section className="flex flex-col justify-center items-start w-[94%] h-fit gap-0.5">
-//         {statCells.map(([name, value]) => (
-//           <StatEntryReact
-//             key={name}
-//             compHeight="100%"
-//             compWidth="100%"
-//             statName={name}
-//             statValue={value}
-//             addColon={true}
-//           />
-//         ))}{' '}
-//       </section>
-//     );
-//   };
+  const setVariableSearch = (name: string) => {
+    if (name !== variableSearchText) {
+      ControlEditor.setVariableSearch(name);
+      setVariableSearchText(name);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
+      <section className="flex flex-col items-center w-full h-fit gap-3">
+        <DotHeaderReact
+          headerText="Control Statistics"
+          compWidth="100%"
+          justifyHeader="start"
+        />
 
+        <ControlStatsTable />
+      </section>
+
+      <section className="flex flex-row items-around w-full h-fit gap-1">
+        <DotHeaderReact
+          compWidth="50%"
+          headerText="Variables"
+          justifyHeader="start"
+        />
+      </section>
+
+      <TextInputReact
+        compWidth="95%"
+        placeholder="Search variables..."
+        onWrite={setVariableSearch}
+        value={variableSearchText}
+      />
+
+      <ControlVariablesTable searchText={variableSearchText} />
     </div>
   );
 };

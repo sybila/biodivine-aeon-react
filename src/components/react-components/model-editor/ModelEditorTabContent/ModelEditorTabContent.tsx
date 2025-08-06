@@ -75,7 +75,7 @@ const ModelEditorTabContent: React.FC = () => {
     }
 
     return (
-      <section className="flex flex-col min-h-[50px] h-auto max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] overflow-auto w-[98%] gap-1">
+      <section className="flex flex-col min-h-[50px] h-auto max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
         {filteredVariables.map((variable: Variable) => (
           <VariableInfo
             key={variable.id}

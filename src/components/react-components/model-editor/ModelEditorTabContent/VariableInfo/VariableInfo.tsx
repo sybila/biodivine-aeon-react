@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import ExtendableContentReact from '../../../lit-wrappers/ExtendableContent';
+import ExtendableContentReact from '../../../lit-wrappers/ExtendableContentReact';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 
@@ -35,8 +35,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     [regulationsObj, id]
   );
 
-  const updateFunction = useUpdateFunctionsStore((state) =>
-    state.getUpdateFunctionId(id)?.functionString ?? ''
+  const updateFunction = useUpdateFunctionsStore(
+    (state) => state.getUpdateFunctionId(id)?.functionString ?? ''
   );
 
   const updateVariableName = (newName: string) => {
@@ -66,7 +66,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   };
 
   const insertRegulators = () => {
-
     if (regulations.length === 0) {
       return (
         <section

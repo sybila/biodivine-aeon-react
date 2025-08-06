@@ -108,12 +108,10 @@ class ModelEditorClass {
 
   // #endregion
 
-
   // #region --- Cytoscape Actions ---
 
   /** Toggles hover state on a variable node in the CytoscapeMe canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set reloadEditorTab with setReloadFunction before running this function)
    */
   public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
     CytoscapeME.hoverNode(id, turnOnHover);

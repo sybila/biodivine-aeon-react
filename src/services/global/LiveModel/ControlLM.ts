@@ -1,5 +1,5 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
-import type { Phenotype } from '../../../types';
+import type { ControlInfo, ControlStats, Phenotype } from '../../../types';
 import type { LiveModelClass } from './LiveModel';
 
 /** Class to manage control information for live model variables */
@@ -16,7 +16,30 @@ class ControlLM {
       return;
     }
 
-    useControlStore.getState().removeInfo(id, force);
+    useControlStore.getState().removeInfo(id);
+  }
+
+  /** Returns control statistics for the live model */
+  public getControlStats(): ControlStats {
+    const controlInfo: ControlInfo[] = useControlStore.getState().getAllInfo();
+    const stats: ControlStats = {
+      controlEnabled: 0,
+      notControlEnabled: 0,
+      inPhenotypeTrue: 0,
+      inPhenotypeFalse: 0,
+      notInPhenotype: 0,
+    };
+
+    controlInfo.forEach((info) => {
+      if (info.controlEnabled) stats.controlEnabled++;
+      else stats.notControlEnabled++;
+
+      if (info.phenotype === true) stats.inPhenotypeTrue++;
+      else if (info.phenotype === false) stats.inPhenotypeFalse++;
+      else stats.notInPhenotype++;
+    });
+
+    return stats;
   }
 
   /** Change control information for a variable by its ID */

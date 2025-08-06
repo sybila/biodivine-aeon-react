@@ -35,7 +35,14 @@
   --color-secondary: #e7ecee;
   --color-highlight: #cfd8dc;
 
+  --color-grey: #bebebe;
+  --color-grey-light: #d6d4d4;
+  --color-green: #4abd73;
+  --color-green-light: #a8e6cf;
   --color-red: #d05d5d;
+  --color-red-light: #f8b4b4;
+  --color-yellow: #f3d491;
+  --color-yellow-light: #ffe8aa;
 
   --base-font-family: 'Helvetica', 'Arial', sans-serif;
   --font-family-fira-mono: 'FiraMono', 'monospace';
