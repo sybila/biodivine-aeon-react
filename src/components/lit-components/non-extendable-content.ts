@@ -42,9 +42,9 @@ export class NonExtendableContent extends LitElement {
   static styles = css`
     :host {
       display: block;
-      height: var(--non-extendable-content-comp-height, 30px);
+      height: var(--non-extendable-content-comp-height, 39px);
       width: var(--non-extendable-content-comp-width, 500px);
-      max-height: var(--non-extendable-content-comp-height, 30px);
+      max-height: var(--non-extendable-content-comp-height, 39px);
       max-width: var(--non-extendable-content-comp-width, 500px);
     }
 
@@ -119,7 +119,7 @@ export class NonExtendableContent extends LitElement {
     const update = (prop: string, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update('compHeight', '--non-extendable-content-comp-height', '30px');
+    update('compHeight', '--non-extendable-content-comp-height', '39px');
     update('compWidth', '--non-extendable-content-comp-width', '500px');
 
     update('contHeight', '--non-extendable-content-cont-height', '100%');
