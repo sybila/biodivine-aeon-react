@@ -7,11 +7,6 @@ export type Position = [number, number];
 
 export type Phenotype = boolean | null;
 
-export type ControlInfo = {
-  controlEnabled: boolean;
-  phenotype: Phenotype;
-};
-
 export type UpdateFunctionMetadata = {
   parameters: Set<{ name: string; cardinality: number }>;
 };
@@ -47,6 +42,13 @@ export type ModelStats = {
 
 export type ComputationModes = 'Attractor Analysis' | 'Control';
 
+// #region --- Control ---
+
+export type ControlInfo = {
+  controlEnabled: boolean;
+  phenotype: Phenotype;
+};
+
 export type ControlStats = {
   controlEnabled: number;
   notControlEnabled: number;
@@ -62,6 +64,27 @@ export type ControlComputationParams = {
 };
 
 export type Oscillation = 'allowed' | 'forbidden' | 'required';
+
+export type ControlResult = {
+  color_count: number;
+  robustness: number;
+  perturbation: Perturbation;
+};
+
+export type ControlComputationStats = {
+  allColorsCount: number;
+  perturbationCount: number;
+  minimalPerturbationSize: number;
+  maximalPerturbationRobustness: number;
+  elapsed: number;
+};
+
+export type ControlResults = {
+  perturbations: Array<ControlResult>;
+  stats: ControlComputationStats;
+};
+
+// #endregion
 
 export type pingInfo = {
   timestamp: number | undefined;
@@ -95,11 +118,3 @@ export type AttractorResults = {
 };
 
 export type Perturbation = Record<string, number>;
-
-export type ControlResult = {
-  color_count: number;
-  robustness: number;
-  perturbation: Perturbation;
-};
-
-export type ControlResults = Array<ControlResult>;
