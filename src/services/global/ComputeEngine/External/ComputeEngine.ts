@@ -3,6 +3,8 @@ import type {
   AttractorResults,
   ComputationModes,
   ComputationStatus,
+  ControlComputationStats,
+  ControlResult,
   ControlResults,
 } from '../../../../types';
 import type {
@@ -537,11 +539,44 @@ class ComputeEngine {
     );
   }
 
+  /** Get control computation statistics. */
+  private getControlComputationStats(results: ControlResult[]) {
+    this.backendRequest(
+      '/get_control_stats',
+      (
+        error: string | undefined,
+        response: ControlComputationStats | undefined
+      ) => {
+        this.getResultsCallback(
+          error,
+          !response
+            ? undefined
+            : {
+                perturbations: results,
+                stats: {
+                  ...response,
+                  maximalPerturbationRobustness:
+                    response.maximalPerturbationRobustness * 100,
+                },
+              },
+          'Control'
+        );
+      },
+      'GET'
+    );
+  }
+
+  /** Get control computation results and statistics. */
   private getControlResults() {
     this.backendRequest(
       '/get_control_results',
-      (error: string | undefined, response: ControlResults) => {
-        this.getResultsCallback(error, response, 'Control');
+      (error: string | undefined, response: ControlResult[] | undefined) => {
+        if (error !== undefined || !response) {
+          this.getResultsCallback(error, undefined, 'Control');
+          return;
+        }
+
+        this.getControlComputationStats(response);
       },
       'GET'
     );
@@ -559,6 +594,7 @@ class ComputeEngine {
   }
 
   // #endregion
+
   /** Build and return an asynchronous request with given parameters. */
   private backendRequest(
     url: string,
