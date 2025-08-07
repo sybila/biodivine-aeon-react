@@ -10,6 +10,10 @@ type ControlState = {
   removeInfo: (id: number) => void;
   /** Retrieves all control information. */
   getAllInfo: () => ControlInfo[];
+  /** Retrieves all control information with the IDs of the corresponding variables.
+   *  @returns [id, ControlInfo] - An array of tuples, where each tuple contains the variable ID and its control information.
+   */
+  getAllInfoIds: () => Array<[number, ControlInfo]>;
   /** Sets the control enabled state for a variable. */
   setControlEnabled: (id: number, controlEnabled: boolean) => void;
   /** Sets the phenotype for a variable. */
@@ -47,6 +51,12 @@ const useControlStore = create<ControlState>((set, get) => ({
   },
 
   getAllInfo: () => Object.values(get().controlInfo),
+
+  getAllInfoIds: () =>
+    Object.entries(get().controlInfo).map(([id, controlInfo]) => [
+      Number(id),
+      controlInfo,
+    ]),
 
   setControlEnabled: (id, controlEnabled) => {
     set((state) => {
