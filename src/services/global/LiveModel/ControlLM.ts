@@ -5,6 +5,7 @@ import type {
   Oscillation,
   Phenotype,
 } from '../../../types';
+import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import type { LiveModelClass } from './LiveModel';
 
@@ -91,6 +92,10 @@ class ControlLM {
     }
 
     useControlStore.getState().setPhenotype(id, phenotype);
+
+    const controlInfo = useControlStore.getState().getVariableControlInfo(id);
+
+    if (controlInfo) CytoscapeME.highlightPhenotype([[id, controlInfo]]);
   }
 
   /** Change variable control enabled state by its ID */
@@ -100,6 +105,11 @@ class ControlLM {
     }
 
     useControlStore.getState().setControlEnabled(id, controlEnabled);
+
+    const controlInfo = useControlStore.getState().getVariableControlInfo(id);
+
+    if (controlInfo) CytoscapeME.highlightControlEnabled([[id, controlInfo]]);
+
     ComputationManager.resetMaxSize();
   }
 }

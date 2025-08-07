@@ -10,6 +10,7 @@ import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
+import EyeIcon from '../../assets/icons/eye.svg';
 import DockIcon from '../../assets/icons/dock-arrow.svg';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
@@ -20,12 +21,14 @@ import TwoSidedTextReact from '../../components/react-components/lit-wrappers/Tw
 import ResultsWindowContent from '../../components/react-components/global/ResultsWindowContent/ResultsWindowContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import StatusBar from '../../components/react-components/global/StatusBar/StatusBar';
+import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 
 type TabTypeME =
   | 'Start Computation'
   | 'Import/Export'
   | 'Model Editor'
   | 'Control Editor'
+  | 'Visual Options'
   | null;
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
@@ -45,6 +48,8 @@ const ModelEditor: React.FC = () => {
         return <ModelEditorTabContent />;
       case 'Control Editor':
         return <ControlEditorTabContent />;
+      case 'Visual Options':
+        return <VisualOptionsTabContent />;
       default:
         return null;
     }
@@ -109,6 +114,14 @@ const ModelEditor: React.FC = () => {
           iconAlt="Control"
           showTag={true}
           tagText="Control Editor"
+        ></IconButtonReact>
+        <IconButtonReact
+          isActive={activeTab === 'Visual Options'}
+          onClick={() => showHideTab('Visual Options')}
+          iconSrc={EyeIcon}
+          iconAlt="Visual"
+          showTag={true}
+          tagText="Visual Options"
         ></IconButtonReact>
       </SideButtonMenu>
 
