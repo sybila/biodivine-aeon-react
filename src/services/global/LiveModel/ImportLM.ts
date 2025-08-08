@@ -1,3 +1,4 @@
+import { Message } from '../../../components/lit-components/message-wrapper';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
@@ -86,7 +87,7 @@ class ImportLM {
       );
 
       if (target === undefined || regulator === undefined) {
-        //Todo-error
+        Message.showError('Error: Regulation cannot be created. One of the variables is not defined.');
         continue;
       }
 
@@ -117,7 +118,7 @@ class ImportLM {
       );
 
       if (!variable) {
-        //Todo error;
+        Message.showError(`Error: Update function for variable "${key}" cannot be set. Variable is not defined.`);
         continue;
       }
 
