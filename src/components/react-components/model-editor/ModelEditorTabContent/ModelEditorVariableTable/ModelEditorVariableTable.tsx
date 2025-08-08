@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import type { Variable } from '../../../../../types';
+import type { RegulationVariables, Variable } from '../../../../../types';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -14,6 +14,11 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
     ModelEditor.getSelectedVariableId()
   );
 
+  const [hoverRegulation, setHoverRegulation] =
+    useState<RegulationVariables | null>(null);
+  const [selectedRegulation, setSelectedRegulation] =
+    useState<RegulationVariables | null>(null);
+
   const variablesObj = useVariablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
 
@@ -25,10 +30,31 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
     setSelectedVariableId(select ? id : null);
   }, []);
 
+  const hoverRegulationInfo = useCallback(
+    (regulation: RegulationVariables, turnOnHover: boolean) => {
+      setHoverRegulation(turnOnHover ? regulation : null);
+    },
+    []
+  );
+
+  const selectRegulationInfo = useCallback(
+    (regulation: RegulationVariables, select: boolean) => {
+      setSelectedRegulation(select ? regulation : null);
+    },
+    []
+  );
+
   useEffect(() => {
     ModelEditor.setSelectVariableFunction(selectVariableInfo);
     ModelEditor.setHoverVariableFunction(hoverVariableInfo);
-  }, [hoverVariableInfo, selectVariableInfo]);
+    ModelEditor.setSelectRegulationFunction(selectRegulationInfo);
+    ModelEditor.setHoverRegulationFunction(hoverRegulationInfo);
+  }, [
+    hoverVariableInfo,
+    selectVariableInfo,
+    hoverRegulationInfo,
+    selectRegulationInfo,
+  ]);
 
   const filterVariable = (variable: Variable) => {
     return (
@@ -51,8 +77,18 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
         <VariableInfo
           key={variable.id}
           {...variable}
-          hover={hoverVariableId === variable.id}
-          selected={selectedVariableId === variable.id}
+          hoverVariable={hoverVariableId === variable.id}
+          selectedVariable={selectedVariableId === variable.id}
+          hoverRegulation={
+            hoverRegulation && hoverRegulation.target === variable.id
+              ? hoverRegulation
+              : undefined
+          }
+          selectedRegulation={
+            selectedRegulation && selectedRegulation.target === variable.id
+              ? selectedRegulation
+              : undefined
+          }
         />
       ))}
     </section>

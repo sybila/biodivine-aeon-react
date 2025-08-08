@@ -1,5 +1,9 @@
 import { type CytoscapeOptions } from 'cytoscape';
-import { EdgeMonotonicity, type ControlInfo } from '../../../types';
+import {
+  EdgeMonotonicity,
+  type ControlInfo,
+  type RegulationVariables,
+} from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import ModelEditor from '../ModelEditor/ModelEditor';
 import ControlEditor from '../ControlEditor/ControlEditor';
@@ -422,23 +426,26 @@ class CytoscapeMEClass {
   /** Helper function to initialize new edge object, since edges can appear explicitly
    * or from the edgehandles plugin. */
   private initEdge(edge: any) {
+    const edgeVars: RegulationVariables = {
+      regulator: Number(edge.data().source),
+      target: Number(edge.data().target),
+    };
+
     edge.on('select', (e: any) => {
+      ModelEditor.selectRegulation(edgeVars, true);
       this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
+      ModelEditor.selectRegulation(edgeVars, false);
       //UI.Visible.toggleEdgeMenu(); // hide menu
     });
     edge.on('mouseover', (e: any) => {
       edge.addClass('hover');
-      //ModelEditor.hoverRegulation(edge.data().source, edge.data().target, true);
+      ModelEditor.hoverRegulation(edgeVars, true);
     });
     edge.on('mouseout', (e: any) => {
       edge.removeClass('hover');
-      /*ModelEditor.hoverRegulation(
-        edge.data().source,
-        edge.data().target,
-        false
-      );*/
+      ModelEditor.hoverRegulation(edgeVars, false);
     });
   }
 

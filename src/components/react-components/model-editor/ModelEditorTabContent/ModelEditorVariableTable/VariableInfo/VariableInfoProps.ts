@@ -1,6 +1,8 @@
-import type { Variable } from '../../../../../../types';
+import type { RegulationVariables, Variable } from '../../../../../../types';
 
 export type VariableInfoProps = Variable & {
-  hover: boolean;
-  selected: boolean;
+  hoverVariable: boolean;
+  selectedVariable: boolean;
+  hoverRegulation: RegulationVariables | undefined;
+  selectedRegulation: RegulationVariables | undefined;
 };

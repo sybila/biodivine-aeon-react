@@ -1,12 +1,14 @@
-import type { Regulation } from '../../../../../../../types';
 import ModelEditor from '../../../../../../../services/model-editor/ModelEditor/ModelEditor';
 import useVariablesStore from '../../../../../../../stores/LiveModel/useVariablesStore';
+import type { RegulationInfoProps } from './RegulationInfoProps';
 
-const RegulationInfo: React.FC<Regulation> = ({
+const RegulationInfo: React.FC<RegulationInfoProps> = ({
   regulator,
   target,
   observable,
   monotonicity,
+  hover,
+  selected,
 }) => {
   const regulatorVar = useVariablesStore((state) =>
     state.variableFromId(regulator)
@@ -28,7 +30,7 @@ const RegulationInfo: React.FC<Regulation> = ({
 
     return (
       <span
-        className={`h-full w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden ${color} text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        className={`h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden ${color} text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
         onClick={() => {
           ModelEditor.toggleRegulationObservability(regulator, target);
         }}
@@ -55,7 +57,7 @@ const RegulationInfo: React.FC<Regulation> = ({
 
     return (
       <span
-        className={`h-full w-[30%] max-w-[30%] overflow-x-auto ${color} overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        className={`h-fit w-[30%] max-w-[30%] overflow-x-auto ${color} overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
         onClick={() => {
           ModelEditor.toggleRegulationMonocity(regulator, target);
         }}
@@ -65,14 +67,37 @@ const RegulationInfo: React.FC<Regulation> = ({
     );
   };
 
+  const getRegulationBgColor = () => {
+    switch (hover) {
+      case true:
+        return selected
+          ? 'bg-[var(--color-grey-blue-light)]'
+          : 'bg-[var(--color-grey-blue-ultra-light)]';
+      default:
+        return selected
+          ? 'bg-[var(--color-grey-blue-light)]'
+          : 'bg-transparent';
+    }
+  };
+
   if (!regulatorVar) return;
 
   return (
-    <div className="h-[22px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) leading-[100%] text-[98%] select-none">
-      <span className="h-full w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[100%]">
+    <div
+      className={`h-[22px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) ${
+        !selected ? 'hover:bg-[var(--color-grey-blue-ultra-light)]' : ''
+      } ${getRegulationBgColor()} leading-[100%] text-[98%] select-none`}
+      onMouseEnter={() => {
+        ModelEditor.hoverRegulationCytoscape({ regulator, target }, true);
+      }}
+      onMouseLeave={() => {
+        ModelEditor.hoverRegulationCytoscape({ regulator, target }, false);
+      }}
+    >
+      <span className="h-fit w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[100%]">
         {regulatorVar.name ?? 'Unknown'}
       </span>
-      <span className="h-full w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center">
+      <span className="h-fit w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center">
         {getRegulationIcon()}
       </span>
 

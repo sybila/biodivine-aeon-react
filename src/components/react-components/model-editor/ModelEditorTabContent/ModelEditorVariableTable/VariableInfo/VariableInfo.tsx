@@ -18,8 +18,10 @@ import useRegulationsStore from '../../../../../../stores/LiveModel/useRegulatio
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
   name,
-  hover,
-  selected,
+  hoverVariable,
+  selectedVariable,
+  hoverRegulation,
+  selectedRegulation,
 }) => {
   const [varName, setVarName] = useState<string>(name);
   const [nameError, setNameError] = useState<boolean>(
@@ -91,6 +93,16 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         {regulations.map((regulation: Regulation) => (
           <RegulationInfo
             key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
+            hover={
+              (hoverRegulation &&
+                hoverRegulation.regulator === regulation.regulator) ??
+              false
+            }
+            selected={
+              (selectedRegulation &&
+                selectedRegulation.regulator === regulation.regulator) ??
+              false
+            }
             {...regulation}
           ></RegulationInfo>
         ))}
@@ -105,8 +117,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       topOverflowY="visible"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
-      hover={hover}
-      active={selected}
+      hover={hoverVariable}
+      active={selectedVariable}
       handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
     >
