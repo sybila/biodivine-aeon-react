@@ -25,9 +25,9 @@ class CytoscapeMEClass {
   // Reference to the cytoscape library "god object"
   private cytoscape: any = undefined;
   // Reference to the edgehandles library "god object"
-  private _edgehandles: any = undefined;
+  private edgehandles: any = undefined;
   // Used to implement the double click feature
-  private _lastClickTimestamp: number | undefined = undefined;
+  private lastClickTimestamp: number | undefined = undefined;
 
   // True if show control-enabled button is in effect.
   private controlEnabledShown: boolean | undefined = undefined;
@@ -43,17 +43,17 @@ class CytoscapeMEClass {
   init(container: HTMLElement) {
     this.container = container;
 
-    this.cytoscape = cytoscape(this._initOptions());
-    this._edgehandles = this.cytoscape.edgehandles(this._edgeOptions());
+    this.cytoscape = cytoscape(this.initOptions());
+    this.edgehandles = this.cytoscape.edgehandles(this.edgeOptions());
 
     // When the user moves or zooms the graph, position of menu must update as well.
     this.cytoscape.on('zoom', (e: any) => {
-      this._renderMenuForSelectedNode();
-      this._renderMenuForSelectedEdge();
+      this.renderMenuForSelectedNode();
+      this.renderMenuForSelectedEdge();
     });
     this.cytoscape.on('pan', (e: any) => {
-      this._renderMenuForSelectedNode();
-      this._renderMenuForSelectedEdge();
+      this.renderMenuForSelectedNode();
+      this.renderMenuForSelectedEdge();
     });
     this.cytoscape.on('click', (e: any) => {
       if (e.target !== this.cytoscape) return;
@@ -61,22 +61,22 @@ class CytoscapeMEClass {
       let now = new Date().getTime();
 
       if (
-        this._lastClickTimestamp &&
-        now - this._lastClickTimestamp < DOUBLE_CLICK_DELAY
+        this.lastClickTimestamp &&
+        now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
         LiveModel.Variables.addVariable(false, [
           e.position['x'],
           e.position['y'],
         ]);
       }
-      this._lastClickTimestamp = now;
+      this.lastClickTimestamp = now;
     });
 
     this.controlEnabledShown = false;
     this.phenotypeShown = false;
   }
 
-  private _initOptions(): CytoscapeOptions {
+  private initOptions(): CytoscapeOptions {
     return {
       container: this.container,
       // Some sensible default auto-layout algorithm
@@ -243,7 +243,7 @@ class CytoscapeMEClass {
     };
   }
 
-  private _edgeOptions() {
+  private edgeOptions() {
     return {
       preview: true, // whether to show added edges preview before releasing selection
       hoverDelay: 150, // time spent hovering over a target node before it is considered selected
@@ -288,7 +288,7 @@ class CytoscapeMEClass {
         ) {
           addedEles.remove(); // if we can't create the regulation, remove new edge
         } else {
-          this._initEdge(addedEles[0]);
+          this.initEdge(addedEles[0]);
         }
       },
     };
@@ -336,7 +336,7 @@ class CytoscapeMEClass {
           selected.unselect();
         }
       }
-      this._renderMenuForSelectedNode(node);
+      this.renderMenuForSelectedNode(node);
       ModelEditor.selectVariable(id, true);
       ControlEditor.selectVariable(id, true);
     });
@@ -346,11 +346,11 @@ class CytoscapeMEClass {
       ControlEditor.selectVariable(id, false);
     });
     node.on('click', (e: any) => {
-      this._lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
+      this.lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
     });
     node.on('drag', (e: any) => {
-      if (node.selected()) this._renderMenuForSelectedNode(node);
-      this._renderMenuForSelectedEdge();
+      if (node.selected()) this.renderMenuForSelectedNode(node);
+      this.renderMenuForSelectedEdge();
     });
   }
 
@@ -421,9 +421,9 @@ class CytoscapeMEClass {
 
   /** Helper function to initialize new edge object, since edges can appear explicitly
    * or from the edgehandles plugin. */
-  private _initEdge(edge: any) {
+  private initEdge(edge: any) {
     edge.on('select', (e: any) => {
-      this._renderMenuForSelectedEdge(edge);
+      this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
       //UI.Visible.toggleEdgeMenu(); // hide menu
@@ -444,7 +444,7 @@ class CytoscapeMEClass {
 
   /** Allow to externally set which edge is hovered - just make sure to unset it later. */
   public hoverEdge(regulatorId: number, targetId: number, isHover: boolean) {
-    let edge = this._findRegulationEdge(regulatorId, targetId);
+    let edge = this.findRegulationEdge(regulatorId, targetId);
     if (edge !== undefined) {
       if (isHover) {
         edge.addClass('hover');
@@ -457,7 +457,7 @@ class CytoscapeMEClass {
   /** Return the edge which represents regulation between the given pair of variables or undefined
    * if such edge does not exist.
    */
-  private _findRegulationEdge(regulatorId: number, targetId: number): any {
+  private findRegulationEdge(regulatorId: number, targetId: number): any {
     let edge = this.cytoscape.edges(
       '[source = "' + regulatorId + '"][target = "' + targetId + '"]'
     );
@@ -474,7 +474,7 @@ class CytoscapeMEClass {
 
   /** Remove regulation between the two specified nodes. */
   public removeRegulation(regulatorId: number, targetId: number) {
-    let edge = this._findRegulationEdge(regulatorId, targetId);
+    let edge = this.findRegulationEdge(regulatorId, targetId);
     if (edge !== undefined) {
       if (edge.selected()) edge.unselect();
       this.cytoscape.remove(edge);
@@ -483,7 +483,7 @@ class CytoscapeMEClass {
 
   /** Ensure that the graph contains edge which corresponds to the provided regulation. */
   public ensureRegulation(regulation: any) {
-    const currentEdge = this._findRegulationEdge(
+    const currentEdge = this.findRegulationEdge(
       regulation.regulator,
       regulation.target
     );
@@ -495,7 +495,7 @@ class CytoscapeMEClass {
       this.cytoscape.style().update(); //redraw graph
       if (currentEdge.selected()) {
         // if the edge is selected, we also redraw the edge menu
-        this._renderMenuForSelectedEdge(currentEdge);
+        this.renderMenuForSelectedEdge(currentEdge);
       }
     } else {
       // Edge does not exist - create a new one
@@ -508,7 +508,7 @@ class CytoscapeMEClass {
           monotonicity: regulation.monotonicity,
         },
       });
-      this._initEdge(edge);
+      this.initEdge(edge);
     }
   }
 
@@ -563,7 +563,7 @@ class CytoscapeMEClass {
    * If the node is undefined, try to find it
    * (element?)
    */
-  private _renderMenuForSelectedNode(node?: any) {
+  private renderMenuForSelectedNode(node?: any) {
     if (node === undefined) {
       node = this.cytoscape.nodes(':selected');
       if (node.length == 0) return; // nothing selected
@@ -577,7 +577,7 @@ class CytoscapeMEClass {
   /** Update the edge menu to be shown exactly for the currently selected edge.
    * If edge is undefined, try to obtain the selected edge.
    */
-  private _renderMenuForSelectedEdge(edge?: any) {
+  private renderMenuForSelectedEdge(edge?: any) {
     if (edge === undefined) {
       edge = this.cytoscape.edges(':selected');
       if (edge.length == 0) return; // nothing selected
