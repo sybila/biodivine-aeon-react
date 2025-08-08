@@ -5,8 +5,6 @@ export type Variable = {
 
 export type Position = [number, number];
 
-export type Phenotype = boolean | null;
-
 export type UpdateFunctionMetadata = {
   parameters: Set<{ name: string; cardinality: number }>;
 };
@@ -16,9 +14,14 @@ export type UpdateFunction = {
   metadata: UpdateFunctionMetadata;
 };
 
-export type Regulation = {
+// #region --- Edge/Regulation ---
+
+export type RegulationVariables = {
   regulator: number;
   target: number;
+};
+
+export type Regulation = RegulationVariables & {
   observable: boolean;
   monotonicity: EdgeMonotonicity;
 };
@@ -30,6 +33,8 @@ export const EdgeMonotonicity = {
   activation: 'activation' as EdgeMonotonicity,
   inhibition: 'inhibition' as EdgeMonotonicity,
 };
+
+// #endregion
 
 export type ModelStats = {
   maxInDegree: number;
@@ -43,6 +48,8 @@ export type ModelStats = {
 export type ComputationModes = 'Attractor Analysis' | 'Control';
 
 // #region --- Control ---
+
+export type Phenotype = boolean | null;
 
 export type ControlInfo = {
   controlEnabled: boolean;
@@ -65,18 +72,20 @@ export type ControlComputationParams = {
 
 export type Oscillation = 'allowed' | 'forbidden' | 'required';
 
-export type ControlResult = {
-  color_count: number;
-  robustness: number;
-  perturbation: Perturbation;
-};
-
 export type ControlComputationStats = {
   allColorsCount: number;
   perturbationCount: number;
   minimalPerturbationSize: number;
   maximalPerturbationRobustness: number;
   elapsed: number;
+};
+
+export type Perturbation = Record<string, number>;
+
+export type ControlResult = {
+  color_count: number;
+  robustness: number;
+  perturbation: Perturbation;
 };
 
 export type ControlResults = {
@@ -86,6 +95,22 @@ export type ControlResults = {
 
 // #endregion
 
+// #region --- Attractor Analysis ---
+
+export type AttractorBehavior = 'Stability' | 'Oscillation' | 'Disorder';
+
+export type AttractorResult = {
+  sat_count: number;
+  phenotype: Array<AttractorBehavior>;
+};
+
+export type AttractorResults = {
+  isPartial: boolean;
+  data: Array<AttractorResult>;
+  elapsed: number;
+};
+
+// #endregion
 export type TimestampResponse = {
   timestamp: number | undefined;
 };
@@ -103,18 +128,3 @@ export type ComputationStatus = {
   computationMode?: ComputationModes;
   additionalInfo?: Array<string>;
 };
-
-export type AttractorBehavior = 'Stability' | 'Oscillation' | 'Disorder';
-
-export type AttractorResult = {
-  sat_count: number;
-  phenotype: Array<AttractorBehavior>;
-};
-
-export type AttractorResults = {
-  isPartial: boolean;
-  data: Array<AttractorResult>;
-  elapsed: number;
-};
-
-export type Perturbation = Record<string, number>;
