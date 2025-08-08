@@ -3,7 +3,6 @@ import type { ComputationStatus } from "../../../../types";
 export type AttractorResponse = {
   timestamp: number | undefined;
   is_canceled: boolean;
-  // Todo - Ask Sam, maybe not used
   running: boolean;
 
   progress: string;
