@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react';
-import ExtendableContentReact from '../../../lit-wrappers/ExtendableContentReact';
-import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
-import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
+import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
+import InvisibleInputReact from '../../../../lit-wrappers/InvisibleInputReact';
+import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
 
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
 
-import SearchIcon from '../../../../../assets/icons/search-24px.svg';
-import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
+import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
+import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import type { VariableInfoProps } from './VariableInfoProps';
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
-import type { Regulation } from '../../../../../types';
+import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
+import type { Regulation } from '../../../../../../types';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
-import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import useUpdateFunctionsStore from '../../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useRegulationsStore from '../../../../../stores/LiveModel/useRegulationsStore';
+import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
+import useUpdateFunctionsStore from '../../../../../../stores/LiveModel/useUpdateFunctionsStore';
+import useRegulationsStore from '../../../../../../stores/LiveModel/useRegulationsStore';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,

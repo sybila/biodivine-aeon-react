@@ -1,4 +1,4 @@
-import type { Variable } from '../../../../../types';
+import type { Variable } from '../../../../../../types';
 
 export type VariableInfoProps = Variable & {
   hover: boolean;
