@@ -1,3 +1,4 @@
+import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
@@ -87,7 +88,9 @@ class ImportLM {
       );
 
       if (target === undefined || regulator === undefined) {
-        Message.showError('Error: Regulation cannot be created. One of the variables is not defined.');
+        Message.showError(
+          'Error: Regulation cannot be created. One of the variables is not defined.'
+        );
         continue;
       }
 
@@ -118,7 +121,9 @@ class ImportLM {
       );
 
       if (!variable) {
-        Message.showError(`Error: Update function for variable "${key}" cannot be set. Variable is not defined.`);
+        Message.showError(
+          `Error: Update function for variable "${key}" cannot be set. Variable is not defined.`
+        );
         continue;
       }
 
@@ -259,6 +264,8 @@ class ImportLM {
       return undefined;
     }
 
+    Loading.startLoading();
+
     // Disable on-the-fly server checks.
     this._liveModel._disable_dynamic_validation = true;
 
@@ -301,6 +308,8 @@ class ImportLM {
     for (const { id } of useVariablesStore.getState().getAllVariables()) {
       this._liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
+
+    Loading.endLoading();
 
     //UI.Visible.closeContent();
 
