@@ -1,5 +1,6 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import config from '../../../config';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
@@ -251,20 +252,15 @@ class ImportLM {
    * If the import is successful, return undefined,
    * otherwise return an error string.
    */
-  public importAeon(
-    modelString: string,
-    erasePossible = false
-  ): string | undefined {
+  public importAeon(modelString: string, erasePossible = false): boolean {
     if (
       (!erasePossible && !this._liveModel._modelModified()) ||
       (!this._liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
     ) {
       // If there is some model loaded, let the user know it will be
       // overwritten. If he decides not to do it, just return...
-      return undefined;
+      return false;
     }
-
-    Loading.startLoading();
 
     // Disable on-the-fly server checks.
     this._liveModel._disable_dynamic_validation = true;
@@ -291,7 +287,6 @@ class ImportLM {
     // Set model metadata
     LiveModel.Info.setModelName(modelName);
     LiveModel.Info.setModelDescription(modelDescription);
-    //Results.importResults(results);
 
     this._setRegulations(regulations, positions, control);
     this._liveModel.Import._setUpdateFunctions(
@@ -309,28 +304,81 @@ class ImportLM {
       this._liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
 
-    Loading.endLoading();
-
     //UI.Visible.closeContent();
 
-    return undefined; // no error
+    return true; // no error
   }
+
+  // #region --- Import from file ---
+
+  public importFromFile(
+    element: HTMLInputElement & { files: FileList },
+    formatToAeonFunction?: (file: string) => Promise<string> | null
+  ): void {
+    if (!element.files || element.files.length === 0 || !element.files[0]) {
+      Message.showError('Import Error: No file was selected.');
+      return;
+    }
+
+    const file = element.files[0];
+    const fr = new FileReader();
+
+    fr.onload = async (e: ProgressEvent<FileReader>) => {
+      if (!e.target || e.target.result === null) {
+        Message.showError('Import Error: File reading failed.');
+        return;
+      }
+
+      const fileContent = e.target.result as string;
+      Loading.startLoading();
+
+      try {
+        const aeonModel = !formatToAeonFunction
+          ? fileContent
+          : await formatToAeonFunction(fileContent);
+
+        if (aeonModel === null) {
+          throw new Error('File format conversion failed.');
+        }
+
+        this.importAeon(aeonModel);
+      } catch (error: any) {
+        Message.showError(
+          `Import Error: ${error?.message ?? 'Parsing file failed'}`
+        );
+      } finally {
+        element.value = '';
+        Loading.endLoading();
+      }
+    };
+
+    fr.readAsText(file);
+  }
+
+  // #endregion
 
   /** Loads model saved in the local storage of the browser. */
   public loadFromLocalStorage(): void {
     try {
-      let modelString = localStorage.getItem('last_model');
+      const modelString = localStorage.getItem(
+        config.localStorageModelName ?? 'lastModel'
+      );
       if (
         modelString !== undefined &&
         modelString !== null &&
         modelString.length > 0
       ) {
         this.importAeon(modelString);
+      } else {
+        Message.showInfo(
+          "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
+        );
       }
     } catch (e) {
-      /*Warning.displayWarning(
-        "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
-      );*/
+      Message.showError(
+        'Import Error: Failed to load model from local storage. '
+      );
+
       console.log(e);
     }
   }

@@ -6,6 +6,7 @@ import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunction
 import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
+import config from '../../../config';
 
 //import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
@@ -136,7 +137,10 @@ class ExportLM {
     if (!true) return; //!hasLocalStorage
     try {
       if (!this._liveModel.isEmpty()) {
-        localStorage.setItem('last_model', modelString);
+        localStorage.setItem(
+          config.localStorageModelName ?? 'last_model',
+          modelString
+        );
       }
     } catch (e) {
       console.log(e);

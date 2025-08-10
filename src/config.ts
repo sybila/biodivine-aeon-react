@@ -1,5 +1,3 @@
-
-
 const config = {
   version: '5.0.0 React',
   computeEngine: {
@@ -10,6 +8,8 @@ const config = {
     /** This is default url for the compute engine. */
     defaultURL: 'http://localhost:8000',
   },
+  /** Local storage key for the last model. */
+  localStorageModelName: 'lastModel',
 };
 
 export default config;

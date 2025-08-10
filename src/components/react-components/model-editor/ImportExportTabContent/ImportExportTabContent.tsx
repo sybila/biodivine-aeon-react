@@ -4,110 +4,113 @@ import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 
 import { ExampleModels } from '../../../../ExampleModels';
 import { Message } from '../../../lit-components/message-wrapper';
+import { useEffect, useRef, useState } from 'react';
+import FileConvertors from '../../../../services/utilities/FileConvertors';
 
 // This component is used to display the Import/Export tab content in the Model Editor
 const ImportExportTabContent: React.FC = () => {
-  const handleImport = (importFunction: () => string | undefined) => {
-    const error: string | undefined = importFunction();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    if (error) Message.showError(error);
+  const fileHandlerRef = useRef<
+    ((fileInput: HTMLInputElement & { files: FileList }) => void) | null
+  >(null);
+  const [acceptType, setAcceptType] = useState<string>('');
+  const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (pendingFileDialog) {
+      fileInputRef.current?.click();
+      setPendingFileDialog(false);
+    }
+  }, [acceptType, pendingFileDialog]);
+
+  const startFileImport = (
+    importFunction: (fileInput: HTMLInputElement & { files: FileList }) => void,
+    accept: string
+  ) => {
+    fileHandlerRef.current = (
+      fileInput: HTMLInputElement & { files: FileList }
+    ) => importFunction(fileInput);
+    setAcceptType(accept);
+    setPendingFileDialog(true);
   };
 
-  const importButtons: Array<[string, string, () => string | undefined]> = [
+  const importButtons: Array<[string, string, () => void]> = [
     [
       'Last Model',
       'Browser Storage',
-      () => {
-        return 'Last Model from Browser Storage';
-      },
+      () => LiveModel.Import.loadFromLocalStorage(),
     ],
     [
-      '.AEON',
+      '.aeon',
       'Simple Text Format',
-      () => {
-        return 'Import AEON Model';
-      },
+      () =>
+        startFileImport(
+          (fileInput: HTMLInputElement & { files: FileList }) =>
+            LiveModel.Import.importFromFile(fileInput),
+          '.aeon'
+        ),
     ],
     [
-      '.SBML',
+      '.sbml',
       'Standard SBML L3',
       () => {
-        return 'Import Standard SBML L3 Model';
+        startFileImport(
+          (fileInput: HTMLInputElement & { files: FileList }) =>
+            LiveModel.Import.importFromFile(
+              fileInput,
+              FileConvertors.sbmlToAeon
+            ),
+          '.sbml'
+        );
       },
     ],
     [
-      '.BNET',
+      '.bnet',
       'Boolnet Text Format',
       () => {
-        return 'Import Boolnet Text Format Model';
+        startFileImport(
+          (fileInput: HTMLInputElement & { files: FileList }) =>
+            LiveModel.Import.importFromFile(
+              fileInput,
+              FileConvertors.bnetToAeon
+            ),
+          '.bnet'
+        );
       },
     ],
   ];
 
-  const exportButtons: Array<[string, string, () => string | undefined]> = [
-    [
-      '.AEON',
-      'Simple Text Format',
-      () => {
-        return 'Export AEON Model';
-      },
-    ],
-    [
-      '.SBML (Parametrized)',
-      'Parametrized Model',
-      () => {
-        return 'Export Parametrized Model';
-      },
-    ],
-    [
-      '.SBML (Instantiated)',
-      'Wittness Model',
-      () => {
-        return 'Export Wittness Model';
-      },
-    ],
-    [
-      '.BNET',
-      'Boolnet Text Format',
-      () => {
-        return 'Export Boolnet Text Format Model';
-      },
-    ],
+  const exportButtons: Array<[string, string, () => void]> = [
+    ['.AEON', 'Simple Text Format', () => {}],
+    ['.SBML (Parametrized)', 'Parametrized Model', () => {}],
+    ['.SBML (Instantiated)', 'Wittness Model', () => {}],
+    ['.BNET', 'Boolnet Text Format', () => {}],
   ];
 
-  const exampleFirstColButtons: Array<
-    [string, string, () => string | undefined]
-  > = [
+  const exampleFirstColButtons: Array<[string, string, () => void]> = [
     [
       'G2A',
       'Cell Division',
-      () => {
-        return LiveModel.Import.importAeon(ExampleModels.g2a);
-      },
+      () => LiveModel.Import.importAeon(ExampleModels.g2a),
     ],
     [
       'G2B',
       'Cell Division',
-      () => {
-        return LiveModel.Import.importAeon(ExampleModels.g2b);
-      },
+      () => LiveModel.Import.importAeon(ExampleModels.g2b),
     ],
   ];
 
-  const exampleSecondColButtons: Array<[string, string, () => string | undefined]> = [
+  const exampleSecondColButtons: Array<[string, string, () => boolean]> = [
     [
       'Orlando',
       'Budding Yeast',
-      () => {
-        return LiveModel.Import.importAeon(ExampleModels.buddingYeastOrlando);
-      },
+      () => LiveModel.Import.importAeon(ExampleModels.buddingYeastOrlando),
     ],
     [
       'Irons',
       'Budding Yeast',
-      () => {
-        return LiveModel.Import.importAeon(ExampleModels.buddingYeastIrons);
-      },
+      () => LiveModel.Import.importAeon(ExampleModels.buddingYeastIrons),
     ],
   ];
 
@@ -116,20 +119,38 @@ const ImportExportTabContent: React.FC = () => {
   // of button texts as input, and returns a list of DoubleTextButtonReact components
   const renderButtons = (
     buttonType: string,
-    buttonArray: Array<[string, string, () => string | undefined]>
+    buttonArray: Array<[string, string, () => void]>
   ) => {
     return buttonArray.map(([leftText, rightText, onClick], index) => (
       <DoubleTextButtonReact
         key={index + buttonType}
         leftText={leftText}
         rightText={rightText}
-        onClick={() => handleImport(onClick)}
+        onClick={() => onClick()}
       />
     ));
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-4">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={acceptType}
+        style={{ display: 'none' }}
+        onChange={() => {
+          if (fileHandlerRef.current) {
+            fileHandlerRef.current(
+              fileInputRef.current as HTMLInputElement & { files: FileList }
+            );
+          } else {
+            Message.showError(
+              'Import Error: Internal Error - No file handler set.'
+            );
+          }
+        }}
+      />
+
       <div className="flex flex-col items-center justify-center w-full h-fit">
         <div className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
           <section
