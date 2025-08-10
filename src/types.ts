@@ -113,6 +113,24 @@ export type AttractorResults = {
 };
 
 // #endregion
+
+// #region --- Navigation Tabs ---
+
+export type TabType = 'Model Editor';
+
+export type TabInfo = {
+  /** Unique identifier for the tab */
+  id: number;
+  /** Type of the tab */
+  type: TabType;
+  /** Path of the tab */
+  path: string;
+  /** Indicates if the tab is currently active */
+  active: boolean;
+};
+
+// #endregion
+
 export type TimestampResponse = {
   timestamp: number | undefined;
 };
