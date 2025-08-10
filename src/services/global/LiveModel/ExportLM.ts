@@ -1,4 +1,9 @@
-import type { ControlInfo, ModelStats, Variable } from '../../../types';
+import type {
+  ControlInfo,
+  fileType,
+  ModelStats,
+  Variable,
+} from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import type { LiveModelClass } from './LiveModel';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
@@ -7,15 +12,20 @@ import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
 import config from '../../../config';
+import { Message } from '../../../components/lit-components/message-wrapper';
 
 //import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
 class ExportLM {
-  private _liveModel: LiveModelClass;
+  // #region --- Properties + Contructor ---
+
+  private liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
-    this._liveModel = liveModel;
+    this.liveModel = liveModel;
   }
+
+  // #endregion
 
   /** Export stats object */
   public stats(): ModelStats {
@@ -76,7 +86,9 @@ class ExportLM {
     const variables: Variable[] = useVariablesStore
       .getState()
       .getAllVariables();
-    if (!emptyPossible && variables.length === 0) return undefined;
+    if (!emptyPossible && variables.length === 0) {
+      return undefined;
+    }
 
     const name = useModelInfoStore.getState().getModelName();
     if (name !== undefined) result += `#name:${name}\n`;
@@ -114,7 +126,7 @@ class ExportLM {
         .getState()
         .regulationsOf(variable.id);
       for (let reg of regulations) {
-        result += this._liveModel.Regulations._regulationToString(reg) + '\n';
+        result += this.liveModel.Regulations._regulationToString(reg) + '\n';
       }
     }
 
@@ -132,11 +144,11 @@ class ExportLM {
       //Todo error
       return;
     }
-    this._liveModel.modelSave = modelString;
+    this.liveModel.modelSave = modelString;
 
     if (!true) return; //!hasLocalStorage
     try {
-      if (!this._liveModel.isEmpty()) {
+      if (!this.liveModel.isEmpty()) {
         localStorage.setItem(
           config.localStorageModelName ?? 'last_model',
           modelString
@@ -146,6 +158,55 @@ class ExportLM {
       console.log(e);
     }
   }
+
+  // #region --- Export to File ---
+
+  /** Download a file with the given file name and content */
+  private downloadFile(fileName: string, content: string): void {
+    var el = document.createElement('a');
+    el.setAttribute(
+      'href',
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+    );
+    el.setAttribute('download', fileName);
+    el.style.display = 'none';
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+  }
+
+  /** Export current model to a file with the given file ending */
+  public async exportToFile(
+    fileEnding: fileType,
+    conversionFunction?: (aeonString: string) => Promise<string>
+  ): Promise<void> {
+    let modelString = this.exportAeon(true);
+    const fileName = useModelInfoStore.getState().getModelName() ?? 'model';
+
+    if (!modelString) {
+      Message.showError('Export Error: No variables in the model.');
+      return;
+    }
+
+    if (conversionFunction) {
+      try {
+        modelString = await conversionFunction(modelString);
+
+        if (!modelString) {
+          throw new Error(
+            `Conversion function returned empty string for ${fileEnding} format`
+          );
+        }
+      } catch (error: any) {
+        Message.showError(`Export Error: ${error.message}`);
+        return;
+      }
+    }
+
+    this.downloadFile(`${fileName}${fileEnding}`, modelString);
+  }
+
+  // #endregion
 }
 
 export default ExportLM;

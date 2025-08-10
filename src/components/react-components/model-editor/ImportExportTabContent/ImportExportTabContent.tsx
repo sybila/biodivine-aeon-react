@@ -7,6 +7,7 @@ import { Message } from '../../../lit-components/message-wrapper';
 import { useEffect, useRef, useState } from 'react';
 import FileConvertors from '../../../../services/utilities/FileConvertors';
 import { Loading } from '../../../lit-components/loading-wrapper';
+import type { fileType } from '../../../../types';
 
 /** This component is used to display the Import/Export tab content in the Model Editor */
 const ImportExportTabContent: React.FC = () => {
@@ -15,7 +16,7 @@ const ImportExportTabContent: React.FC = () => {
   const fileHandlerRef = useRef<
     ((fileInput: HTMLInputElement & { files: FileList }) => void) | null
   >(null);
-  const [acceptType, setAcceptType] = useState<string>('');
+  const [acceptType, setAcceptType] = useState<fileType | ''>('');
   const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
 
   const handleExampleImport = (exampleModel: string) => {
@@ -33,7 +34,7 @@ const ImportExportTabContent: React.FC = () => {
 
   const startFileImport = (
     importFunction: (fileInput: HTMLInputElement & { files: FileList }) => void,
-    accept: string
+    accept: fileType | ''
   ) => {
     fileHandlerRef.current = (
       fileInput: HTMLInputElement & { files: FileList }
@@ -89,10 +90,30 @@ const ImportExportTabContent: React.FC = () => {
   ];
 
   const exportButtons: Array<[string, string, () => void]> = [
-    ['.AEON', 'Simple Text Format', () => {}],
-    ['.SBML (Parametrized)', 'Parametrized Model', () => {}],
-    ['.SBML (Instantiated)', 'Wittness Model', () => {}],
-    ['.BNET', 'Boolnet Text Format', () => {}],
+    [
+      '.aeon',
+      'Simple Text Format',
+      () => LiveModel.Export.exportToFile('.aeon'),
+    ],
+    [
+      '.sbml (Parametrized)',
+      'Parametrized Model',
+      () => LiveModel.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
+    ],
+    [
+      '.sbml (Instantiated)',
+      'Wittness Model',
+      () =>
+        LiveModel.Export.exportToFile(
+          '.sbml',
+          FileConvertors.aeonToSbmlInstantiated
+        ),
+    ],
+    [
+      '.bnet',
+      'Boolnet Text Format',
+      () => LiveModel.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
+    ],
   ];
 
   const exampleFirstColButtons: Array<[string, string, () => void]> = [
