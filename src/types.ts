@@ -116,7 +116,7 @@ export type AttractorResults = {
 
 // #region --- Navigation Tabs ---
 
-export type TabType = 'Model Editor';
+export type TabType = 'Model Editor' | 'Attractor Bifurcation Explorer';
 
 export type TabInfo = {
   /** Unique identifier for the tab */

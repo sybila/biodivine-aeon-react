@@ -6,10 +6,26 @@ import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
 
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
+import { useNavigate } from '@tanstack/react-router';
+import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
 }) => {
+  const navigate = useNavigate();
+  const openAttractorBifurcationExplorer = () => {
+    navigate({
+      to: '/attractor-bifurcation-explorer',
+    });
+
+    useTabsStore
+      .getState()
+      .addTab(
+        'attractor-bifurcation-explorer',
+        'Attractor Bifurcation Explorer'
+      );
+  };
+
   const renderStats = () => {
     return (
       <section className="flex flex-col justify-end items-center h-fit w-full gap-3">
@@ -98,6 +114,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           text="Explore Bifurcation Function"
           iconAlt="Bifurcation"
           iconSrc={SplitIcon}
+          handleClick={openAttractorBifurcationExplorer}
         />
       </div>
     </section>

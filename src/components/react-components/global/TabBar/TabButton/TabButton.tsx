@@ -1,16 +1,18 @@
-import { Navigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import type { TabInfo } from '../../../../../types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 
 const TabButton: React.FC<TabInfo> = ({ id, type, path, active }) => {
+  const navigate = useNavigate();
+
   const onClick = () => {
     if (active) {
       return;
     }
 
     useTabsStore.getState().setActiveTab(id);
-    Navigate({ to: `${path}` });
+    navigate({ to: `${path}` });
   };
 
   return (
