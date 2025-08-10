@@ -1,11 +1,64 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'FiraMono';
+  src: url('./font/FiraMono-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'FiraMonoBold';
+  src: url('./font/FiraMono-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'FiraMonoBold';
+  src: url('./font/FiraMono-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'BaileyReg';
+  src: url('./font/Bailey-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'BaileyBold';
+  src: url('./font/Bailey-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Symbols';
+  src: url('./font/Symbols.ttf');
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-bg-base: #fff;
+  --color-secondary: #e7ecee;
+  --color-highlight: #cfd8dc;
+
+  --color-grey: #bebebe;
+  --color-grey-light: #d6d4d4;
+  --color-grey-blue-light: #cfd8dc;
+  --color-grey-blue-ultra-light: #eceff1;
+  --color-green: #4abd73;
+  --color-green-light: #a8e6cf;
+  --color-red: #d05d5d;
+  --color-red-light: #f8b4b4;
+  --color-yellow: #f3d491;
+  --color-yellow-light: #ffe8aa;
+
+  --base-font-family: 'Helvetica', 'Arial', sans-serif;
+  --font-family-fira-mono: 'FiraMono', 'monospace';
+  --font-family-fira-bold: 'FiraMonoBold', 'monospace';
+
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: black;
   background-color: #242424;
+  transition: 0.03s;
+
+  font-family: var(--base-font-family);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +66,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+html {
+  overflow: hidden;
 }

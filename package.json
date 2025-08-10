@@ -10,11 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lit/react": "^1.0.7",
+    "@tailwindcss/vite": "^4.1.11",
+    "cytoscape": "^3.32.1",
+    "cytoscape-dagre": "^2.5.0",
+    "cytoscape-edgehandles": "^4.0.1",
+    "cytoscape-tidytree": "^0.2.0",
+    "dagre": "^0.8.5",
+    "lit": "^3.3.0",
+    "lodash": "^4.17.21",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.11",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@types/cytoscape": "^3.21.9",
+    "@types/lodash": "^4.17.20",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
