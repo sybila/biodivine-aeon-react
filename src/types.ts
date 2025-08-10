@@ -47,6 +47,8 @@ export type ModelStats = {
 
 export type ComputationModes = 'Attractor Analysis' | 'Control';
 
+export type fileType = '.aeon' | '.sbml' | '.bnet';
+
 // #region --- Control ---
 
 export type Phenotype = boolean | null;
