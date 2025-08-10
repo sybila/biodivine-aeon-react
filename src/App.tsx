@@ -1,7 +1,8 @@
+import { RouterProvider } from '@tanstack/react-router';
 import LoadingIndicatorReact from './components/react-components/lit-wrappers/LoadingIndicatorReact';
 import LoadingWrapperReact from './components/react-components/lit-wrappers/LoadingWrapperReact';
 import MessageWrapperReact from './components/react-components/lit-wrappers/MessageWrapperReact';
-import ModelEditor from './pages/model-editor/ModelEditor';
+import router from './router';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <MessageWrapperReact>
         <LoadingWrapperReact>
           <LoadingIndicatorReact slot="loading-component" />
-          <ModelEditor />
+          <RouterProvider router={router} />
         </LoadingWrapperReact>
       </MessageWrapperReact>
     </div>

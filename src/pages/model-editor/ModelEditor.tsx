@@ -2,8 +2,6 @@ import { useState } from 'react';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import PopUpBarReact from '../../components/react-components/lit-wrappers/PopUpBarReact';
-import NavigationDockContent from '../../components/react-components/global/NavigationDockContent/NavigationDockContent';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
@@ -11,16 +9,11 @@ import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
-import DockIcon from '../../assets/icons/dock-arrow.svg';
+
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
-import OverlayWindowReact from '../../components/react-components/lit-wrappers/OverlayWindowReact';
-import ComputeEngineWindowContent from '../../components/react-components/global/ComputeEngineWindowContent/ComputeEngineWindowContent';
-import TwoSidedTextReact from '../../components/react-components/lit-wrappers/TwoSidedTextReact';
-import ResultsWindowContent from '../../components/react-components/global/ResultsWindowContent/ResultsWindowContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
-import StatusBar from '../../components/react-components/global/StatusBar/StatusBar';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 
 type TabTypeME =
@@ -31,12 +24,8 @@ type TabTypeME =
   | 'Visual Options'
   | null;
 
-type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
-
 const ModelEditor: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
-  const [activeOverlayWindow, setActiveOverlayWindow] =
-    useState<OverlayWindowTypeME | null>(null);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -55,17 +44,6 @@ const ModelEditor: React.FC = () => {
     }
   };
 
-  const renderOverlayWindowContent = () => {
-    switch (activeOverlayWindow) {
-      case 'Compute Engine':
-        return <ComputeEngineWindowContent />;
-      case 'Results':
-        return <ResultsWindowContent />;
-      default:
-        return null;
-    }
-  };
-
   const showHideTab = (tabType: TabTypeME) => {
     if (activeTab === tabType) {
       setActiveTab(null);
@@ -77,11 +55,6 @@ const ModelEditor: React.FC = () => {
 
   return (
     <>
-      <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
-        <StatusBar />
-        <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
-      </section>
-
       <SideButtonMenu>
         <IconButtonReact
           isActive={activeTab === 'Start Computation'}
@@ -132,35 +105,6 @@ const ModelEditor: React.FC = () => {
       >
         {renderTabContent()}
       </ContentTab>
-
-      {activeOverlayWindow !== null ? (
-        <OverlayWindowReact
-          compWidth="100%"
-          compHeight="100%"
-          windWidth="fit-content"
-          windMaxWidth="80%"
-          showHeader={true}
-          showCloseButton={true}
-          headerText={activeOverlayWindow}
-          handleCloseClick={() => setActiveOverlayWindow(null)}
-          handleBackgroundClick={() => setActiveOverlayWindow(null)}
-        >
-          {renderOverlayWindowContent()}
-        </OverlayWindowReact>
-      ) : null}
-
-      <PopUpBarReact
-        className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
-        iconSrc={DockIcon}
-        iconAlt="Dock"
-      >
-        <NavigationDockContent
-          handleComputeEngineClick={() =>
-            setActiveOverlayWindow('Compute Engine')
-          }
-          handleResultsClick={() => setActiveOverlayWindow('Results')}
-        />
-      </PopUpBarReact>
 
       <ModelEditorCanvas />
     </>
