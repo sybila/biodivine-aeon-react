@@ -15,6 +15,7 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
+import KeepAlive from 'react-activation';
 
 type TabTypeME =
   | 'Start Computation'
@@ -106,7 +107,9 @@ const ModelEditor: React.FC = () => {
         {renderTabContent()}
       </ContentTab>
 
-      <ModelEditorCanvas />
+      <KeepAlive>
+        <ModelEditorCanvas />
+      </KeepAlive>
     </>
   );
 };
