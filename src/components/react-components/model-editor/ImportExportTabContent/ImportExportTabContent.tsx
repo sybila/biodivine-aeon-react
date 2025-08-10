@@ -6,8 +6,9 @@ import { ExampleModels } from '../../../../ExampleModels';
 import { Message } from '../../../lit-components/message-wrapper';
 import { useEffect, useRef, useState } from 'react';
 import FileConvertors from '../../../../services/utilities/FileConvertors';
+import { Loading } from '../../../lit-components/loading-wrapper';
 
-// This component is used to display the Import/Export tab content in the Model Editor
+/** This component is used to display the Import/Export tab content in the Model Editor */
 const ImportExportTabContent: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -16,6 +17,12 @@ const ImportExportTabContent: React.FC = () => {
   >(null);
   const [acceptType, setAcceptType] = useState<string>('');
   const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
+
+  const handleExampleImport = (exampleModel: string) => {
+    Loading.startLoading();
+    LiveModel.Import.importAeon(exampleModel);
+    Loading.endLoading();
+  };
 
   useEffect(() => {
     if (pendingFileDialog) {
@@ -89,28 +96,20 @@ const ImportExportTabContent: React.FC = () => {
   ];
 
   const exampleFirstColButtons: Array<[string, string, () => void]> = [
-    [
-      'G2A',
-      'Cell Division',
-      () => LiveModel.Import.importAeon(ExampleModels.g2a),
-    ],
-    [
-      'G2B',
-      'Cell Division',
-      () => LiveModel.Import.importAeon(ExampleModels.g2b),
-    ],
+    ['G2A', 'Cell Division', () => handleExampleImport(ExampleModels.g2a)],
+    ['G2B', 'Cell Division', () => handleExampleImport(ExampleModels.g2b)],
   ];
 
-  const exampleSecondColButtons: Array<[string, string, () => boolean]> = [
+  const exampleSecondColButtons: Array<[string, string, () => void]> = [
     [
       'Orlando',
       'Budding Yeast',
-      () => LiveModel.Import.importAeon(ExampleModels.buddingYeastOrlando),
+      () => handleExampleImport(ExampleModels.buddingYeastOrlando),
     ],
     [
       'Irons',
       'Budding Yeast',
-      () => LiveModel.Import.importAeon(ExampleModels.buddingYeastIrons),
+      () => handleExampleImport(ExampleModels.buddingYeastIrons),
     ],
   ];
 

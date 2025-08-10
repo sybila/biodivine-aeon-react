@@ -360,6 +360,7 @@ class ImportLM {
   /** Loads model saved in the local storage of the browser. */
   public loadFromLocalStorage(): void {
     try {
+      Loading.startLoading();
       const modelString = localStorage.getItem(
         config.localStorageModelName ?? 'lastModel'
       );
@@ -380,6 +381,8 @@ class ImportLM {
       );
 
       console.log(e);
+    } finally {
+      Loading.endLoading();
     }
   }
 }
