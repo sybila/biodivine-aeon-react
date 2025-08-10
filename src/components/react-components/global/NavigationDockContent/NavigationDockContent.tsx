@@ -1,8 +1,8 @@
-import IconButtonReact from "../../lit-wrappers/IconButtonReact";
+import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 
-import ResultsIcon from "../../../../assets/icons/call_split-48px.svg";
-import EngineIcon from "../../../../assets/icons/engine-48px.svg";
-import type { NavigationDockContentProps } from "./NavigationDockContentProps";
+import ResultsIcon from '../../../../assets/icons/call_split-48px.svg';
+import EngineIcon from '../../../../assets/icons/engine-48px.svg';
+import type { NavigationDockContentProps } from './NavigationDockContentProps';
 
 const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
   children,
@@ -29,7 +29,7 @@ const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
 
       <div className="h-[90%] w-1 bg-black"></div>
 
-      <section>{children}</section>
+      {children}
     </div>
   );
 };

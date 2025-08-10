@@ -9,6 +9,7 @@ import DockIcon from '../../../../assets/icons/dock-arrow.svg';
 import StatusBar from '../../global/StatusBar/StatusBar';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import { Outlet } from '@tanstack/react-router';
+import TabBar from '../../global/TabBar/TabBar';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
@@ -60,7 +61,9 @@ const BaseLayout = () => {
             setActiveOverlayWindow('Compute Engine')
           }
           handleResultsClick={() => setActiveOverlayWindow('Results')}
-        />
+        >
+          <TabBar />
+        </NavigationDockContent>
       </PopUpBarReact>
 
       <Outlet />
