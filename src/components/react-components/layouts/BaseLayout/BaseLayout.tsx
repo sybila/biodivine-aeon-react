@@ -10,7 +10,6 @@ import StatusBar from '../../global/StatusBar/StatusBar';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import { Outlet } from '@tanstack/react-router';
 import TabBar from '../../global/TabBar/TabBar';
-import { AliveScope } from 'react-activation';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
@@ -67,11 +66,7 @@ const BaseLayout = () => {
         </NavigationDockContent>
       </PopUpBarReact>
 
-      <AliveScope>
-        <section className="h-full w-full relative">
-          <Outlet />
-        </section>
-      </AliveScope>
+      <Outlet />
     </div>
   );
 };

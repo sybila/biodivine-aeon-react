@@ -3,17 +3,20 @@ import LoadingIndicatorReact from './components/react-components/lit-wrappers/Lo
 import LoadingWrapperReact from './components/react-components/lit-wrappers/LoadingWrapperReact';
 import MessageWrapperReact from './components/react-components/lit-wrappers/MessageWrapperReact';
 import router from './router';
+import { AliveScope } from 'react-activation';
 
 function App() {
   return (
-    <div className="h-screen w-screen max-h-screen min-w-screen bg-[var(--color-bg-base)]">
-      <MessageWrapperReact>
-        <LoadingWrapperReact>
-          <LoadingIndicatorReact slot="loading-component" />
-          <RouterProvider router={router} />
-        </LoadingWrapperReact>
-      </MessageWrapperReact>
-    </div>
+    <AliveScope>
+      <div className="h-screen w-screen max-h-screen min-w-screen bg-[var(--color-bg-base)] relative">
+        <MessageWrapperReact>
+          <LoadingWrapperReact>
+            <LoadingIndicatorReact slot="loading-component" />
+            <RouterProvider router={router} />
+          </LoadingWrapperReact>
+        </MessageWrapperReact>
+      </div>
+    </AliveScope>
   );
 }
 
