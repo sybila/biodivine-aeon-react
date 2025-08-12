@@ -131,6 +131,48 @@ export type TabInfo = {
 
 // #endregion
 
+// #region --- Bifurcation Explorer ---
+
+export type AttractorClassBE = {
+  cardinality: number;
+  class: string;
+};
+
+export type NodeDataBE = {
+  id: number;
+  attribute_name?: string;
+  cardinality: number;
+  class?: string;
+  classes?: Array<AttractorClassBE>;
+  left?: number;
+  right?: number;
+  type: NodeTypeBE;
+};
+
+export type NodeTypeBE = 'unprocessed' | 'decision' | 'leaf';
+
+export type NodeSubTypeBE = 'stability' | 'disorder' | 'oscillation';
+
+export type CytoscapeNodeDataBE = {
+  id: string;
+  targetId?: string;
+  label?: string;
+  opacity?: number;
+  treeData?: NodeDataBE;
+  type?: NodeTypeBE;
+  subtype?: NodeSubTypeBE;
+  action?: 'remove';
+};
+
+export type DecisionMixedNode = {
+  id: number;
+  label: string;
+  type: 'decision' | 'unprocessed';
+  cardinality: number;
+  classes: Array<AttractorClassBE>;
+};
+
+// #endregion
 export type TimestampResponse = {
   timestamp: number | undefined;
 };
