@@ -4,12 +4,15 @@ import type {
   ComputationStatus,
   ControlComputationParams,
   ControlResults,
+  NodeDataBE,
 } from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import { Loading } from '../../../components/lit-components/loading-wrapper';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -204,6 +207,56 @@ class ComputationManagerClass {
 
     // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
+  }
+
+  // #endregion
+
+  // #region --- Attractor Bifurcation Explorer ---
+
+  /** Callback for fetching the bifurcation tree.
+   * Sets the bifurcation tree in the AttractorBifurcationExplorer.
+   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer */
+  private getBifurcationTreeCallback(
+    error: string | undefined,
+    nodes: NodeDataBE[] | undefined,
+    fit: boolean
+  ): void {
+    if (error || !nodes) {
+      Message.showError(
+        `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(nodes, fit);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the bifurcation tree from the compute engine.
+   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
+   */
+  public getBifurcationTree(fit: boolean): void {
+    Loading.startLoading();
+    this.computeEngine.getBifurcationTree((error, nodes) =>
+      this.getBifurcationTreeCallback(error, nodes, fit)
+    );
+  }
+
+  /** Callback for setting the bifurcation tree precision. Checks for errors and updates the UI accordingly. */
+  private setBifurcationTreePrecisionCallback(error: string | undefined): void {
+    if (error) {
+      Message.showError(`Error setting bifurcation tree precision: ${error}`);
+      return;
+    }
+
+    this.getBifurcationTree(false);
+  }
+
+  public setBifurcationTreePrecision(precision: number): void {
+    this.computeEngine.setBifurcationTreePrecision(
+      precision,
+      this.setBifurcationTreePrecisionCallback.bind(this)
+    );
   }
 
   // #endregion

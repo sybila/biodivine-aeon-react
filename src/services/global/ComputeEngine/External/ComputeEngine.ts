@@ -6,6 +6,7 @@ import type {
   ControlComputationStats,
   ControlResult,
   ControlResults,
+  NodeDataBE,
   TimestampResponse,
 } from '../../../../types';
 import type {
@@ -22,7 +23,7 @@ class ComputeEngine {
 
   private connected: boolean = false;
 
-  private pingRepeatToken: NodeJS.Timeout | undefined = undefined;
+  private pingRepeatToken: number | undefined = undefined;
 
   private waitingForResults: boolean = false;
 
@@ -503,6 +504,42 @@ class ComputeEngine {
       },
       'POST',
       ''
+    );
+  }
+
+  // #endregion
+
+  // #region --- Bifurcation Tree ---
+
+  /** Fetches the bifurcation tree from the compute engine. */
+  public getBifurcationTree(
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_bifurcation_tree',
+      (error: string | undefined, response: NodeDataBE[] | undefined) => {
+        callback?.(error, response);
+      },
+      'GET'
+    );
+  }
+
+  /** Sets the precision of the bifurcation tree in the compute engine. */
+  public setBifurcationTreePrecision(
+    precision: number,
+    callback: (error: string | undefined) => void
+  ): void {
+    this.backendRequest(
+      '/apply_tree_precision/' + precision,
+      (error: string | undefined, response: any) => {
+        if (callback !== undefined) {
+          callback(error);
+        }
+      },
+      'POST'
     );
   }
 
