@@ -45,6 +45,11 @@ class CytoscapeMEClass {
   // #region --- Initialization ---
 
   init(container: HTMLElement) {
+    // Avoid re-initialization
+    if (this.container === container) {
+      return;
+    }
+
     this.container = container;
 
     this.cytoscape = cytoscape(this.initOptions());
