@@ -295,7 +295,9 @@ class CytoscapeABEClass {
     this._cytoscape.getElementById(nodeId).select();
   }
 
-  // Triggers all necessary events to update UI after graph update
+  /** Triggers all necessary events to update UI after graph update.
+   * Selects/Unselects nodes as needed.
+   * If targetId is provided, it will be selected. */
   public refreshSelection(targetId?: string) {
     let selected = this._cytoscape.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {

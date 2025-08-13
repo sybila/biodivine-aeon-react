@@ -1,3 +1,5 @@
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { NodeDataBE } from '../../../types';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
@@ -325,44 +327,6 @@ class AttractorBifurcationExplorerClass {
     // }
   }
 
-  // --- Tree and Node Operations ---
-  public autoExpandBifurcationTree(
-    node: string,
-    depth: number,
-    fit = false
-  ): void {
-    // @ts-ignore
-    if (!UI.testResultsAvailable()) return;
-
-    const loading = document.getElementById('loading-indicator') as HTMLElement;
-    loading.classList.remove('invisible');
-    // @ts-ignore
-    ComputeEngine.AttractorTree.autoExpandBifurcationTree(
-      node,
-      depth,
-      (e: any, r: any[]) => {
-        if (r !== undefined && r.length > 0) {
-          for (const n of r) {
-            CytoscapeTreeEditor.ensureNode(n);
-          }
-          for (const n of r) {
-            if (n.type === 'decision') {
-              CytoscapeTreeEditor.ensureEdge(n.id, n.left, false);
-              CytoscapeTreeEditor.ensureEdge(n.id, n.right, true);
-            }
-          }
-          CytoscapeTreeEditor.applyTreeLayout(fit);
-        } else {
-          // @ts-ignore
-          Warning.displayWarning(e);
-        }
-        loading.classList.add('invisible');
-        CytoscapeTreeEditor.refreshSelection();
-      },
-      true
-    );
-  }
-
   // #region --- Bifurcation Tree Management ---
 
   /** Inserts a bifurcation tree into CytoscapeABE.
@@ -392,6 +356,41 @@ class AttractorBifurcationExplorerClass {
   public loadBifurcationTree(fit: boolean = true): void {
     ComputationManager.getBifurcationTree(fit);
   }
+
+  /** Automatically expands the bifurcation tree from the selected node.
+   *  If nodeId is not provided, it uses the currently selected node.
+   * @param nodeId - (number?) The ID of the node to expand from.
+   * @param depth - (number) The depth to expand to.
+   */
+  public autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number) {
+    if (!nodeId) {
+      const newNodeID = useBifurcationExplorerStatus.getState().selectedNode;
+
+      if (!newNodeID) {
+        Message.showError(
+          'Error Auto-Expanding Bifurcation Tree: No node selected'
+        );
+        return;
+      }
+
+      ComputationManager.autoExpandBifurcationTree(newNodeID.id, depth ?? 1);
+    } else {
+      ComputationManager.autoExpandBifurcationTree(nodeId, depth ?? 1);
+    }
+  }
+
+  // #endregion
+
+  // #region --- Node Operations ---
+
+  /** Refreshes the selection in the AttractorBifurcationExplorer. */
+  public refreshSelection(): void {
+    CytoscapeABE.refreshSelection();
+  }
+
+  // #endregion
+
+  // #region --- Visual Options ---
 
   /** Set precision for the bifurcation tree. */
   public setPrecision(precision: number): void {

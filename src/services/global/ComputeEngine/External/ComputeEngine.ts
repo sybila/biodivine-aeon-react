@@ -543,6 +543,26 @@ class ComputeEngine {
     );
   }
 
+  /** Automatically expands the bifurcation tree at the given node and depth. */
+  public autoExpandBifurcationTree(
+    nodeId: number,
+    depth: number,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/auto_expand/' + nodeId + '/' + depth,
+      (error: string | undefined, nodes: NodeDataBE[] | undefined) => {
+        if (callback !== undefined) {
+          callback(error, nodes);
+        }
+      },
+      'POST'
+    );
+  }
+
   // #endregion
 
   // #region --- Control Computation ---

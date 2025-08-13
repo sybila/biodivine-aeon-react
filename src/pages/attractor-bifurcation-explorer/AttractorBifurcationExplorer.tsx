@@ -11,6 +11,7 @@ import EyeIcon from '../../assets/icons/eye.svg';
 import KeepAlive from 'react-activation';
 import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
+import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
 
 type TabTypeME =
   | 'Overview'
@@ -29,7 +30,7 @@ const ModelEditor: React.FC = () => {
       case 'Stability Analysis':
         return <div>Stability Analysis</div>;
       case 'Make Decision':
-        return <div>Make Decision</div>;
+        return <MakeDecisionTabContent />;
       case 'Visual Options':
         return <div>Visual Options</div>;
       default:

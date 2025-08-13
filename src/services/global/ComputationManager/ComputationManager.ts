@@ -252,10 +252,39 @@ class ComputationManagerClass {
     this.getBifurcationTree(false);
   }
 
+  /** Sets the precision of the bifurcation tree. */
   public setBifurcationTreePrecision(precision: number): void {
     this.computeEngine.setBifurcationTreePrecision(
       precision,
       this.setBifurcationTreePrecisionCallback.bind(this)
+    );
+  }
+
+  /** Callback for auto-expanding the bifurcation tree. Sets the expanded nodes in the AttractorBifurcationExplorer and unselects selected node. */
+  private autoExpandBifurcationTreeCallback(
+    error: string | undefined,
+    nodes: NodeDataBE[] | undefined
+  ): void {
+    if (error || !nodes) {
+      Message.showError(
+        `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(nodes, true);
+    }
+
+    AttractorBifurcationExplorer.refreshSelection();
+
+    Loading.endLoading();
+  }
+
+  /** Automatically expands the bifurcation tree at the given node and depth. */
+  public autoExpandBifurcationTree(nodeId: number, depth: number): void {
+    Loading.startLoading();
+    this.computeEngine.autoExpandBifurcationTree(
+      nodeId,
+      depth,
+      this.autoExpandBifurcationTreeCallback.bind(this)
     );
   }
 

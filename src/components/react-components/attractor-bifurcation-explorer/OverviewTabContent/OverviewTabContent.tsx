@@ -14,7 +14,7 @@ const OverviewTabContent: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-fit gap-2">
+    <div className="flex flex-col items-center justify-center w-full h-fit gap-3">
       <SimpleHeaderReact
         className="ml-[24px] mt-1"
         compHeight="fit-content"
