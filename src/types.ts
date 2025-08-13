@@ -172,6 +172,22 @@ export type DecisionMixedNode = {
   classes: Array<AttractorClassBE>;
 };
 
+export type VariableStability = {
+  colors: number;
+  vector: Array<string>;
+};
+
+export type StabilityAnalysisVariable = {
+  variable: string;
+  data: Array<VariableStability>;
+};
+
+export type StabilityAnalysisModes =
+  | 'Total'
+  | 'Stability'
+  | 'Oscillation'
+  | 'Disorder';
+
 // #endregion
 export type TimestampResponse = {
   timestamp: number | undefined;
