@@ -13,6 +13,7 @@ import type {
   AttractorResponse,
   ComputationInfo,
   ControlResponse,
+  DeleteBifDecisionResponse,
 } from './ComputeEngineTypes';
 
 class ComputeEngine {
@@ -534,7 +535,7 @@ class ComputeEngine {
   ): void {
     this.backendRequest(
       '/apply_tree_precision/' + precision,
-      (error: string | undefined, response: any) => {
+      (error: string | undefined, _response: any) => {
         if (callback !== undefined) {
           callback(error);
         }
@@ -557,6 +558,29 @@ class ComputeEngine {
       (error: string | undefined, nodes: NodeDataBE[] | undefined) => {
         if (callback !== undefined) {
           callback(error, nodes);
+        }
+      },
+      'POST'
+    );
+  }
+
+  /** Deletes a bifurcation decision from the compute engine. */
+  public deleteBifurcationDecision(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      node: NodeDataBE | undefined,
+      removedNodes: number[]
+    ) => void
+  ) {
+    this.backendRequest(
+      '/revert_decision/' + nodeId,
+      (
+        error: string | undefined,
+        response: DeleteBifDecisionResponse | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, response?.node ?? undefined, response?.removed ?? []);
         }
       },
       'POST'

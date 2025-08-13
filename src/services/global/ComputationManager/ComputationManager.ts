@@ -288,6 +288,37 @@ class ComputationManagerClass {
     );
   }
 
+  /** Callback for deleting a bifurcation decision. */
+  private deleteBifurcationDecisionCallback(
+    error: string | undefined,
+    node: NodeDataBE | undefined,
+    removed: number[] | undefined
+  ): void {
+    if (error || !node) {
+      Message.showError(
+        `Error deleting bifurcation decision: ${error ?? 'Internal error'}`
+      );
+    } else {
+      if (!removed || removed.length === 0) {
+        Message.showInfo(
+          `Bifurcation decision for node ${node.id} was deleted, but no nodes were removed.`
+        );
+      }
+      AttractorBifurcationExplorer.removeFromCytoscape(node, removed ?? []);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Deletes a bifurcation decision by node ID. */
+  public deleteBifurcationDecision(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.deleteBifurcationDecision(
+      nodeId,
+      this.deleteBifurcationDecisionCallback.bind(this)
+    );
+  }
+
   // #endregion
 
   // #region --- Control Computation ---

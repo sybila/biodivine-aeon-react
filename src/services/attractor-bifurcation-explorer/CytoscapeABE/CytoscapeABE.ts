@@ -6,7 +6,6 @@ import type {
 } from '../../../types';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import AttractorBifurcationExplorer from '../AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import { use } from 'react';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 
 const _remove_svg =
@@ -225,14 +224,16 @@ class CytoscapeABEClass {
     e.target.on('position', handler);
   }
 
+  /** Function to handle node selection */
   private _onSelect(e: EventObject) {
     // Todo - add quick help for tree explorer - document.getElementById('quick-help-tree-explorer').classList.add('gone');
 
     console.log(e.target.data());
     const data: CytoscapeNodeDataBE = e.target.data();
     if (data.action == 'remove') {
-      // This is a remove button for a specifc tree node. Todo- Fix-Remove
-      //TreeExplorer.removeNode(data.targetId);
+      if (!data.targetId) return;
+      // This is a remove button for a specifc tree node.
+      AttractorBifurcationExplorer.removeNode(Number(data.targetId));
       return;
     }
 
@@ -254,11 +255,13 @@ class CytoscapeABEClass {
     }
   }
 
+  /** Function to handle node unselection */
   private _onUnselect(e: any) {
-    useBifurcationExplorerStatus.getState().changeSelectedNode(null);
-    // toto -fix
-    // // Clear remove button
-    // this._cytoscape.$('.remove-button').remove();
+    useBifurcationExplorerStatus.getState().clear();
+    // Clear remove button
+    this._cytoscape.$('.remove-button').remove();
+
+    // todo -fix
     // // Remove the listener upading its position
     // const scratch = this._scratch(e.target);
     // e.target.removeListener('position', scratch.removeBtnHandler);
@@ -303,6 +306,15 @@ class CytoscapeABEClass {
     if (selected.length > 0) {
       selected.unselect();
     }
+
+    // If there was an error and useBifurcationExplorerStatus has selected node, unselect it
+    if (
+      selected <= 0 &&
+      useBifurcationExplorerStatus.getState().selectedNode != null
+    ) {
+      useBifurcationExplorerStatus.getState().changeSelectedNode(null);
+    }
+
     if (targetId === undefined) {
       if (selected.length > 0) {
         selected.select();
@@ -316,15 +328,13 @@ class CytoscapeABEClass {
 
   // #region --- Remove Nodes/Edges ---
 
+  /** Removes all nodes from the CytoscapeABE. */
   public removeAll() {
-    // Todo - Fix
-    // document.getElementById('decision-info').classList.add('gone');
-    // document.getElementById('mixed-info').classList.add('gone');
-    // document.getElementById('leaf-info').classList.add('gone');
     this._cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
     this._cytoscape.elements().remove();
   }
 
+  /** Removes node from CytoscapeABE. */
   public removeNode(nodeId: string) {
     let e = this._cytoscape.getElementById(nodeId);
     if (e.length > 0) {
@@ -390,6 +400,7 @@ class CytoscapeABEClass {
 
   // #region --- Ensure Nodes/Edges ---
 
+  /** Checks if node exists, if it doesn't, creates it, else updates its data. */
   public ensureNode(treeData: NodeDataBE) {
     let node = this._cytoscape.getElementById(treeData.id);
     if (node !== undefined && node.length > 0) {
@@ -409,6 +420,7 @@ class CytoscapeABEClass {
     }
   }
 
+  /** Ensures that an edge exists between two nodes. */
   public ensureEdge(
     sourceId: number | undefined,
     targetId: number | undefined,
@@ -421,7 +433,7 @@ class CytoscapeABEClass {
       return;
     }
 
-    let edge = this._cytoscape.edges(
+    const edge = this._cytoscape.edges(
       '[source = "' + sourceId + '"][target = "' + targetId + '"]'
     );
     if (edge.length >= 1) {

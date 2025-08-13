@@ -388,6 +388,29 @@ class AttractorBifurcationExplorerClass {
     CytoscapeABE.refreshSelection();
   }
 
+  /** Removes a node from Cytoscape. Should be used only after calling of the removeNode function.*/
+  public removeFromCytoscape(
+    node: NodeDataBE | undefined,
+    removedNodes: number[]
+  ) {
+    if (removedNodes.length > 0) {
+      for (const removed of removedNodes) {
+        CytoscapeABE.removeNode(removed.toString());
+      }
+    }
+    if (node !== undefined) {
+      CytoscapeABE.ensureNode(node);
+      CytoscapeABE.refreshSelection(node.id.toString());
+    } else {
+      CytoscapeABE.refreshSelection();
+    }
+  }
+
+  /** Removes a node and its child nodes from the AttractorBifurcationExplorer. */
+  public removeNode(nodeId: number): void {
+    ComputationManager.deleteBifurcationDecision(nodeId);
+  }
+
   // #endregion
 
   // #region --- Visual Options ---
@@ -398,21 +421,6 @@ class AttractorBifurcationExplorerClass {
   }
 
   // #endregion
-
-  public removeNode(nodeId: string): void {
-    // @ts-ignore
-    ComputeEngine.AttractorTree.deleteDecision(nodeId, (e: any, r: any) => {
-      if (r.removed.length > 0) {
-        for (const removed of r.removed) {
-          CytoscapeTreeEditor.removeNode(removed);
-        }
-      }
-      if (r.node !== undefined) {
-        CytoscapeTreeEditor.ensureNode(r.node);
-        CytoscapeTreeEditor.refreshSelection(r.node.id);
-      }
-    });
-  }
 
   public selectAttribute(node: string, attr: string): void {
     // @ts-ignore
