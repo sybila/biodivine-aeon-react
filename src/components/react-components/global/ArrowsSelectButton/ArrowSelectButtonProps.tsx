@@ -1,4 +1,4 @@
-export type ComputationModeButtonProps = {
+export type ArrowSelectButtonProps = {
     active: boolean;
     onClick: () => void;
     text: string;
