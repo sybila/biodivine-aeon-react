@@ -1,6 +1,6 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import type { NodeDataBE } from '../../../types';
+import type { NodeDataBE, StabilityAnalysisModes } from '../../../types';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
 import CytoscapeTreeEditor from '../CytoscapeABE/CytoscapeABE';
@@ -25,97 +25,44 @@ const SORTS = [
 ];
 
 class AttractorBifurcationExplorerClass {
-  // --- UI Initialization ---
-  public openNewTreeExplorer(): void {
-    // Todo - Fix/Remove
-    // CytoscapeTreeEditor.init();
-    // const checkbox = document.getElementById("mass-distribution") as HTMLInputElement;
-    // const label = document.getElementById("mass-distribution-label") as HTMLElement;
-    // checkbox.addEventListener("change", (event: Event) => {
-    //   const target = event.target as HTMLInputElement;
-    //   if (target.checked) {
-    //     CytoscapeTreeEditor.setMassEnabled();
-    //     label.classList.add("primary", "bold");
-    //   } else {
-    //     CytoscapeTreeEditor.setMassDisabled();
-    //     label.classList.remove("primary", "bold");
-    //   }
-    // });
-    // document.fonts.load('1rem "symbols"').then(() => {
-    //   document.fonts.load('1rem "FiraMono"').then(() => {
-    //     this.loadBifurcationTree();
-    //   });
-    // });
-    // const slider = document.getElementById("precision-slider") as HTMLInputElement;
-    // const output = document.getElementById("precision-value") as HTMLElement;
-    // output.innerHTML = (Number(slider.value) / 100.0) + "%";
-    // slider.oninput = function () {
-    //   output.innerHTML = (Number(this.value) / 100.0) + "%";
-    // };
-    // slider.onmouseup = () => {
-    //   this.setPrecision(Number(slider.value));
-    // };
-    // // @ts-ignore
-    // ComputeEngine.AttractorTree.getTreePrecision((e: any, r: number) => {
-    //   slider.value = String(r);
-    //   output.innerHTML = (r / 100.0) + "%";
-    // });
-    // const depth = document.getElementById("auto-expand-slider") as HTMLInputElement;
-    // const autoExpand = document.getElementById("button-auto-expand") as HTMLElement;
-    // depth.oninput = function () {
-    //   const value = Number(depth.value);
-    //   if (value === 1) {
-    //     autoExpand.innerHTML = "Auto expand (1 level)  <img src='img/graph-24px.svg'>";
-    //   } else {
-    //     autoExpand.innerHTML = `Auto expand (${value} levels)  <img src='img/graph-24px.svg'>`;
-    //   }
-    // };
-    // autoExpand.onclick = () => {
-    //   CytoscapeTreeEditor.getSelectedNodeId() &&
-    //     this.autoExpandBifurcationTree(CytoscapeTreeEditor.getSelectedNodeId()!, Number(depth.value));
-    // };
-    // // Setup mutually exclusive sort checkboxes.
-    // for (const sort of SORTS) {
-    //   const checkbox = document.getElementById(sort) as HTMLInputElement;
-    //   checkbox.onclick = () => {
-    //     for (const sortInner of SORTS) {
-    //       (document.getElementById(sortInner) as HTMLInputElement).checked = false;
-    //     }
-    //     checkbox.checked = true;
-    //     this.setSort(checkbox.id);
-    //   };
-    // }
-    // document.getElementById("toggle-animate")?.addEventListener("change", (e: any) => {
-    //   CytoscapeTreeEditor.layoutSettings.animate = e.target.checked;
-    // });
-    // document.getElementById("toggle-layered")?.addEventListener("change", (e: any) => {
-    //   CytoscapeTreeEditor.layoutSettings.layered = e.target.checked;
-    //   CytoscapeTreeEditor.applyTreeLayout();
-    // });
-    // document.getElementById("toggle-posonleft")?.addEventListener("change", (e: any) => {
-    //   CytoscapeTreeEditor.layoutSettings.positiveOnLeft = e.target.checked;
-    //   CytoscapeTreeEditor.applyTreeLayout();
-    // });
-    // document.getElementById("button-fit")?.addEventListener("click", () => {
-    //   CytoscapeTreeEditor.fit();
-    // });
-    // document.getElementById("button-resetlayout")?.addEventListener("click", () => {
-    //   CytoscapeTreeEditor.layoutSettings.extraVerticalSpacings = {};
-    //   CytoscapeTreeEditor.layoutSettings.switchChildren.clear();
-    //   CytoscapeTreeEditor.applyTreeLayout();
-    // });
-  }
-
   // #region --- Math helpers ---
 
-  public mathDimPercent(cardinality: number, total: number): number {
+  /** Calculates the logarithmic dimension percentage of a subset relative to the total set.
+   * <p>
+   * The result is computed as:
+   * <pre>
+   *   percent = Math.round(((Math.log2(cardinality) + 1) / (Math.log2(total) + 1)) * 100)
+   * </pre>
+   * This reflects the relative "dimension" (logarithmic scale) of the subset compared to the whole,
+   * which is useful for visualizing exponential growth or combinatorial complexity.
+   * </p>
+   *
+   * @param subsetSize The size of the subset.
+   * @param total The size of the total set.
+   * @return The dimension percentage (0-100) of the subset relative to the total.
+   */
+  public mathDimPercent(subsetSize: number, total: number): number {
     return Math.round(
-      ((Math.log2(cardinality) + 1) / (Math.log2(total) + 1)) * 100
+      ((Math.log2(subsetSize) + 1) / (Math.log2(total) + 1)) * 100
     );
   }
 
-  public mathPercent(cardinality: number, total: number): number {
-    return Math.round((cardinality / total) * 100);
+  /** Calculates the linear percentage of a subset relative to the total set.
+   * <p>
+   * The result is computed as:
+   * <pre>
+   *   percent = Math.round((cardinality / total) * 100)
+   * </pre>
+   * This reflects the direct ratio of the subset size to the total size,
+   * expressed as a percentage (0-100).
+   * </p>
+   *
+   * @param subsetSize The size of the subset.
+   * @param total The size of the total set.
+   * @return The percentage (0-100) of the subset relative to the total.
+   */
+  public mathPercent(subsetSize: number, total: number): number {
+    return Math.round((subsetSize / total) * 100);
   }
 
   // #endregion
@@ -174,11 +121,12 @@ class AttractorBifurcationExplorerClass {
 
     const selected = CytoscapeTreeEditor.getSelectedNodeTreeData();
     if (selected) {
-      this.renderAttributeTable(
-        selected.id,
-        selected.attributes,
-        selected.cardinality
-      );
+      // Todo - fix
+      // this.renderAttributeTable(
+      //   selected.id,
+      //   selected.attributes,
+      //   selected.cardinality
+      // );
     }
   }
 
@@ -202,130 +150,6 @@ class AttractorBifurcationExplorerClass {
   }
 
   // #endregion
-
-  // --- Attribute Table Rendering ---
-  public renderAttributeTable(
-    id: any,
-    attributes: any[],
-    totalCardinality: number
-  ): void {
-    // Todo - Fix/Remove
-    // const mixedAttributes = document.getElementById('mixed-attributes');
-    // const mixedAttributesTitle = document.getElementById(
-    //   'mixed-attributes-title'
-    // );
-    // const template = document.getElementById(
-    //   'mixed-attributes-list-item-template'
-    // ) as HTMLElement;
-    // const list = document.getElementById(
-    //   'mixed-attributes-list'
-    // ) as HTMLElement;
-    // if (!mixedAttributes || !mixedAttributesTitle || !template || !list) return;
-    // mixedAttributes.classList.remove('gone');
-    // mixedAttributesTitle.innerHTML = `Attributes (${attributes.length}):`;
-    // list.innerHTML = '';
-    // let cut_off = 100;
-    // this.sortAttributes(attributes);
-    // for (const attr of attributes) {
-    //   if (cut_off < 0) break;
-    //   const attrNode = template.cloneNode(true) as HTMLElement;
-    //   attrNode.id = '';
-    //   attrNode.classList.remove('gone');
-    //   const nameText = attrNode.getElementsByClassName(
-    //     'attribute-name'
-    //   )[0] as HTMLElement;
-    //   nameText.innerHTML = "<small class='grey'>SELECT:</small>" + attr.name;
-    //   nameText.onclick = () => this.selectAttribute(id, attr.id);
-    //   const igText = attrNode.getElementsByClassName(
-    //     'information-gain'
-    //   )[0] as HTMLElement;
-    //   igText.innerHTML = `${attr.gain.toFixed(2)} ɪɢ / ${
-    //     attr.left.length + attr.right.length
-    //   } ᴛᴄ`;
-    //   if (attr.gain <= 0.0) {
-    //     igText.classList.add('red');
-    //   } else if (attr.gain >= 0.99) {
-    //     igText.classList.add('green');
-    //   } else {
-    //     igText.classList.add('primary');
-    //   }
-    //   list.appendChild(attrNode);
-    //   const leftNode = attrNode.getElementsByClassName(
-    //     'negative'
-    //   )[0] as HTMLElement;
-    //   const rightNode = attrNode.getElementsByClassName(
-    //     'positive'
-    //   )[0] as HTMLElement;
-    //   const leftTotal = attr.left.reduce(
-    //     (a: number, b: any) => a + b.cardinality,
-    //     0.0
-    //   );
-    //   const rightTotal = attr.right.reduce(
-    //     (a: number, b: any) => a + b.cardinality,
-    //     0.0
-    //   );
-    //   leftNode.getElementsByClassName('title')[0].innerHTML = `Negative (${
-    //     attr.left.length
-    //   }|<small>${this.mathPercent(leftTotal, totalCardinality)}%</small>)`;
-    //   rightNode.getElementsByClassName('title')[0].innerHTML = `Positive (${
-    //     attr.right.length
-    //   }|<small>${this.mathPercent(rightTotal, totalCardinality)}%</small>)`;
-    //   const leftTable = leftNode.getElementsByClassName(
-    //     'table'
-    //   )[0] as HTMLElement;
-    //   leftTable.innerHTML = attr.left.reduce((html: string, cls: any) => {
-    //     const style = html.length > 0 ? "class='extra'" : '';
-    //     const row = `
-    //       <tr ${style}>
-    //         <td class="distribution">${this.mathPercent(
-    //           cls.cardinality,
-    //           leftTotal
-    //         )}%</td>
-    //         <td class="symbols phenotype">${CytoscapeABE.normalizeClass(
-    //           cls.class
-    //         )}</td>
-    //       </tr>
-    //     `;
-    //     return html + row;
-    //   }, '');
-    //   const rightTable = rightNode.getElementsByClassName(
-    //     'table'
-    //   )[0] as HTMLElement;
-    //   rightTable.innerHTML = attr.right.reduce((html: string, cls: any) => {
-    //     const style = html.length > 0 ? "class='extra'" : '';
-    //     const row = `
-    //       <tr ${style}>
-    //         <td class="symbols phenotype">${CytoscapeTreeEditor.normalizeClass(
-    //           cls.class
-    //         )}</td>
-    //         <td class="distribution">${this.mathPercent(
-    //           cls.cardinality,
-    //           rightTotal
-    //         )}%</td>
-    //       </tr>
-    //     `;
-    //     return html + row;
-    //  }, '');
-    //   const expandButton = attrNode.getElementsByClassName(
-    //     'expand-button'
-    //   )[0] as HTMLElement;
-    //   if (attr.left.length === 1 && attr.right.length === 1) {
-    //     expandButton.parentNode?.removeChild(expandButton);
-    //   } else {
-    //     expandButton.onclick = () => {
-    //       if (expandButton.innerHTML === 'more...') {
-    //         expandButton.innerHTML = '...less';
-    //         leftTable.classList.remove('collapsed');
-    //         rightTable.classList.remove('collapsed');
-    //       } else if (expandButton.innerHTML === '...less') {
-    //         expandButton.innerHTML = 'more...';
-    //         leftTable.classList.add('collapsed');
-    //         rightTable.classList.add('collapsed');
-    //       }
-    //     };
-    //   }
-    // }
-  }
 
   // #region --- Bifurcation Tree Management ---
 
@@ -409,6 +233,20 @@ class AttractorBifurcationExplorerClass {
   /** Removes a node and its child nodes from the AttractorBifurcationExplorer. */
   public removeNode(nodeId: number): void {
     ComputationManager.deleteBifurcationDecision(nodeId);
+  }
+
+  // #endregion
+
+  // #region --- Stability Analysis ---
+
+  /** Gets the stability data for a specific node.
+   * @param nodeId - (number) The ID of the node to get stability data for.
+   */
+  public getStabilityData(
+    nodeId: number,
+    behaviour: StabilityAnalysisModes
+  ): void {
+    ComputationManager.getStabilityData(nodeId, behaviour);
   }
 
   // #endregion
@@ -522,57 +360,6 @@ class AttractorBifurcationExplorerClass {
     }
     result += ']';
     return result;
-  }
-
-  public initStabilityButton(
-    id: string,
-    button: HTMLElement,
-    dropdown: HTMLSelectElement,
-    container: HTMLElement
-  ): void {
-    const loading = document.getElementById('loading-indicator') as HTMLElement;
-    button.onclick = () => {
-      // @ts-ignore
-      if (!UI.testResultsAvailable()) return;
-
-      loading.classList.remove('invisible');
-      const behaviour = dropdown.value;
-      // @ts-ignore
-      ComputeEngine.AttractorTree.getStabilityData(
-        id,
-        behaviour,
-        (e: any, r: any[]) => {
-          loading.classList.add('invisible');
-          if (e !== undefined) {
-            // @ts-ignore
-            Warning.displayWarning('Cannot load stability data: ' + e);
-          } else {
-            let content = '<h4>Stability analysis:</h4>';
-            for (const item of r) {
-              const variableName = item.variable;
-              if (item.data.length === 1) {
-                content += `<div><b>${variableName}</b>: always ${this.vectorToString(
-                  item.data[0].vector
-                )}</div>`;
-              } else {
-                content += `<div><b>${variableName}</b>:</br>`;
-                for (const data of item.data) {
-                  content += ` - ${this.vectorToString(data.vector)}: ${
-                    data.colors
-                  } ${this.getWitnessPanelForVariable(
-                    variableName,
-                    behaviour,
-                    data.vector
-                  )}</br>`;
-                }
-                content += '</div>';
-              }
-            }
-            container.innerHTML = content;
-          }
-        }
-      );
-    };
   }
 
   public getWitnessPanelForVariable(

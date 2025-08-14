@@ -5,6 +5,8 @@ import type {
   ControlComputationParams,
   ControlResults,
   NodeDataBE,
+  StabilityAnalysisModes,
+  StabilityAnalysisVariable,
 } from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
@@ -13,6 +15,7 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import { Loading } from '../../../components/lit-components/loading-wrapper';
+import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -316,6 +319,38 @@ class ComputationManagerClass {
     this.computeEngine.deleteBifurcationDecision(
       nodeId,
       this.deleteBifurcationDecisionCallback.bind(this)
+    );
+  }
+
+  /** Callback for fetching stability data. */
+  private getStabilityDataCallback(
+    error: string | undefined,
+    data: Array<StabilityAnalysisVariable> | undefined
+  ): void {
+    if (error || !data) {
+      Message.showError(
+        `Error fetching stability data: ${error ?? 'Internal error'}`
+      );
+    } else {
+      useBifurcationExplorerStatus.getState().loadStabilityData(data);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the stability data for a specific node and behaviour.
+   * @param nodeId - (number) The ID of the node to fetch stability data for.
+   * @param behaviour - (StabilityAnalysisModes) The behaviour mode to use for fetching stability data.
+   */
+  public getStabilityData(
+    nodeId: number,
+    behaviour: StabilityAnalysisModes
+  ): void {
+    Loading.startLoading();
+    this.computeEngine.getStabilityData(
+      nodeId,
+      behaviour,
+      this.getStabilityDataCallback.bind(this)
     );
   }
 

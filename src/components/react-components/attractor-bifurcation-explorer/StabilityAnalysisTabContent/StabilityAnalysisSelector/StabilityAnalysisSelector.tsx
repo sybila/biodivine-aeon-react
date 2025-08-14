@@ -5,19 +5,28 @@ import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 
 import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
+import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
-const StabilityAnalysisSelector = () => {
+type FullStabilityAnalysisMode =
+  | 'Total'
+  | 'Stability'
+  | 'Oscillation'
+  | 'Disorder';
+
+const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
+  nodeId,
+}) => {
   const [stabilityMode, setStabilityMode] =
-    useState<StabilityAnalysisModes>('Total');
+    useState<FullStabilityAnalysisMode>('Total');
 
   const renderButtons = () => {
-    const firstCol: Array<StabilityAnalysisModes> = ['Total', 'Stability'];
-    const secondCol: Array<StabilityAnalysisModes> = [
+    const firstCol: Array<FullStabilityAnalysisMode> = ['Total', 'Stability'];
+    const secondCol: Array<FullStabilityAnalysisMode> = [
       'Oscillation',
       'Disorder',
     ];
 
-    const renderButton = (mode: StabilityAnalysisModes) => (
+    const renderButton = (mode: FullStabilityAnalysisMode) => (
       <ArrowSelectButton
         key={mode}
         active={stabilityMode === mode}
@@ -28,11 +37,15 @@ const StabilityAnalysisSelector = () => {
     return (
       <section className="flex flex-row w-full">
         <div className="flex flex-col justify-center items-center w-1/2 gap-2">
-          {firstCol.map((mode: StabilityAnalysisModes) => renderButton(mode))}
+          {firstCol.map((mode: FullStabilityAnalysisMode) =>
+            renderButton(mode)
+          )}
         </div>
 
         <div className="flex flex-col justify-center items-center w-1/2 gap-2">
-          {secondCol.map((mode: StabilityAnalysisModes) => renderButton(mode))}
+          {secondCol.map((mode: FullStabilityAnalysisMode) =>
+            renderButton(mode)
+          )}
         </div>
       </section>
     );
@@ -57,7 +70,14 @@ const StabilityAnalysisSelector = () => {
         text="Start Stability Analysis"
         iconAlt="Stability"
         iconSrc={StabilityIcon}
-        onClick={() => {}}
+        handleClick={() =>
+          AttractorBifurcationExplorer.getStabilityData(
+            nodeId,
+            stabilityMode === 'Total'
+              ? 'total'
+              : (stabilityMode[0] as StabilityAnalysisModes)
+          )
+        }
       />
     </section>
   );

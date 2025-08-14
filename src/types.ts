@@ -182,11 +182,7 @@ export type StabilityAnalysisVariable = {
   data: Array<VariableStability>;
 };
 
-export type StabilityAnalysisModes =
-  | 'Total'
-  | 'Stability'
-  | 'Oscillation'
-  | 'Disorder';
+export type StabilityAnalysisModes = 'total' | 'S' | 'O' | 'D';
 
 // #endregion
 export type TimestampResponse = {

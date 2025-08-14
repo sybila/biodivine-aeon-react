@@ -7,6 +7,8 @@ import type {
   ControlResult,
   ControlResults,
   NodeDataBE,
+  StabilityAnalysisModes,
+  StabilityAnalysisVariable,
   TimestampResponse,
 } from '../../../../types';
 import type {
@@ -561,6 +563,28 @@ class ComputeEngine {
         }
       },
       'POST'
+    );
+  }
+
+  public getStabilityData(
+    nodeId: number,
+    behaviour: StabilityAnalysisModes,
+    callback: (
+      error: string | undefined,
+      data: Array<StabilityAnalysisVariable> | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/get_stability_data/' + nodeId + '/' + behaviour,
+      (
+        error: string | undefined,
+        response: Array<StabilityAnalysisVariable> | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
     );
   }
 

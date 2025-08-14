@@ -52,6 +52,7 @@ class CytoscapeABEClass {
     this._cytoscape.on('dragfreeon', this._handleDragEnd.bind(this));
 
     AttractorBifurcationExplorer.loadBifurcationTree();
+    this.fit();
   }
 
   private initOptions(): CytoscapeOptions {
@@ -261,35 +262,10 @@ class CytoscapeABEClass {
     // Clear remove button
     this._cytoscape.$('.remove-button').remove();
 
-    // todo -fix
-    // // Remove the listener upading its position
-    // const scratch = this._scratch(e.target);
-    // e.target.removeListener('position', scratch.removeBtnHandler);
-    // scratch.removeBtnHandler = undefined;
-    // // Close panels
-    // let leafInfo = document.getElementById('leaf-info');
-    // leafInfo.classList.add('gone');
-    // let decisionInfo = document.getElementById('decision-info');
-    // decisionInfo.classList.add('gone');
-    // let mixedInfo = document.getElementById('mixed-info');
-    // mixedInfo.classList.add('gone');
-    // // Clear decision attribute list:
-    // document.getElementById('make-decision-button').classList.remove('gone');
-    // document.getElementById('mixed-attributes').classList.add('gone');
-    // document.getElementById('mixed-attributes-list').innerHTML = '';
-    // // Reset stability analysis buttons:
-    // document
-    //   .getElementById('mixed-stability-analysis-button')
-    //   .classList.remove('gone');
-    // document
-    //   .getElementById('leaf-stability-analysis-button')
-    //   .classList.remove('gone');
-    // document
-    //   .getElementById('decision-stability-analysis-button')
-    //   .classList.remove('gone');
-    // document.getElementById('mixed-stability-analysis').innerHTML = '';
-    // document.getElementById('leaf-stability-analysis').innerHTML = '';
-    // document.getElementById('decision-stability-analysis').innerHTML = '';
+    // Remove the listener upading its position
+    const scratch = this._scratch(e.target);
+    e.target.removeListener('position', scratch.removeBtnHandler);
+    scratch.removeBtnHandler = undefined;
   }
 
   public selectNode(nodeId: string) {
@@ -321,24 +297,6 @@ class CytoscapeABEClass {
       }
     } else {
       this._cytoscape.getElementById(targetId).select();
-    }
-  }
-
-  // #endregion
-
-  // #region --- Remove Nodes/Edges ---
-
-  /** Removes all nodes from the CytoscapeABE. */
-  public removeAll() {
-    this._cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
-    this._cytoscape.elements().remove();
-  }
-
-  /** Removes node from CytoscapeABE. */
-  public removeNode(nodeId: string) {
-    let e = this._cytoscape.getElementById(nodeId);
-    if (e.length > 0) {
-      e.remove();
     }
   }
 
@@ -398,7 +356,7 @@ class CytoscapeABEClass {
 
   // #endregion
 
-  // #region --- Ensure Nodes/Edges ---
+  // #region --- Ensure/Remove Nodes/Edges ---
 
   /** Checks if node exists, if it doesn't, creates it, else updates its data. */
   public ensureNode(treeData: NodeDataBE) {
@@ -449,6 +407,20 @@ class CytoscapeABEClass {
           positive: positive.toString(),
         },
       });
+    }
+  }
+
+  /** Removes all nodes from the CytoscapeABE. */
+  public removeAll() {
+    this._cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
+    this._cytoscape.elements().remove();
+  }
+
+  /** Removes node from CytoscapeABE. */
+  public removeNode(nodeId: string) {
+    let e = this._cytoscape.getElementById(nodeId);
+    if (e.length > 0) {
+      e.remove();
     }
   }
 
@@ -702,6 +674,7 @@ class CytoscapeABEClass {
 
   // #endregion
 
+  /** Fit the whole Bifurcation Tree into view */
   public fit() {
     this._cytoscape.fit(undefined, this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
