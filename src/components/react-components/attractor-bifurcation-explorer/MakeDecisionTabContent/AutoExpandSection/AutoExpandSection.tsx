@@ -9,8 +9,9 @@ const AutoExpandSection: React.FC = () => {
   const [depth, setDepth] = useState<number>(1);
 
   return (
-    <section className="flex flex-row justify-around items-center h-[30px] w-full gap-2">
+    <section className="flex flex-row justify-around items-center h-[40px] w-full gap-2">
       <TextIconButtonReact
+        compHeight="95%"
         compWidth="50%"
         text={`Auto-Expand (${depth} level${depth === 1 ? '' : 's'})`}
         iconAlt="Graph Icon"
