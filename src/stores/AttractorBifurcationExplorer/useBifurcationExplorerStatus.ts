@@ -1,15 +1,22 @@
 import { create } from 'zustand';
-import type { DecisionMixedNode, StabilityAnalysisVariable } from '../../types';
+import type {
+  DecisionMixedNode,
+  Decisions,
+  StabilityAnalysisVariable,
+} from '../../types';
 
 type BifurcationExplorerStatusState = {
   /** Currently selected node in the Bifurcation Explorer */
   selectedNode: DecisionMixedNode | null;
   /** Last computed stability analysis results */
   stabilityData: Array<StabilityAnalysisVariable> | null;
+  /** Decisions available for the selected node */
+  availableDecisions: Decisions | null;
   changeSelectedNode: (node: DecisionMixedNode | null) => void;
   loadStabilityData: (
     stabilityData: Array<StabilityAnalysisVariable> | null
   ) => void;
+  loadDecisions: (decisions: Decisions | null) => void;
   clear: () => void;
 };
 
@@ -20,6 +27,7 @@ const useBifurcationExplorerStatus = create<BifurcationExplorerStatusState>()(
   (set) => ({
     selectedNode: null,
     stabilityData: null,
+    availableDecisions: null,
     changeSelectedNode: (node) => {
       set({
         selectedNode: node,
@@ -28,7 +36,15 @@ const useBifurcationExplorerStatus = create<BifurcationExplorerStatusState>()(
     loadStabilityData: (stabilityData) => {
       set({ stabilityData });
     },
-    clear: () => set({ selectedNode: null, stabilityData: null }),
+    loadDecisions: (decisions) => {
+      set({ availableDecisions: decisions });
+    },
+    clear: () =>
+      set({
+        selectedNode: null,
+        stabilityData: null,
+        availableDecisions: null,
+      }),
   })
 );
 
