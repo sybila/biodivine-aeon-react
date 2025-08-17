@@ -184,7 +184,26 @@ export type StabilityAnalysisVariable = {
 
 export type StabilityAnalysisModes = 'total' | 'S' | 'O' | 'D';
 
+export type DecsionBehaviorClass = {
+  cardinality: number;
+  class: string;
+  fraction: number;
+};
+
+export type Decision = {
+  id: number;
+  name: string;
+  gain: number;
+  left: Array<DecsionBehaviorClass>;
+  leftTotal: number;
+  right: Array<DecsionBehaviorClass>;
+  rightTotal: number;
+};
+
+export type Decisions = Array<Decision>;
+
 // #endregion
+
 export type TimestampResponse = {
   timestamp: number | undefined;
 };
