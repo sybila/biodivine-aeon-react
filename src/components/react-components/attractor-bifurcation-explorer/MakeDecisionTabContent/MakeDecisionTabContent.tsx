@@ -36,7 +36,7 @@ const MakeDecisionTabContent: React.FC = () => {
           justifyHeader="start"
           headerText="Decisions"
         />
-        <DecisionTable />
+        <DecisionTable nodeId={selectedNode.id} nodeCardinality={selectedNode.cardinality} />
       </section>
     </div>
   );

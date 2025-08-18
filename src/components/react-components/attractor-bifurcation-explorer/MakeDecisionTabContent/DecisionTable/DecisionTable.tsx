@@ -2,8 +2,10 @@ import useBifurcationExplorerStatus from '../../../../../stores/AttractorBifurca
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 
 import PlusIcon from '../../../../../assets/icons/add_box.svg';
+import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 
-const DecisionTable = () => {
+const DecisionTable: React.FC<{ nodeId: number, nodeCardinality: number }> = ({ nodeId, nodeCardinality }) => {
   const decisions = useBifurcationExplorerStatus(
     (state) => state.availableDecisions
   );
@@ -11,11 +13,12 @@ const DecisionTable = () => {
   if (!decisions) {
     return (
       <TextIconButtonReact
-        className='mb-2'
-        compWidth='95%'
+        className="mb-2"
+        compWidth="95%"
         text="Get Decisions"
         iconAlt="Plus Icon"
         iconSrc={PlusIcon}
+        handleClick={() => AttractorBifurcationExplorer.getDecisions(nodeId)}
       />
     );
   }
@@ -24,7 +27,7 @@ const DecisionTable = () => {
     return (
       <>
         {decisions?.map((decision, index) => (
-          <div> Todo </div>
+          <DecisionTableRow key={index} decision={decision} nodeCardinality={nodeCardinality} />
         ))}
       </>
     );
