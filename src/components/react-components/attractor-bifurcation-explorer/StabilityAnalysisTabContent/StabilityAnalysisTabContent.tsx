@@ -1,5 +1,5 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import NoSelectedNode from '../NoSelectedNode/NoSelectedNode';
+import NoDataText from '../NoDataText/NoDataText';
 import StabilityAnalysisSelector from './StabilityAnalysisSelector/StabilityAnalysisSelector';
 import StabilityAnalysisTable from './StabilityAnalysisTable/StabilityAnalysisTable';
 
@@ -9,7 +9,7 @@ const StabilityAnalysisTabContent = () => {
   );
 
   if (!selectedNode) {
-    return <NoSelectedNode />;
+    return <NoDataText text="No selected node" />;
   }
 
   return (

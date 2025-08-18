@@ -2,7 +2,8 @@ import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcatio
 import type { DecisionMixedNode } from '../../../../types';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import NoSelectedNode from '../NoSelectedNode/NoSelectedNode';
+import NoDataText from '../NoDataText/NoDataText';
+
 import AutoExpandSection from './AutoExpandSection/AutoExpandSection';
 import DecisionTable from './DecisionTable/DecisionTable';
 
@@ -12,7 +13,7 @@ const MakeDecisionTabContent: React.FC = () => {
   );
 
   if (!selectedNode) {
-    return <NoSelectedNode />;
+    return <NoDataText text="No selected node" />;
   }
 
   return (

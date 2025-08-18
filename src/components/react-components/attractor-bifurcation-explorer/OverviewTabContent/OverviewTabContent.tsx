@@ -1,7 +1,7 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { DecisionMixedNode } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import NoSelectedNode from '../NoSelectedNode/NoSelectedNode';
+import NoDataText from '../NoDataText/NoDataText';
 import BehaviorClassTable from './BehaviorClassTable/BehaviorClassTable';
 
 const OverviewTabContent: React.FC = () => {
@@ -10,7 +10,7 @@ const OverviewTabContent: React.FC = () => {
   );
 
   if (!selectedNode) {
-    return <NoSelectedNode />;
+    return <NoDataText text="No selected node" />;
   }
 
   return (
