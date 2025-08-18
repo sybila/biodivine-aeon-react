@@ -30,6 +30,15 @@ const SORTS = [
 ];
 
 class AttractorBifurcationExplorerClass {
+  // #region --- Properties ---
+
+  /** Last set precision in the VisualOptions of AttractorExplorer.
+   *  Default precision is 100%
+   */
+  private precision: number = 100;
+
+  // #endregion
+
   // #region --- Math helpers ---
 
   /** Calculates the logarithmic dimension percentage of a subset relative to the total set.
@@ -305,6 +314,11 @@ class AttractorBifurcationExplorerClass {
 
   // #region --- Visual Options ---
 
+  /** Gets last precision set in the VisualOptions of AttractorExplorer */
+  public getLastPrecision(): number {
+    return this.precision;
+  }
+
   /** Gets the current state of the switchable options in the visual options tab */
   public getSwitchableOptionsState(): VisualOptionsSwitchableABE {
     return CytoscapeABE.getSwitchLayoutOptions();
@@ -312,6 +326,7 @@ class AttractorBifurcationExplorerClass {
 
   /** Set precision for the bifurcation tree. */
   public setPrecision(precision: number): void {
+    this.precision = precision;
     ComputationManager.setBifurcationTreePrecision(precision);
   }
 

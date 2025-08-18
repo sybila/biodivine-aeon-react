@@ -14,7 +14,9 @@ const VisualOptionsTabContent = () => {
       AttractorBifurcationExplorer.getSwitchableOptionsState()
     );
 
-  const [precision, setPrecision] = useState<number>(100);
+  const [precision, setPrecision] = useState<number>(
+    AttractorBifurcationExplorer.getLastPrecision()
+  );
 
   const resetLayout: VisualOptionsButtonSection = {
     headerText: 'Reset Layout',
