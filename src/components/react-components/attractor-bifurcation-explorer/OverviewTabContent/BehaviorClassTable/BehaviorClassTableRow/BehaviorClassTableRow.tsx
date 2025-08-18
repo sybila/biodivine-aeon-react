@@ -1,4 +1,3 @@
-import CytoscapeABE from '../../../../../../services/attractor-bifurcation-explorer/CytoscapeABE/CytoscapeABE';
 import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { BehaviorClassTableRowProps } from './BehaviorClassTableRowProps';
