@@ -184,7 +184,7 @@ export type StabilityAnalysisVariable = {
 
 export type StabilityAnalysisModes = 'total' | 'S' | 'O' | 'D';
 
-export type DecsionBehaviorClass = {
+export type DecisionBehaviorClass = {
   cardinality: number;
   class: string;
   fraction: number;
@@ -194,9 +194,9 @@ export type Decision = {
   id: number;
   name: string;
   gain: number;
-  left: Array<DecsionBehaviorClass>;
+  left: Array<DecisionBehaviorClass>;
   leftTotal: number;
-  right: Array<DecsionBehaviorClass>;
+  right: Array<DecisionBehaviorClass>;
   rightTotal: number;
 };
 
