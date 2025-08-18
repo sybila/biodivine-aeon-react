@@ -1,5 +1,6 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { DecisionMixedNode } from '../../../../types';
+import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import NoSelectedNode from '../NoSelectedNode/NoSelectedNode';
 import AutoExpandSection from './AutoExpandSection/AutoExpandSection';
@@ -27,7 +28,7 @@ const MakeDecisionTabContent: React.FC = () => {
         <AutoExpandSection />
       </section>
 
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+      <SeparatorLine />
 
       <section className="flex flex-col justify-end items-center h-fit w-full gap-2">
         <DotHeaderReact
@@ -36,7 +37,10 @@ const MakeDecisionTabContent: React.FC = () => {
           justifyHeader="start"
           headerText="Decisions"
         />
-        <DecisionTable nodeId={selectedNode.id} nodeCardinality={selectedNode.cardinality} />
+        <DecisionTable
+          nodeId={selectedNode.id}
+          nodeCardinality={selectedNode.cardinality}
+        />
       </section>
     </div>
   );
