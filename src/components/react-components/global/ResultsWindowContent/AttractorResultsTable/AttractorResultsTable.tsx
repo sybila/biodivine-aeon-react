@@ -8,6 +8,7 @@ import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResult
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
 import { useNavigate } from '@tanstack/react-router';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
+import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
@@ -100,11 +101,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
 
         {renderTable()}
 
-        <div className="flex flex-row justify-center items-center w-full h-[30px] font-[var(--base-font-family] text-sm gap-2">
-          <span className="font-[Symbols] mb-[-10px]">D</span> disorder |{' '}
-          <span className="font-[Symbols] mb-[-10px]">O</span> oscillation |{' '}
-          <span className="font-[Symbols] mb-[-10px]">S</span> stability
-        </div>
+        <BehaviorClassLegend />
 
         <TextIconButtonReact
           className="mb-2"

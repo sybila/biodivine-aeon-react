@@ -1,5 +1,6 @@
 import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import type { DecisionMixedNode } from '../../../../../types';
+import BehaviorClassLegend from '../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
@@ -83,10 +84,8 @@ const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
       <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
       {renderTable()}
 
-      <div className="flex flex-row justify-center items-center w-full h-[30px] font-[var(--base-font-family] text-sm gap-2 my-1">
-        <span className="font-[Symbols] mb-[-10px]">D</span> disorder |{' '}
-        <span className="font-[Symbols] mb-[-10px]">O</span> oscillation |{' '}
-        <span className="font-[Symbols] mb-[-10px]">S</span> stability
+      <div className="h-fit w-full my-1">
+        <BehaviorClassLegend />
       </div>
     </section>
   );
