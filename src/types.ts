@@ -204,6 +204,21 @@ export type Decisions = Array<Decision>;
 
 // #endregion
 
+// #region --- Visual Options ---
+
+export type VisualOptionsButtonSection = {
+  headerText: string;
+  buttons: Array<[string, () => void, boolean]>;
+};
+
+export type VisualOptionsSwitchableABE = {
+  animate: boolean;
+  snapLayers: boolean;
+  positiveOnLeft: boolean;
+};
+
+// #end region
+
 export type TimestampResponse = {
   timestamp: number | undefined;
 };

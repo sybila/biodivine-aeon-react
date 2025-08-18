@@ -531,13 +531,20 @@ class ComputeEngine {
     );
   }
 
-  /** Sets the precision of the bifurcation tree in the compute engine. */
+  /** Sets the precision of the bifurcation tree in the compute engine.
+   *  Precision is % with up to two decimal places
+   */
   public setBifurcationTreePrecision(
     precision: number,
     callback: (error: string | undefined) => void
   ): void {
+    const fixedPrecision =
+      precision < 100
+        ? precision.toFixed(2).replace('.', '').slice(0, 4)
+        : '10000';
+
     this.backendRequest(
-      '/apply_tree_precision/' + precision,
+      '/apply_tree_precision/' + fixedPrecision,
       (error: string | undefined, _response: any) => {
         if (callback !== undefined) {
           callback(error);

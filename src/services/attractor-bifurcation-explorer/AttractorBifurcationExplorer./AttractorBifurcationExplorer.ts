@@ -4,6 +4,7 @@ import type {
   Decisions,
   NodeDataBE,
   StabilityAnalysisModes,
+  VisualOptionsSwitchableABE,
 } from '../../../types';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
@@ -304,9 +305,39 @@ class AttractorBifurcationExplorerClass {
 
   // #region --- Visual Options ---
 
+  /** Gets the current state of the switchable options in the visual options tab */
+  public getSwitchableOptionsState(): VisualOptionsSwitchableABE {
+    return CytoscapeABE.getSwitchLayoutOptions();
+  }
+
   /** Set precision for the bifurcation tree. */
   public setPrecision(precision: number): void {
     ComputationManager.setBifurcationTreePrecision(precision);
+  }
+
+  /** Fits the bifurcation tree to the viewport. */
+  public fitTree(): void {
+    CytoscapeABE.fit();
+  }
+
+  /** Resets the layout of the bifurcation tree. */
+  public resetTreeLayout(): void {
+    CytoscapeABE.resetTreeLayout();
+  }
+
+  /** Sets the nodes to snap to their respective layers. */
+  public toggleSnapNodesToLayers(): void {
+    CytoscapeABE.toggleSnapNodesToLayers();
+  }
+
+  /** Animates layout changes in the Cytoscape instance. */
+  public toggleAnimateLayoutChanges(): void {
+    CytoscapeABE.toggleAnimateLayoutChanges();
+  }
+
+  /** Toggles the positive class on the left side of the bifurcation tree. */
+  public togglePositiveOnLeft(): void {
+    CytoscapeABE.togglePositiveOnLeft();
   }
 
   // #endregion

@@ -256,7 +256,9 @@ class ComputationManagerClass {
     this.getBifurcationTree(false);
   }
 
-  /** Sets the precision of the bifurcation tree. */
+  /** Sets the precision of the bifurcation tree.
+   *  Precision is % with up to two decimal places
+   */
   public setBifurcationTreePrecision(precision: number): void {
     this.computeEngine.setBifurcationTreePrecision(
       precision,

@@ -3,12 +3,14 @@ import type {
   CytoscapeNodeDataBE,
   DecisionMixedNode,
   NodeDataBE,
+  VisualOptionsSwitchableABE,
 } from '../../../types';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import AttractorBifurcationExplorer from '../AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import BehaviorClassOperations from '../../utilities/BehaviorClassOperations';
 
+//Todo hace locally
 const _remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
 
@@ -96,7 +98,7 @@ class CytoscapeABEClass {
             'text-halign': 'right',
             shape: 'round-rectangle',
             'background-opacity': 0,
-            'background-image': function (e) {
+            'background-image': function () {
               return (
                 'data:image/svg+xml;utf8,' + encodeURIComponent(_remove_svg)
               );
@@ -632,11 +634,95 @@ class CytoscapeABEClass {
 
   // #endregion
 
+  // #region --- Tree Layout Management ---
+
   /** Fit the whole Bifurcation Tree into view */
   public fit() {
     this._cytoscape.fit(undefined, this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
+
+  /**  Applies the tree layout to the Cytoscape instance */
+  public applyTreeLayout(fit = false) {
+    const settings = this.layoutSettings;
+    const options = settings.useTidytree
+      ? {
+          name: 'tidytree',
+          animate: settings.animate,
+          horizontalSpacing: settings.horizontalSpacing,
+          verticalSpacing: settings.verticalSpacing,
+          extraVerticalSpacings: settings.extraVerticalSpacings,
+          layerHeight: settings.layered ? settings.layerHeight : undefined,
+          lineWidth: 50,
+          // comparator for the order of children, assumes one positive and one negative edge
+          edgeComparator: (e1: any, e2: any) => {
+            const order =
+              (e1.data().positive === 'true' ? 1 : 0) -
+              (e2.data().positive === 'true' ? 1 : 0);
+            return settings.positiveOnLeft !=
+              settings.switchChildren.has(e1.source().id())
+              ? -order
+              : order;
+          },
+          fit: fit,
+          padding: settings.fitPadding,
+        }
+      : {
+          name: 'dagre',
+          spacingFactor: 1.0,
+          roots: [0],
+          directed: true,
+          avoidOverlap: true,
+          nodeDimensionsIncludeLabels: true,
+          //animate: true,
+          fit: fit,
+          padding: settings.fitPadding,
+        };
+    this._cytoscape
+      .elements()
+      .difference(this._cytoscape.$('.remove-button'))
+      .layout(options)
+      .run();
+  }
+
+  /** Resets the tree layout to the initial state */
+  public resetTreeLayout() {
+    this.layoutSettings.extraVerticalSpacings = {};
+    this.layoutSettings.switchChildren.clear();
+    this.applyTreeLayout();
+  }
+
+  /**  Gets the current layout options for the switchable options in CytoscapeABE. */
+  public getSwitchLayoutOptions(): VisualOptionsSwitchableABE {
+    return {
+      animate: this.layoutSettings.animate ?? false,
+      snapLayers: this.layoutSettings.layered ?? false,
+      positiveOnLeft: this.layoutSettings.positiveOnLeft ?? false,
+    };
+  }
+
+  /** Sets the nodes to snap to their respective layers.
+   *  @param snap - (boolean) Whether to snap nodes to layers or un-snap them.
+   */
+  public toggleSnapNodesToLayers(): void {
+    this.layoutSettings.layered = !this.layoutSettings.layered;
+    this.applyTreeLayout();
+  }
+
+  /** Animates layout changes in the Cytoscape instance.
+   *  @param animate - (boolean) Whether to animate layout changes or not.
+   */
+  public toggleAnimateLayoutChanges(): void {
+    this.layoutSettings.animate = !this.layoutSettings.animate;
+  }
+
+  /** Toggles the positive class on the left side of the bifurcation tree. */
+  public togglePositiveOnLeft(): void {
+    this.layoutSettings.positiveOnLeft = !this.layoutSettings.positiveOnLeft;
+    this.applyTreeLayout();
+  }
+
+  // #endregion
 
   private _applyTreeData(data: any, treeData: NodeDataBE): CytoscapeNodeDataBE {
     if (data.id != treeData.id) {
@@ -689,48 +775,6 @@ class CytoscapeABEClass {
     }
     data.opacity = opacity;
     return data;
-  }
-
-  public applyTreeLayout(fit = false) {
-    const settings = this.layoutSettings;
-    const options = settings.useTidytree
-      ? {
-          name: 'tidytree',
-          animate: settings.animate,
-          horizontalSpacing: settings.horizontalSpacing,
-          verticalSpacing: settings.verticalSpacing,
-          extraVerticalSpacings: settings.extraVerticalSpacings,
-          layerHeight: settings.layered ? settings.layerHeight : undefined,
-          lineWidth: 50,
-          // comparator for the order of children, assumes one positive and one negative edge
-          edgeComparator: (e1: any, e2: any) => {
-            const order =
-              (e1.data().positive === 'true' ? 1 : 0) -
-              (e2.data().positive === 'true' ? 1 : 0);
-            return settings.positiveOnLeft !=
-              settings.switchChildren.has(e1.source().id())
-              ? -order
-              : order;
-          },
-          fit: fit,
-          padding: settings.fitPadding,
-        }
-      : {
-          name: 'dagre',
-          spacingFactor: 1.0,
-          roots: [0],
-          directed: true,
-          avoidOverlap: true,
-          nodeDimensionsIncludeLabels: true,
-          //animate: true,
-          fit: fit,
-          padding: settings.fitPadding,
-        };
-    this._cytoscape
-      .elements()
-      .difference(this._cytoscape.$('.remove-button'))
-      .layout(options)
-      .run();
   }
 
   private _handleDragStart(e: any) {

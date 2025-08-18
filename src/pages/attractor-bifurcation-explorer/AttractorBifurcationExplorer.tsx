@@ -13,6 +13,7 @@ import OverviewTabContent from '../../components/react-components/attractor-bifu
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
 import StabilityAnalysisTabContent from '../../components/react-components/attractor-bifurcation-explorer/StabilityAnalysisTabContent/StabilityAnalysisTabContent';
+import VisualOptionsTabContent from '../../components/react-components/attractor-bifurcation-explorer/VisualOptionsTabContent/VisualOptionsTabContent';
 
 type TabTypeME =
   | 'Overview'
@@ -33,7 +34,7 @@ const ModelEditor: React.FC = () => {
       case 'Make Decision':
         return <MakeDecisionTabContent />;
       case 'Visual Options':
-        return <div>Visual Options</div>;
+        return <VisualOptionsTabContent />;
       default:
         return null;
     }
