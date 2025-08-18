@@ -1,4 +1,5 @@
 import CytoscapeABE from '../../../../../../services/attractor-bifurcation-explorer/CytoscapeABE/CytoscapeABE';
+import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { BehaviorClassTableRowProps } from './BehaviorClassTableRowProps';
 
@@ -7,9 +8,9 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
   interpretationCount,
   behaviorClassJSON,
 }) => {
-  // Todo update _normalizeClass
   const behaviorClass =
-    CytoscapeABE._normalizeClass(behaviorClassJSON) || 'unclassified';
+    BehaviorClassOperations.normalizeClasses(undefined, behaviorClassJSON) ??
+    'unclassified';
 
   const createDistributionString = () => {
     if (distribution[0] < 0 || distribution[1] < 0) return 'unknown';
