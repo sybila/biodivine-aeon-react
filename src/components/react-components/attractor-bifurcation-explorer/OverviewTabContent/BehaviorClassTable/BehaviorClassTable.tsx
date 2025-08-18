@@ -55,7 +55,7 @@ const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
           </div>
         </div>
 
-        <section className="flex flex-col w-full h-fit max-h-[200px] 2xl:max-h-[450px] items-center justify-center gap-1 overflow-auto">
+        <section className="flex flex-col w-full h-fit max-h-[200px] 2xl:max-h-[450px] gap-1 overflow-auto">
           {nodeData.classes?.map((behaviorClass, index) => (
             <BehaviorClassTableRow
               key={index}
