@@ -6,6 +6,7 @@ import type {
   ControlComputationStats,
   ControlResult,
   ControlResults,
+  Decisions,
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
@@ -608,6 +609,23 @@ class ComputeEngine {
         }
       },
       'POST'
+    );
+  }
+
+  /** Gets decisions for a specific node from the compute engine. */
+  public getDecisions(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      decisions: Decisions | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/get_attributes/' + nodeId,
+      (error: string | undefined, response: Decisions | undefined) => {
+        callback?.(error, response);
+      },
+      'GET'
     );
   }
 

@@ -4,6 +4,7 @@ import type {
   ComputationStatus,
   ControlComputationParams,
   ControlResults,
+  Decisions,
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
@@ -351,6 +352,33 @@ class ComputationManagerClass {
       nodeId,
       behaviour,
       this.getStabilityDataCallback.bind(this)
+    );
+  }
+
+  /** Callback for fetching decisions. */
+  public getDecisionsCallback(
+    error: string | undefined,
+    decisions: Decisions | undefined
+  ) {
+    if (error || !decisions) {
+      Message.showError(
+        `Error fetching decisions: ${error ?? 'Internal error'}`
+      );
+    } else {
+      const formatedDecisions =
+        AttractorBifurcationExplorer.formatClassesDecisions(decisions);
+      useBifurcationExplorerStatus.getState().loadDecisions(formatedDecisions);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the decisions for a specific node. */
+  public getDecisions(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.getDecisions(
+      nodeId,
+      this.getDecisionsCallback.bind(this)
     );
   }
 

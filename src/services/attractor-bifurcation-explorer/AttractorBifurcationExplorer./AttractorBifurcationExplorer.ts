@@ -1,6 +1,10 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import type { NodeDataBE, StabilityAnalysisModes } from '../../../types';
+import type {
+  Decisions,
+  NodeDataBE,
+  StabilityAnalysisModes,
+} from '../../../types';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
 import CytoscapeTreeEditor from '../CytoscapeABE/CytoscapeABE';
@@ -247,6 +251,47 @@ class AttractorBifurcationExplorerClass {
     behaviour: StabilityAnalysisModes
   ): void {
     ComputationManager.getStabilityData(nodeId, behaviour);
+  }
+
+  // #endregion
+
+  // #region --- Make Decision ---
+
+  /** Formats behavior classes inside decisions for display.
+   * @param decisions - The decisions to format.
+   * @returns The formatted decisions.
+   */
+  public formatClassesDecisions(decisions: Decisions): Decisions {
+    for (const decision of decisions) {
+      decision.left.sort(function (a, b) {
+        return b.cardinality - a.cardinality;
+      });
+      decision.right.sort(function (a, b) {
+        return b.cardinality - a.cardinality;
+      });
+      const leftTotal = decision.left.reduce((a, b) => a + b.cardinality, 0.0);
+      const rightTotal = decision.right.reduce(
+        (a, b) => a + b.cardinality,
+        0.0
+      );
+      decision['leftTotal'] = leftTotal;
+      decision['rightTotal'] = rightTotal;
+
+      decision.left.forEach((lElement) => {
+        lElement['fraction'] = lElement.cardinality / leftTotal;
+      });
+
+      decision.right.forEach((rElement) => {
+        rElement['fraction'] = rElement.cardinality / rightTotal;
+      });
+    }
+
+    return decisions;
+  }
+
+  /** Gets the decisions for the selected node. */
+  public getDecisions(nodeId: number): void {
+    ComputationManager.getDecisions(nodeId);
   }
 
   // #endregion
