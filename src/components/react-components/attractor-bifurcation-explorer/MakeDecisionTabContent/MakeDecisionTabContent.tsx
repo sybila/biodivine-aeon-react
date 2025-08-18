@@ -16,6 +16,10 @@ const MakeDecisionTabContent: React.FC = () => {
     return <NoDataText text="No selected node" />;
   }
 
+  if (selectedNode.type != 'unprocessed') {
+    return <NoDataText text="Decisions can only be made on mixed nodes." />;
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2">
       <section className="flex flex-col justify-end items-center h-fit w-full gap-3">
