@@ -163,10 +163,11 @@ class AttractorBifurcationExplorerClass {
    */
   public insertBifurcationTree(
     nodeList: NodeDataBE[],
-    fit: boolean = true
+    fit: boolean = true,
+    clearCytoscape: boolean = true
   ): void {
     if (nodeList !== undefined && nodeList.length > 0) {
-      CytoscapeABE.removeAll();
+      if (clearCytoscape) CytoscapeABE.removeAll();
       for (const n of nodeList) {
         CytoscapeABE.ensureNode(n);
       }
@@ -292,6 +293,11 @@ class AttractorBifurcationExplorerClass {
   /** Gets the decisions for the selected node. */
   public getDecisions(nodeId: number): void {
     ComputationManager.getDecisions(nodeId);
+  }
+
+  /** Make decision for a specific node. */
+  public makeDecision(nodeId: number, decisionId: number): void {
+    ComputationManager.makeDecision(nodeId, decisionId);
   }
 
   // #endregion

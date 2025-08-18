@@ -629,6 +629,26 @@ class ComputeEngine {
     );
   }
 
+  /** Makes a decision for a specific node in the compute engine. */
+  public makeDecision(
+    nodeId: number,
+    decisionId: number,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/apply_attribute/' + nodeId + '/' + decisionId,
+      (error: string | undefined, nodes: NodeDataBE[] | undefined) => {
+        if (callback !== undefined) {
+          callback(error, nodes);
+        }
+      },
+      'POST'
+    );
+  }
+
   // #endregion
 
   // #region --- Control Computation ---

@@ -382,6 +382,29 @@ class ComputationManagerClass {
     );
   }
 
+  public makeDecisionCallback(
+    error: string | undefined,
+    node: NodeDataBE[] | undefined
+  ): void {
+    if (error || !node) {
+      Message.showError(`Error making decision: ${error ?? 'Internal error'}`);
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(node, true, false);
+      AttractorBifurcationExplorer.refreshSelection();
+    }
+
+    Loading.endLoading();
+  }
+
+  public makeDecision(nodeId: number, decisionId: number): void {
+    Loading.startLoading();
+    this.computeEngine.makeDecision(
+      nodeId,
+      decisionId,
+      this.makeDecisionCallback.bind(this)
+    );
+  }
+
   // #endregion
 
   // #region --- Control Computation ---

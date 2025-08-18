@@ -11,8 +11,9 @@ import TextButtonReact from '../../../../lit-wrappers/TextButtonReact';
 
 const DecisionTableRow: React.FC<{
   decision: Decision;
+  nodeId: number;
   nodeCardinality: number;
-}> = ({ decision, nodeCardinality }) => {
+}> = ({ decision, nodeId, nodeCardinality }) => {
   const renderTopSection = () => {
     return (
       <section
@@ -48,6 +49,9 @@ const DecisionTableRow: React.FC<{
           text="Select Decision"
           compHeight="30px"
           compWidth="97%"
+          handleClick={() =>
+            AttractorBifurcationExplorer.makeDecision(nodeId, decision.id)
+          }
         />
       </section>
     );
@@ -116,13 +120,13 @@ const DecisionTableRow: React.FC<{
           />
           <StatEntryReact
             compWidth="95%"
-            statName="Positive"
-            statValue={`${decision.right.length ?? 'unknown'}`}
+            statName="Negative"
+            statValue={`${decision.left.length ?? 'unknown'}`}
           />
           <StatEntryReact
             compWidth="95%"
-            statName="Negative"
-            statValue={`${decision.left.length ?? 'unknown'}`}
+            statName="Positive"
+            statValue={`${decision.right.length ?? 'unknown'}`}
           />
         </div>
 
@@ -137,18 +141,18 @@ const DecisionTableRow: React.FC<{
           />
           <StatEntryReact
             compWidth="95%"
-            statName="Positive"
-            statValue={`${getInterpretationPercentage(
-              decision.rightTotal,
-              decision.right
-            )}%`}
-          />
-          <StatEntryReact
-            compWidth="95%"
             statName="Negative"
             statValue={`${getInterpretationPercentage(
               decision.leftTotal,
               decision.left
+            )}%`}
+          />
+          <StatEntryReact
+            compWidth="95%"
+            statName="Positive"
+            statValue={`${getInterpretationPercentage(
+              decision.rightTotal,
+              decision.right
             )}%`}
           />
         </div>

@@ -5,7 +5,10 @@ import PlusIcon from '../../../../../assets/icons/add_box.svg';
 import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 
-const DecisionTable: React.FC<{ nodeId: number, nodeCardinality: number }> = ({ nodeId, nodeCardinality }) => {
+const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
+  nodeId,
+  nodeCardinality,
+}) => {
   const decisions = useBifurcationExplorerStatus(
     (state) => state.availableDecisions
   );
@@ -27,7 +30,12 @@ const DecisionTable: React.FC<{ nodeId: number, nodeCardinality: number }> = ({ 
     return (
       <>
         {decisions?.map((decision, index) => (
-          <DecisionTableRow key={index} decision={decision} nodeCardinality={nodeCardinality} />
+          <DecisionTableRow
+            key={index}
+            decision={decision}
+            nodeId={nodeId}
+            nodeCardinality={nodeCardinality}
+          />
         ))}
       </>
     );
