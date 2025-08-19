@@ -29,7 +29,7 @@ const OverviewTabContent: React.FC = () => {
             textFontFamily="var(--base-font-family)"
           />
         ) : (
-          <span className="flex flex-row justify-center h-[30px] w-full text-[28px] font-normal font-[Symbols]">
+          <span className="flex flex-row justify-center h-[30px] w-full text-[30px] font-normal font-[Symbols] overflow-hidden mb-[-10px]">
             {selectedNode.label ?? 'Unknown'}
           </span>
         )}
