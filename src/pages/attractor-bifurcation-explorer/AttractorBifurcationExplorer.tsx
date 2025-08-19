@@ -22,7 +22,7 @@ type TabTypeME =
   | 'Visual Options'
   | null;
 
-const ModelEditor: React.FC = () => {
+const AttractorBifurcationExplorer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
 
   const renderTabContent = () => {
@@ -101,4 +101,4 @@ const ModelEditor: React.FC = () => {
   );
 };
 
-export default ModelEditor;
+export default AttractorBifurcationExplorer;
