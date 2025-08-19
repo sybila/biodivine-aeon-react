@@ -21,9 +21,9 @@ declare const cytoscape: any;
 class CytoscapeABEClass {
   // #region --- Properties ---
 
-  private _cytoscape: any = undefined;
-  private _totalCardinality = 0.0;
-  private _showMass = false;
+  private cytoscape: any = undefined;
+  private totalCardinality = 0.0;
+  private showMass = false;
 
   public layoutSettings = {
     useTidytree: true,
@@ -50,11 +50,11 @@ class CytoscapeABEClass {
     }
 
     this.container = container;
-    this._cytoscape = cytoscape(this.initOptions());
-    this._cytoscape.on('select', (e: EventObject) => this.onSelect(e));
-    this._cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
-    this._cytoscape.on('grabon', this._handleDragStart.bind(this));
-    this._cytoscape.on('dragfreeon', this._handleDragEnd.bind(this));
+    this.cytoscape = cytoscape(this.initOptions());
+    this.cytoscape.on('select', (e: EventObject) => this.onSelect(e));
+    this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
+    this.cytoscape.on('grabon', this.handleDragStart.bind(this));
+    this.cytoscape.on('dragfreeon', this.handleDragEnd.bind(this));
 
     AttractorBifurcationExplorer.loadBifurcationTree();
     this.fit();
@@ -196,7 +196,7 @@ class CytoscapeABEClass {
 
   /** Returns total cardinality of the graph or -1 if not available */
   public getTotalCardinality() {
-    return this._totalCardinality ?? -1;
+    return this.totalCardinality ?? -1;
   }
 
   // #endregion
@@ -219,7 +219,7 @@ class CytoscapeABEClass {
         y: currentPosition.y - e.target.height() / 2 - 12,
       },
     };
-    const node = this._cytoscape.add(closeButton);
+    const node = this.cytoscape.add(closeButton);
     node.on('mouseover', () => {
       node.addClass('hover');
     });
@@ -235,7 +235,7 @@ class CytoscapeABEClass {
         y: targetPos.y - e.target.height() / 2 - 12,
       });
     };
-    this._scratch(e.target).removeBtnHandler = handler; // save handler to remove later
+    this.scratch(e.target).removeBtnHandler = handler; // save handler to remove later
     e.target.on('position', handler);
   }
 
@@ -283,25 +283,25 @@ class CytoscapeABEClass {
   private _onUnselect(e: any) {
     useBifurcationExplorerStatus.getState().clear();
     // Clear remove button
-    this._cytoscape.$('.remove-button').remove();
+    this.cytoscape.$('.remove-button').remove();
 
     // Remove the listener upading its position
-    const scratch = this._scratch(e.target);
+    const scratch = this.scratch(e.target);
     e.target.removeListener('position', scratch.removeBtnHandler);
     scratch.removeBtnHandler = undefined;
   }
 
   public selectNode(nodeId: string) {
-    let current = this._cytoscape.nodes(':selected');
+    let current = this.cytoscape.nodes(':selected');
     current.unselect();
-    this._cytoscape.getElementById(nodeId).select();
+    this.cytoscape.getElementById(nodeId).select();
   }
 
   /** Triggers all necessary events to update UI after graph update.
    * Selects/Unselects nodes as needed.
    * If targetId is provided, it will be selected. */
   public refreshSelection(targetId?: string) {
-    let selected = this._cytoscape.$(':selected'); // node or edge that are selected
+    let selected = this.cytoscape.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {
       selected.unselect();
     }
@@ -319,7 +319,7 @@ class CytoscapeABEClass {
         selected.select();
       }
     } else {
-      this._cytoscape.getElementById(targetId).select();
+      this.cytoscape.getElementById(targetId).select();
     }
   }
 
@@ -328,7 +328,7 @@ class CytoscapeABEClass {
   // #region --- Node Getters ---
 
   public getParentNode(targetId: string) {
-    let parentEdge = this._cytoscape.edges("edge[target='" + targetId + "']");
+    let parentEdge = this.cytoscape.edges("edge[target='" + targetId + "']");
     if (parentEdge.length == 0) {
       return undefined;
     }
@@ -336,7 +336,7 @@ class CytoscapeABEClass {
   }
 
   public getChildNode(sourceId: string, positive: boolean) {
-    let childEdge = this._cytoscape.edges(
+    let childEdge = this.cytoscape.edges(
       "edge[source='" + sourceId + "'][positive='" + positive + "']"
     );
     if (childEdge.length == 0) {
@@ -346,13 +346,13 @@ class CytoscapeABEClass {
   }
 
   public getSiblingNode(targetId: string) {
-    let parentEdge = this._cytoscape.edges("edge[target='" + targetId + "']");
+    let parentEdge = this.cytoscape.edges("edge[target='" + targetId + "']");
     if (parentEdge.length == 0) {
       return undefined;
     }
     let sourceId = parentEdge.data().source;
     let positive = !(parentEdge.data().positive == 'true');
-    let childEdge = this._cytoscape.edges(
+    let childEdge = this.cytoscape.edges(
       "edge[source='" + sourceId + "'][positive='" + positive + "']"
     );
     if (childEdge.length == 0) {
@@ -362,37 +362,37 @@ class CytoscapeABEClass {
   }
 
   public getSelectedNodeId() {
-    const node = this._cytoscape.nodes(':selected');
+    const node = this.cytoscape.nodes(':selected');
     if (node.length == 0) return undefined;
     return node.data().id;
   }
 
   public getSelectedNodeTreeData() {
-    const node = this._cytoscape.nodes(':selected');
+    const node = this.cytoscape.nodes(':selected');
     if (node.length == 0) return undefined;
     return node.data().treeData;
   }
 
   public getNodeType(nodeId: string) {
-    return this._cytoscape.getElementById(nodeId).data().type;
+    return this.cytoscape.getElementById(nodeId).data().type;
   }
 
   /** Returns necessary conditions to reach a node. */
   public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
     const conditions: NodeNecessaryConditions = [];
     let pathId = nodeId;
-    let source = this._cytoscape.edges('[target = "' + pathId + '"]');
+    let source = this.cytoscape.edges('[target = "' + pathId + '"]');
     while (source.length != 0) {
       const data = source.data();
       const is_positive = data.positive === 'true';
       pathId = data.source;
-      const name = this._cytoscape.getElementById(pathId).data()
+      const name = this.cytoscape.getElementById(pathId).data()
         .treeData.attribute_name;
       conditions.push({
         name: name,
         positive: is_positive,
       });
-      source = this._cytoscape.edges('[target = "' + pathId + '"]');
+      source = this.cytoscape.edges('[target = "' + pathId + '"]');
     }
 
     conditions.reverse(); // Reverse to have the root condition first
@@ -403,18 +403,71 @@ class CytoscapeABEClass {
 
   // #region --- Ensure/Remove Nodes/Edges ---
 
+  private applyTreeData(data: any, treeData: NodeDataBE): CytoscapeNodeDataBE {
+    if (data.id != treeData.id) {
+      Message.showError(
+        'Bifurcation Error: Internal Error - Updating wrong node.'
+      );
+    }
+    if (treeData.id == 0) {
+      this.totalCardinality = treeData.cardinality;
+    }
+    if (treeData.classes !== undefined) {
+      treeData.classes.sort((a, b) => {
+        if (a.cardinality == b.cardinality) {
+          return a.class.localeCompare(b.class);
+        } else if (a.cardinality < b.cardinality) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+    }
+    data.treeData = treeData;
+    data.type = treeData.type;
+    if (treeData.type == 'leaf') {
+      let normalizedClass =
+        BehaviorClassOperations.normalizeClasses(
+          undefined,
+          treeData.class ?? '[]'
+        ) ?? 'unknown';
+      if (normalizedClass.includes('D')) {
+        data.subtype = 'disorder';
+      } else if (normalizedClass.includes('O')) {
+        data.subtype = 'oscillation';
+      } else {
+        data.subtype = 'stability';
+      }
+      data.label = normalizedClass;
+      //data.label += "\n(" + treeData.cardinality + ")";
+    } else if (treeData.type == 'decision') {
+      data.label = treeData.attribute_name;
+    } else if (treeData.type == 'unprocessed') {
+      data.label =
+        'Mixed Classes\n' + '(' + (treeData.classes?.length ?? 0) + ' types)';
+    } else {
+      data.label = treeData.type + '(' + treeData.id + ')';
+    }
+    let opacity = 1.0;
+    if (this.showMass) {
+      opacity = this._computeMassOpacity(treeData.cardinality);
+    }
+    data.opacity = opacity;
+    return data;
+  }
+
   /** Checks if node exists, if it doesn't, creates it, else updates its data. */
   public ensureNode(treeData: NodeDataBE) {
-    let node = this._cytoscape.getElementById(treeData.id);
+    let node = this.cytoscape.getElementById(treeData.id);
     if (node !== undefined && node.length > 0) {
       const data = node.data();
-      this._applyTreeData(data, treeData);
-      this._cytoscape.style().update(); //redraw graph
+      this.applyTreeData(data, treeData);
+      this.cytoscape.style().update(); //redraw graph
       return node;
     } else {
-      const data = this._applyTreeData({ id: treeData.id }, treeData);
+      const data = this.applyTreeData({ id: treeData.id }, treeData);
 
-      return this._cytoscape.add({
+      return this.cytoscape.add({
         id: data.id,
         data: data,
         grabbable: treeData.id != 0,
@@ -436,15 +489,15 @@ class CytoscapeABEClass {
       return;
     }
 
-    const edge = this._cytoscape.edges(
+    const edge = this.cytoscape.edges(
       '[source = "' + sourceId + '"][target = "' + targetId + '"]'
     );
     if (edge.length >= 1) {
       // Edge exists
-      this._cytoscape.style().update(); //redraw graph
+      this.cytoscape.style().update(); //redraw graph
     } else {
       // Make new edge
-      this._cytoscape.add({
+      this.cytoscape.add({
         group: 'edges',
         data: {
           source: sourceId,
@@ -457,13 +510,13 @@ class CytoscapeABEClass {
 
   /** Removes all nodes from the CytoscapeABE. */
   public removeAll() {
-    this._cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
-    this._cytoscape.elements().remove();
+    this.cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
+    this.cytoscape.elements().remove();
   }
 
   /** Removes node from CytoscapeABE. */
   public removeNode(nodeId: string) {
-    let e = this._cytoscape.getElementById(nodeId);
+    let e = this.cytoscape.getElementById(nodeId);
     if (e.length > 0) {
       e.remove();
     }
@@ -471,196 +524,26 @@ class CytoscapeABEClass {
 
   // #endregion
 
-  // #region --- Render Functions - Todo - analyze and delete
-
-  private _showDecisionPanel(data: any) {
-    // Todo
-    // document.getElementById('decision-info').classList.remove('gone');
-    // document.getElementById('decision-attribute').innerHTML =
-    //   data.treeData.attribute_name;
-    // document.getElementById('decision-phenotype-label').innerHTML =
-    //   'Behavior Classes (' + data.treeData.classes.length + '):';
-    // let behaviorTable = document.getElementById('decision-behavior-table');
-    // this._renderBehaviorTable(
-    //   data.treeData.classes,
-    //   data.treeData.cardinality,
-    //   behaviorTable
-    // );
-    // let stabilityButton = document.getElementById(
-    //   'decision-stability-analysis-button'
-    // );
-    // let stabilityDropdown = document.getElementById(
-    //   'decision-stability-dropdown'
-    // );
-    // let stabilityContainer = document.getElementById(
-    //   'decision-stability-analysis'
-    // );
-    // TreeExplorer.initStabilityButton(
-    //   data.treeData.id,
-    //   stabilityButton,
-    //   stabilityDropdown,
-    //   stabilityContainer
-    // );
-  }
-
-  //Functionality for the make-decision-button.
-  private _makeDecisionFunction(
-    addButton: HTMLElement,
-    loading: HTMLElement,
-    data: any
-  ) {
-    // Todo Fix
-    // if (!UI.testResultsAvailable()) {
-    //   return;
-    // }
-    // if (data.treeData['attributes'] === undefined) {
-    //   loading.classList.remove('invisible');
-    //   ComputeEngine.AttractorTree.getDecisionAttributes(data.id, (e, r) => {
-    //     loading.classList.add('invisible');
-    //     addButton.classList.add('gone');
-    //     for (attr of r) {
-    //       // Prepare data:
-    //       attr.left.sort(function (a, b) {
-    //         return b.cardinality - a.cardinality;
-    //       });
-    //       attr.right.sort(function (a, b) {
-    //         return b.cardinality - a.cardinality;
-    //       });
-    //       let leftTotal = attr.left.reduce((a, b) => a + b.cardinality, 0.0);
-    //       let rightTotal = attr.right.reduce((a, b) => a + b.cardinality, 0.0);
-    //       attr['leftTotal'] = leftTotal;
-    //       attr['rightTotal'] = rightTotal;
-    //       for (lElement of attr.left) {
-    //         lElement['fraction'] = lElement.cardinality / leftTotal;
-    //       }
-    //       for (rElement of attr.right) {
-    //         rElement['fraction'] = rElement.cardinality / rightTotal;
-    //       }
-    //     }
-    //     data.treeData['attributes'] = r;
-    //     TreeExplorer.renderAttributeTable(
-    //       data.id,
-    //       r,
-    //       data.treeData.cardinality
-    //     );
-    //   });
-    // } else {
-    //   TreeExplorer.renderAttributeTable(
-    //     data.id,
-    //     data.treeData['attributes'],
-    //     data.treeData.cardinality
-    //   );
-    // }
-  }
-
-  private _showMixedPanel(data: any) {
-    // Todo
-    // document.getElementById('mixed-info').classList.remove('gone');
-    // document.getElementById('mixed-type-label').innerHTML =
-    //   data.treeData.classes.length + ' Behavior Classes';
-    // let table = document.getElementById('mixed-behavior-table');
-    // this._renderBehaviorTable(
-    //   data.treeData.classes,
-    //   data.treeData.cardinality,
-    //   table
-    // );
-    // let loading = document.getElementById('loading-indicator');
-    // let addButton = document.getElementById('make-decision-button');
-    // addButton.onclick = () => {
-    //   this._makeDecisionFunction(addButton, loading, data);
-    // };
-    // let stabilityButton = document.getElementById(
-    //   'mixed-stability-analysis-button'
-    // );
-    // let stabilityDropdown = document.getElementById('mixed-stability-dropdown');
-    // let stabilityContainer = document.getElementById(
-    //   'mixed-stability-analysis'
-    // );
-    // TreeExplorer.initStabilityButton(
-    //   data.treeData.id,
-    //   stabilityButton,
-    //   stabilityDropdown,
-    //   stabilityContainer
-    // );
-  }
-
-  private _showLeafPanel(data: any) {
-    /* Todo - 
-    document.getElementById('leaf-info').classList.remove('gone');
-    document.getElementById('leaf-phenotype').innerHTML = data.label;
-    let percent = TreeExplorer.Math_percent(
-      data.treeData.cardinality,
-      this._totalCardinality
-    );
-    let dimPercent = TreeExplorer.Math_dimPercent(
-      data.treeData.cardinality,
-      this._totalCardinality
-    );
-    document.getElementById('leaf-witness-count').innerHTML =
-      data.treeData.cardinality + ' (' + percent + '% / ' + dimPercent + '٪)';
-    let conditions = '';
-    let pathId = data.id;
-    let source = this._cytoscape.edges('[target = "' + pathId + '"]');
-    while (source.length != 0) {
-      let data = source.data();
-      let is_positive = data.positive === 'true';
-      let color = is_positive ? 'green' : 'red';
-      let pathId = data.source;
-      let attribute = this._cytoscape.getElementById(pathId).data()
-        .treeData.attribute_name;
-      conditions +=
-        "<span class='" + color + "'> ‣ " + attribute + '</span><br>';
-      source = this._cytoscape.edges('[target = "' + pathId + '"]');
-    }
-    document.getElementById('leaf-necessary-conditions').innerHTML = conditions;
-    let stabilityButton = document.getElementById(
-      'leaf-stability-analysis-button'
-    );
-    let stabilityDropdown = document.getElementById('leaf-stability-dropdown');
-    let stabilityContainer = document.getElementById('leaf-stability-analysis');
-    TreeExplorer.initStabilityButton(
-      data.treeData.id,
-      stabilityButton,
-      stabilityDropdown,
-      stabilityContainer
-    );
-
-    // Show additional phenotypes if this is a leaf that was created due to precision.
-    let table = document.getElementById('leaf-behavior-table');
-    if (data.treeData['all_classes'] !== undefined) {
-      table.classList.remove('gone');
-      this._renderBehaviorTable(
-        data.treeData['all_classes'],
-        data.treeData.cardinality,
-        table
-      );
-    } else {
-      table.classList.add('gone');
-    } */
-  }
-
-  // #endregion
-
   // #region --- Mass Management ---
 
   public setMassEnabled() {
-    this._showMass = true;
-    for (const node of this._cytoscape.nodes()) {
+    this.showMass = true;
+    for (const node of this.cytoscape.nodes()) {
       let data = node.data();
       if (data.treeData !== undefined) {
         data.opacity = this._computeMassOpacity(data.treeData.cardinality);
       }
     }
-    this._cytoscape.style().update(); //redraw graph
+    this.cytoscape.style().update(); //redraw graph
   }
 
   public setMassDisabled() {
-    this._showMass = false;
-    for (const node of this._cytoscape.nodes()) {
+    this.showMass = false;
+    for (const node of this.cytoscape.nodes()) {
       const data = node.data();
       data.opacity = 1.0;
     }
-    this._cytoscape.style().update(); //redraw graph
+    this.cytoscape.style().update(); //redraw graph
   }
 
   private _computeMassOpacity(cardinality: number) {
@@ -669,7 +552,7 @@ class CytoscapeABEClass {
     }
     let percent = AttractorBifurcationExplorer.mathDimPercent(
       cardinality,
-      this._totalCardinality
+      this.totalCardinality
     );
     return (percent / 100.0) * (percent / 100.0);
   }
@@ -680,7 +563,7 @@ class CytoscapeABEClass {
 
   /** Fit the whole Bifurcation Tree into view */
   public fit() {
-    this._cytoscape.fit(undefined, this.layoutSettings.fitPadding);
+    this.cytoscape.fit(undefined, this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
@@ -720,9 +603,9 @@ class CytoscapeABEClass {
           fit: fit,
           padding: settings.fitPadding,
         };
-    this._cytoscape
+    this.cytoscape
       .elements()
-      .difference(this._cytoscape.$('.remove-button'))
+      .difference(this.cytoscape.$('.remove-button'))
       .layout(options)
       .run();
   }
@@ -766,65 +649,14 @@ class CytoscapeABEClass {
 
   // #endregion
 
-  private _applyTreeData(data: any, treeData: NodeDataBE): CytoscapeNodeDataBE {
-    if (data.id != treeData.id) {
-      Message.showError(
-        'Bifurcation Error: Internal Error - Updating wrong node.'
-      );
-    }
-    if (treeData.id == 0) {
-      this._totalCardinality = treeData.cardinality;
-    }
-    if (treeData.classes !== undefined) {
-      treeData.classes.sort((a, b) => {
-        if (a.cardinality == b.cardinality) {
-          return a.class.localeCompare(b.class);
-        } else if (a.cardinality < b.cardinality) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
-    }
-    data.treeData = treeData;
-    data.type = treeData.type;
-    if (treeData.type == 'leaf') {
-      let normalizedClass =
-        BehaviorClassOperations.normalizeClasses(
-          undefined,
-          treeData.class ?? '[]'
-        ) ?? 'unknown';
-      if (normalizedClass.includes('D')) {
-        data.subtype = 'disorder';
-      } else if (normalizedClass.includes('O')) {
-        data.subtype = 'oscillation';
-      } else {
-        data.subtype = 'stability';
-      }
-      data.label = normalizedClass;
-      //data.label += "\n(" + treeData.cardinality + ")";
-    } else if (treeData.type == 'decision') {
-      data.label = treeData.attribute_name;
-    } else if (treeData.type == 'unprocessed') {
-      data.label =
-        'Mixed Classes\n' + '(' + (treeData.classes?.length ?? 0) + ' types)';
-    } else {
-      data.label = treeData.type + '(' + treeData.id + ')';
-    }
-    let opacity = 1.0;
-    if (this._showMass) {
-      opacity = this._computeMassOpacity(treeData.cardinality);
-    }
-    data.opacity = opacity;
-    return data;
-  }
+  // #region --- Node/Edge moving ---
 
-  private _handleDragStart(e: any) {
+  private handleDragStart(e: any) {
     const dragged = e.target;
     const draggedPos = dragged.position();
 
     // Save the position at the start of the drag to use in _handleDragEnd
-    this._scratch(dragged).dragOrigPos = { ...draggedPos };
+    this.scratch(dragged).dragOrigPos = { ...draggedPos };
 
     // Update the position of children when the node is moved
     // get descendants and their current positions relative to parent
@@ -853,20 +685,20 @@ class CytoscapeABEClass {
         });
       }
     };
-    this._scratch(dragged).moveChildrenHandler = handler; // save handler to remove later
+    this.scratch(dragged).moveChildrenHandler = handler; // save handler to remove later
     dragged.on('position', handler);
   }
 
-  private _handleDragEnd(e: any) {
+  private handleDragEnd(e: any) {
     const dragged = e.target;
-    const origPos = this._scratch(e.target).dragOrigPos;
+    const origPos = this.scratch(e.target).dragOrigPos;
     const draggedPos = dragged.position();
 
     dragged.removeListener(
       'position',
-      this._scratch(dragged).moveChildrenHandler
+      this.scratch(dragged).moveChildrenHandler
     );
-    this._scratch(dragged).moveChildrenHandler = undefined;
+    this.scratch(dragged).moveChildrenHandler = undefined;
 
     const parentId = this.getParentNode(dragged.id());
     // Do not do anything for the parent node
@@ -878,7 +710,7 @@ class CytoscapeABEClass {
     // If node dragged past its sibling, switch their order
     const siblingId = this.getSiblingNode(dragged.id());
     if (siblingId !== undefined) {
-      const siblingPos = this._cytoscape.getElementById(siblingId).position();
+      const siblingPos = this.cytoscape.getElementById(siblingId).position();
       if (
         Math.min(origPos.x, draggedPos.x) < siblingPos.x &&
         Math.max(origPos.x, draggedPos.x) > siblingPos.x
@@ -892,7 +724,7 @@ class CytoscapeABEClass {
     }
 
     // Else, set node's extra spacing based on the drag final position
-    const parent = this._cytoscape.getElementById(parentId);
+    const parent = this.cytoscape.getElementById(parentId);
     const newSpacing =
       draggedPos.y -
       (parent.position().y +
@@ -908,12 +740,14 @@ class CytoscapeABEClass {
     this.applyTreeLayout();
   }
 
-  private _scratch(node: any) {
+  private scratch(node: any) {
     if (node.scratch('_aeon') === undefined) {
       node.scratch('_aeon', {});
     }
     return node.scratch('_aeon');
   }
+
+  // #endregion
 }
 
 const CytoscapeABE = new CytoscapeABEClass();
