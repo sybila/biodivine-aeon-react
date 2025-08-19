@@ -2,17 +2,18 @@ import { create } from 'zustand';
 import type {
   DecisionMixedNode,
   Decisions,
+  LeafNode,
   StabilityAnalysisVariable,
 } from '../../types';
 
 type BifurcationExplorerStatusState = {
   /** Currently selected node in the Bifurcation Explorer */
-  selectedNode: DecisionMixedNode | null;
+  selectedNode: LeafNode | DecisionMixedNode | null;
   /** Last computed stability analysis results */
   stabilityData: Array<StabilityAnalysisVariable> | null;
   /** Decisions available for the selected node */
   availableDecisions: Decisions | null;
-  changeSelectedNode: (node: DecisionMixedNode | null) => void;
+  changeSelectedNode: (node: LeafNode | DecisionMixedNode | null) => void;
   loadStabilityData: (
     stabilityData: Array<StabilityAnalysisVariable> | null
   ) => void;

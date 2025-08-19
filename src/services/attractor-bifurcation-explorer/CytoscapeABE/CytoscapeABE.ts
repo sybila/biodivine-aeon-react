@@ -2,7 +2,9 @@ import { type CytoscapeOptions, type EventObject } from 'cytoscape';
 import type {
   CytoscapeNodeDataBE,
   DecisionMixedNode,
+  LeafNode,
   NodeDataBE,
+  NodeNecessaryConditions,
   VisualOptionsSwitchableABE,
 } from '../../../types';
 import { Message } from '../../../components/lit-components/message-wrapper';
@@ -49,7 +51,7 @@ class CytoscapeABEClass {
 
     this.container = container;
     this._cytoscape = cytoscape(this.initOptions());
-    this._cytoscape.on('select', (e: EventObject) => this._onSelect(e));
+    this._cytoscape.on('select', (e: EventObject) => this.onSelect(e));
     this._cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
     this._cytoscape.on('grabon', this._handleDragStart.bind(this));
     this._cytoscape.on('dragfreeon', this._handleDragEnd.bind(this));
@@ -190,6 +192,15 @@ class CytoscapeABEClass {
 
   // #endregion
 
+  // #region --- Cardinality ---
+
+  /** Returns total cardinality of the graph or -1 if not available */
+  public getTotalCardinality() {
+    return this._totalCardinality ?? -1;
+  }
+
+  // #endregion
+
   // #region --- Node/Edge Selection ---
 
   private selectedDecisionNode(e: EventObject) {
@@ -229,7 +240,7 @@ class CytoscapeABEClass {
   }
 
   /** Function to handle node selection */
-  private _onSelect(e: EventObject) {
+  private onSelect(e: EventObject) {
     // Todo - add quick help for tree explorer - document.getElementById('quick-help-tree-explorer').classList.add('gone');
 
     console.log(e.target.data());
@@ -241,22 +252,31 @@ class CytoscapeABEClass {
       return;
     }
 
-    if (data.type == 'leaf') {
-      this._showLeafPanel(data);
-    } else if (data.type == 'decision' || data.type == 'unprocessed') {
-      const decisionMixedNode: DecisionMixedNode = {
-        id: Number(data.id),
-        label: data.label ?? 'Unknown Node',
-        type: data.type,
-        cardinality: data.treeData?.cardinality ?? 0,
-        classes: data.treeData?.classes ?? [],
-      };
+    const newNode: LeafNode | DecisionMixedNode | null =
+      data.type === 'leaf'
+        ? {
+            id: Number(data.id),
+            label: data.label ?? 'Unknown Node',
+            type: 'leaf',
+            cardinality: data.treeData?.cardinality ?? 0,
+            class: data.treeData?.class ?? 'Unknown Class',
+            classes: data.treeData?.all_classes ?? undefined,
+          }
+        : data.type === 'unprocessed' || data.type === 'decision'
+        ? {
+            id: Number(data.id),
+            label: data.label ?? 'Unknown Node',
+            type: data.type,
+            cardinality: data.treeData?.cardinality ?? 0,
+            classes: data.treeData?.classes ?? [],
+          }
+        : null;
 
-      useBifurcationExplorerStatus
-        .getState()
-        .changeSelectedNode(decisionMixedNode);
-      if (data.type === 'decision') this.selectedDecisionNode(e);
-    }
+    // If node has unknown type then return
+    if (!newNode) return null;
+
+    useBifurcationExplorerStatus.getState().changeSelectedNode(newNode);
+    if (data.type === 'decision') this.selectedDecisionNode(e);
   }
 
   /** Function to handle node unselection */
@@ -355,6 +375,28 @@ class CytoscapeABEClass {
 
   public getNodeType(nodeId: string) {
     return this._cytoscape.getElementById(nodeId).data().type;
+  }
+
+  /** Returns necessary conditions to reach a node. */
+  public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
+    const conditions: NodeNecessaryConditions = [];
+    let pathId = nodeId;
+    let source = this._cytoscape.edges('[target = "' + pathId + '"]');
+    while (source.length != 0) {
+      const data = source.data();
+      const is_positive = data.positive === 'true';
+      pathId = data.source;
+      const name = this._cytoscape.getElementById(pathId).data()
+        .treeData.attribute_name;
+      conditions.push({
+        name: name,
+        positive: is_positive,
+      });
+      source = this._cytoscape.edges('[target = "' + pathId + '"]');
+    }
+
+    conditions.reverse(); // Reverse to have the root condition first
+    return conditions;
   }
 
   // #endregion

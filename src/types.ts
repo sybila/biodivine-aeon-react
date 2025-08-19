@@ -144,6 +144,7 @@ export type NodeDataBE = {
   cardinality: number;
   class?: string;
   classes?: Array<AttractorClassBE>;
+  all_classes?: Array<AttractorClassBE>;
   left?: number;
   right?: number;
   type: NodeTypeBE;
@@ -162,6 +163,15 @@ export type CytoscapeNodeDataBE = {
   type?: NodeTypeBE;
   subtype?: NodeSubTypeBE;
   action?: 'remove';
+};
+
+export type LeafNode = {
+  id: number;
+  label: string;
+  type: 'leaf';
+  cardinality: number;
+  class: string;
+  classes?: Array<AttractorClassBE>;
 };
 
 export type DecisionMixedNode = {
@@ -202,6 +212,11 @@ export type Decision = {
 
 export type Decisions = Array<Decision>;
 
+export type NodeNecessaryConditions = Array<{
+  name: string;
+  positive: boolean;
+}>;
+
 // #endregion
 
 // #region --- Visual Options ---
@@ -217,7 +232,7 @@ export type VisualOptionsSwitchableABE = {
   positiveOnLeft: boolean;
 };
 
-// #end region
+// #endregion
 
 export type TimestampResponse = {
   timestamp: number | undefined;

@@ -3,6 +3,7 @@ import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationEx
 import type {
   Decisions,
   NodeDataBE,
+  NodeNecessaryConditions,
   StabilityAnalysisModes,
   VisualOptionsSwitchableABE,
 } from '../../../types';
@@ -165,6 +166,15 @@ class AttractorBifurcationExplorerClass {
 
   // #endregion
 
+  // #region --- Cardinality ---
+
+  /** Returns total cardinality of the graph or -1 if not available */
+  public getTotalCardinality(): number {
+    return CytoscapeABE.getTotalCardinality();
+  }
+
+  // #endregion
+
   // #region --- Bifurcation Tree Management ---
 
   /** Inserts a bifurcation tree into CytoscapeABE.
@@ -248,6 +258,11 @@ class AttractorBifurcationExplorerClass {
   /** Removes a node and its child nodes from the AttractorBifurcationExplorer. */
   public removeNode(nodeId: number): void {
     ComputationManager.deleteBifurcationDecision(nodeId);
+  }
+
+  /** Gets the necessary conditions for a specific node. */
+  public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
+    return CytoscapeABE.getNodeNecessaryConditions(nodeId);
   }
 
   // #endregion

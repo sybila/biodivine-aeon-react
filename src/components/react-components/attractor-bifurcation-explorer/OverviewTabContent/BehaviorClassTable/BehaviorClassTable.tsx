@@ -1,41 +1,15 @@
 import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import type { DecisionMixedNode } from '../../../../../types';
+import type { AttractorClassBE } from '../../../../../types';
 import BehaviorClassLegend from '../../../global/BehaviorClassLegend/BehaviorClassLegend';
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
+import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import BehaviorClassTableRow from './BehaviorClassTableRow/BehaviorClassTableRow';
 
-const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
-  const renderStats = () => {
-    return (
-      <section className="flex flex-col justify-end items-center h-fit w-full gap-3">
-        <DotHeaderReact
-          compHeight="30px"
-          compWidth="100%"
-          justifyHeader="start"
-          headerText="Statistics"
-        />
-        <div className="flex flex-col justify-between items-center w-[95%] h-[45px]">
-          <StatEntryReact
-            compWidth="100%"
-            statName="Node Type"
-            statValue={
-              nodeData.type === 'unprocessed'
-                ? 'mixed'
-                : nodeData.type ?? 'unknown'
-            }
-          />
-          <StatEntryReact
-            compWidth="100%"
-            statName="Number of Classes"
-            statValue={nodeData.classes?.length.toString() ?? 'Unknown'}
-          />
-        </div>
-      </section>
-    );
-  };
-
+const BehaviorClassTable: React.FC<{
+  classes: AttractorClassBE[];
+  nodeCardinality: number;
+  isLeaf: boolean;
+}> = ({ classes, nodeCardinality, isLeaf }) => {
   const renderTable = () => {
     return (
       <section className="flex flex-col w-full h-fit items-center justify-center gap-2">
@@ -51,12 +25,18 @@ const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
           </div>
 
           <div className="flex flex-col justify-center items-center w-[30%] h-full">
-            <SimpleHeaderReact headerText="Division" />
+            <SimpleHeaderReact headerText="Distribution" />
           </div>
         </div>
 
-        <section className="flex flex-col w-full h-fit max-h-[200px] 2xl:max-h-[450px] gap-1 overflow-auto">
-          {nodeData.classes?.map((behaviorClass, index) => (
+        <section
+          className={`flex flex-col w-full h-fit  ${
+            !isLeaf
+              ? 'max-h-[100px]xl:max-h-[170px] 2xl:max-h-[200px]'
+              : 'max-h-[50px] xl:max-h-[100px] 2xl:max-h-[150px]'
+          } gap-1 overflow-auto`}
+        >
+          {classes?.map((behaviorClass, index) => (
             <BehaviorClassTableRow
               key={index}
               interpretationCount={behaviorClass.cardinality}
@@ -64,11 +44,11 @@ const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
               distribution={[
                 AttractorBifurcationExplorer.mathPercent(
                   behaviorClass.cardinality,
-                  nodeData.cardinality
+                  nodeCardinality
                 ) ?? -1,
                 AttractorBifurcationExplorer.mathDimPercent(
                   behaviorClass.cardinality,
-                  nodeData.cardinality
+                  nodeCardinality
                 ) ?? -1,
               ]}
             />
@@ -79,15 +59,14 @@ const BehaviorClassTable: React.FC<DecisionMixedNode> = (nodeData) => {
   };
 
   return (
-    <section className="h-fit w-full flex flex-col justify-center items-center gap-2">
-      {renderStats()}
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+    <>
+      <SeparatorLine />
       {renderTable()}
 
       <div className="h-fit w-full my-1">
         <BehaviorClassLegend />
       </div>
-    </section>
+    </>
   );
 };
 
