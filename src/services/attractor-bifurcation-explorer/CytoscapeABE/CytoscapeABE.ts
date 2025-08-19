@@ -650,6 +650,20 @@ class CytoscapeABEClass {
 
   // #region --- Node/Edge moving ---
 
+  public moveNode(nodeId: string, steps: number) {
+    const settings = this.layoutSettings;
+    const spacing = settings.extraVerticalSpacings;
+    const change = (settings.layered ? settings.layerHeight : 50) * steps;
+    if (spacing[nodeId] === undefined) {
+      spacing[nodeId] = 0;
+    }
+    spacing[nodeId] += change;
+    if (spacing[nodeId] <= 0) {
+      delete spacing[nodeId];
+    }
+    this.applyTreeLayout();
+  }
+
   private handleDragStart(e: any) {
     const dragged = e.target;
     const draggedPos = dragged.position();
