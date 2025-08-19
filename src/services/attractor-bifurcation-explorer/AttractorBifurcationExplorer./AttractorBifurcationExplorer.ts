@@ -265,6 +265,10 @@ class AttractorBifurcationExplorerClass {
     return CytoscapeABE.getNodeNecessaryConditions(nodeId);
   }
 
+  public moveNode(nodeId: string, steps: number): void {
+    CytoscapeABE.moveNode(nodeId, steps);
+  }
+
   // #endregion
 
   // #region --- Stability Analysis ---
@@ -372,31 +376,8 @@ class AttractorBifurcationExplorerClass {
 
   // #endregion
 
-  public selectAttribute(node: string, attr: string): void {
-    // @ts-ignore
-    if (!UI.testResultsAvailable()) return;
+  // #region --- Open wittness/attractor ---
 
-    // @ts-ignore
-    ComputeEngine.AttractorTree.selectDecisionAttribute(
-      node,
-      attr,
-      (e: any, r: any[]) => {
-        for (const n of r) {
-          CytoscapeTreeEditor.ensureNode(n);
-        }
-        for (const n of r) {
-          if (n.type === 'decision') {
-            CytoscapeTreeEditor.ensureEdge(n.id, n.left, false);
-            CytoscapeTreeEditor.ensureEdge(n.id, n.right, true);
-          }
-        }
-        CytoscapeTreeEditor.applyTreeLayout();
-        CytoscapeTreeEditor.refreshSelection();
-      }
-    );
-  }
-
-  // --- Witness and Attractor Opening ---
   public openTreeWitness(): void {
     const node = CytoscapeTreeEditor.getSelectedNodeId();
     if (node === undefined) return;
@@ -452,49 +433,7 @@ class AttractorBifurcationExplorerClass {
     );
   }
 
-  // --- Utility ---
-  public vectorToString(vector: string[]): string {
-    let result = '[';
-    let first = true;
-    for (const item of vector) {
-      if (first) {
-        first = false;
-      } else {
-        result += ',';
-      }
-      if (item === 'true') {
-        result += "<span class='green'><b>true</b></span>";
-      } else if (item === 'false') {
-        result += "<span class='red'><b>false</b></span>";
-      } else {
-        result += '<b>' + item + '</b>';
-      }
-    }
-    result += ']';
-    return result;
-  }
-
-  public getWitnessPanelForVariable(
-    variable: string,
-    behaviour: string,
-    vector: string
-  ): string {
-    return `<span class='witness-panel'><span class='inline-button' onclick='AttractorBifurcationExplorer.openStabilityWitness("${variable}","${behaviour}","${vector}");'>Witness</span> | <span class='inline-button' onclick='AttractorBifurcationExplorer.openStabilityAttractor("${variable}","${behaviour}","${vector}");'>Attractor</span></span>`;
-  }
-
-  public moveNode(nodeId: string, steps: number): void {
-    const settings = CytoscapeTreeEditor.layoutSettings;
-    const spacing = settings.extraVerticalSpacings;
-    const change = (settings.layered ? settings.layerHeight : 50) * steps;
-    if (spacing[nodeId] === undefined) {
-      spacing[nodeId] = 0;
-    }
-    spacing[nodeId] += change;
-    if (spacing[nodeId] <= 0) {
-      delete spacing[nodeId];
-    }
-    CytoscapeTreeEditor.applyTreeLayout();
-  }
+  // #endregion
 }
 
 export default new AttractorBifurcationExplorerClass();
