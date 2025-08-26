@@ -116,7 +116,10 @@ export type AttractorResults = {
 
 // #region --- Navigation Tabs ---
 
-export type TabType = 'Model Editor' | 'Attractor Bifurcation Explorer';
+export type TabType =
+  | 'Model Editor'
+  | 'Attractor Bifurcation Explorer'
+  | 'Attractor Visualizer';
 
 export type TabInfo = {
   /** Unique identifier for the tab */
@@ -216,6 +219,53 @@ export type NodeNecessaryConditions = Array<{
   name: string;
   positive: boolean;
 }>;
+
+// #endregion
+
+// #region --- Attractor Visualizer ---
+
+export type VisEdge = {
+  arrows?: { to: string };
+  color?: { color: string; opacity: number };
+  from: string;
+  to: string;
+  id: string;
+  length?: number;
+};
+
+export type VisNode = {
+  id: string;
+  label: string;
+  font?: { face: string; size: number };
+  labelHighlightBold?: boolean;
+  opacity?: number;
+};
+
+export type VisGraphData = {
+  nodes: Array<VisNode>;
+  edges: Array<VisEdge>;
+};
+
+export type AttractorVisualizerAttractor = {
+  class: AttractorBehavior;
+  edges: number;
+  graph: Array<Array<string>>;
+  vis: VisGraphData;
+};
+
+export type AttractorVisualizerInput = {
+  nodeId?: number;
+  variableName?: string;
+  behavior?: string;
+  vector?: string[];
+};
+
+export type AttractorData = {
+  attractors: AttractorVisualizerAttractor[];
+  model: string;
+  variableNames: string[];
+  witness: string;
+};
 
 // #endregion
 
