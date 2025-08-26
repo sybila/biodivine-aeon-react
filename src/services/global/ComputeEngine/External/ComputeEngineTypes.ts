@@ -1,4 +1,8 @@
-import type { ComputationStatus, NodeDataBE } from '../../../../types';
+import type {
+  AttractorVisualizerAttractor,
+  ComputationStatus,
+  NodeDataBE,
+} from '../../../../types';
 
 export type AttractorResponse = {
   timestamp: number | undefined;
@@ -30,4 +34,12 @@ export type ComputationInfo = {
 export type DeleteBifDecisionResponse = {
   node: NodeDataBE | undefined;
   removed: number[] | undefined;
+};
+
+export type AttractorExplorerResponse = {
+  attractors: Array<AttractorVisualizerAttractor>;
+  has_large_attractors: boolean;
+  model: { model: string };
+  variables: Array<string>;
+  witness: string;
 };

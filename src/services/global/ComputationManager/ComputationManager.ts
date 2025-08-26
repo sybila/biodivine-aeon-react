@@ -1,4 +1,5 @@
 import type {
+  AttractorData,
   AttractorResults,
   ComputationModes,
   ComputationStatus,
@@ -17,6 +18,7 @@ import useResultsStatus from '../../../stores/ComputationManager/useResultsStatu
 import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -404,6 +406,61 @@ class ComputationManagerClass {
       nodeId,
       decisionId,
       this.makeDecisionCallback.bind(this)
+    );
+  }
+
+  // #endregion
+
+  // #region --- Attractor Visualizer ---
+
+  /** Callback for attractor getting functions.
+   * Handles errors and inserts attractor data into AttractorVisualizer */
+  private getAttractorCallback(
+    error: string | undefined,
+    attractorData: AttractorData | undefined
+  ) {
+    if (error || !attractorData) {
+      Message.showError(
+        `Error fetching attractor: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorVisualizer.insertAttractorData(attractorData, true);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches an attractor by its behavior string. Used by the results window.*/
+  public getAttractorByBehavior(behavior: string) {
+    Loading.startLoading();
+    this.computeEngine.getAttractorByBehavior(
+      behavior,
+      this.getAttractorCallback.bind(this)
+    );
+  }
+
+  /** Fetches an attractor for node in the AttractorBifurcationExplorer */
+  public getBifurcationExplorerAttractor(nodeId: number) {
+    Loading.startLoading();
+    this.computeEngine.getBifurcationExplorerAttractor(
+      nodeId,
+      this.getAttractorCallback.bind(this)
+    );
+  }
+
+  public getStabilityAnalysisAttractor(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
+  ) {
+    Loading.startLoading();
+    this.computeEngine.getStabilityAnalysisAttractor(
+      nodeId,
+      variableName,
+      behavior,
+      vector,
+      this.getAttractorCallback.bind(this)
     );
   }
 

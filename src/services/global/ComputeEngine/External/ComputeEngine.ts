@@ -1,5 +1,6 @@
 import config from '../../../../config';
 import type {
+  AttractorData,
   AttractorResults,
   ComputationModes,
   ComputationStatus,
@@ -653,6 +654,62 @@ class ComputeEngine {
         }
       },
       'POST'
+    );
+  }
+
+  // #endregion
+
+  // #region --- Attractor Visualizer ---
+
+  /** Gets the attractor for a specific behavior. */
+  public getAttractorByBehavior(
+    behavior: string,
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest('/get_attractors/' + behavior, callback, 'GET', null);
+  }
+
+  /** Gets the attractor for a specific node in the AttractorBifurcationExplorer. */
+  public getBifurcationExplorerAttractor(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_tree_attractors/' + nodeId,
+      callback,
+      'GET',
+      null
+    );
+  }
+
+  public getStabilityAnalysisAttractor(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[],
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_stability_attractors/' +
+        nodeId +
+        '/' +
+        encodeURI(behavior) +
+        '/' +
+        encodeURI(variableName) +
+        '/' +
+        encodeURI('[' + vector + ']'),
+      callback,
+      'GET',
+      null
     );
   }
 
