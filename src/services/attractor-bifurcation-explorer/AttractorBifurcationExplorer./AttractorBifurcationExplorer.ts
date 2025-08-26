@@ -83,6 +83,7 @@ class AttractorBifurcationExplorerClass {
   // #endregion
 
   // #region --- Sorting helpers ---
+
   private compareInformationGain(a: any, b: any): number {
     return b.gain - a.gain;
   }
