@@ -10,7 +10,6 @@ class AttractorVisualizerClass {
   // #region --- Properties ---
 
   private _loadedResult: any = undefined;
-  private reloadRequired: boolean = false;
   private _network: any = undefined;
   /** Container for the vis graph. */
   private container: HTMLElement | null = null;
@@ -48,15 +47,18 @@ class AttractorVisualizerClass {
 
   /** Initialize the visualizer with a container element. */
   public init(container: HTMLElement): void {
+    console.log('Attractor Visualizer initialized');
     if (this.container != container) {
-      this.reloadRequired = true;
       this.container = container;
+      this.reloadVisualizer();
     }
+  }
 
-    if (this.reloadRequired) {
+  /** Reload the visualizer and display currently set attractor. */
+  private reloadVisualizer(): void {
+    if (this.container) {
       this._displayAll();
       this._network.on('click', this._nodeClick.bind(this));
-      this.reloadRequired = false;
     }
   }
 
@@ -88,13 +90,16 @@ class AttractorVisualizerClass {
       result = this.processAttractorData(result);
       useTabsStore
         .getState()
-        .addTab('attractor-visualizer', 'Attractor Visualizer');
+        .addTab('attractor-visualizer', 'Attractor Visualizer', () => {
+          this._loadedResult = result;
+          this.reloadVisualizer();
+        });
     }
 
     router.navigate({ to: '/attractor-visualizer' });
 
     this._loadedResult = result;
-    this.reloadRequired = true;
+    this.reloadVisualizer();
 
     // todo - implement witness panel update
     // document.getElementById('explorer-update-functions')!.innerHTML =
