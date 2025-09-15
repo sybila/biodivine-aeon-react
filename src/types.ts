@@ -128,6 +128,8 @@ export type TabInfo = {
   type: TabType;
   /** Path of the tab */
   path: string;
+  /** Callback function to be executed when the tab is clicked */
+  onClick?: () => void;
   /** Indicates if the tab is currently active */
   active: boolean;
 };

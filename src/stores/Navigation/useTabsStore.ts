@@ -7,7 +7,7 @@ type TabsState = {
   /** Property containing the ID of the next created tab. */
   idNow: number;
   /** Adds a new tab. */
-  addTab: (name: string, type: TabType) => number;
+  addTab: (name: string, type: TabType, onClick?: () => void) => number;
   /** Removes a tab by ID. */
   removeTab: (id: number) => void;
   /** Sets the active tab by ID. */
@@ -33,7 +33,7 @@ const useTabsStore = create<TabsState>((set, get) => ({
   },
   idNow: 1,
 
-  addTab: (path: string, type: TabType) => {
+  addTab: (path: string, type: TabType, onClick?: () => void) => {
     if (type === 'Model Editor') {
       return 0;
     }
@@ -42,6 +42,7 @@ const useTabsStore = create<TabsState>((set, get) => ({
     const newTab: TabInfo = {
       id,
       path,
+      onClick,
       type,
       active: false,
     };
