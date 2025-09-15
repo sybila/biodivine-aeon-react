@@ -3,7 +3,8 @@ import type { TabInfo } from '../../../../../types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 
-const TabButton: React.FC<TabInfo> = ({ id, type, path, active }) => {
+// Todo add type
+const TabButton: React.FC<TabInfo> = ({ id, path, active }) => {
   const navigate = useNavigate();
 
   const onClick = () => {
