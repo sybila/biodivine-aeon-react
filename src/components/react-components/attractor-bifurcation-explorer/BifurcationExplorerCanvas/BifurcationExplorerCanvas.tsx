@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import CytoscapeABE from '../../../../services/attractor-bifurcation-explorer/CytoscapeABE/CytoscapeABE';
 
 const BifurcationExplorerCanvas: React.FC = () => {
-  const [initialized, setInitialized] = useState<Boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 

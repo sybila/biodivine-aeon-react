@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import AttractorVisualizer from '../../../services/attractor-visualizer/AttractorVisualizer';
 
 const BifurcationExplorerCanvas: React.FC = () => {
-  const [initialized, setInitialized] = useState<Boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
