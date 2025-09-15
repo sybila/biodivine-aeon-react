@@ -26,7 +26,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   };
 
   const getObservable = () => {
-    let color: string = observable ? 'text-black' : 'text-gray-400';
+    const color: string = observable ? 'text-black' : 'text-gray-400';
 
     return (
       <span
