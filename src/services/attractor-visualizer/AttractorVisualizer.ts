@@ -1,7 +1,13 @@
 import { Message } from '../../components/lit-components/message-wrapper';
 import router from '../../router';
+import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import useTabsStore from '../../stores/Navigation/useTabsStore';
-import type { AttractorVisualizerInput } from '../../types';
+import type {
+  AttractorData,
+  AttractorVisualizerInput,
+  VisEdge,
+  VisNode,
+} from '../../types';
 import ComputationManager from '../global/ComputationManager/ComputationManager';
 
 declare const vis: any;
@@ -9,11 +15,14 @@ declare const vis: any;
 class AttractorVisualizerClass {
   // #region --- Properties ---
 
-  private _loadedResult: any = undefined;
-  private _network: any = undefined;
+  /** Currently loaded attractor data. */
+  private attractorData: AttractorData | undefined = undefined;
+  /** Currently active vis network visualization. */
+  private network: any = undefined;
   /** Container for the vis graph. */
   private container: HTMLElement | null = null;
-  private _options: any = {
+  /** Options for the vis graph. */
+  private options: any = {
     edges: {
       arrows: {
         to: { enabled: true, type: 'triangle' },
@@ -47,18 +56,9 @@ class AttractorVisualizerClass {
 
   /** Initialize the visualizer with a container element. */
   public init(container: HTMLElement): void {
-    console.log('Attractor Visualizer initialized');
     if (this.container != container) {
       this.container = container;
       this.reloadVisualizer();
-    }
-  }
-
-  /** Reload the visualizer and display currently set attractor. */
-  private reloadVisualizer(): void {
-    if (this.container) {
-      this._displayAll();
-      this._network.on('click', this._nodeClick.bind(this));
     }
   }
 
@@ -66,6 +66,10 @@ class AttractorVisualizerClass {
 
   // #region --- Show Visualization ---
 
+  /** Open the attractor visualizer with the given input data.
+   * inputData depends on the part of the application from which the visualizer is opened.
+   *
+   */
   public openVisualizer(inputData: AttractorVisualizerInput): void {
     // todo - add if there is tab open with the same attractor
 
@@ -91,14 +95,14 @@ class AttractorVisualizerClass {
       useTabsStore
         .getState()
         .addTab('attractor-visualizer', 'Attractor Visualizer', () => {
-          this._loadedResult = result;
+          this.attractorData = result;
           this.reloadVisualizer();
         });
     }
 
     router.navigate({ to: '/attractor-visualizer' });
 
-    this._loadedResult = result;
+    this.attractorData = result;
     this.reloadVisualizer();
 
     // todo - implement witness panel update
@@ -106,53 +110,188 @@ class AttractorVisualizerClass {
     //   this._loadedResult.witness;
   }
 
-  // #endregion
+  /** Inserts this.loadedResults into the visualizer.
+   *  Creates new network visualizer with the currently loaded attractor. */
+  private displayAll(): void {
+    if (!this.attractorData) {
+      Message.showError(
+        'Unable to render Attractor Visualization: No loaded result available for display.'
+      );
+      return;
+    }
 
-  private processAttractorData(results: any): void {
-    for (let i = 0; i < results.attractors.length; i++) {
-      results.attractors[i].vis = this._edgesToVisFormat(
-        results.attractors[i].graph
+    if (this.attractorData['has_large_attractors']) {
+      Message.showInfo(
+        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
       );
     }
-    this._addLabels(results);
-    results.witness = this._generateWitness(results);
 
-    return results;
+    let nodes: any[] = [];
+    let edges: any[] = [];
+
+    for (let i = 0; i < this.attractorData.attractors.length; i++) {
+      nodes = nodes.concat(this.attractorData.attractors[i].vis.nodes);
+      edges = edges.concat(this.attractorData.attractors[i].vis.edges);
+    }
+
+    if (!this.container) {
+      Message.showError(
+        'Unable to render Attractor Visualization: Missing container element - Internal Error'
+      );
+      return;
+    }
+
+    this.network = new vis.Network(
+      this.container!,
+      { nodes, edges },
+      this.options
+    );
   }
+
+  public displayGraph(index: number): void {
+    if (!this.container) {
+      Message.showError('Cannot show Attractor Visualization: Internal Error');
+      return;
+    }
+
+    if (!this.attractorData) {
+      Message.showError(
+        'Unable to render Attractor Visualization: No loaded result available for display.'
+      );
+      return;
+    }
+
+    if (this.attractorData?.has_large_attractors) {
+      Message.showInfo(
+        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
+      );
+    }
+
+    this.network = new vis.Network(
+      this.container!,
+      this.attractorData.attractors[index].vis,
+      this.options
+    );
+  }
+
+  /** Reload the visualizer and display currently set attractor. */
+  private reloadVisualizer(): void {
+    if (this.container) {
+      this.displayAll();
+      this.network.on('click', this.nodeClick.bind(this));
+    }
+  }
+
+  // #endregion
 
   // #region --- Node Click ---
 
-  private _stateToHtml(state: string): string {
-    let result = '';
-    for (let i = 0; i < state.length; i++) {
-      const is_false = state[i] === '0' || state[i] === '⊥';
-      const is_dynamic = state[i] === '0' || state[i] === '1';
-      result +=
-        '<span ' +
-        'class="valuation-pair ' +
-        (is_dynamic ? (is_false ? 'red' : 'green') : 'grey') +
-        '" ' +
-        'style="font-weight: ' +
-        (is_dynamic ? 'bold' : 'normal') +
-        '"' +
-        '>' +
-        (is_false ? '!' : '') +
-        this._loadedResult.variables[i] +
-        '</span>';
+  // private _stateToHtml(state: string): string {
+  //   let result = '';
+  //   for (let i = 0; i < state.length; i++) {
+  //     const is_false = state[i] === '0' || state[i] === '⊥';
+  //     const is_dynamic = state[i] === '0' || state[i] === '1';
+  //     result +=
+  //       '<span ' +
+  //       'class="valuation-pair ' +
+  //       (is_dynamic ? (is_false ? 'red' : 'green') : 'grey') +
+  //       '" ' +
+  //       'style="font-weight: ' +
+  //       (is_dynamic ? 'bold' : 'normal') +
+  //       '"' +
+  //       '>' +
+  //       (is_false ? '!' : '') +
+  //       this.attractorData.variables[i] +
+  //       '</span>';
+  //   }
+  //   return result;
+  // }
+
+  /** Function for handling node clicks.
+   * Changes selected node state in the useAttractorVisualizerStatus store. */
+  private nodeClick(e: any): void {
+    if (e) {
+      useAttractorVisualizerStatus
+        .getState()
+        .changeSelectedState(
+          e.nodes.length !== 1 || e.nodes[0][0] === 'l'
+            ? null
+            : (e.nodes[0] as string)
+        );
     }
-    return result;
   }
 
-  private _nodeClick(e: any): void {
-    // todo - fix
-    // const panel = document.getElementById('explorer-valuations');
-    // const text = document.getElementById('explorer-valuations-text');
-    // if (e.nodes.length !== 1 || e.nodes[0][0] === 'l') {
-    //   if (panel) panel.style.display = 'none';
-    //   return;
-    // }
-    // if (panel) panel.style.display = 'block';
-    // if (text) text.innerHTML = this._stateToHtml(e.nodes[0]);
+  // #endregion
+
+  // #region --- Process Results ---
+
+  /** Converts graph in the form of array of [from, to] pairs into format used by vis. */
+  private edgesToVisFormat(array: Array<[string, string]>): {
+    edges: Array<{ from: string; to: string }>;
+    nodes: Array<{ id: string; label: string }>;
+  } {
+    const nodes = new Set<string>();
+    const edges: Array<{ from: string; to: string }> = [];
+
+    for (let i = 0; i < array.length; i++) {
+      nodes.add(array[i][0]);
+      nodes.add(array[i][1]);
+      if (array[i][0] !== array[i][1]) {
+        edges.push({ from: array[i][0], to: array[i][1] });
+      }
+    }
+
+    return {
+      edges,
+      nodes: Array.from(nodes).map((x) => ({
+        id: x,
+        label: x.replace(/[⊥⊤]/gi, '-'),
+      })),
+    };
+  }
+
+  /** Creates a vis-network node that serves as the label for an attractor. */
+  private createLabelNode(label: string, index: number): VisNode {
+    return {
+      label,
+      id: 'labelnode' + index,
+      font: { face: 'symbols', size: 40 },
+      opacity: 0,
+      labelHighlightBold: false,
+    };
+  }
+
+  /** Creates a vis-network edge that connects the label node to the first attractor node. */
+  private createLabelEdge(toNode: VisNode, index: number): VisEdge {
+    return {
+      id: 'labelnodeedge' + index,
+      length: 20,
+      from: 'labelnode' + index,
+      to: toNode.id,
+      color: { color: '#000000', opacity: 0.1 },
+      arrows: { to: { enabled: false } },
+    };
+  }
+
+  /** Process the raw attractor data from the ComputationManager into form used in the visualizer */
+  private processAttractorData(results: any): AttractorData {
+    for (let i = 0; i < results.attractors.length; i++) {
+      results.attractors[i].vis = this.edgesToVisFormat(
+        results.attractors[i].graph
+      );
+
+      results.attractors[i].vis.nodes.push(
+        this.createLabelNode(results.attractors[i].class[0], i)
+      );
+
+      results.attractors[i].vis.edges.push(
+        this.createLabelEdge(results.attractors[i].vis.nodes[0], i)
+      );
+    }
+
+    results.witness = this._generateWitness(results);
+
+    return results;
   }
 
   // #endregion
@@ -180,116 +319,13 @@ class AttractorVisualizerClass {
     if (panel) panel.style.display = show ? 'block' : 'none';
   }
 
-  private _edgesToVisFormat(array: any[]): { edges: any[]; nodes: any[] } {
-    const nodes = new Set<string>();
-    const edges: any[] = [];
-
-    for (let i = 0; i < array.length; i++) {
-      nodes.add(array[i][0]);
-      nodes.add(array[i][1]);
-      if (array[i][0] !== array[i][1]) {
-        edges.push({ from: array[i][0], to: array[i][1] });
-      }
-    }
-
-    return {
-      edges,
-      nodes: Array.from(nodes).map((x) => ({
-        id: x,
-        label: x.replace(/[⊥⊤]/gi, '-'),
-      })),
-    };
-  }
-
   public showState(string: string): void {
     for (let i = 0; i < string.length; i++) {
       console.log(
-        this._loadedResult.variables[i],
+        this.attractorData?.variables[i],
         string[i] === '0' || string[i] === '⊥' ? 'false' : 'true'
       );
     }
-  }
-
-  private _addLabels(results: any): void {
-    for (let i = 0; i < results.attractors.length; i++) {
-      const label = results.attractors[i].class[0];
-      results.attractors[i].vis.nodes.push({
-        label,
-        id: 'labelnode' + i,
-        font: { face: 'symbols', size: 40 },
-        opacity: 0,
-        labelHighlightBold: false,
-      });
-      results.attractors[i].vis.edges.push({
-        length: 20,
-        from: 'labelnode' + i,
-        to: results.attractors[i].vis.nodes[0].id,
-        color: { color: '#000000', opacity: 0.1 },
-        arrows: { to: { enabled: false } },
-      });
-    }
-  }
-
-  private _displayAll(): void {
-    if (!this._loadedResult) {
-      Message.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return;
-    }
-
-    if (this._loadedResult['has_large_attractors']) {
-      Message.showInfo(
-        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
-      );
-    }
-
-    let nodes: any[] = [];
-    let edges: any[] = [];
-
-    for (let i = 0; i < this._loadedResult.attractors.length; i++) {
-      nodes = nodes.concat(this._loadedResult.attractors[i].vis.nodes);
-      edges = edges.concat(this._loadedResult.attractors[i].vis.edges);
-    }
-
-    if (!this.container) {
-      Message.showError(
-        'Unable to render Attractor Visualization: Missing container element - Internal Error'
-      );
-      return;
-    }
-
-    this._network = new vis.Network(
-      this.container!,
-      { nodes, edges },
-      this._options
-    );
-  }
-
-  public displayGraph(index: number): void {
-    if (!this.container) {
-      Message.showError('Cannot show Attractor Visualization: Internal Error');
-      return;
-    }
-
-    if (!this._loadedResult) {
-      Message.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return;
-    }
-
-    if (this._loadedResult['has_large_attractors']) {
-      Message.showInfo(
-        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
-      );
-    }
-
-    this._network = new vis.Network(
-      this.container!,
-      this._loadedResult.attractors[index].vis,
-      this._options
-    );
   }
 }
 

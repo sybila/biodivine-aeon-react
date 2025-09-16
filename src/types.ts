@@ -227,7 +227,7 @@ export type NodeNecessaryConditions = Array<{
 // #region --- Attractor Visualizer ---
 
 export type VisEdge = {
-  arrows?: { to: string };
+  arrows?: { to: { enabled: boolean } };
   color?: { color: string; opacity: number };
   from: string;
   to: string;
@@ -251,7 +251,7 @@ export type VisGraphData = {
 export type AttractorVisualizerAttractor = {
   class: AttractorBehavior;
   edges: number;
-  graph: Array<Array<string>>;
+  graph: Array<[string, string]>;
   vis: VisGraphData;
 };
 
@@ -265,8 +265,9 @@ export type AttractorVisualizerInput = {
 export type AttractorData = {
   attractors: AttractorVisualizerAttractor[];
   model: string;
-  variableNames: string[];
+  variables: string[];
   witness: string;
+  has_large_attractors: boolean;
 };
 
 // #endregion
