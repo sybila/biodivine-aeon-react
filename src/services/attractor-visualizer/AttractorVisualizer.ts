@@ -112,12 +112,12 @@ class AttractorVisualizerClass {
 
   /** Inserts this.loadedResults into the visualizer.
    *  Creates new network visualizer with the currently loaded attractor. */
-  private displayAll(): void {
+  private displayAll(): boolean {
     if (!this.attractorData) {
       Message.showError(
         'Unable to render Attractor Visualization: No loaded result available for display.'
       );
-      return;
+      return false;
     }
 
     if (this.attractorData['has_large_attractors']) {
@@ -138,7 +138,7 @@ class AttractorVisualizerClass {
       Message.showError(
         'Unable to render Attractor Visualization: Missing container element - Internal Error'
       );
-      return;
+      return false;
     }
 
     this.network = new vis.Network(
@@ -146,6 +146,8 @@ class AttractorVisualizerClass {
       { nodes, edges },
       this.options
     );
+
+    return true;
   }
 
   public displayGraph(index: number): void {
@@ -178,7 +180,10 @@ class AttractorVisualizerClass {
   private reloadVisualizer(): void {
     if (this.container) {
       this.displayAll();
-      this.network.on('click', this.nodeClick.bind(this));
+
+      if (this.network) {
+        this.network.on('click', this.nodeClick.bind(this));
+      }
     }
   }
 
@@ -296,6 +301,14 @@ class AttractorVisualizerClass {
 
   // #endregion
 
+  // #region --- Get Data ---
+
+  /** Returns the list of state variable names, or undefined if no attractor data is loaded. */
+  public getStateVariables(): string[] | undefined {
+    return this.attractorData?.variables;
+  }
+
+  // #endregion
   private _generateWitness(results: any): string {
     return results.model.model
       .split('\n')
