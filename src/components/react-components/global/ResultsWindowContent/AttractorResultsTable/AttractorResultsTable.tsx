@@ -69,13 +69,15 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
         </div>
 
         <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] items-center justify-center gap-2 overflow-auto">
-          {results?.data.map((result, index) => (
-            <AttractorResultsTableRow
-              key={index}
-              interpretationCount={result.sat_count}
-              behaviorClassList={result.phenotype}
-            />
-          ))}
+          {results?.data
+            .sort((a, b) => b.sat_count - a.sat_count)
+            .map((result, index) => (
+              <AttractorResultsTableRow
+                key={index}
+                interpretationCount={result.sat_count}
+                behaviorClassList={result.phenotype}
+              />
+            ))}
         </section>
       </section>
     );
