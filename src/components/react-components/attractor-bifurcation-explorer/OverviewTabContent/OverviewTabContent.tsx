@@ -1,7 +1,7 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { DecisionMixedNode, LeafNode } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import NoDataText from '../NoDataText/NoDataText';
+import NoDataText from '../../global/NoDataText/NoDataText';
 import BehaviorClassTable from './BehaviorClassTable/BehaviorClassTable';
 import NecessaryConditionsTable from './NecessaryConditionsTable/NecessaryConditionsTable';
 import NodeStatTable from './NodeStatTable/NodeStatTable';

@@ -1,5 +1,5 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import NoDataText from '../NoDataText/NoDataText';
+import NoDataText from '../../global/NoDataText/NoDataText';
 import StabilityAnalysisSelector from './StabilityAnalysisSelector/StabilityAnalysisSelector';
 import StabilityAnalysisTable from './StabilityAnalysisTable/StabilityAnalysisTable';
 
