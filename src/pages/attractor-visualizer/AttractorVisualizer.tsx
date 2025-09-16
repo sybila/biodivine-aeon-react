@@ -1,5 +1,5 @@
 import KeepAlive from 'react-activation';
-import AttractorVisCanvas from '../../components/react-components/attractor-visualizer/AttractorVisCanvas';
+import AttractorVisCanvas from '../../components/react-components/attractor-visualizer/AttractorVisCanvas/AttractorVisCanvas';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
