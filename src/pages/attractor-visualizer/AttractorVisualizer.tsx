@@ -4,21 +4,17 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import { useState } from 'react';
+import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
 
-type TabTypeAV =
-  | 'Overview'
-  | 'Stability Analysis'
-  | 'Make Decision'
-  | 'Visual Options'
-  | null;
+type TabTypeAV = 'State Overview' | null;
 
 const AttractorVisualizer = () => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'Overview':
-        return <div>Overview Content</div>;
+      case 'State Overview':
+        return <StateOverviewTabContent />;
       default:
         return null;
     }
@@ -37,11 +33,11 @@ const AttractorVisualizer = () => {
     <>
       <SideButtonMenu>
         <IconButtonReact
-          isActive={activeTab === 'Overview'}
-          onClick={() => showHideTab('Overview')}
+          isActive={activeTab === 'State Overview'}
+          onClick={() => showHideTab('State Overview')}
           iconAlt="Play"
           showTag={true}
-          tagText="Overview"
+          tagText="State Overview"
         ></IconButtonReact>
       </SideButtonMenu>
 
