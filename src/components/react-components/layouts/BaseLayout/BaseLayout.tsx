@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
@@ -8,7 +8,7 @@ import NavigationDockContent from '../../global/NavigationDockContent/Navigation
 import DockIcon from '../../../../assets/icons/dock-arrow.svg';
 import StatusBar from '../../global/StatusBar/StatusBar';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import TabBar from '../../global/TabBar/TabBar';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
@@ -16,6 +16,22 @@ type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 const BaseLayout = () => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/model-editor') {
+      return;
+    }
+
+    const [nav] = performance.getEntriesByType(
+      'navigation'
+    ) as PerformanceNavigationTiming[];
+    if (nav?.type === 'reload') {
+      navigate({ to: '/model-editor' });
+    }
+  }, []);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
