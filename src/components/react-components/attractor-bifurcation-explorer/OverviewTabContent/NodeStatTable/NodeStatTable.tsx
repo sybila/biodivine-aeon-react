@@ -41,10 +41,10 @@ const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
               statName="Number of Interpretations"
               nameWidth="fit-content"
               nameMaxWidth="fit-content"
-              nameAlign="start"
+              nameJustify="start"
               valueWidth="fit-content"
               valueMaxWidth="40%"
-              valueAlign="end"
+              valueJustify="end"
               valNameGap="2%"
               statValue={nodeData.cardinality.toString() ?? 'unknown'}
             />
