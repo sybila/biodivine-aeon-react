@@ -38,7 +38,9 @@ const OverviewTabContent: React.FC = () => {
       <section className="h-fit w-full flex flex-col justify-center items-center gap-2">
         <NodeStatTable {...selectedNode} />
 
-        {selectedNode.type === 'leaf' ? <WittnessAttractorRow /> : null}
+        {selectedNode.type === 'leaf' ? (
+          <WittnessAttractorRow leafNodeId={selectedNode.id} />
+        ) : null}
 
         {selectedNode.classes ? (
           <BehaviorClassTable
