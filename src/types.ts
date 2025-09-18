@@ -266,7 +266,8 @@ export type AttractorData = {
   attractors: AttractorVisualizerAttractor[];
   model: string;
   variables: string[];
-  witness: string;
+  /** List of witness update functions in a form [variableName, updateFunction] */
+  witness: Array<[string, string]>;
   has_large_attractors: boolean;
 };
 

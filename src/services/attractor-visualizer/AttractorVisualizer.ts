@@ -191,27 +191,6 @@ class AttractorVisualizerClass {
 
   // #region --- Node Click ---
 
-  // private _stateToHtml(state: string): string {
-  //   let result = '';
-  //   for (let i = 0; i < state.length; i++) {
-  //     const is_false = state[i] === '0' || state[i] === '⊥';
-  //     const is_dynamic = state[i] === '0' || state[i] === '1';
-  //     result +=
-  //       '<span ' +
-  //       'class="valuation-pair ' +
-  //       (is_dynamic ? (is_false ? 'red' : 'green') : 'grey') +
-  //       '" ' +
-  //       'style="font-weight: ' +
-  //       (is_dynamic ? 'bold' : 'normal') +
-  //       '"' +
-  //       '>' +
-  //       (is_false ? '!' : '') +
-  //       this.attractorData.variables[i] +
-  //       '</span>';
-  //   }
-  //   return result;
-  // }
-
   /** Function for handling node clicks.
    * Changes selected node state in the useAttractorVisualizerStatus store. */
   private nodeClick(e: any): void {
@@ -294,7 +273,7 @@ class AttractorVisualizerClass {
       );
     }
 
-    results.witness = this._generateWitness(results);
+    results.witness = this.generateWitness(results);
 
     return results;
   }
@@ -308,23 +287,21 @@ class AttractorVisualizerClass {
     return this.attractorData?.variables;
   }
 
+  public getWitness(): Array<[string, string]> | undefined {
+    return this.attractorData?.witness;
+  }
+
   // #endregion
-  private _generateWitness(results: any): string {
+
+  /** Generates witness update functions list from the raw results returned by the computation manager. */
+  private generateWitness(results: any): Array<[string, string]> {
     return results.model.model
       .split('\n')
       .filter((x: string) => x[0] === '$')
       .map((x: string) => x.slice(1))
       .map((x: string) => x.split(':'))
-      .map(
-        (x: string[]) =>
-          '<span class="explorer-fnName">' +
-          x[0].trim() +
-          '</span><span class="explorer-fnValue">' +
-          x[1].trim() +
-          '</span>'
-      )
-      .reverse()
-      .reduce((a: string, x: string) => '<li>' + x + '</li>' + a, '');
+      .map((x: string[]) => [x[0].trim(), x[1].trim()])
+      .reverse();
   }
 
   public witnessPanelVisible(show = true): void {
