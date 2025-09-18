@@ -330,6 +330,7 @@ class ComputationManagerClass {
   /** Callback for fetching stability data. */
   private getStabilityDataCallback(
     error: string | undefined,
+    behavior: StabilityAnalysisModes,
     data: Array<StabilityAnalysisVariable> | undefined
   ): void {
     if (error || !data) {
@@ -337,7 +338,10 @@ class ComputationManagerClass {
         `Error fetching stability data: ${error ?? 'Internal error'}`
       );
     } else {
-      useBifurcationExplorerStatus.getState().loadStabilityData(data);
+      useBifurcationExplorerStatus.getState().loadStabilityData({
+        computedBehavior: behavior,
+        stabilityAnalysis: data,
+      });
     }
 
     Loading.endLoading();

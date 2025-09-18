@@ -577,20 +577,21 @@ class ComputeEngine {
 
   public getStabilityData(
     nodeId: number,
-    behaviour: StabilityAnalysisModes,
+    behavior: StabilityAnalysisModes,
     callback: (
       error: string | undefined,
+      behavior: StabilityAnalysisModes,
       data: Array<StabilityAnalysisVariable> | undefined
     ) => void
   ) {
     this.backendRequest(
-      '/get_stability_data/' + nodeId + '/' + behaviour,
+      '/get_stability_data/' + nodeId + '/' + behavior,
       (
         error: string | undefined,
         response: Array<StabilityAnalysisVariable> | undefined
       ) => {
         if (callback !== undefined) {
-          callback(error, response);
+          callback(error, behavior, response);
         }
       },
       'GET'

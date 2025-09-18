@@ -276,12 +276,14 @@ class AttractorBifurcationExplorerClass {
 
   /** Gets the stability data for a specific node.
    * @param nodeId - (number) The ID of the node to get stability data for.
+   * @param behavior - (StabilityAnalysisModes) The type of stability analysis to perform.
    */
   public getStabilityData(
     nodeId: number,
-    behaviour: StabilityAnalysisModes
+    behavior: StabilityAnalysisModes
   ): void {
-    ComputationManager.getStabilityData(nodeId, behaviour);
+    useBifurcationExplorerStatus.getState().loadStabilityData(null);
+    ComputationManager.getStabilityData(nodeId, behavior);
   }
 
   // #endregion

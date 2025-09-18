@@ -187,6 +187,11 @@ export type DecisionMixedNode = {
   classes: Array<AttractorClassBE>;
 };
 
+export type NodeStabilityData = {
+  computedBehavior: StabilityAnalysisModes;
+  stabilityAnalysis: Array<StabilityAnalysisVariable>;
+};
+
 export type VariableStability = {
   colors: number;
   vector: Array<string>;
