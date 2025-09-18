@@ -22,9 +22,15 @@ const StabilityAnalysisTable = () => {
   const renderTable = () => {
     return (
       <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
-        {stabilityResults?.map((variableStabilityData, index) => (
-          <StabilityAnalysisTableRow key={index} {...variableStabilityData} />
-        ))}
+        {stabilityResults?.stabilityAnalysis.map(
+          (variableStabilityData, index) => (
+            <StabilityAnalysisTableRow
+              key={index}
+              {...variableStabilityData}
+              computedBehavior={stabilityResults.computedBehavior}
+            />
+          )
+        )}
       </section>
     );
   };

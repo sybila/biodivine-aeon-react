@@ -1,19 +1,38 @@
 import { Fragment } from 'react';
 import type {
+  StabilityAnalysisModes,
   StabilityAnalysisVariable,
   VariableStability,
 } from '../../../../../../types';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
+import useBifurcationExplorerStatus from '../../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import { Message } from '../../../../../lit-components/message-wrapper';
+import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
 
-const StabilityAnalysisTableRow: React.FC<StabilityAnalysisVariable> = ({
-  variable,
-  data,
-}) => {
-  const buttonsContent: Array<[string, () => void]> = [
-    ['Witness', () => console.log('Witness clicked')],
-    ['Attractor', () => console.log('Attractor clicked')],
-  ];
+const StabilityAnalysisTableRow: React.FC<
+  StabilityAnalysisVariable & { computedBehavior: StabilityAnalysisModes }
+> = ({ variable, computedBehavior, data }) => {
+  const selectedNode = useBifurcationExplorerStatus(
+    (state) => state.selectedNode
+  );
+
+  const openAttractor = (vector: Array<string>) => {
+    if (!selectedNode) {
+      Message.showError('Cannot open attractor explorer: no node selected');
+    } else if (!computedBehavior || !data || !variable) {
+      Message.showError(
+        'Cannot open attractor explorer: no stability analysis data available'
+      );
+    } else {
+      AttractorVisualizer.openVisualizer({
+        nodeId: selectedNode.id,
+        variableName: variable,
+        behavior: computedBehavior,
+        vector: vector,
+      });
+    }
+  };
 
   const renderHeaders = () => {
     return (
@@ -85,7 +104,12 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisVariable> = ({
     );
   };
 
-  const renderButtons = () => {
+  const renderButtons = (vector: Array<string>) => {
+    const buttonsContent: Array<[string, () => void]> = [
+      ['Witness', () => console.log('Witness clicked')],
+      ['Attractor', () => openAttractor(vector)],
+    ];
+
     return (
       <div className="flex flex-row h-full w-[28%] items-center justify-center gap-2">
         {buttonsContent.map(([text, onClick], index) => (
@@ -120,11 +144,14 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisVariable> = ({
         slot="extended-content"
       >
         {renderHeaders()}
-        {data.map((stabilityData: VariableStability) => (
-          <section className="flex flex-row items-center justify-start h-[30px] w-full bg-[var(--color-grey-blue-ultra-light)] px-[1%]">
+        {data.map((stabilityData: VariableStability, index) => (
+          <section
+            key={index}
+            className="flex flex-row items-center justify-start h-[30px] w-full bg-[var(--color-grey-blue-ultra-light)] px-[1%]"
+          >
             {renderStabilityValues(stabilityData.vector ?? [])}
             {renderInterpretations(stabilityData.colors)}
-            {renderButtons()}
+            {renderButtons(stabilityData.vector)}
           </section>
         ))}{' '}
       </div>

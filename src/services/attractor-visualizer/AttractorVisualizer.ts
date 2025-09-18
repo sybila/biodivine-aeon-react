@@ -68,12 +68,15 @@ class AttractorVisualizerClass {
 
   /** Open the attractor visualizer with the given input data.
    * inputData depends on the part of the application from which the visualizer is opened.
-   *
+   * inputData types:
+   *  - { behavior: AttractorBehavior } - from the Attractor Analysis results
+   *  - { nodeId: number } - from the overview in the Bifurcation Explorer
+   *  - { nodeId: number, variableName: string, behavior: AttractorBehavior, vector: string[] } - from the Stability Analysis results in the Bifurcation Explorer
    */
   public openVisualizer(inputData: AttractorVisualizerInput): void {
     // todo - add if there is tab open with the same attractor
 
-    if (!inputData.nodeId) {
+    if (inputData.nodeId === undefined || inputData.nodeId === null) {
       if (inputData.behavior) {
         ComputationManager.getAttractorByBehavior(inputData.behavior);
       }
@@ -104,10 +107,6 @@ class AttractorVisualizerClass {
 
     this.attractorData = result;
     this.reloadVisualizer();
-
-    // todo - implement witness panel update
-    // document.getElementById('explorer-update-functions')!.innerHTML =
-    //   this._loadedResult.witness;
   }
 
   /** Inserts this.loadedResults into the visualizer.
