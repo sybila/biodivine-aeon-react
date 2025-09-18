@@ -6,6 +6,7 @@ import type {
   ControlComputationParams,
   ControlResults,
   Decisions,
+  ModelObject,
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
@@ -19,6 +20,7 @@ import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/A
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -195,6 +197,42 @@ class ComputationManagerClass {
       Message.showInfo(warning);
     }
   };
+
+  // #endregion
+
+  // #region --- Open Witness ---
+
+  public openWitnessCallback(
+    error: string | undefined,
+    response: ModelObject | undefined
+  ): void {
+    if (error || !response || !response.model) {
+      Message.showError(`Error opening witness: "${error ?? 'Unknown error'}"`);
+    } else {
+      const modelId = LiveModel.Models.addModel(response.model, 'witness');
+      LiveModel.Models.loadModel(modelId);
+      useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
+        LiveModel.Models.loadModel(modelId);
+      });
+    }
+
+    Loading.endLoading();
+  }
+
+  public openWitnessAttractorAnalysis(behavior: string): void {
+    if (!behavior || behavior.length === 0) {
+      Message.showError(
+        'Cannot open witness: No behavior string provided for the attractor.'
+      );
+      return;
+    }
+
+    Loading.startLoading();
+    this.computeEngine.getWitnessAttractorAnalysis(
+      behavior,
+      this.openWitnessCallback.bind(this)
+    );
+  }
 
   // #endregion
 

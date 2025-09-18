@@ -1,4 +1,5 @@
 import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
+import ComputationManager from '../../../../../../services/global/ComputationManager/ComputationManager';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { AttractorResultsTableRowProps } from './AttractorResultsTableRowProps';
 
@@ -19,8 +20,14 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
     }
   };
 
+  const openWitness = () => {
+    ComputationManager.openWitnessAttractorAnalysis(
+      behaviourString ? behaviourString : ''
+    );
+  };
+
   const buttonsContent: Array<[string, () => void]> = [
-    ['Witness', () => console.log('Witness clicked')],
+    ['Witness', () => openWitness()],
     ['Attractor', () => openAttractor()],
   ];
 

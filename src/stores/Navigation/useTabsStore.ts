@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { TabInfo, TabType } from '../../types';
+import { LiveModel } from '../../services/global/LiveModel/LiveModel';
 
 type TabsState = {
   /** Property containing information about all opened tabs. */
@@ -29,6 +30,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
       path: '/model-editor',
       type: 'Model Editor',
       active: true,
+      onClick: () => {
+        LiveModel.Models.loadModel(0);
+      },
     },
   },
   idNow: 1,

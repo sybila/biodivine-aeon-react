@@ -8,6 +8,7 @@ import type {
   ControlResult,
   ControlResults,
   Decisions,
+  ModelObject,
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
@@ -374,6 +375,26 @@ class ComputeEngine {
   }
 
   // #endregion
+
+  // #region --- Get Witness ---
+
+  public getWitnessAttractorAnalysis(
+    behavior: string,
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_witness/' + behavior,
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
 
   // #region --- Start Computation ---
 

@@ -2,6 +2,7 @@ import ControlLM from './ControlLM';
 import ExportLM from './ExportLM';
 import ImportLM from './ImportLM';
 import InfoLM from './InfoLM';
+import ModelsLM from './ModelsLM';
 import RegulationsLM from './RegulationsLM';
 import UpdateFunctionsLM from './UpdateFunctionsLM';
 import VariablesLM from './VariablesLM';
@@ -21,8 +22,9 @@ class LiveModelClass {
 	It is the responsibility of the user of this flag to re-run these tasks AFTER the changes are done.
 	Currently we use this only in import. */
   public _disable_dynamic_validation: boolean = false;
-  /** Stores model in the AEON string format. */
-  public modelSave: string = '';
+
+  /** Functions and properties for managing multiple models. */
+  Models: ModelsLM = new ModelsLM(this);
 
   /** Functions and properties for managing model information such as name and description. */
   Info: InfoLM = new InfoLM(this);

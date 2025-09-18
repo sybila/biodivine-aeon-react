@@ -49,6 +49,22 @@ export type ComputationModes = 'Attractor Analysis' | 'Control';
 
 export type fileType = '.aeon' | '.sbml' | '.bnet';
 
+// #region --- Models ---
+
+export type ModelType = 'main' | 'witness';
+
+export type ModelSave = {
+  id: number;
+  type: ModelType;
+  modelAeonString: string;
+};
+
+export type ModelObject = {
+  model: string;
+};
+
+// #endregion
+
 // #region --- Control ---
 
 export type Phenotype = boolean | null;
@@ -119,7 +135,8 @@ export type AttractorResults = {
 export type TabType =
   | 'Model Editor'
   | 'Attractor Bifurcation Explorer'
-  | 'Attractor Visualizer';
+  | 'Attractor Visualizer'
+  | 'Witness';
 
 export type TabInfo = {
   /** Unique identifier for the tab */

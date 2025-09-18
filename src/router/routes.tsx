@@ -29,9 +29,16 @@ export const AttractorVisualizerRoute = createRoute({
   component: AttractorVisualizer,
 });
 
+export const WitnessRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/witness',
+  component: ModelEditor,
+});
+
 export const routeTree = rootRoute.addChildren([
   defaultRedirect,
   modelEditorRoute,
   AttractorBifurcationExplorerRoute,
   AttractorVisualizerRoute,
+  WitnessRoute,
 ]);
