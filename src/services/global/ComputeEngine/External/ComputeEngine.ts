@@ -379,14 +379,60 @@ class ComputeEngine {
   // #region --- Get Witness ---
 
   public getWitnessAttractorAnalysis(
-    behavior: string,
+    behaviorString: string,
     callback: (
       error: string | undefined,
       response: ModelObject | undefined
     ) => void
   ): void {
     this.backendRequest(
-      '/get_witness/' + behavior,
+      '/get_witness/' + behaviorString,
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
+
+  public getWitnessBifurcationExplorer(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_tree_witness/' + nodeId,
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
+
+  public getWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[],
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_stability_witness/' +
+        nodeId +
+        '/' +
+        encodeURI(behavior) +
+        '/' +
+        encodeURI(variableName) +
+        '/' +
+        encodeURI('[' + vector + ']'),
       (error: string | undefined, response: ModelObject | undefined) => {
         if (callback !== undefined) {
           callback(error, response);

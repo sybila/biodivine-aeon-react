@@ -7,6 +7,7 @@ import type {
   StabilityAnalysisModes,
   VisualOptionsSwitchableABE,
 } from '../../../types';
+import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
 import CytoscapeTreeEditor from '../CytoscapeABE/CytoscapeABE';
@@ -379,61 +380,97 @@ class AttractorBifurcationExplorerClass {
 
   // #endregion
 
-  // #region --- Open wittness/attractor ---
+  // #region --- Open witness/attractor ---
 
-  public openTreeWitness(): void {
-    const node = CytoscapeTreeEditor.getSelectedNodeId();
-    if (node === undefined) return;
-    // @ts-ignore
-    UI.Open.openWitness(null, '&tree_witness=' + encodeURI(node));
+  /** Opens the witness tab for a specific leaf node. */
+  public openLeafNodeWitness(nodeId: number): void {
+    if (nodeId === undefined || nodeId === null) {
+      Message.showError(
+        'Cannot open witness: Internal error (Missing node ID).'
+      );
+      return;
+    }
+
+    ComputationManager.openWitnessBifurcationExplorer(nodeId);
   }
 
+  /** Opens the witness tab for a specific stability analysis. */
   public openStabilityWitness(
+    nodeId: number | null,
     variable: string,
     behaviour: string,
-    vector: string
+    vector: Array<string>
   ): void {
-    const node = CytoscapeTreeEditor.getSelectedNodeId();
-    if (node === undefined) return;
-    // @ts-ignore
-    UI.Open.openWitness(
-      null,
-      '&tree_witness=' +
-        encodeURI(node) +
-        '&variable=' +
-        encodeURI(variable) +
-        '&behaviour=' +
-        encodeURI(behaviour) +
-        '&vector=' +
-        encodeURI(vector)
+    if (
+      nodeId === null ||
+      nodeId === undefined ||
+      !variable ||
+      !behaviour ||
+      !vector
+    ) {
+      Message.showError(
+        'Cannot open witness: Internal error (Missing parameters).'
+      );
+      return;
+    }
+
+    ComputationManager.openWitnessStabilityAnalysis(
+      nodeId,
+      variable,
+      behaviour,
+      vector
     );
   }
 
-  public openTreeAttractor(): void {
-    const node = CytoscapeTreeEditor.getSelectedNodeId();
-    if (node === undefined) return;
-    // @ts-ignore
-    UI.Open.openExplorer('&tree_witness=' + encodeURI(node));
+  /** Opens the attractor visualizer for a specific leaf node. */
+  public openLeafNodeAttractor(nodeId: number): void {
+    if (!nodeId) {
+      Message.showError(
+        "Can't open attractor visualizer: no leaf node selected"
+      );
+    } else {
+      AttractorVisualizer.openVisualizer({ nodeId: nodeId });
+    }
   }
 
+  /** Opens the attractor visualizer for a specific stability analysis. */
   public openStabilityAttractor(
-    variable: string,
-    behaviour: string,
-    vector: string
+    nodeId: number | null,
+    variableName: string,
+    behavior: StabilityAnalysisModes,
+    vector: string[]
   ): void {
-    const node = CytoscapeTreeEditor.getSelectedNodeId();
-    if (node === undefined) return;
-    // @ts-ignore
-    UI.Open.openExplorer(
-      '&tree_witness=' +
-        encodeURI(node) +
-        '&variable=' +
-        encodeURI(variable) +
-        '&behaviour=' +
-        encodeURI(behaviour) +
-        '&vector=' +
-        encodeURI(vector)
-    );
+    if (nodeId === null) {
+      Message.showError(
+        'Cannot open attractor explorer: Internal error (Missing node ID).'
+      );
+      return;
+    }
+    if (!variableName) {
+      Message.showError(
+        'Cannot open attractor explorer: Internal error (Missing variable name).'
+      );
+      return;
+    }
+    if (!behavior) {
+      Message.showError(
+        'Cannot open attractor explorer: Internal error (Missing behavior).'
+      );
+      return;
+    }
+    if (!vector) {
+      Message.showError(
+        'Cannot open attractor explorer: Internal error (Missing vector).'
+      );
+      return;
+    }
+
+    AttractorVisualizer.openVisualizer({
+      nodeId,
+      variableName,
+      behavior,
+      vector,
+    });
   }
 
   // #endregion

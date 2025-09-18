@@ -21,6 +21,7 @@ import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import router from '../../../router';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -214,13 +215,15 @@ class ComputationManagerClass {
       useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
         LiveModel.Models.loadModel(modelId);
       });
+      router.navigate({ to: `/witness` });
     }
 
     Loading.endLoading();
   }
 
-  public openWitnessAttractorAnalysis(behavior: string): void {
-    if (!behavior || behavior.length === 0) {
+  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
+  public openWitnessAttractorAnalysis(behaviorString: string): void {
+    if (!behaviorString || behaviorString.length === 0) {
       Message.showError(
         'Cannot open witness: No behavior string provided for the attractor.'
       );
@@ -229,7 +232,33 @@ class ComputationManagerClass {
 
     Loading.startLoading();
     this.computeEngine.getWitnessAttractorAnalysis(
+      behaviorString,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
+  public openWitnessBifurcationExplorer(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.getWitnessBifurcationExplorer(
+      nodeId,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  /** Get witness for stability analysis and opens new witness tab */
+  public openWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
+  ): void {
+    Loading.startLoading();
+    this.computeEngine.getWitnessStabilityAnalysis(
+      nodeId,
+      variableName,
       behavior,
+      vector,
       this.openWitnessCallback.bind(this)
     );
   }

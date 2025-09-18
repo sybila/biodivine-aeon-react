@@ -7,8 +7,7 @@ import type {
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import useBifurcationExplorerStatus from '../../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import { Message } from '../../../../../lit-components/message-wrapper';
-import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
+import AttractorBifurcationExplorer from '../../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
 const StabilityAnalysisTableRow: React.FC<
   StabilityAnalysisVariable & { computedBehavior: StabilityAnalysisModes }
@@ -16,23 +15,6 @@ const StabilityAnalysisTableRow: React.FC<
   const selectedNode = useBifurcationExplorerStatus(
     (state) => state.selectedNode
   );
-
-  const openAttractor = (vector: Array<string>) => {
-    if (!selectedNode) {
-      Message.showError('Cannot open attractor explorer: no node selected');
-    } else if (!computedBehavior || !data || !variable) {
-      Message.showError(
-        'Cannot open attractor explorer: no stability analysis data available'
-      );
-    } else {
-      AttractorVisualizer.openVisualizer({
-        nodeId: selectedNode.id,
-        variableName: variable,
-        behavior: computedBehavior,
-        vector: vector,
-      });
-    }
-  };
 
   const renderHeaders = () => {
     return (
@@ -106,8 +88,26 @@ const StabilityAnalysisTableRow: React.FC<
 
   const renderButtons = (vector: Array<string>) => {
     const buttonsContent: Array<[string, () => void]> = [
-      ['Witness', () => console.log('Witness clicked')],
-      ['Attractor', () => openAttractor(vector)],
+      [
+        'Witness',
+        () =>
+          AttractorBifurcationExplorer.openStabilityWitness(
+            selectedNode?.id ?? null,
+            variable,
+            computedBehavior,
+            vector
+          ),
+      ],
+      [
+        'Attractor',
+        () =>
+          AttractorBifurcationExplorer.openStabilityAttractor(
+            selectedNode?.id ?? null,
+            variable,
+            computedBehavior,
+            vector
+          ),
+      ],
     ];
 
     return (
