@@ -1,5 +1,6 @@
 import type { ModelSave, ModelType } from '../../../types';
 import type { LiveModelClass } from './LiveModel';
+import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 
 /** Class for managing multiple models in the LiveModel. */
 class ModelsLM {
@@ -13,22 +14,10 @@ class ModelsLM {
   /** Id of the next added model. */
   private nextId: number = 1;
 
-  /** Id of the currently loaded model. */
-  private loadedModelId: number = 0;
-
   private livemodel: LiveModelClass;
 
   constructor(livemodel: LiveModelClass) {
     this.livemodel = livemodel;
-  }
-
-  // #endregion
-
-  // #region --- Getters ---
-
-  /** Returns the ID of the currently loaded model. */
-  public getLoadedModelId(): number {
-    return this.loadedModelId;
   }
 
   // #endregion
@@ -71,21 +60,26 @@ class ModelsLM {
   public removeModel(id: number): void {
     if (id === 0) return; // cannot remove main model
 
+    if (useLoadedModelStore.getState().loadedModelId === id) {
+      this.loadModel(0);
+    }
+
     delete this.models[id];
   }
 
   /** Function for switching between added models. */
   public loadModel(id: number): boolean {
-    if (this.loadedModelId === id) return true;
+    const loadedModelId = useLoadedModelStore.getState().loadedModelId;
+    if (loadedModelId === id) return true;
 
-    if (this.loadedModelId === 0) {
+    if (loadedModelId === 0) {
       this.updateModel(0, this.livemodel.Export.exportAeon(true) ?? '');
     }
 
     const model = this.models[id];
     if (!model) return false;
 
-    this.loadedModelId = id;
+    useLoadedModelStore.getState().setLoadedModel(id, model.type);
     this.livemodel.Import.importAeon(model.modelAeonString, true);
     return true;
   }

@@ -13,6 +13,7 @@ import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
 import config from '../../../config';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 
 //import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
@@ -152,7 +153,7 @@ class ExportLM {
    */
   public saveModel(): void {
     const modelString = this.exportAeon();
-    const modelId = this.liveModel.Models.getLoadedModelId();
+    const modelId = useLoadedModelStore.getState().loadedModelId;
 
     if (!modelString || modelId === null) {
       //Todo error

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
@@ -16,10 +16,14 @@ import StartCompTabContent from '../../components/react-components/model-editor/
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import KeepAlive from 'react-activation';
+import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
+import type { ModelType } from '../../types';
+import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
 
 type TabTypeME =
   | 'Start Computation'
   | 'Import/Export'
+  | 'Export Witness'
   | 'Model Editor'
   | 'Control Editor'
   | 'Visual Options'
@@ -27,6 +31,19 @@ type TabTypeME =
 
 const ModelEditor: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+  const modelType: ModelType = useLoadedModelStore(
+    (state) => state.loadedModelType
+  );
+
+  useEffect(() => {
+    if (
+      (modelType === 'witness' &&
+        (activeTab === 'Start Computation' || activeTab === 'Import/Export')) ||
+      (modelType !== 'witness' && activeTab === 'Export Witness')
+    ) {
+      setActiveTab(null);
+    }
+  }, [modelType]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -34,6 +51,8 @@ const ModelEditor: React.FC = () => {
         return <StartCompTabContent />;
       case 'Import/Export':
         return <ImportExportTabContent />;
+      case 'Export Witness':
+        return <ExportTabContent />;
       case 'Model Editor':
         return <ModelEditorTabContent />;
       case 'Control Editor':
@@ -57,22 +76,35 @@ const ModelEditor: React.FC = () => {
   return (
     <>
       <SideButtonMenu>
-        <IconButtonReact
-          isActive={activeTab === 'Start Computation'}
-          onClick={() => showHideTab('Start Computation')}
-          iconSrc={PlayIcon}
-          iconAlt="Play"
-          showTag={true}
-          tagText="Start Computation"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Import/Export'}
-          onClick={() => showHideTab('Import/Export')}
-          iconSrc={FileIcon}
-          iconAlt="File"
-          showTag={true}
-          tagText="Import/Export"
-        ></IconButtonReact>
+        {modelType !== 'witness' ? (
+          <IconButtonReact
+            isActive={activeTab === 'Start Computation'}
+            onClick={() => showHideTab('Start Computation')}
+            iconSrc={PlayIcon}
+            iconAlt="Play"
+            showTag={true}
+            tagText="Start Computation"
+          ></IconButtonReact>
+        ) : null}
+        {modelType !== 'witness' ? (
+          <IconButtonReact
+            isActive={activeTab === 'Import/Export'}
+            onClick={() => showHideTab('Import/Export')}
+            iconSrc={FileIcon}
+            iconAlt="File"
+            showTag={true}
+            tagText="Import/Export"
+          ></IconButtonReact>
+        ) : (
+          <IconButtonReact
+            isActive={activeTab === 'Export Witness'}
+            onClick={() => showHideTab('Export Witness')}
+            iconSrc={FileIcon}
+            iconAlt="File"
+            showTag={true}
+            tagText="Export Witness"
+          ></IconButtonReact>
+        )}
         <IconButtonReact
           isActive={activeTab === 'Model Editor'}
           onClick={() => showHideTab('Model Editor')}
