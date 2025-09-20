@@ -3,9 +3,9 @@ import SideButtonMenu from '../../components/react-components/global/SideButtonM
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 
-import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
-import FileIcon from '../../assets/icons/file_copy-48px.svg';
-import ModelIcon from '../../assets/icons/model-48px.svg';
+import StateIcon from '../../assets/icons/state_overview.svg';
+import StabilityIcon from '../../assets/icons/stability_analysis.svg';
+import DecisionIcon from '../../assets/icons/make_decision.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
 
 import KeepAlive from 'react-activation';
@@ -55,24 +55,25 @@ const AttractorBifurcationExplorer: React.FC = () => {
         <IconButtonReact
           isActive={activeTab === 'Overview'}
           onClick={() => showHideTab('Overview')}
-          iconSrc={PlayIcon}
-          iconAlt="Play"
+          iconSrc={StateIcon}
+          iconAlt="State"
           showTag={true}
           tagText="Overview"
         ></IconButtonReact>
         <IconButtonReact
           isActive={activeTab === 'Stability Analysis'}
           onClick={() => showHideTab('Stability Analysis')}
-          iconSrc={FileIcon}
-          iconAlt="File"
+          iconSrc={StabilityIcon}
+          iconAlt="Stability"
           showTag={true}
           tagText="Stability Analysis"
         ></IconButtonReact>
         <IconButtonReact
           isActive={activeTab === 'Make Decision'}
           onClick={() => showHideTab('Make Decision')}
-          iconSrc={ModelIcon}
-          iconAlt="Model"
+          iconSrc={DecisionIcon}
+          iconAlt="Decision"
+          iconSize="88%"
           showTag={true}
           tagText="Make Decision"
         ></IconButtonReact>

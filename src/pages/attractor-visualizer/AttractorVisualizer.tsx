@@ -7,6 +7,9 @@ import { useState } from 'react';
 import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
 import WittnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WittnessUpdateFunctionsTabContent/WittnessUpdateFunctionsTabContent';
 
+import StateIcon from '../../assets/icons/state_overview.svg';
+import UpdateFuncitons from '../../assets/icons/update_functions.svg';
+
 type TabTypeAV = 'State Overview' | 'Wittness Update Functions' | null;
 
 const AttractorVisualizer = () => {
@@ -38,14 +41,16 @@ const AttractorVisualizer = () => {
         <IconButtonReact
           isActive={activeTab === 'State Overview'}
           onClick={() => showHideTab('State Overview')}
-          iconAlt="Play"
+          iconSrc={StateIcon}
+          iconAlt="State"
           showTag={true}
           tagText="State Overview"
         ></IconButtonReact>
         <IconButtonReact
           isActive={activeTab === 'Wittness Update Functions'}
           onClick={() => showHideTab('Wittness Update Functions')}
-          iconAlt="Play"
+          iconSrc={UpdateFuncitons}
+          iconAlt="Update Functions"
           showTag={true}
           tagText="Wittness Update Functions"
         ></IconButtonReact>
