@@ -22,7 +22,7 @@ export class StatEntry extends LitElement {
   @property({ type: String }) declare nameMaxHeight?: string;
   @property({ type: String }) declare nameWidth?: string;
   @property({ type: String }) declare nameMaxWidth?: string;
-  @property({ type: String }) declare nameAlign?: string;
+  @property({ type: String }) declare nameJustify?: string;
   @property({ type: String }) declare nameOverflowX?: string;
 
   @property({ type: Boolean }) declare addColon?: boolean;
@@ -31,7 +31,7 @@ export class StatEntry extends LitElement {
   @property({ type: String }) declare valueMaxHeight?: string;
   @property({ type: String }) declare valueWidth?: string;
   @property({ type: String }) declare valueMaxWidth?: string;
-  @property({ type: String }) declare valueAlign?: string;
+  @property({ type: String }) declare valueJustify?: string;
   @property({ type: String }) declare valueOverflowX?: string;
 
   @property({ type: String }) declare lineHeight?: string;
@@ -81,20 +81,20 @@ export class StatEntry extends LitElement {
     }
 
     #name {
-      height: var(--stat-entry-name-height, fit-content);
-      width: var(--stat-entry-name-width, fit-content);
+      height: var(--stat-entry-name-height, auto);
+      width: var(--stat-entry-name-width, auto);
       max-height: var(--stat-entry-name-max-height, fit-content);
       max-width: var(--stat-entry-name-max-width, 50%);
-      text-align: var(--stat-entry-name-align, center);
+      justify-content: var(--stat-entry-name-justify-content, safe center);
       overflow-x: var(--stat-entry-name-overflow-x, hidden);
     }
 
     #value {
-      height: var(--stat-entry-value-height, fit-content);
-      width: var(--stat-entry-value-width, fit-content);
+      height: var(--stat-entry-value-height, auto);
+      width: var(--stat-entry-value-width, auto);
       max-height: var(--stat-entry-value-max-height, fit-content);
       max-width: var(--stat-entry-value-max-width, 50%);
-      text-align: var(--stat-entry-value-align, center);
+      justify-content: var(--stat-entry-value-justify-content, safe center);
       overflow-x: var(--stat-entry-value-overflow-x, auto);
     }
   `;
@@ -120,23 +120,23 @@ export class StatEntry extends LitElement {
     update('contHeight', '--stat-entry-cont-height', 'fit-content');
     update('contWidth', '--stat-entry-cont-width', '100%');
     update('contJustify', '--stat-entry-justify-content', 'space-between');
-    update('contAlign', '--stat-entry-align-items', 'center');
+    update('contAlign', '--stat-entry-align-items', 'safe center');
     update('contPadX', '--stat-entry-padding-x', '5px');
     update('contBgColor', '--stat-entry-bg-color', '#cfd8dc');
     update('contBorderRadius', '--stat-entry-border-radius', '3px');
 
-    update('nameHeight', '--stat-entry-name-height', 'fit-content');
+    update('nameHeight', '--stat-entry-name-height', 'auto');
     update('nameMaxHeight', '--stat-entry-name-max-height', 'fit-content');
-    update('nameWidth', '--stat-entry-name-width', 'fit-content');
+    update('nameWidth', '--stat-entry-name-width', 'auto');
     update('nameMaxWidth', '--stat-entry-name-max-width', '50%');
-    update('nameAlign', '--stat-entry-name-align', 'center');
+    update('nameJustify', '--stat-entry-name-justify-content', 'safe center');
     update('nameOverflowX', '--stat-entry-name-overflow-x', 'hidden');
 
-    update('valueHeight', '--stat-entry-value-height', 'fit-content');
+    update('valueHeight', '--stat-entry-value-height', 'auto');
     update('valueMaxHeight', '--stat-entry-value-max-height', 'fit-content');
-    update('valueWidth', '--stat-entry-value-width', 'fit-content');
+    update('valueWidth', '--stat-entry-value-width', 'auto');
     update('valueMaxWidth', '--stat-entry-value-max-width', '50%');
-    update('valueAlign', '--stat-entry-value-align', 'center');
+    update('valueJustify', '--stat-entry-value-justify-content', 'safe center');
     update('valueOverflowX', '--stat-entry-value-overflow-x', 'auto');
 
     update('lineHeight', '--stat-entry-line-height', '20px');

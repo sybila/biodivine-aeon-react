@@ -49,6 +49,22 @@ export type ComputationModes = 'Attractor Analysis' | 'Control';
 
 export type fileType = '.aeon' | '.sbml' | '.bnet';
 
+// #region --- Models ---
+
+export type ModelType = 'main' | 'witness';
+
+export type ModelSave = {
+  id: number;
+  type: ModelType;
+  modelAeonString: string;
+};
+
+export type ModelObject = {
+  model: string;
+};
+
+// #endregion
+
 // #region --- Control ---
 
 export type Phenotype = boolean | null;
@@ -113,6 +129,187 @@ export type AttractorResults = {
 };
 
 // #endregion
+
+// #region --- Navigation Tabs ---
+
+export type TabType =
+  | 'Model Editor'
+  | 'Attractor Bifurcation Explorer'
+  | 'Attractor Visualizer'
+  | 'Witness';
+
+export type TabInfo = {
+  /** Unique identifier for the tab */
+  id: number;
+  /** Type of the tab */
+  type: TabType;
+  /** Path of the tab */
+  path: string;
+  /** Callback function to be executed when the tab is clicked */
+  onClick?: () => void;
+  /** Indicates if the tab is currently active */
+  active: boolean;
+};
+
+// #endregion
+
+// #region --- Bifurcation Explorer ---
+
+export type AttractorClassBE = {
+  cardinality: number;
+  class: string;
+};
+
+export type NodeDataBE = {
+  id: number;
+  attribute_name?: string;
+  cardinality: number;
+  class?: string;
+  classes?: Array<AttractorClassBE>;
+  all_classes?: Array<AttractorClassBE>;
+  left?: number;
+  right?: number;
+  type: NodeTypeBE;
+};
+
+export type NodeTypeBE = 'unprocessed' | 'decision' | 'leaf';
+
+export type NodeSubTypeBE = 'stability' | 'disorder' | 'oscillation';
+
+export type CytoscapeNodeDataBE = {
+  id: string;
+  targetId?: string;
+  label?: string;
+  opacity?: number;
+  treeData?: NodeDataBE;
+  type?: NodeTypeBE;
+  subtype?: NodeSubTypeBE;
+  action?: 'remove';
+};
+
+export type LeafNode = {
+  id: number;
+  label: string;
+  type: 'leaf';
+  cardinality: number;
+  class: string;
+  classes?: Array<AttractorClassBE>;
+};
+
+export type DecisionMixedNode = {
+  id: number;
+  label: string;
+  type: 'decision' | 'unprocessed';
+  cardinality: number;
+  classes: Array<AttractorClassBE>;
+};
+
+export type NodeStabilityData = {
+  computedBehavior: StabilityAnalysisModes;
+  stabilityAnalysis: Array<StabilityAnalysisVariable>;
+};
+
+export type VariableStability = {
+  colors: number;
+  vector: Array<string>;
+};
+
+export type StabilityAnalysisVariable = {
+  variable: string;
+  data: Array<VariableStability>;
+};
+
+export type StabilityAnalysisModes = 'total' | 'S' | 'O' | 'D';
+
+export type DecisionBehaviorClass = {
+  cardinality: number;
+  class: string;
+  fraction: number;
+};
+
+export type Decision = {
+  id: number;
+  name: string;
+  gain: number;
+  left: Array<DecisionBehaviorClass>;
+  leftTotal: number;
+  right: Array<DecisionBehaviorClass>;
+  rightTotal: number;
+};
+
+export type Decisions = Array<Decision>;
+
+export type NodeNecessaryConditions = Array<{
+  name: string;
+  positive: boolean;
+}>;
+
+// #endregion
+
+// #region --- Attractor Visualizer ---
+
+export type VisEdge = {
+  arrows?: { to: { enabled: boolean } };
+  color?: { color: string; opacity: number };
+  from: string;
+  to: string;
+  id: string;
+  length?: number;
+};
+
+export type VisNode = {
+  id: string;
+  label: string;
+  font?: { face: string; size: number };
+  labelHighlightBold?: boolean;
+  opacity?: number;
+};
+
+export type VisGraphData = {
+  nodes: Array<VisNode>;
+  edges: Array<VisEdge>;
+};
+
+export type AttractorVisualizerAttractor = {
+  class: AttractorBehavior;
+  edges: number;
+  graph: Array<[string, string]>;
+  vis: VisGraphData;
+};
+
+export type AttractorVisualizerInput = {
+  nodeId?: number;
+  variableName?: string;
+  behavior?: string;
+  vector?: string[];
+};
+
+export type AttractorData = {
+  attractors: AttractorVisualizerAttractor[];
+  model: string;
+  variables: string[];
+  /** List of witness update functions in a form [variableName, updateFunction] */
+  witness: Array<[string, string]>;
+  has_large_attractors: boolean;
+};
+
+// #endregion
+
+// #region --- Visual Options ---
+
+export type VisualOptionsButtonSection = {
+  headerText: string;
+  buttons: Array<[string, () => void, boolean]>;
+};
+
+export type VisualOptionsSwitchableABE = {
+  animate: boolean;
+  snapLayers: boolean;
+  positiveOnLeft: boolean;
+};
+
+// #endregion
+
 export type TimestampResponse = {
   timestamp: number | undefined;
 };

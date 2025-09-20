@@ -6,10 +6,27 @@ import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
 
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
+import { useNavigate } from '@tanstack/react-router';
+import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
+import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
 }) => {
+  const navigate = useNavigate();
+  const openAttractorBifurcationExplorer = () => {
+    navigate({
+      to: '/attractor-bifurcation-explorer',
+    });
+
+    useTabsStore
+      .getState()
+      .addTab(
+        'attractor-bifurcation-explorer',
+        'Attractor Bifurcation Explorer'
+      );
+  };
+
   const renderStats = () => {
     return (
       <section className="flex flex-col justify-end items-center h-fit w-full gap-3">
@@ -52,13 +69,15 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
         </div>
 
         <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] items-center justify-center gap-2 overflow-auto">
-          {results?.data.map((result, index) => (
-            <AttractorResultsTableRow
-              key={index}
-              interpretationCount={result.sat_count}
-              behaviorClassList={result.phenotype}
-            />
-          ))}
+          {results?.data
+            .sort((a, b) => b.sat_count - a.sat_count)
+            .map((result, index) => (
+              <AttractorResultsTableRow
+                key={index}
+                interpretationCount={result.sat_count}
+                behaviorClassList={result.phenotype}
+              />
+            ))}
         </section>
       </section>
     );
@@ -84,11 +103,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
 
         {renderTable()}
 
-        <div className="flex flex-row justify-center items-center w-full h-[30px] font-[var(--base-font-family] text-sm gap-2">
-          <span className="font-[Symbols] mb-[-10px]">D</span> disorder |{' '}
-          <span className="font-[Symbols] mb-[-10px]">O</span> oscillation |{' '}
-          <span className="font-[Symbols] mb-[-10px]">S</span> stability
-        </div>
+        <BehaviorClassLegend />
 
         <TextIconButtonReact
           className="mb-2"
@@ -98,6 +113,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           text="Explore Bifurcation Function"
           iconAlt="Bifurcation"
           iconSrc={SplitIcon}
+          handleClick={openAttractorBifurcationExplorer}
         />
       </div>
     </section>

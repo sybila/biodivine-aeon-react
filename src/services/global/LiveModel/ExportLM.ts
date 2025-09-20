@@ -13,16 +13,30 @@ import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
 import config from '../../../config';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 
 //import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
 
 class ExportLM {
-  // #region --- Properties + Contructor ---
+  // #region --- Properties + Constructor ---
 
+  /** Reference to the parent LiveModel class. */
   private liveModel: LiveModelClass;
+
+  /** Indicates whether local storage is available. */
+  private hasLocalStorage: boolean;
 
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
+
+    try {
+      const testKey = '__storage_test__';
+      window.localStorage.setItem(testKey, 'test');
+      window.localStorage.removeItem(testKey);
+      this.hasLocalStorage = true;
+    } catch (e) {
+      this.hasLocalStorage = false;
+    }
   }
 
   // #endregion
@@ -134,19 +148,20 @@ class ExportLM {
   }
 
   /**
-   * Save the current state of the model to local storage and modelSave field.
+   * Save the current state of the model to local storage and ModelsLM live model module.
    * NOTE: This only triggers on structure change, not metadata changes.
    */
   public saveModel(): void {
     const modelString = this.exportAeon();
+    const modelId = useLoadedModelStore.getState().loadedModelId;
 
-    if (!modelString) {
+    if (!modelString || modelId === null) {
       //Todo error
       return;
     }
-    this.liveModel.modelSave = modelString;
+    this.liveModel.Models.updateModel(modelId, modelString);
 
-    if (!true) return; //!hasLocalStorage
+    if (!this.hasLocalStorage || modelId !== 0) return;
     try {
       if (!this.liveModel.isEmpty()) {
         localStorage.setItem(

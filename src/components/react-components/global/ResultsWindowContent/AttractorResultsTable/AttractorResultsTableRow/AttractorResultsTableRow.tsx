@@ -1,3 +1,5 @@
+import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
+import ComputationManager from '../../../../../../services/global/ComputationManager/ComputationManager';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { AttractorResultsTableRowProps } from './AttractorResultsTableRowProps';
 
@@ -5,17 +7,29 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   interpretationCount,
   behaviorClassList,
 }) => {
-  const buttonsContent: Array<[string, () => void]> = [
-    ['Witness', () => console.log('Witness clicked')],
-    ['Attractor', () => console.log('Attractor clicked')],
-  ];
-
   const behaviourString: string | undefined = !behaviorClassList
     ? undefined
     : behaviorClassList
         .map((x) => x[0])
         .sort()
         .join('');
+
+  const openAttractor = () => {
+    if (behaviourString && behaviourString.length > 0) {
+      AttractorVisualizer.openVisualizer({ behavior: behaviourString });
+    }
+  };
+
+  const openWitness = () => {
+    ComputationManager.openWitnessAttractorAnalysis(
+      behaviourString ? behaviourString : ''
+    );
+  };
+
+  const buttonsContent: Array<[string, () => void]> = [
+    ['Witness', () => openWitness()],
+    ['Attractor', () => openAttractor()],
+  ];
 
   return (
     <section className="flex flex-row items-center justify-start h-[30px] w-full">

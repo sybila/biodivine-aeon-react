@@ -1,17 +1,24 @@
 import config from '../../../../config';
 import type {
+  AttractorData,
   AttractorResults,
   ComputationModes,
   ComputationStatus,
   ControlComputationStats,
   ControlResult,
   ControlResults,
+  Decisions,
+  ModelObject,
+  NodeDataBE,
+  StabilityAnalysisModes,
+  StabilityAnalysisVariable,
   TimestampResponse,
 } from '../../../../types';
 import type {
   AttractorResponse,
   ComputationInfo,
   ControlResponse,
+  DeleteBifDecisionResponse,
 } from './ComputeEngineTypes';
 
 class ComputeEngine {
@@ -22,7 +29,7 @@ class ComputeEngine {
 
   private connected: boolean = false;
 
-  private pingRepeatToken: NodeJS.Timeout | undefined = undefined;
+  private pingRepeatToken: number | undefined = undefined;
 
   private waitingForResults: boolean = false;
 
@@ -369,6 +376,72 @@ class ComputeEngine {
 
   // #endregion
 
+  // #region --- Get Witness ---
+
+  public getWitnessAttractorAnalysis(
+    behaviorString: string,
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_witness/' + behaviorString,
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
+
+  public getWitnessBifurcationExplorer(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_tree_witness/' + nodeId,
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
+
+  public getWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[],
+    callback: (
+      error: string | undefined,
+      response: ModelObject | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_stability_witness/' +
+        nodeId +
+        '/' +
+        encodeURI(behavior) +
+        '/' +
+        encodeURI(variableName) +
+        '/' +
+        encodeURI('[' + vector + ']'),
+      (error: string | undefined, response: ModelObject | undefined) => {
+        if (callback !== undefined) {
+          callback(error, response);
+        }
+      },
+      'GET'
+    );
+  }
+
   // #region --- Start Computation ---
 
   private processTimestampResponse(
@@ -503,6 +576,208 @@ class ComputeEngine {
       },
       'POST',
       ''
+    );
+  }
+
+  // #endregion
+
+  // #region --- Bifurcation Tree ---
+
+  /** Fetches the bifurcation tree from the compute engine. */
+  public getBifurcationTree(
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_bifurcation_tree',
+      (error: string | undefined, response: NodeDataBE[] | undefined) => {
+        callback?.(error, response);
+      },
+      'GET'
+    );
+  }
+
+  /** Sets the precision of the bifurcation tree in the compute engine.
+   *  Precision is % with up to two decimal places
+   */
+  public setBifurcationTreePrecision(
+    precision: number,
+    callback: (error: string | undefined) => void
+  ): void {
+    const fixedPrecision =
+      precision < 100
+        ? precision.toFixed(2).replace('.', '').slice(0, 4)
+        : '10000';
+
+    this.backendRequest(
+      '/apply_tree_precision/' + fixedPrecision,
+      (error: string | undefined, _response: any) => {
+        if (callback !== undefined) {
+          callback(error);
+        }
+      },
+      'POST'
+    );
+  }
+
+  /** Automatically expands the bifurcation tree at the given node and depth. */
+  public autoExpandBifurcationTree(
+    nodeId: number,
+    depth: number,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/auto_expand/' + nodeId + '/' + depth,
+      (error: string | undefined, nodes: NodeDataBE[] | undefined) => {
+        if (callback !== undefined) {
+          callback(error, nodes);
+        }
+      },
+      'POST'
+    );
+  }
+
+  public getStabilityData(
+    nodeId: number,
+    behavior: StabilityAnalysisModes,
+    callback: (
+      error: string | undefined,
+      behavior: StabilityAnalysisModes,
+      data: Array<StabilityAnalysisVariable> | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/get_stability_data/' + nodeId + '/' + behavior,
+      (
+        error: string | undefined,
+        response: Array<StabilityAnalysisVariable> | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, behavior, response);
+        }
+      },
+      'GET'
+    );
+  }
+
+  /** Deletes a bifurcation decision from the compute engine. */
+  public deleteBifurcationDecision(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      node: NodeDataBE | undefined,
+      removedNodes: number[]
+    ) => void
+  ) {
+    this.backendRequest(
+      '/revert_decision/' + nodeId,
+      (
+        error: string | undefined,
+        response: DeleteBifDecisionResponse | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, response?.node ?? undefined, response?.removed ?? []);
+        }
+      },
+      'POST'
+    );
+  }
+
+  /** Gets decisions for a specific node from the compute engine. */
+  public getDecisions(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      decisions: Decisions | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/get_attributes/' + nodeId,
+      (error: string | undefined, response: Decisions | undefined) => {
+        callback?.(error, response);
+      },
+      'GET'
+    );
+  }
+
+  /** Makes a decision for a specific node in the compute engine. */
+  public makeDecision(
+    nodeId: number,
+    decisionId: number,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataBE[] | undefined
+    ) => void
+  ) {
+    this.backendRequest(
+      '/apply_attribute/' + nodeId + '/' + decisionId,
+      (error: string | undefined, nodes: NodeDataBE[] | undefined) => {
+        if (callback !== undefined) {
+          callback(error, nodes);
+        }
+      },
+      'POST'
+    );
+  }
+
+  // #endregion
+
+  // #region --- Attractor Visualizer ---
+
+  /** Gets the attractor for a specific behavior. */
+  public getAttractorByBehavior(
+    behavior: string,
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest('/get_attractors/' + behavior, callback, 'GET', null);
+  }
+
+  /** Gets the attractor for a specific node in the AttractorBifurcationExplorer. */
+  public getBifurcationExplorerAttractor(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_tree_attractors/' + nodeId,
+      callback,
+      'GET',
+      null
+    );
+  }
+
+  public getStabilityAnalysisAttractor(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[],
+    callback: (
+      error: string | undefined,
+      attractorData: AttractorData | undefined
+    ) => void
+  ): void {
+    this.backendRequest(
+      '/get_stability_attractors/' +
+        nodeId +
+        '/' +
+        encodeURI(behavior) +
+        '/' +
+        encodeURI(variableName) +
+        '/' +
+        encodeURI('[' + vector + ']'),
+      callback,
+      'GET',
+      null
     );
   }
 

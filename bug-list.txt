@@ -3,3 +3,5 @@ selected variable unselects after leaving (unmounting) the ModelEditorTabContent
 random occurence = Uncaught TypeError: can't access property "getElementById", this._cytoscape is undefined -- maybe fixed
 
 chrome sizing errors -- ModelEditor buttons not centered, scrollbar problem
+
+budding yeast iron error - drops compute engine

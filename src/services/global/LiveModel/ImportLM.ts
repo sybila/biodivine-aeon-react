@@ -15,14 +15,20 @@ import { LiveModel, type LiveModelClass } from './LiveModel';
 // } from "./Todo-imports";
 
 class ImportLM {
-  private _liveModel: LiveModelClass;
+  // #region --- Properties and Constructor ---
+
+  private liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
-    this._liveModel = liveModel;
+    this.liveModel = liveModel;
   }
 
+  // #endregion
+
+  // #region --- Import Aeon helper functions ---
+
   /** Add variable for importAeon function, returns id of the variable. */
-  private _addVariableImport(
+  private addVariableImport(
     variable: Variable | undefined,
     name: string,
     position: any,
@@ -33,10 +39,10 @@ class ImportLM {
     }
 
     if (control == undefined) {
-      return this._liveModel.Variables.addVariable(true, position, name);
+      return this.liveModel.Variables.addVariable(true, position, name);
     }
 
-    return this._liveModel.Variables.addVariable(
+    return this.liveModel.Variables.addVariable(
       true,
       position,
       name,
@@ -46,7 +52,7 @@ class ImportLM {
   }
 
   /** Adds variables which are not connected to any other variable. */
-  private _insertNotConnected(
+  private insertNotConnected(
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
@@ -59,7 +65,7 @@ class ImportLM {
         continue;
       }
 
-      this._addVariableImport(
+      this.addVariableImport(
         useVariablesStore.getState().variableFromName(variable),
         variable,
         positions[variable],
@@ -69,19 +75,19 @@ class ImportLM {
   }
 
   /** Add all regulations, creating variables if needed. */
-  private _setRegulations(
+  private setRegulations(
     regulations: any[],
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
     for (const template of regulations) {
-      const regulator = this._addVariableImport(
+      const regulator = this.addVariableImport(
         useVariablesStore.getState().variableFromName(template.regulatorName),
         template.regulatorName,
         positions[template.regulatorName],
         control[template.regulatorName]
       );
-      const target = this._addVariableImport(
+      const target = this.addVariableImport(
         useVariablesStore.getState().variableFromName(template.targetName),
         template.targetName,
         positions[template.targetName],
@@ -96,7 +102,7 @@ class ImportLM {
       }
 
       // Create the actual regulation...
-      this._liveModel.Regulations.addRegulation(
+      this.liveModel.Regulations.addRegulation(
         true,
         regulator,
         target,
@@ -107,14 +113,14 @@ class ImportLM {
   }
 
   /** Set all update functions */
-  private _setUpdateFunctions(
+  private setUpdateFunctions(
     updateFunctions: Record<string, string>,
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
     let keys = Object.keys(updateFunctions);
     for (let key of keys) {
-      const variable = this._addVariableImport(
+      const variable = this.addVariableImport(
         useVariablesStore.getState().variableFromName(key),
         key,
         positions[key],
@@ -130,7 +136,7 @@ class ImportLM {
 
       // We actually have to also set the function in the model because we don't update it from the set method...
       //ModelEditor.setUpdateFunction(variable, updateFunctions[key]);
-      let error = this._liveModel.UpdateFunctions.setUpdateFunction(
+      let error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
         updateFunctions[key]
       );
@@ -146,7 +152,7 @@ class ImportLM {
    * modelString is model in the form of Aeon string
    * All the other parameters are empty objects to be filled with data from the parsed Aeon string
    */
-  private _parseAeonFile(
+  private parseAeonFile(
     modelString: string,
     regulations: any[],
     positions: Record<string, any>,
@@ -247,15 +253,18 @@ class ImportLM {
     return [modelName, modelDescription.replace(/\\n/g, '\n')];
   }
 
+  // #endregion
+
+  // #region --- Import Aeon ---
+
   /**
-   * Import model from Aeon file.
-   * If the import is successful, return undefined,
-   * otherwise return an error string.
+   * Import model from Aeon file, load it into the live model and save it as the main model.
+   * If the import is successful, return true.
    */
   public importAeon(modelString: string, erasePossible = false): boolean {
     if (
-      (!erasePossible && !this._liveModel._modelModified()) ||
-      (!this._liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
+      (!erasePossible && !this.liveModel._modelModified()) ||
+      (!this.liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
     ) {
       // If there is some model loaded, let the user know it will be
       // overwritten. If he decides not to do it, just return...
@@ -263,7 +272,7 @@ class ImportLM {
     }
 
     // Disable on-the-fly server checks.
-    this._liveModel._disable_dynamic_validation = true;
+    this.liveModel._disable_dynamic_validation = true;
 
     let modelName = '';
     let modelDescription = '';
@@ -273,7 +282,7 @@ class ImportLM {
     let updateFunctions: Record<string, string> = {};
     let results: Record<string, any> = {};
 
-    [modelName, modelDescription] = this._parseAeonFile(
+    [modelName, modelDescription] = this.parseAeonFile(
       modelString,
       regulations,
       positions,
@@ -282,32 +291,34 @@ class ImportLM {
       results
     ) as [string, string];
 
-    this._liveModel.clear();
+    this.liveModel.clear();
 
     // Set model metadata
     LiveModel.Info.setModelName(modelName);
     LiveModel.Info.setModelDescription(modelDescription);
 
-    this._setRegulations(regulations, positions, control);
-    this._liveModel.Import._setUpdateFunctions(
+    this.setRegulations(regulations, positions, control);
+    this.liveModel.Import.setUpdateFunctions(
       updateFunctions,
       positions,
       control
     );
-    this._insertNotConnected(positions, control);
+    this.insertNotConnected(positions, control);
 
     CytoscapeME.fit();
 
     // Re-enable server checks and run them.
-    this._liveModel._disable_dynamic_validation = false;
+    this.liveModel._disable_dynamic_validation = false;
     for (const { id } of useVariablesStore.getState().getAllVariables()) {
-      this._liveModel.UpdateFunctions._validateUpdateFunction(id);
+      this.liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
 
     //UI.Visible.closeContent();
 
     return true; // no error
   }
+
+  // #endregion
 
   // #region --- Import from file ---
 
@@ -342,6 +353,7 @@ class ImportLM {
         }
 
         this.importAeon(aeonModel);
+        this.liveModel.Models.addModel(aeonModel, 'main');
       } catch (error: any) {
         Message.showError(
           `Import Error: ${error?.message ?? 'Parsing file failed'}`

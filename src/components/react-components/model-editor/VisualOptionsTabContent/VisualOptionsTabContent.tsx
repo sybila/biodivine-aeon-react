@@ -2,11 +2,7 @@ import { useState } from 'react';
 import CytoscapeME from '../../../../services/model-editor/CytoscapeME/CytoscapeME';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-
-type VisualOptionsButtonSection = {
-  headerText: string;
-  buttons: Array<[string, () => void, boolean]>;
-};
+import type { VisualOptionsButtonSection } from '../../../../types';
 
 const VisualOptionsTabContent = () => {
   const [activeButtons, setActiveButtons] = useState<Record<string, boolean>>({

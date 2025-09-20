@@ -1,15 +1,27 @@
 import type {
+  AttractorData,
   AttractorResults,
   ComputationModes,
   ComputationStatus,
   ControlComputationParams,
   ControlResults,
+  Decisions,
+  ModelObject,
+  NodeDataBE,
+  StabilityAnalysisModes,
+  StabilityAnalysisVariable,
 } from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import { Loading } from '../../../components/lit-components/loading-wrapper';
+import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import router from '../../../router';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -189,6 +201,70 @@ class ComputationManagerClass {
 
   // #endregion
 
+  // #region --- Open Witness ---
+
+  public openWitnessCallback(
+    error: string | undefined,
+    response: ModelObject | undefined
+  ): void {
+    if (error || !response || !response.model) {
+      Message.showError(`Error opening witness: "${error ?? 'Unknown error'}"`);
+    } else {
+      const modelId = LiveModel.Models.addModel(response.model, 'witness');
+      LiveModel.Models.loadModel(modelId);
+      useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
+        LiveModel.Models.loadModel(modelId);
+      });
+      router.navigate({ to: `/witness` });
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
+  public openWitnessAttractorAnalysis(behaviorString: string): void {
+    if (!behaviorString || behaviorString.length === 0) {
+      Message.showError(
+        'Cannot open witness: No behavior string provided for the attractor.'
+      );
+      return;
+    }
+
+    Loading.startLoading();
+    this.computeEngine.getWitnessAttractorAnalysis(
+      behaviorString,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
+  public openWitnessBifurcationExplorer(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.getWitnessBifurcationExplorer(
+      nodeId,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  /** Get witness for stability analysis and opens new witness tab */
+  public openWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
+  ): void {
+    Loading.startLoading();
+    this.computeEngine.getWitnessStabilityAnalysis(
+      nodeId,
+      variableName,
+      behavior,
+      vector,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  // #endregion
+
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis(): void {
@@ -204,6 +280,259 @@ class ComputationManagerClass {
 
     // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
+  }
+
+  // #endregion
+
+  // #region --- Attractor Bifurcation Explorer ---
+
+  /** Callback for fetching the bifurcation tree.
+   * Sets the bifurcation tree in the AttractorBifurcationExplorer.
+   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer */
+  private getBifurcationTreeCallback(
+    error: string | undefined,
+    nodes: NodeDataBE[] | undefined,
+    fit: boolean
+  ): void {
+    if (error || !nodes) {
+      Message.showError(
+        `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(nodes, fit);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the bifurcation tree from the compute engine.
+   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
+   */
+  public getBifurcationTree(fit: boolean): void {
+    Loading.startLoading();
+    this.computeEngine.getBifurcationTree((error, nodes) =>
+      this.getBifurcationTreeCallback(error, nodes, fit)
+    );
+  }
+
+  /** Callback for setting the bifurcation tree precision. Checks for errors and updates the UI accordingly. */
+  private setBifurcationTreePrecisionCallback(error: string | undefined): void {
+    if (error) {
+      Message.showError(`Error setting bifurcation tree precision: ${error}`);
+      return;
+    }
+
+    this.getBifurcationTree(false);
+  }
+
+  /** Sets the precision of the bifurcation tree.
+   *  Precision is % with up to two decimal places
+   */
+  public setBifurcationTreePrecision(precision: number): void {
+    this.computeEngine.setBifurcationTreePrecision(
+      precision,
+      this.setBifurcationTreePrecisionCallback.bind(this)
+    );
+  }
+
+  /** Callback for auto-expanding the bifurcation tree. Sets the expanded nodes in the AttractorBifurcationExplorer and unselects selected node. */
+  private autoExpandBifurcationTreeCallback(
+    error: string | undefined,
+    nodes: NodeDataBE[] | undefined
+  ): void {
+    if (error || !nodes) {
+      Message.showError(
+        `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(nodes, true);
+    }
+
+    AttractorBifurcationExplorer.refreshSelection();
+
+    Loading.endLoading();
+  }
+
+  /** Automatically expands the bifurcation tree at the given node and depth. */
+  public autoExpandBifurcationTree(nodeId: number, depth: number): void {
+    Loading.startLoading();
+    this.computeEngine.autoExpandBifurcationTree(
+      nodeId,
+      depth,
+      this.autoExpandBifurcationTreeCallback.bind(this)
+    );
+  }
+
+  /** Callback for deleting a bifurcation decision. */
+  private deleteBifurcationDecisionCallback(
+    error: string | undefined,
+    node: NodeDataBE | undefined,
+    removed: number[] | undefined
+  ): void {
+    if (error || !node) {
+      Message.showError(
+        `Error deleting bifurcation decision: ${error ?? 'Internal error'}`
+      );
+    } else {
+      if (!removed || removed.length === 0) {
+        Message.showInfo(
+          `Bifurcation decision for node ${node.id} was deleted, but no nodes were removed.`
+        );
+      }
+      AttractorBifurcationExplorer.removeFromCytoscape(node, removed ?? []);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Deletes a bifurcation decision by node ID. */
+  public deleteBifurcationDecision(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.deleteBifurcationDecision(
+      nodeId,
+      this.deleteBifurcationDecisionCallback.bind(this)
+    );
+  }
+
+  /** Callback for fetching stability data. */
+  private getStabilityDataCallback(
+    error: string | undefined,
+    behavior: StabilityAnalysisModes,
+    data: Array<StabilityAnalysisVariable> | undefined
+  ): void {
+    if (error || !data) {
+      Message.showError(
+        `Error fetching stability data: ${error ?? 'Internal error'}`
+      );
+    } else {
+      useBifurcationExplorerStatus.getState().loadStabilityData({
+        computedBehavior: behavior,
+        stabilityAnalysis: data,
+      });
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the stability data for a specific node and behaviour.
+   * @param nodeId - (number) The ID of the node to fetch stability data for.
+   * @param behaviour - (StabilityAnalysisModes) The behaviour mode to use for fetching stability data.
+   */
+  public getStabilityData(
+    nodeId: number,
+    behaviour: StabilityAnalysisModes
+  ): void {
+    Loading.startLoading();
+    this.computeEngine.getStabilityData(
+      nodeId,
+      behaviour,
+      this.getStabilityDataCallback.bind(this)
+    );
+  }
+
+  /** Callback for fetching decisions. */
+  public getDecisionsCallback(
+    error: string | undefined,
+    decisions: Decisions | undefined
+  ) {
+    if (error || !decisions) {
+      Message.showError(
+        `Error fetching decisions: ${error ?? 'Internal error'}`
+      );
+    } else {
+      const formatedDecisions =
+        AttractorBifurcationExplorer.formatClassesDecisions(decisions);
+      useBifurcationExplorerStatus.getState().loadDecisions(formatedDecisions);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches the decisions for a specific node. */
+  public getDecisions(nodeId: number): void {
+    Loading.startLoading();
+    this.computeEngine.getDecisions(
+      nodeId,
+      this.getDecisionsCallback.bind(this)
+    );
+  }
+
+  public makeDecisionCallback(
+    error: string | undefined,
+    node: NodeDataBE[] | undefined
+  ): void {
+    if (error || !node) {
+      Message.showError(`Error making decision: ${error ?? 'Internal error'}`);
+    } else {
+      AttractorBifurcationExplorer.insertBifurcationTree(node, true, false);
+      AttractorBifurcationExplorer.refreshSelection();
+    }
+
+    Loading.endLoading();
+  }
+
+  public makeDecision(nodeId: number, decisionId: number): void {
+    Loading.startLoading();
+    this.computeEngine.makeDecision(
+      nodeId,
+      decisionId,
+      this.makeDecisionCallback.bind(this)
+    );
+  }
+
+  // #endregion
+
+  // #region --- Attractor Visualizer ---
+
+  /** Callback for attractor getting functions.
+   * Handles errors and inserts attractor data into AttractorVisualizer */
+  private getAttractorCallback(
+    error: string | undefined,
+    attractorData: AttractorData | undefined
+  ) {
+    if (error || !attractorData) {
+      Message.showError(
+        `Error fetching attractor: ${error ?? 'Internal error'}`
+      );
+    } else {
+      AttractorVisualizer.insertAttractorData(attractorData, true);
+    }
+
+    Loading.endLoading();
+  }
+
+  /** Fetches an attractor by its behavior string. Used by the results window.*/
+  public getAttractorByBehavior(behavior: string) {
+    Loading.startLoading();
+    this.computeEngine.getAttractorByBehavior(
+      behavior,
+      this.getAttractorCallback.bind(this)
+    );
+  }
+
+  /** Fetches an attractor for node in the AttractorBifurcationExplorer */
+  public getBifurcationExplorerAttractor(nodeId: number) {
+    Loading.startLoading();
+    this.computeEngine.getBifurcationExplorerAttractor(
+      nodeId,
+      this.getAttractorCallback.bind(this)
+    );
+  }
+
+  public getStabilityAnalysisAttractor(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
+  ) {
+    Loading.startLoading();
+    this.computeEngine.getStabilityAnalysisAttractor(
+      nodeId,
+      variableName,
+      behavior,
+      vector,
+      this.getAttractorCallback.bind(this)
+    );
   }
 
   // #endregion

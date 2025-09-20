@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import ComputationModeButton from './ComputationModeButton/ComputationModeButton';
 import type { ComputationModes } from '../../../../types';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import ControlCompParams from './ControlCompParams/ControlCompParams';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
 
 const StartCompTabContent: React.FC = () => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
@@ -30,7 +30,7 @@ const StartCompTabContent: React.FC = () => {
     const secondCol: Array<ComputationModes> = ['Control'];
 
     const renderButton = (mode: ComputationModes) => (
-      <ComputationModeButton
+      <ArrowSelectButton
         key={mode}
         active={computationMode === mode}
         text={mode}
