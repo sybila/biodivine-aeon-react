@@ -18,7 +18,6 @@ type ResultsState = {
 /** Zustand store for managing computation results.
  * Provides actions to set and clear the results.
  */
-
 const useResultsStatus = create<ResultsState>()((set) => ({
   type: undefined,
   results: undefined,
