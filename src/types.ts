@@ -136,7 +136,8 @@ export type TabType =
   | 'Model Editor'
   | 'Attractor Bifurcation Explorer'
   | 'Attractor Visualizer'
-  | 'Witness';
+  | 'Witness'
+  | 'Control Perturbations Table';
 
 export type TabInfo = {
   /** Unique identifier for the tab */
