@@ -6,23 +6,17 @@ import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
 
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
-import { useNavigate } from '@tanstack/react-router';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
 }) => {
-  const navigate = useNavigate();
   const openAttractorBifurcationExplorer = () => {
-    navigate({
-      to: '/attractor-bifurcation-explorer',
-    });
-
     useTabsStore
       .getState()
       .addTab(
-        'attractor-bifurcation-explorer',
+        '/attractor-bifurcation-explorer',
         'Attractor Bifurcation Explorer'
       );
   };

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import type { TabInfo, TabType } from '../../types';
 import { LiveModel } from '../../services/global/LiveModel/LiveModel';
+import router from '../../router';
+import { Loading } from '../../components/lit-components/loading-wrapper';
 
 type TabsState = {
   /** Property containing information about all opened tabs. */
@@ -8,11 +10,11 @@ type TabsState = {
   /** Property containing the ID of the next created tab. */
   idNow: number;
   /** Adds a new tab. */
-  addTab: (name: string, type: TabType, onClick?: () => void) => number;
+  addTab: (path: string, type: TabType, onClick?: () => void) => number;
   /** Removes a tab by ID. */
   removeTab: (id: number) => void;
   /** Sets the active tab by ID. */
-  setActiveTab: (id: number) => void;
+  setActiveTab: (id: number, navigate?: boolean) => void;
   /** Retrieves all opened tabs. */
   getAllTabs: () => TabInfo[];
   /** Retrieves a tab by ID. */
@@ -76,7 +78,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
     });
   },
 
-  setActiveTab: (id: number) => {
+  setActiveTab: (id: number, navigate: boolean = true) => {
+    Loading.startLoading();
     set((state) => {
       const newTabs = { ...state.openedTabs };
       Object.values(newTabs).forEach((tab) => {
@@ -84,6 +87,12 @@ const useTabsStore = create<TabsState>((set, get) => ({
       });
       return { openedTabs: newTabs };
     });
+
+    const tab = get().openedTabs[id];
+    if (navigate && tab && tab.path) {
+      router.navigate({ to: tab.path });
+    }
+    Loading.endLoading();
   },
 
   getAllTabs: () => Object.values(get().openedTabs),

@@ -1,5 +1,4 @@
 import { Message } from '../../components/lit-components/message-wrapper';
-import router from '../../router';
 import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import useTabsStore from '../../stores/Navigation/useTabsStore';
 import type {
@@ -97,13 +96,11 @@ class AttractorVisualizerClass {
       result = this.processAttractorData(result);
       useTabsStore
         .getState()
-        .addTab('attractor-visualizer', 'Attractor Visualizer', () => {
+        .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
           this.reloadVisualizer();
         });
     }
-
-    router.navigate({ to: '/attractor-visualizer' });
 
     this.attractorData = result;
     this.reloadVisualizer();

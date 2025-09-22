@@ -21,7 +21,6 @@ import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import router from '../../../router';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -215,7 +214,6 @@ class ComputationManagerClass {
       useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
         LiveModel.Models.loadModel(modelId);
       });
-      router.navigate({ to: `/witness` });
     }
 
     Loading.endLoading();
