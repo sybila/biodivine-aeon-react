@@ -169,6 +169,10 @@ class ComputationManagerClass {
       }
     }
 
+    // Todo - add warning
+    useResultsStatus.getState().clear();
+    useTabsStore.getState().clear();
+
     return;
   }
 
@@ -276,7 +280,6 @@ class ComputationManagerClass {
       return;
     }
 
-    // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
   }
 
@@ -550,7 +553,6 @@ class ComputationManagerClass {
       return;
     }
 
-    // Todo delete old results
     this.computeEngine.startControlComputation(
       model,
       oscillation,
