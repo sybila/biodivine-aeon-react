@@ -62,7 +62,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           </div>
         </div>
 
-        <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] items-center justify-center gap-2 overflow-auto">
+        <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] gap-2 overflow-auto">
           {results?.data
             .sort((a, b) => b.sat_count - a.sat_count)
             .map((result, index) => (
