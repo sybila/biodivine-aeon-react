@@ -10,12 +10,15 @@ import StatusBar from '../../global/StatusBar/StatusBar';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import TabBar from '../../global/TabBar/TabBar';
+import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
 const BaseLayout = () => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
+
+  const loadedResults = useResultsStatus((state) => state.results);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +35,12 @@ const BaseLayout = () => {
       navigate({ to: '/model-editor' });
     }
   }, []);
+
+  useEffect(() => {
+    if (loadedResults) {
+      setActiveOverlayWindow('Results');
+    }
+  }, [loadedResults]);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
