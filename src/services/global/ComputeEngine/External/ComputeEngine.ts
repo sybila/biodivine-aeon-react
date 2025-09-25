@@ -5,7 +5,9 @@ import type {
   ComputationModes,
   ComputationStatus,
   ControlComputationStats,
+  ControlPreComputationInfo,
   ControlResult,
+  ControlResultNoId,
   ControlResults,
   Decisions,
   ModelObject,
@@ -34,6 +36,9 @@ class ComputeEngine {
   private waitingForResults: boolean = false;
 
   private lastComputationType: ComputationModes | undefined = undefined;
+
+  private lastComputationData: ControlPreComputationInfo | undefined =
+    undefined;
 
   private setResults: (
     warning: string | undefined,
@@ -442,6 +447,8 @@ class ComputeEngine {
     );
   }
 
+  // #endregion
+
   // #region --- Start Computation ---
 
   private processTimestampResponse(
@@ -791,6 +798,7 @@ class ComputeEngine {
     minRobustness: number,
     maxSize: number,
     maxNumberResults: number,
+    preComputationInfo: ControlPreComputationInfo,
     callback:
       | ((
           warning: string | undefined,
@@ -802,6 +810,7 @@ class ComputeEngine {
       | undefined = undefined
   ): void {
     this.waitingForResults = true;
+    this.lastComputationData = preComputationInfo;
 
     this.backendRequest(
       `/start_control_computation/${oscillation}/${
@@ -855,9 +864,14 @@ class ComputeEngine {
         error: string | undefined,
         response: ControlComputationStats | undefined
       ) => {
+        if (error !== undefined || !response || !this.lastComputationData) {
+          error =
+            'Cannot get Control computation statistics: Internal Compute Engine Error';
+        }
+
         this.getResultsCallback(
           error,
-          !response
+          !response || !this.lastComputationData
             ? undefined
             : {
                 perturbations: results,
@@ -866,6 +880,7 @@ class ComputeEngine {
                   maximalPerturbationRobustness:
                     response.maximalPerturbationRobustness * 100,
                 },
+                preComputationInfo: this.lastComputationData,
               },
           'Control'
         );
@@ -874,17 +889,34 @@ class ComputeEngine {
     );
   }
 
+  /** Adds IDs to each perturbation in the control results. */
+  private addIdsToControlResults(results: ControlResultNoId[]) {
+    const idPerturbations = [];
+    for (let i = 0; i < results.length; i++) {
+      idPerturbations.push({ id: i + 1, ...results[i] });
+    }
+    return idPerturbations;
+  }
+
   /** Get control computation results and statistics. */
   private getControlResults() {
     this.backendRequest(
       '/get_control_results',
-      (error: string | undefined, response: ControlResult[] | undefined) => {
-        if (error !== undefined || !response) {
+      (
+        error: string | undefined,
+        response: ControlResultNoId[] | undefined
+      ) => {
+        if (error !== undefined || !response || !this.lastComputationData) {
+          if (error === undefined && (!response || !this.lastComputationData)) {
+            error = 'Cannot get Control results: Internal Compute Engine Error';
+          }
+
           this.getResultsCallback(error, undefined, 'Control');
           return;
         }
 
-        this.getControlComputationStats(response);
+        const perturbationsWithIds = this.addIdsToControlResults(response);
+        this.getControlComputationStats(perturbationsWithIds);
       },
       'GET'
     );

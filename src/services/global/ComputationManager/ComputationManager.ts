@@ -544,6 +544,8 @@ class ComputationManagerClass {
     const model = LiveModel.Export.exportAeon();
 
     const oscillation = LiveModel.Control.getOscillation() ?? 'Allowed';
+    const phenotypeControlEnabled =
+      LiveModel.Control.getPhenotypeControlEnabledVars();
 
     try {
       this.computationCanStart(model);
@@ -559,6 +561,7 @@ class ComputationManagerClass {
       this.getMinRobustness(),
       this.getMaxSize(),
       this.getMaxNumberOfResults(),
+      { ...phenotypeControlEnabled, oscillation: oscillation },
       this.setComputationStatus
     );
   }
