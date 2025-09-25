@@ -9,12 +9,12 @@ import ComputationManager from '../ComputationManager/ComputationManager';
 
 /** Manage variables in the live model */
 class VariablesLM {
-  private _idCounter = 0;
+  private idCounter = 0;
 
-  private _liveModel: LiveModelClass;
+  private liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
-    this._liveModel = liveModel;
+    this.liveModel = liveModel;
   }
 
   // #region --- Variable Actions ---
@@ -27,11 +27,11 @@ class VariablesLM {
     controllable: boolean = true,
     phenotype: any = null
   ): number | undefined {
-    if (!modAllowed && !this._liveModel._modelModified()) {
+    if (!modAllowed && !this.liveModel._modelModified()) {
       return;
     }
 
-    const id = this._idCounter++;
+    const id = this.idCounter++;
     const variableName = name ?? `v_${id + 1}`;
 
     const variable: Variable = {
@@ -54,14 +54,14 @@ class VariablesLM {
     // Todo
     //UI.Visible.setQuickHelpVisible(false);
 
-    this._liveModel.UpdateFunctions._validateUpdateFunction(id);
-    this._liveModel.Export.saveModel();
+    this.liveModel.UpdateFunctions._validateUpdateFunction(id);
+    this.liveModel.Export.saveModel();
     return id;
   }
 
   /** Remove a variable by its ID */
   public removeVariable(id: number, force = false): void {
-    if (!force && !this._liveModel._modelModified()) return;
+    if (!force && !this.liveModel._modelModified()) return;
 
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
@@ -75,47 +75,47 @@ class VariablesLM {
         .filter((reg) => reg.regulator === id || reg.target === id);
 
       for (const reg of toRemove) {
-        this._liveModel.Regulations._removeRegulation(reg);
+        this.liveModel.Regulations._removeRegulation(reg);
         updateTargets.push(reg.target);
       }
 
       ComputationManager.resetMaxSize();
 
       useVariablesStore.getState().removeVariable(id);
-      this._liveModel.Control.removeControlInfo(id);
-      this._liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
+      this.liveModel.Control.removeControlInfo(id);
+      this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
       CytoscapeME.removeNode(id);
 
-      if (this._liveModel.isEmpty()) {
+      if (this.liveModel.isEmpty()) {
         //UI.Visible.setQuickHelpVisible(true);
       }
 
-      this._liveModel.Export.saveModel();
+      this.liveModel.Export.saveModel();
 
       for (const affectedId of updateTargets) {
         const fn = useUpdateFunctionsStore
           .getState()
           .getUpdateFunctionId(affectedId);
         if (fn !== undefined) {
-          this._liveModel.UpdateFunctions.setUpdateFunction(
+          this.liveModel.UpdateFunctions.setUpdateFunction(
             affectedId,
             fn.functionString
           );
         }
-        this._liveModel.UpdateFunctions._validateUpdateFunction(affectedId);
+        this.liveModel.UpdateFunctions._validateUpdateFunction(affectedId);
       }
     }
   }
 
   /** Rename a variable by its ID */
   public renameVariable(id: number, newName: string): string | undefined {
-    if (!this._liveModel._modelModified()) return;
+    if (!this.liveModel._modelModified()) return;
 
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
 
-    const error = this._checkVariableName(id, newName);
+    const error = this.checkVariableName(id, newName);
     if (error !== undefined) {
       return `${newName} ${error}`; //Strings.invalidVariableName(newName)
     }
@@ -129,11 +129,11 @@ class VariablesLM {
 
     for (const reg of useRegulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
-        this._liveModel.Regulations._regulationChanged(reg);
+        this.liveModel.Regulations._regulationChanged(reg);
       }
     }
 
-    this._liveModel.Export.saveModel();
+    this.liveModel.Export.saveModel();
     return undefined;
   }
 
@@ -194,7 +194,7 @@ class VariablesLM {
   }
 
   /** Check if a variable name is valid */
-  private _checkVariableName(id: number, name: string): string | undefined {
+  private checkVariableName(id: number, name: string): string | undefined {
     if (typeof name !== 'string') return 'Name must be a string.';
     if (!/^[a-z0-9{}_]+$/i.test(name)) {
       return 'Name can only contain letters, numbers and `_`, `{`, `}`.';
