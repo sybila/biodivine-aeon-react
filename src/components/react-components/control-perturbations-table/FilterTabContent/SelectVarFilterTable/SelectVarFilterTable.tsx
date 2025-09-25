@@ -5,6 +5,7 @@ import { Loading } from '../../../../lit-components/loading-wrapper';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 
 const SelectVarFilterTable: React.FC<{
   variableNames: Array<string>;
@@ -97,7 +98,12 @@ const SelectVarFilterTable: React.FC<{
             />
           ))}
         </div>
-        <div></div>
+
+        <SelectionButtons
+          variableNames={variableNames}
+          selectedVariables={selectedVariables}
+          setSelectedVariables={setSelectedVariables}
+        />
       </section>
 
       <TextInputReact
