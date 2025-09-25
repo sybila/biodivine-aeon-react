@@ -1,78 +1,29 @@
-import { memo, useMemo, useState, type JSX } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
+import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
   ({
     perturbationId,
     numberOfInterpretations,
     robustness,
-    perturbationArray,
+    perturbation,
     cellSizes,
     useTextVisualization = false,
   }) => {
     const [textVisualization, setTextVisualization] =
       useState<boolean>(useTextVisualization);
 
-    /** Formats perturbation array into tuple of two JSX element.
-     *  On index 0 the element contains perturbation variables colored (green for positive, red for negative),
-     *  on index 1 the element contains perturbation variables and their values in text (VariableName: true, VariableName2: false).
-     *  Each tuple represents one variable in the perturbation.
-     */
-    const formatPerturbation = () => {
-      if (perturbationArray.length === 0) {
-        return [
-          <span className="flex flex-row h-full w-fit text-black">
-            {'{ }'}
-          </span>,
-          <span className="flex flex-row h-full w-fit text-black">
-            No Perturbation
-          </span>,
-        ];
-      }
+    const perturbationArray = useMemo(() => {
+      return Object.entries(perturbation);
+    }, [perturbation]);
 
-      const coloredPerturbation: Array<JSX.Element> = [];
-      const textPerturbation: Array<JSX.Element> = [];
-
-      perturbationArray.forEach(([key, value], index) => {
-        coloredPerturbation.push(
-          <div key={key} className="flex flex-row h-full w-fit">
-            <span
-              style={{
-                color: `${
-                  value > 0 ? 'var(--color-green)' : 'var(--color-red)'
-                }`,
-              }}
-            >
-              {key}
-            </span>
-            {index < perturbationArray.length - 1 && <span>,</span>}
-          </div>
-        );
-
-        textPerturbation.push(
-          <div key={key} className="flex flex-row h-full w-fit">
-            <span className="">{`${key}: ${
-              value > 0 ? 'true' : 'false'
-            }`}</span>
-            {index < perturbationArray.length - 1 && <span>,</span>}
-          </div>
-        );
-      });
-
-      return [
-        <div className="flex flex-row h-full w-fit gap-1">
-          {coloredPerturbation}
-        </div>,
-        <div className="flex flex-row h-full w-fit gap-1 text-black">
-          {textPerturbation}
-        </div>,
-      ];
-    };
-
+    /** Memoized formatted perturbation in the form of JSX elements [coloredFormat, textFormat] */
     const formatedPerturbation = useMemo(() => {
-      return formatPerturbation();
+      return ControlPerturbationsTable.formatPerturbation(perturbationArray);
     }, [perturbationArray]);
 
+    /** Data for each cell inside the row */
     const cells = [
       perturbationId,
       textVisualization || useTextVisualization
@@ -80,7 +31,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
         : formatedPerturbation[0],
       perturbationArray.length,
       numberOfInterpretations,
-      robustness.toFixed(2),
+      (robustness * 100).toFixed(2),
     ];
 
     /** Handles click events for each cell */

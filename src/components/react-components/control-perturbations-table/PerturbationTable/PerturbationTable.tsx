@@ -1,16 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import type { ControlResults } from '../../../../types';
+import { type ControlResults } from '../../../../types';
 import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
-
-const PerturbationTable: React.FC = () => {
+import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
+import { Loading } from '../../../lit-components/loading-wrapper';
+const PerturbationTable: React.FC<{
+  startFilter: boolean;
+  startSort: boolean;
+  setNextPageExists: (value: boolean) => void;
+}> = ({ startFilter, startSort, setNextPageExists }) => {
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
 
   const perturbations = useResultsStatus((state) =>
     state.type === 'Control' && state.results
       ? (state.results as ControlResults).perturbations
-      : []
+      : undefined
   );
+
+  if (!perturbations) {
+    return null;
+  }
+
+  const [filteredPerts, nextPageExists] = useMemo(() => {
+    Loading.startLoading();
+    const result = ControlPerturbationsTable.filterPerturbations(perturbations);
+    Loading.endLoading();
+    return result;
+  }, [perturbations, startFilter]);
+
+  useEffect(() => {
+    setNextPageExists(nextPageExists);
+  }, [nextPageExists, setNextPageExists]);
 
   /** Table headers for the perturbation table.
    *  [header name, onClick function]
@@ -20,7 +40,7 @@ const PerturbationTable: React.FC = () => {
     ['Perturbation', () => setPerturbationsAsText((prev) => !prev)],
     ['Perturbation Size', () => null],
     ['Number of Interpretations', () => null],
-    ['Robustness', () => null],
+    ['Robustness (%)', () => null],
   ];
 
   const cellSizes: [string, string, string, string, string] = [
@@ -30,17 +50,6 @@ const PerturbationTable: React.FC = () => {
     '15%',
     '15%',
   ];
-
-  const processedPerts = useMemo(
-    () =>
-      perturbations.map((p, index) => ({
-        perturbationId: index + 1,
-        numberOfInterpretations: p.color_count,
-        robustness: p.robustness,
-        perturbationArray: Object.entries(p.perturbation),
-      })),
-    [perturbations]
-  );
 
   return (
     <section className="flex flex-col justify-center w-[99%] h-fit gap-1 pt-2 pb-2 font-[var(--base-font-family)]">
@@ -65,10 +74,13 @@ const PerturbationTable: React.FC = () => {
         ))}
       </section>
       <div className="flex flex-col w-full h-[calc(100vh-120px)] overflow-y-auto pb-[55px] font-semibold">
-        {processedPerts.map((row) => (
+        {filteredPerts.map((row) => (
           <PerturbationTableRow
-            key={row.perturbationId}
-            {...row}
+            key={row.id}
+            perturbationId={row.id}
+            numberOfInterpretations={row.color_count}
+            robustness={row.robustness}
+            perturbation={row.perturbation}
             cellSizes={cellSizes}
             useTextVisualization={perturbationsAsText}
           />
