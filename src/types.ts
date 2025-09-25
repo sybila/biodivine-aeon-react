@@ -129,9 +129,13 @@ export type ControlResults = {
   preComputationInfo: ControlPreComputationInfo;
 };
 
+export type PerturbationSortFields = 'id' | 'size' | 'interpretations';
+
+export type SortDirection = 'asc' | 'desc';
+
 export type PertTableSort = {
-  field: 'robustness' | 'size' | 'interpretations';
-  direction: 'asc' | 'desc';
+  field: PerturbationSortFields;
+  direction: SortDirection;
 };
 
 // #endregion
