@@ -19,7 +19,7 @@ const SortTabContent: React.FC<{
       />
 
       <SortButtonSection
-        sortDirection={filtersAndSorts.primarySort?.direction || 'desc'}
+        sortDirection={filtersAndSorts.primarySort?.direction || 'asc'}
         sortField={filtersAndSorts.primarySort?.field || 'id'}
         setFunction={(value) => {
           filtersAndSorts.setPrimarySort(value);
@@ -35,18 +35,16 @@ const SortTabContent: React.FC<{
       />
 
       <SortButtonSection
-        sortDirection={filtersAndSorts.secondarySort?.direction || 'desc'}
+        sortDirection={filtersAndSorts.secondarySort?.direction || 'asc'}
         sortField={filtersAndSorts.secondarySort?.field || 'id'}
         setFunction={(value) => {
           filtersAndSorts.setSecondarySort(value);
         }}
         disable={
+          !filtersAndSorts.primarySort ||
+          filtersAndSorts.primarySort?.field === 'id' ||
           filtersAndSorts.secondarySort?.field ===
-            filtersAndSorts.primarySort?.field ||
-          (!filtersAndSorts.secondarySort &&
-            filtersAndSorts.primarySort?.field === 'id') ||
-          (!filtersAndSorts.primarySort &&
-            filtersAndSorts.secondarySort?.field === 'id')
+            filtersAndSorts.primarySort?.field
         }
       />
 

@@ -3,6 +3,7 @@ import usePerturbationFilterSortStore from '../../stores/ControlPerturbationsTab
 import {
   PertVariableFilterStatus,
   type ControlResult,
+  type PertTableSort,
   type Perturbation,
 } from '../../types';
 
@@ -163,6 +164,85 @@ class ControlPerturbationsTable {
 
     return [filteredPerturbations, false];
   }
+  // #endregion
+
+  // #region --- Perturbations Sorting ---
+
+  /** Compares two perturbations by their ID. */
+  private static compareById = (
+    pertA: ControlResult,
+    pertB: ControlResult
+  ): number => {
+    return pertA.id - pertB.id;
+  };
+
+  /** Compares two perturbations by their size (number of variables in the perturbation).
+   *  Used for sorting perturbations.
+   */
+  private static compareBySize = (
+    pertA: ControlResult,
+    pertB: ControlResult
+  ): number => {
+    return (
+      Object.keys(pertA.perturbation).length -
+      Object.keys(pertB.perturbation).length
+    );
+  };
+
+  /** Compares two perturbations by their number of interpretations. */
+  private static compareByInterpretations = (
+    pertA: ControlResult,
+    pertB: ControlResult
+  ): number => {
+    return pertA.color_count - pertB.color_count;
+  };
+
+  private static comparePerturbations = (
+    pertA: ControlResult,
+    pertB: ControlResult,
+    sort: PertTableSort
+  ): number => {
+    switch (sort.field) {
+      case 'size':
+        return this.compareBySize(pertA, pertB);
+      case 'interpretations':
+        return this.compareByInterpretations(pertA, pertB);
+      default:
+        return this.compareById(pertA, pertB);
+    }
+  };
+
+  /** Sorts perturbations by primary and secondary sort criteria from usePerturbationFilterSortStore.
+   *  Returns new array of sorted perturbations.
+   */
+  public static sortPerturbations(
+    perturbations: Array<ControlResult>
+  ): Array<ControlResult> {
+    const sortState = usePerturbationFilterSortStore.getState();
+    const primarySort = sortState.primarySort ?? {
+      field: 'id',
+      direction: 'asc',
+    };
+    const secondarySort = sortState.secondarySort ?? {
+      field: 'id',
+      direction: 'asc',
+    };
+
+    const sortedPerturbations = [...perturbations];
+
+    sortedPerturbations.sort((pertA, pertB) => {
+      let comparison = this.comparePerturbations(pertA, pertB, primarySort);
+      if (comparison === 0 && primarySort.field !== secondarySort.field) {
+        comparison = this.comparePerturbations(pertA, pertB, secondarySort);
+        return secondarySort.direction === 'asc' ? comparison : -comparison;
+      } else {
+        return primarySort.direction === 'asc' ? comparison : -comparison;
+      }
+    });
+
+    return sortedPerturbations;
+  }
+
   // #endregion
 }
 

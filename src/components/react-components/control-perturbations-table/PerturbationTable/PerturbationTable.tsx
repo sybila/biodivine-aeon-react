@@ -21,12 +21,19 @@ const PerturbationTable: React.FC<{
     return null;
   }
 
-  const [filteredPerts, nextPageExists] = useMemo(() => {
+  const sortedPerts = useMemo(() => {
     Loading.startLoading();
-    const result = ControlPerturbationsTable.filterPerturbations(perturbations);
+    const result = ControlPerturbationsTable.sortPerturbations(perturbations);
     Loading.endLoading();
     return result;
-  }, [perturbations, startFilter]);
+  }, [perturbations, startSort]);
+
+  const [filteredPerts, nextPageExists] = useMemo(() => {
+    Loading.startLoading();
+    const result = ControlPerturbationsTable.filterPerturbations(sortedPerts);
+    Loading.endLoading();
+    return result;
+  }, [sortedPerts, startFilter]);
 
   useEffect(() => {
     setNextPageExists(nextPageExists);
