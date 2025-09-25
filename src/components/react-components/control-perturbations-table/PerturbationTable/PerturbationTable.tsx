@@ -68,7 +68,7 @@ const PerturbationTable: React.FC<{
           >
             {header}
             {index === 1 && (
-              <span className="ml-1 text-blue-600">&#x25BC;</span>
+              <span className="ml-1 text-[var(--color-grey)]">&#x25BC;</span>
             )}
           </div>
         ))}

@@ -12,6 +12,7 @@ import TopButtonMenu from '../../components/react-components/global/TopButtonMen
 import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import FilterTabContent from '../../components/react-components/control-perturbations-table/FilterTabContent/FilterTabContent';
 import PagesTabContent from '../../components/react-components/control-perturbations-table/PagesTabContent/PagesTabContent';
+import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
 
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
@@ -37,7 +38,9 @@ const ControlPerturbationsTable = () => {
           />
         );
       case 'Sorting':
-        return <div className="p-4">Sorting options will be here.</div>;
+        return (
+          <SortTabContent startSort={startSort} setStartSort={setStartSort} />
+        );
       case 'Pages':
         return (
           <PagesTabContent
