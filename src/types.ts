@@ -102,7 +102,7 @@ export type Perturbation = Record<string, boolean>;
 
 export type ControlEnabledVars = Array<string>;
 
-export type PhenotypeVars = Record<string, Phenotype>;
+export type PhenotypeVars = Record<string, boolean>;
 
 export type PhenotypeControlEnabledVars = {
   controlEnabledVars: ControlEnabledVars;
