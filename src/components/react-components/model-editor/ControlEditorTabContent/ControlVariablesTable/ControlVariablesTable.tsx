@@ -7,6 +7,7 @@ import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 
 const ControlVariablesTable: React.FC = () => {
   const [hoverId, setHoverId] = useState<number | null>(null);
@@ -67,6 +68,60 @@ const ControlVariablesTable: React.FC = () => {
     return variables.filter(filterVariable);
   }, [variables, variableSearchText]);
 
+  /** Array of buttons for changing the Control-Enabled and Phenotype status of selected variables.
+   * Each button is represented as a tuple containing:
+   * - The button label (string)
+   * - The button color (string)
+   * - The onClick handler function (() => void)
+   */
+  const statusButtons: Array<[string, string, () => void]> = [
+    [
+      'E',
+      'var(--color-grey)',
+      () =>
+        ControlEditor.changeControlEnabledSelected(
+          Object.entries(selectedVariables),
+          false
+        ),
+    ],
+    [
+      'N',
+      'var(--color-yellow)',
+      () =>
+        ControlEditor.changeControlEnabledSelected(
+          Object.entries(selectedVariables),
+          true
+        ),
+    ],
+    [
+      'N',
+      'var(--color-grey)',
+      () =>
+        ControlEditor.changePhenotypeSelected(
+          Object.entries(selectedVariables),
+          null
+        ),
+    ],
+    [
+      'T',
+      'var(--color-green)',
+      () =>
+        ControlEditor.changePhenotypeSelected(
+          Object.entries(selectedVariables),
+          true
+        ),
+    ],
+    [
+      'F',
+      'var(--color-red)',
+      () =>
+        ControlEditor.changePhenotypeSelected(
+          Object.entries(selectedVariables),
+          false
+        ),
+    ],
+  ];
+
   return (
     <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
       <TextInputReact
@@ -77,7 +132,18 @@ const ControlVariablesTable: React.FC = () => {
       />
 
       <section className="flex flex-row justify-around items-center h-[50px] w-[95%]">
-        <div />
+        <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
+          {statusButtons.map(([label, color, onClick], index) => (
+            <TextButtonReact
+              key={index}
+              compHeight="29px"
+              compWidth="29px"
+              text={label}
+              handleClick={onClick}
+              buttonColor={color}
+            />
+          ))}
+        </div>
         <SelectionButtons
           keys={variableNames}
           selectedVariables={selectedVariables}

@@ -1,5 +1,6 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
-import type { ControlInfo } from '../../../types';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import type { ControlInfo, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
@@ -97,12 +98,38 @@ class ControlEditorClass {
     }
   }
 
+  /** Changes the control enabled state of selected variables.
+   *  @param selectedVariables - Array of tuples where each tuple contains:
+   *    - variable name (string)
+   *    - whether the variable is selected (boolean)
+   *  @param controlEnabled - The new control enabled state to set (true or false)
+   *  Only variables that are marked as selected (true) will have their control enabled state changed.
+   *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
+   *  If a variable name does not correspond to any existing variable, it will be ignored.
+   */
+  public changeControlEnabledSelected(
+    selectedVariables: Array<[string, boolean]>,
+    controlEnabled: boolean
+  ) {
+    selectedVariables.forEach(([varName, isSelected]) => {
+      if (!isSelected) return;
+
+      const variableId = useVariablesStore
+        .getState()
+        .variableFromName(varName)?.id;
+
+      if (variableId != undefined && variableId !== null) {
+        this.changeControlEnabled(variableId, controlEnabled);
+      }
+    });
+  }
+
   // #endregion
 
   // #region --- Phenotype Actions ---
 
   /** Changes the phenotype state of a variable by its ID */
-  public changePhenotype(id: number, phenotype: boolean) {
+  public changePhenotype(id: number, phenotype: Phenotype) {
     LiveModel.Control.changePhenotypeById(id, phenotype);
   }
 
@@ -124,6 +151,32 @@ class ControlEditorClass {
       default:
         LiveModel.Control.changePhenotypeById(id, true);
     }
+  }
+
+  /** Changes the phenotype state of selected variables.
+   *  @param selectedVariables - Array of tuples where each tuple contains:
+   *    - variable name (string)
+   *    - whether the variable is selected (boolean)
+   *  @param phenotype - The new phenotype state to set (true, false, or null)
+   *  Only variables that are marked as selected (true) will have their phenotype state changed.
+   *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
+   *  If a variable name does not correspond to any existing variable, it will be ignored.
+   */
+  public changePhenotypeSelected(
+    selectedVariables: Array<[string, boolean]>,
+    phenotype: Phenotype
+  ) {
+    selectedVariables.forEach(([varName, isSelected]) => {
+      if (!isSelected) return;
+
+      const variableId = useVariablesStore
+        .getState()
+        .variableFromName(varName)?.id;
+
+      if (variableId != undefined && variableId !== null) {
+        this.changePhenotype(variableId, phenotype);
+      }
+    });
   }
 
   // #endregion
