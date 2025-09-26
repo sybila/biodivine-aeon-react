@@ -131,7 +131,7 @@ const ControlVariablesTable: React.FC = () => {
         value={variableSearchText}
       />
 
-      <section className="flex flex-row justify-around items-center h-[50px] w-[95%]">
+      <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
           {statusButtons.map(([label, color, onClick], index) => (
             <TextButtonReact
