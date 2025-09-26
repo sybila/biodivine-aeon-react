@@ -875,11 +875,7 @@ class ComputeEngine {
             ? undefined
             : {
                 perturbations: results,
-                stats: {
-                  ...response,
-                  maximalPerturbationRobustness:
-                    response.maximalPerturbationRobustness * 100,
-                },
+                stats: response,
                 preComputationInfo: this.lastComputationData,
               },
           'Control'
