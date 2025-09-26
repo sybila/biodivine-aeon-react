@@ -47,7 +47,7 @@ class ControlPerturbationsTable {
 
     perturbationArray.forEach(([key, value], index) => {
       coloredPerturbation.push(
-        <div key={key} className="flex flex-row h-full w-fit">
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
           <span
             style={{
               color: `${value ? 'var(--color-green)' : 'var(--color-red)'}`,
@@ -60,7 +60,7 @@ class ControlPerturbationsTable {
       );
 
       textPerturbation.push(
-        <div key={key} className="flex flex-row h-full w-fit">
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
           <span className="">{`${key}: ${value ? 'true' : 'false'}`}</span>
           {index < perturbationArray.length - 1 && <span>,</span>}
         </div>
