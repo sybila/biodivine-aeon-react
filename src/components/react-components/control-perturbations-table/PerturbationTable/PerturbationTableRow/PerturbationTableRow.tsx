@@ -1,6 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
 import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
+import DataFormaters from '../../../../../services/utilities/DataFormaters';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
   ({
@@ -31,7 +32,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
         : formatedPerturbation[0],
       perturbationArray.length,
       numberOfInterpretations,
-      (robustness * 100).toFixed(2),
+      DataFormaters.convertRobustnessToPercentage(robustness),
     ];
 
     /** Handles click events for each cell */

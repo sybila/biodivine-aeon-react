@@ -8,6 +8,7 @@ import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
+import DataFormaters from '../../../../services/utilities/DataFormaters';
 
 const OverviewTabContent: React.FC = () => {
   const [phenAsText, setPhenotypeAsText] = useState<boolean>(false);
@@ -57,8 +58,8 @@ const OverviewTabContent: React.FC = () => {
       />
       <StatEntryReact
         statName="Maximal Robustness (%)"
-        statValue={(controlStats.maximalPerturbationRobustness * 100).toFixed(
-          2
+        statValue={DataFormaters.convertRobustnessToPercentage(
+          controlStats.maximalPerturbationRobustness
         )}
         compWidth="99%"
         nameMaxWidth="51%"

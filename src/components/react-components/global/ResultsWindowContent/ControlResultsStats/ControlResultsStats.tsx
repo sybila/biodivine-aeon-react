@@ -1,3 +1,4 @@
+import DataFormaters from '../../../../../services/utilities/DataFormaters';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -43,7 +44,9 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Highest Robustness"
-            statValue={`${results.stats.maximalPerturbationRobustness.toString()}%`}
+            statValue={`${DataFormaters.convertRobustnessToPercentage(
+              results.stats.maximalPerturbationRobustness
+            )}%`}
           />
         </div>
       </section>
