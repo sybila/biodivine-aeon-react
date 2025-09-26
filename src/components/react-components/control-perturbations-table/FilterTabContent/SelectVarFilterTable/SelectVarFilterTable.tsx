@@ -100,7 +100,7 @@ const SelectVarFilterTable: React.FC<{
         </div>
 
         <SelectionButtons
-          variableNames={variableNames}
+          keys={variableNames}
           selectedVariables={selectedVariables}
           setSelectedVariables={setSelectedVariables}
         />

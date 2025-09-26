@@ -1,5 +1,5 @@
 export type SelectionButtonsProps = {
-  variableNames: string[];
+  keys: string[];
   selectedVariables: Record<string, boolean>;
   setSelectedVariables: (selectedVariables: Record<string, boolean>) => void;
   /** Size of the buttons border radius in the form of Css length (e.g. '8px', '0.5rem') */

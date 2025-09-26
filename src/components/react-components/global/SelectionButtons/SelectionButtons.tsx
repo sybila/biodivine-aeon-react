@@ -6,7 +6,7 @@ import type { SelectionButtonsProps } from './SelectionButtonsProps';
 import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 
 const SelectionButtons: React.FC<SelectionButtonsProps> = ({
-  variableNames,
+  keys,
   selectedVariables,
   setSelectedVariables,
   buttonBorderRadius = '10px',
@@ -14,8 +14,8 @@ const SelectionButtons: React.FC<SelectionButtonsProps> = ({
 }) => {
   const selectAll = () => {
     setSelectedVariables(
-      variableNames.reduce((acc, name) => {
-        acc[name] = true;
+      keys.reduce((acc, key) => {
+        acc[key] = true;
         return acc;
       }, {} as Record<string, boolean>)
     );
@@ -23,9 +23,9 @@ const SelectionButtons: React.FC<SelectionButtonsProps> = ({
 
   const toggleSelected = () => {
     setSelectedVariables(
-      variableNames.reduce((acc, name) => {
-        if (!selectedVariables[name]) {
-          acc[name] = !selectedVariables[name];
+      keys.reduce((acc, key) => {
+        if (!selectedVariables[key]) {
+          acc[key] = !selectedVariables[key];
         }
         return acc;
       }, {} as Record<string, boolean>)
