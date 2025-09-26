@@ -8,6 +8,7 @@ import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResult
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
+import Time from '../../../../../services/utilities/Time';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
@@ -35,7 +36,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Elapsed"
-            statValue={`${results?.elapsed}s`}
+            statValue={Time.getTime(results?.elapsed, true)}
           />
           <StatEntryReact
             compWidth="100%"

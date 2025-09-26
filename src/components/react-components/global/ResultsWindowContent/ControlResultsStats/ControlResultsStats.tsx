@@ -1,4 +1,5 @@
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
+import Time from '../../../../../services/utilities/Time';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -24,7 +25,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Elapsed"
-            statValue={`${results.stats.elapsed}ms`}
+            statValue={Time.getTime(results.stats.elapsed, true)}
           />
           <StatEntryReact
             compWidth="100%"
