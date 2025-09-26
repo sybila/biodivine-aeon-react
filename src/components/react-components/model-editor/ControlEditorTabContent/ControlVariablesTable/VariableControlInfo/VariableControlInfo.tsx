@@ -54,7 +54,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       active={selected}
       onMouseEnter={() => ControlEditor.hoverVariableCytoscape(id, true)}
       onMouseLeave={() => ControlEditor.hoverVariableCytoscape(id, false)}
-      onClick={() => toggleSelect(id)}
+      onClick={() => toggleSelect(name)}
     >
       <span className="h-full w-[60%] max-w-[60%] select-none overflow-auto text-[100%] font-(family-name:--font-family-fira-mono)">
         {name}

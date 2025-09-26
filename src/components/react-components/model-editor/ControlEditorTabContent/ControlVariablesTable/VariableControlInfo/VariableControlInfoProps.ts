@@ -3,5 +3,5 @@ export type VariableControlInfoProps = {
   name: string;
   hover: boolean;
   selected: boolean;
-  toggleSelect: (variableId: number) => void;
+  toggleSelect: (variableName: string) => void;
 };

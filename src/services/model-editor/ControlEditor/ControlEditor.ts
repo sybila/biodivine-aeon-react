@@ -11,8 +11,12 @@ class ControlEditorClass {
     | ((id: number, turnOnHover: boolean) => void)
     | null = null;
 
-  /** Record containing all selected variables in the ControlEditorTabContent.tsx component */
-  private selectedVariables: Record<number, boolean> = {};
+  /** Record containing all selected variables in the ControlEditorTabContent.tsx component.
+   *  Key: variable name
+   *  Value: whether the variable is selected or not (true = selected, false = not selected)
+   *  If variables is missing from the record, it is considered not selected (false).
+   */
+  private selectedVariables: Record<string, boolean> = {};
 
   /** Currently searched variable name in the ControlEditorTabContent.tsx component */
   private variableSearch: string = '';
@@ -28,13 +32,21 @@ class ControlEditorClass {
     this.hoverVariableInfo = hoverFunction;
   }
 
-  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component. */
-  public setSelectVariables(newSelected: Record<number, boolean>) {
+  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
+   *  Key: variable name
+   *  Value: whether the variable is selected or not (true = selected, false = not selected)
+   *  If variables is missing from the record, it is considered not selected (false).
+   */
+  public setSelectVariables(newSelected: Record<string, boolean>) {
     this.selectedVariables = newSelected;
   }
 
-  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component. */
-  public getSelectedVariables(): Record<number, boolean> {
+  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component.
+   * Key: variable name
+   * Value: whether the variable is selected or not (true = selected, false = not selected)
+   * If variables is missing from the record, it is considered not selected (false).
+   */
+  public getSelectedVariables(): Record<string, boolean> {
     return this.selectedVariables;
   }
 
