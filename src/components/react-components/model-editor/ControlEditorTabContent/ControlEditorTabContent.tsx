@@ -10,11 +10,20 @@ const ControlEditorTabContent: React.FC = () => {
     ControlEditor.getVariableSearch()
   );
 
+  const [selectedVariables, setSelectedVariables] = useState<
+    Record<number, boolean>
+  >(ControlEditor.getSelectedVariables());
+
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
       ControlEditor.setVariableSearch(name);
       setVariableSearchText(name);
     }
+  };
+
+  const updateSelectedVariables = (newSelected: Record<number, boolean>) => {
+    setSelectedVariables(newSelected);
+    ControlEditor.setSelectVariables(newSelected);
   };
 
   return (
@@ -44,7 +53,11 @@ const ControlEditorTabContent: React.FC = () => {
         value={variableSearchText}
       />
 
-      <ControlVariablesTable searchText={variableSearchText} />
+      <ControlVariablesTable
+        searchText={variableSearchText}
+        selectedVariables={selectedVariables}
+        setSelectedVariables={updateSelectedVariables}
+      />
     </div>
   );
 };

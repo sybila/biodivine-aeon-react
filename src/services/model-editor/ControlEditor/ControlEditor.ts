@@ -11,12 +11,8 @@ class ControlEditorClass {
     | ((id: number, turnOnHover: boolean) => void)
     | null = null;
 
-  /** Function for toggling selected state of variables in the ControlEditorTabContent.tsx component */
-  private selectVariableInfo: ((id: number, select: boolean) => void) | null =
-    null;
-
-  /** Currently selected variable in the ModelEditorCanvas.tsx component */
-  private selectedVariableId: number | null = null;
+  /** Record containing all selected variables in the ControlEditorTabContent.tsx component */
+  private selectedVariables: Record<number, boolean> = {};
 
   /** Currently searched variable name in the ControlEditorTabContent.tsx component */
   private variableSearch: string = '';
@@ -32,16 +28,14 @@ class ControlEditorClass {
     this.hoverVariableInfo = hoverFunction;
   }
 
-  /** Sets select function for variables inside the ControlEditorTabContent.tsx (needs to be called before selectVariable function) */
-  public setSelectVariableFunction(
-    selectFunction: (id: number, select: boolean) => void
-  ) {
-    this.selectVariableInfo = selectFunction;
+  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component. */
+  public setSelectVariables(newSelected: Record<number, boolean>) {
+    this.selectedVariables = newSelected;
   }
 
-  /** Returns last selected variable id in the ModelEditorCanvas.tsx component. Returns null if no variable is selected */
-  public getSelectedVariableId(): number | null {
-    return this.selectedVariableId;
+  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component. */
+  public getSelectedVariables(): Record<number, boolean> {
+    return this.selectedVariables;
   }
 
   /** Toggles hover state on a variable in the ControlEditorTabContent.tsx component
@@ -51,17 +45,6 @@ class ControlEditorClass {
   public hoverVariable(id: number, turnOnHover: boolean) {
     if (this.hoverVariableInfo) {
       this.hoverVariableInfo(id, turnOnHover);
-    }
-  }
-
-  /** Toggles selected state on a variable in the ControlEditorTabContent.tsx component
-   * If `select` is true, it sets variable as selected; if false, it unselects it.
-   * (you must first set selectVariableInfo with setSelectVariableFunction before running this function)
-   */
-  public selectVariable(id: number, select: boolean) {
-    if (this.selectVariableInfo) {
-      this.selectedVariableId = select ? id : null;
-      this.selectVariableInfo(id, select);
     }
   }
 

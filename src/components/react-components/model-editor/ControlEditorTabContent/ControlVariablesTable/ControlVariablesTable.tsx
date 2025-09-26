@@ -5,14 +5,14 @@ import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore
 import type { Variable } from '../../../../../types';
 import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import { Loading } from '../../../../lit-components/loading-wrapper';
 
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   searchText,
+  selectedVariables,
+  setSelectedVariables,
 }) => {
   const [hoverId, setHoverId] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(
-    ControlEditor.getSelectedVariableId()
-  );
 
   const variablesObj = useVariablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
@@ -21,14 +21,18 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     setHoverId(turnOnHover ? id : null);
   }, []);
 
-  const selectVariableInfo = useCallback((id: number, select: boolean) => {
-    setSelectedId(select ? id : null);
-  }, []);
+  const toggleVariableSelect = (variableId: number) => {
+    Loading.startLoading();
+    setSelectedVariables({
+      ...selectedVariables,
+      [variableId]: !selectedVariables[variableId],
+    });
+    Loading.endLoading();
+  };
 
   useEffect(() => {
-    ControlEditor.setSelectVariableFunction(selectVariableInfo);
     ControlEditor.setHoverVariableFunction(hoverVariableInfo);
-  }, [hoverVariableInfo, selectVariableInfo]);
+  }, [hoverVariableInfo]);
 
   const filterVariable = (variable: Variable) => {
     return (
@@ -57,7 +61,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           id={variable.id}
           name={variable.name ?? 'Unknown Variable'}
           hover={hoverId === variable.id}
-          selected={selectedId === variable.id}
+          selected={selectedVariables[variable.id] ?? false}
+          toggleSelect={toggleVariableSelect}
         />
       ))}
     </section>
