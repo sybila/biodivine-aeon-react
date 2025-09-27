@@ -1,3 +1,4 @@
+import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import ControlLM from './ControlLM';
 import ExportLM from './ExportLM';
 import ImportLM from './ImportLM';
@@ -55,9 +56,7 @@ class LiveModelClass {
   /** Erase the whole model */
   public clear(): void {
     LiveModel.Variables.clear();
-    //ModelEditor.setModelDescription("");
-    //ControllableEditor.clear();
-    //PhenotypeEditor.clear();
+    useModelEditorStatus.getState().clear();
   }
 
   // Todo update or remove
