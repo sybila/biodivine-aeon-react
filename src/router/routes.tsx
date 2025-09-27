@@ -3,6 +3,7 @@ import { rootRoute } from './root';
 import ModelEditor from '../pages/model-editor/ModelEditor';
 import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explorer/AttractorBifurcationExplorer';
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
+import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 
 // Redirect root path '/' to '/model-editor'
 export const defaultRedirect = createRoute({
@@ -35,10 +36,17 @@ export const WitnessRoute = createRoute({
   component: ModelEditor,
 });
 
+export const ControlPerturbationsTableRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/control-perturbations-table',
+  component: ControlPerturbationsTable,
+});
+
 export const routeTree = rootRoute.addChildren([
   defaultRedirect,
   modelEditorRoute,
   AttractorBifurcationExplorerRoute,
   AttractorVisualizerRoute,
   WitnessRoute,
+  ControlPerturbationsTableRoute,
 ]);

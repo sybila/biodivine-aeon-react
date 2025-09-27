@@ -14,6 +14,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   name,
   hover,
   selected,
+  toggleSelect,
 }) => {
   const controlInfo: ControlInfo | undefined = useControlStore((state) =>
     state.getVariableControlInfo(id)
@@ -45,6 +46,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
 
   return (
     <NonExtendableContentReact
+      className="cursor-pointer"
       compWidth="100%"
       contentOverflowX="visible"
       contentOverflowY="visible"
@@ -52,36 +54,42 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       active={selected}
       onMouseEnter={() => ControlEditor.hoverVariableCytoscape(id, true)}
       onMouseLeave={() => ControlEditor.hoverVariableCytoscape(id, false)}
+      onClick={() => toggleSelect(name)}
     >
       <span className="h-full w-[60%] max-w-[60%] select-none overflow-auto text-[100%] font-(family-name:--font-family-fira-mono)">
         {name}
       </span>
 
       <section className="flex flex-row items-center justify-around h-full w-[39%] overflow-visible">
-        <TextIconButtonReact
-          compHeight="95%"
-          compWidth="40%"
-          iconHeight="21px"
-          textFontWeight="normal"
-          text="CE"
-          iconSrc={ContrIcon}
-          iconAlt="Control-Enabled Icon"
-          buttonColor={getControlButtonColor(false)}
-          buttonHoverColor={getControlButtonColor(true)}
-          handleClick={() => ControlEditor.toggleControlEnabled(id)}
-        />
-        <TextIconButtonReact
-          compHeight="95%"
-          compWidth="40%"
-          iconHeight="21px"
-          textFontWeight="normal"
-          text="Ph"
-          iconSrc={PhenIcon}
-          iconAlt="Phenotype Icon"
-          buttonColor={getPhenButtonColor(false)}
-          buttonHoverColor={getPhenButtonColor(true)}
-          handleClick={() => ControlEditor.togglePhenotype(id)}
-        />
+        <div className="h-[95%] w-[40%]" onClick={(e) => e.stopPropagation()}>
+          <TextIconButtonReact
+            compHeight="100%"
+            compWidth="100%"
+            iconHeight="21px"
+            textFontWeight="normal"
+            text="CE"
+            iconSrc={ContrIcon}
+            iconAlt="Control-Enabled Icon"
+            buttonColor={getControlButtonColor(false)}
+            buttonHoverColor={getControlButtonColor(true)}
+            handleClick={() => ControlEditor.toggleControlEnabled(id)}
+          />
+        </div>
+
+        <div className="h-[95%] w-[40%]" onClick={(e) => e.stopPropagation()}>
+          <TextIconButtonReact
+            compHeight="100%"
+            compWidth="100%"
+            iconHeight="21px"
+            textFontWeight="normal"
+            text="Ph"
+            iconSrc={PhenIcon}
+            iconAlt="Phenotype Icon"
+            buttonColor={getPhenButtonColor(false)}
+            buttonHoverColor={getPhenButtonColor(true)}
+            handleClick={() => ControlEditor.togglePhenotype(id)}
+          />
+        </div>
       </section>
     </NonExtendableContentReact>
   );

@@ -1,3 +1,8 @@
+import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
+import DataFormaters from '../../../../../services/utilities/DataFormaters';
+import Time from '../../../../../services/utilities/Time';
+import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
+import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
@@ -22,7 +27,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Elapsed"
-            statValue={`${results.stats.elapsed}ms`}
+            statValue={Time.getTime(results.stats.elapsed, true)}
           />
           <StatEntryReact
             compWidth="100%"
@@ -42,7 +47,9 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Highest Robustness"
-            statValue={`${results.stats.maximalPerturbationRobustness.toString()}%`}
+            statValue={`${DataFormaters.convertRobustnessToPercentage(
+              results.stats.maximalPerturbationRobustness
+            )}%`}
           />
         </div>
       </section>
@@ -75,7 +82,19 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             justifyHeader="start"
             headerText="Visualizations"
           />
-          <TextButtonReact compWidth="90%" text="Table" />
+          <TextButtonReact
+            compWidth="90%"
+            text="Table"
+            handleClick={() =>
+              useTabsStore
+                .getState()
+                .addTab(
+                  '/control-perturbations-table',
+                  'Control Perturbations Table',
+                  () => {}
+                )
+            }
+          />
         </div>
 
         <div className="h-[2px] w-[95%] mt-2 mb-2 bg-gray-300" />
@@ -88,7 +107,18 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             justifyHeader="start"
             headerText="Export"
           />
-          <TextButtonReact compWidth="90%" text="CSV" />
+          <TextButtonReact
+            compWidth="90%"
+            text="CSV"
+            handleClick={() =>
+              ResultsOperations.exportControlPerturbationsAsCsv(
+                results.perturbations,
+                `${useModelInfoStore
+                  .getState()
+                  .getModelName()}_control_perturbations_${Time.getCurrentTime()}`
+              )
+            }
+          />
         </div>
       </div>
     </section>

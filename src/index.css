@@ -36,6 +36,7 @@
   --color-highlight: #cfd8dc;
 
   --color-grey: #bebebe;
+  --color-darker-grey: #b1b1b1ff;
   --color-grey-light: #d6d4d4;
   --color-grey-blue-light: #cfd8dc;
   --color-grey-blue-ultra-light: #eceff1;
@@ -45,6 +46,7 @@
   --color-red-light: #f8b4b4;
   --color-yellow: #f3d491;
   --color-yellow-light: #ffe8aa;
+  --color-violet: #9c6ade;
 
   --base-font-family: 'Helvetica', 'Arial', sans-serif;
   --font-family-fira-mono: 'FiraMono', 'monospace';

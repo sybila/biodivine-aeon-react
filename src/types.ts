@@ -98,17 +98,44 @@ export type ControlComputationStats = {
   elapsed: number;
 };
 
-export type Perturbation = Record<string, number>;
+export type Perturbation = Record<string, boolean>;
 
-export type ControlResult = {
+export type ControlEnabledVars = Array<string>;
+
+export type PhenotypeVars = Record<string, boolean>;
+
+export type PhenotypeControlEnabledVars = {
+  controlEnabledVars: ControlEnabledVars;
+  phenotypeVars: PhenotypeVars;
+};
+
+export type ControlPreComputationInfo = PhenotypeControlEnabledVars & {
+  oscillation: Oscillation;
+};
+
+export type ControlResultNoId = {
   color_count: number;
   robustness: number;
   perturbation: Perturbation;
 };
 
+export type ControlResult = ControlResultNoId & {
+  id: number;
+};
+
 export type ControlResults = {
   perturbations: Array<ControlResult>;
   stats: ControlComputationStats;
+  preComputationInfo: ControlPreComputationInfo;
+};
+
+export type PerturbationSortFields = 'id' | 'size' | 'interpretations';
+
+export type SortDirection = 'asc' | 'desc';
+
+export type PertTableSort = {
+  field: PerturbationSortFields;
+  direction: SortDirection;
 };
 
 // #endregion
@@ -136,7 +163,8 @@ export type TabType =
   | 'Model Editor'
   | 'Attractor Bifurcation Explorer'
   | 'Attractor Visualizer'
-  | 'Witness';
+  | 'Witness'
+  | 'Control Perturbations Table';
 
 export type TabInfo = {
   /** Unique identifier for the tab */
@@ -292,6 +320,19 @@ export type AttractorData = {
   witness: Array<[string, string]>;
   has_large_attractors: boolean;
 };
+
+// #endregion
+
+// #region --- Control Perturbations Table ---
+
+export const PertVariableFilterStatus = {
+  IN_FILTER_PERTURBED: 1,
+  IN_FILTER_POSITIVELY_PERTURBED: 2,
+  IN_FILTER_NEGATIVELY_PERTURBED: 3,
+};
+
+export type PertVariableFilterStatus =
+  (typeof PertVariableFilterStatus)[keyof typeof PertVariableFilterStatus];
 
 // #endregion
 

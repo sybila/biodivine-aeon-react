@@ -21,7 +21,6 @@ import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import router from '../../../router';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -170,6 +169,10 @@ class ComputationManagerClass {
       }
     }
 
+    // Todo - add warning
+    useResultsStatus.getState().clear();
+    useTabsStore.getState().clear();
+
     return;
   }
 
@@ -215,7 +218,6 @@ class ComputationManagerClass {
       useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
         LiveModel.Models.loadModel(modelId);
       });
-      router.navigate({ to: `/witness` });
     }
 
     Loading.endLoading();
@@ -278,7 +280,6 @@ class ComputationManagerClass {
       return;
     }
 
-    // Todo delete old results
     this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
   }
 
@@ -543,6 +544,8 @@ class ComputationManagerClass {
     const model = LiveModel.Export.exportAeon();
 
     const oscillation = LiveModel.Control.getOscillation() ?? 'Allowed';
+    const phenotypeControlEnabled =
+      LiveModel.Control.getPhenotypeControlEnabledVars();
 
     try {
       this.computationCanStart(model);
@@ -552,13 +555,13 @@ class ComputationManagerClass {
       return;
     }
 
-    // Todo delete old results
     this.computeEngine.startControlComputation(
       model,
       oscillation,
       this.getMinRobustness(),
       this.getMaxSize(),
       this.getMaxNumberOfResults(),
+      { ...phenotypeControlEnabled, oscillation: oscillation },
       this.setComputationStatus
     );
   }

@@ -1,5 +1,6 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
-import type { ControlInfo } from '../../../types';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import type { ControlInfo, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
@@ -11,12 +12,12 @@ class ControlEditorClass {
     | ((id: number, turnOnHover: boolean) => void)
     | null = null;
 
-  /** Function for toggling selected state of variables in the ControlEditorTabContent.tsx component */
-  private selectVariableInfo: ((id: number, select: boolean) => void) | null =
-    null;
-
-  /** Currently selected variable in the ModelEditorCanvas.tsx component */
-  private selectedVariableId: number | null = null;
+  /** Record containing all selected variables in the ControlEditorTabContent.tsx component.
+   *  Key: variable name
+   *  Value: whether the variable is selected or not (true = selected, false = not selected)
+   *  If variables is missing from the record, it is considered not selected (false).
+   */
+  private selectedVariables: Record<string, boolean> = {};
 
   /** Currently searched variable name in the ControlEditorTabContent.tsx component */
   private variableSearch: string = '';
@@ -32,16 +33,22 @@ class ControlEditorClass {
     this.hoverVariableInfo = hoverFunction;
   }
 
-  /** Sets select function for variables inside the ControlEditorTabContent.tsx (needs to be called before selectVariable function) */
-  public setSelectVariableFunction(
-    selectFunction: (id: number, select: boolean) => void
-  ) {
-    this.selectVariableInfo = selectFunction;
+  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
+   *  Key: variable name
+   *  Value: whether the variable is selected or not (true = selected, false = not selected)
+   *  If variables is missing from the record, it is considered not selected (false).
+   */
+  public setSelectVariables(newSelected: Record<string, boolean>) {
+    this.selectedVariables = newSelected;
   }
 
-  /** Returns last selected variable id in the ModelEditorCanvas.tsx component. Returns null if no variable is selected */
-  public getSelectedVariableId(): number | null {
-    return this.selectedVariableId;
+  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component.
+   * Key: variable name
+   * Value: whether the variable is selected or not (true = selected, false = not selected)
+   * If variables is missing from the record, it is considered not selected (false).
+   */
+  public getSelectedVariables(): Record<string, boolean> {
+    return this.selectedVariables;
   }
 
   /** Toggles hover state on a variable in the ControlEditorTabContent.tsx component
@@ -51,17 +58,6 @@ class ControlEditorClass {
   public hoverVariable(id: number, turnOnHover: boolean) {
     if (this.hoverVariableInfo) {
       this.hoverVariableInfo(id, turnOnHover);
-    }
-  }
-
-  /** Toggles selected state on a variable in the ControlEditorTabContent.tsx component
-   * If `select` is true, it sets variable as selected; if false, it unselects it.
-   * (you must first set selectVariableInfo with setSelectVariableFunction before running this function)
-   */
-  public selectVariable(id: number, select: boolean) {
-    if (this.selectVariableInfo) {
-      this.selectedVariableId = select ? id : null;
-      this.selectVariableInfo(id, select);
     }
   }
 
@@ -102,12 +98,38 @@ class ControlEditorClass {
     }
   }
 
+  /** Changes the control enabled state of selected variables.
+   *  @param selectedVariables - Array of tuples where each tuple contains:
+   *    - variable name (string)
+   *    - whether the variable is selected (boolean)
+   *  @param controlEnabled - The new control enabled state to set (true or false)
+   *  Only variables that are marked as selected (true) will have their control enabled state changed.
+   *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
+   *  If a variable name does not correspond to any existing variable, it will be ignored.
+   */
+  public changeControlEnabledSelected(
+    selectedVariables: Array<[string, boolean]>,
+    controlEnabled: boolean
+  ) {
+    selectedVariables.forEach(([varName, isSelected]) => {
+      if (!isSelected) return;
+
+      const variableId = useVariablesStore
+        .getState()
+        .variableFromName(varName)?.id;
+
+      if (variableId != undefined && variableId !== null) {
+        this.changeControlEnabled(variableId, controlEnabled);
+      }
+    });
+  }
+
   // #endregion
 
   // #region --- Phenotype Actions ---
 
   /** Changes the phenotype state of a variable by its ID */
-  public changePhenotype(id: number, phenotype: boolean) {
+  public changePhenotype(id: number, phenotype: Phenotype) {
     LiveModel.Control.changePhenotypeById(id, phenotype);
   }
 
@@ -129,6 +151,32 @@ class ControlEditorClass {
       default:
         LiveModel.Control.changePhenotypeById(id, true);
     }
+  }
+
+  /** Changes the phenotype state of selected variables.
+   *  @param selectedVariables - Array of tuples where each tuple contains:
+   *    - variable name (string)
+   *    - whether the variable is selected (boolean)
+   *  @param phenotype - The new phenotype state to set (true, false, or null)
+   *  Only variables that are marked as selected (true) will have their phenotype state changed.
+   *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
+   *  If a variable name does not correspond to any existing variable, it will be ignored.
+   */
+  public changePhenotypeSelected(
+    selectedVariables: Array<[string, boolean]>,
+    phenotype: Phenotype
+  ) {
+    selectedVariables.forEach(([varName, isSelected]) => {
+      if (!isSelected) return;
+
+      const variableId = useVariablesStore
+        .getState()
+        .variableFromName(varName)?.id;
+
+      if (variableId != undefined && variableId !== null) {
+        this.changePhenotype(variableId, phenotype);
+      }
+    });
   }
 
   // #endregion

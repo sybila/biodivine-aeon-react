@@ -1,22 +1,9 @@
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import { useState } from 'react';
 import ControlStatsTable from './ControStatsTable/ControlStatsTable';
-import TextInputReact from '../../lit-wrappers/TextInputReact';
-import ControlEditor from '../../../../services/model-editor/ControlEditor/ControlEditor';
+
 import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
 
 const ControlEditorTabContent: React.FC = () => {
-  const [variableSearchText, setVariableSearchText] = useState<string>(
-    ControlEditor.getVariableSearch()
-  );
-
-  const setVariableSearch = (name: string) => {
-    if (name !== variableSearchText) {
-      ControlEditor.setVariableSearch(name);
-      setVariableSearchText(name);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
       <section className="flex flex-col items-center w-full h-fit gap-3">
@@ -37,14 +24,7 @@ const ControlEditorTabContent: React.FC = () => {
         />
       </section>
 
-      <TextInputReact
-        compWidth="95%"
-        placeholder="Search variables..."
-        onWrite={setVariableSearch}
-        value={variableSearchText}
-      />
-
-      <ControlVariablesTable searchText={variableSearchText} />
+      <ControlVariablesTable />
     </div>
   );
 };

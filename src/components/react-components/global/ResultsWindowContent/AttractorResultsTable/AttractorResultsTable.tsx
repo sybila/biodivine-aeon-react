@@ -6,23 +6,18 @@ import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
 
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
-import { useNavigate } from '@tanstack/react-router';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
+import Time from '../../../../../services/utilities/Time';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
 }) => {
-  const navigate = useNavigate();
   const openAttractorBifurcationExplorer = () => {
-    navigate({
-      to: '/attractor-bifurcation-explorer',
-    });
-
     useTabsStore
       .getState()
       .addTab(
-        'attractor-bifurcation-explorer',
+        '/attractor-bifurcation-explorer',
         'Attractor Bifurcation Explorer'
       );
   };
@@ -41,7 +36,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Elapsed"
-            statValue={`${results?.elapsed}s`}
+            statValue={Time.getTime(results?.elapsed, true)}
           />
           <StatEntryReact
             compWidth="100%"
@@ -68,7 +63,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           </div>
         </div>
 
-        <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] items-center justify-center gap-2 overflow-auto">
+        <section className="flex flex-col w-full h-fit max-h-[100px] 2xl:max-h-[250px] gap-2 overflow-auto">
           {results?.data
             .sort((a, b) => b.sat_count - a.sat_count)
             .map((result, index) => (

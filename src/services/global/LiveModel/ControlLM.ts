@@ -1,9 +1,13 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type {
+  ControlEnabledVars,
   ControlInfo,
   ControlStats,
   Oscillation,
   Phenotype,
+  PhenotypeControlEnabledVars,
+  PhenotypeVars,
 } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import ComputationManager from '../ComputationManager/ComputationManager';
@@ -14,14 +18,14 @@ class ControlLM {
   // #region --- Properties ---`
 
   /** Reference to the live model instance */
-  private _liveModel: LiveModelClass;
+  private liveModel: LiveModelClass;
 
   private oscillation: Oscillation = 'allowed';
 
   // #endregion
 
   constructor(liveModel: LiveModelClass) {
-    this._liveModel = liveModel;
+    this.liveModel = liveModel;
   }
 
   // #region --- Oscillation ---
@@ -55,7 +59,7 @@ class ControlLM {
 
   /** Remove control information for a variable by its ID */
   public removeControlInfo(id: number, force = false): void {
-    if (!force && !this._liveModel._modelModified()) {
+    if (!force && !this.liveModel._modelModified()) {
       return;
     }
 
@@ -85,9 +89,11 @@ class ControlLM {
     return stats;
   }
 
+  // #region --- Change Control Info ---
+
   /** Change control information for a variable by its ID */
   public changePhenotypeById(id: number, phenotype: Phenotype): void {
-    if (!this._liveModel._modelModified()) {
+    if (!this.liveModel._modelModified()) {
       return;
     }
 
@@ -100,7 +106,7 @@ class ControlLM {
 
   /** Change variable control enabled state by its ID */
   public changeControlEnabledById(id: number, controlEnabled: boolean): void {
-    if (!this._liveModel._modelModified()) {
+    if (!this.liveModel._modelModified()) {
       return;
     }
 
@@ -112,6 +118,35 @@ class ControlLM {
 
     ComputationManager.resetMaxSize();
   }
+
+  // #endregion
+
+  // #region --- Get Formated Control Info ---
+
+  /** Get Phenotype and Control-Enabled variables formated into object { phenotypeVars: Record<VarName, Phenotype>, controlEnabledVars: Record<VarName, boolean> } */
+  public getPhenotypeControlEnabledVars(): PhenotypeControlEnabledVars {
+    const controlInfo = useControlStore.getState().getAllInfoIds();
+
+    const phenotypeVarsObj: PhenotypeVars = {};
+    const controlEnabledVarsList: ControlEnabledVars = [];
+
+    controlInfo.forEach(([id, info]) => {
+      const varName =
+        useVariablesStore.getState().variableFromId(id)?.name ?? 'Unknown';
+
+      if (varName) {
+        if (info.phenotype !== null) phenotypeVarsObj[varName] = info.phenotype;
+        if (info.controlEnabled) controlEnabledVarsList.push(varName);
+      }
+    });
+
+    return {
+      phenotypeVars: phenotypeVarsObj,
+      controlEnabledVars: controlEnabledVarsList.sort(),
+    };
+  }
+
+  // #endregion
 }
 
 export default ControlLM;

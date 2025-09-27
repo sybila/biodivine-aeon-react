@@ -4,7 +4,8 @@ import type { ContentTabProps } from './ContentTabProps';
 const ContentTab: React.FC<ContentTabProps> = ({
   children,
   headerText,
-  showTab,
+  showTab = false,
+  spaceOnTop = false,
   onClose,
 }) => {
   if (!showTab) {
@@ -13,9 +14,13 @@ const ContentTab: React.FC<ContentTabProps> = ({
 
   return (
     <ContentWindowReact
-      className="absolute top-1.5 left-[85px] z-9"
+      className="absolute z-9"
+      style={{
+        top: `${spaceOnTop ? '75px' : '6px'}`,
+        left: `${spaceOnTop ? '6px' : '85px'}`,
+      }}
       compMaxHeight="98%"
-      windHeight='auto'
+      windHeight="auto"
       headerText={headerText ?? ''}
       showHeader={true}
       showCloseButton={true}

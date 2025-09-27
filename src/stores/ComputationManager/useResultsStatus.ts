@@ -15,9 +15,9 @@ type ResultsState = {
   clear: () => void;
 };
 
-// Zustand store for managing computation results.
-// Provides actions to set and clear the results.
-
+/** Zustand store for managing computation results.
+ * Provides actions to set and clear the results.
+ */
 const useResultsStatus = create<ResultsState>()((set) => ({
   type: undefined,
   results: undefined,
