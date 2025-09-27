@@ -14,8 +14,7 @@ import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
 import config from '../../../config';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
-
-//import { ModelEditor, Results, hasLocalStorage } from "./Todo-import";
+import FileHelpers from '../../utilities/FileHelpers';
 
 class ExportLM {
   // #region --- Properties + Constructor ---
@@ -176,20 +175,6 @@ class ExportLM {
 
   // #region --- Export to File ---
 
-  /** Download a file with the given file name and content */
-  private downloadFile(fileName: string, content: string): void {
-    var el = document.createElement('a');
-    el.setAttribute(
-      'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
-    );
-    el.setAttribute('download', fileName);
-    el.style.display = 'none';
-    document.body.appendChild(el);
-    el.click();
-    document.body.removeChild(el);
-  }
-
   /** Export current model to a file with the given file ending */
   public async exportToFile(
     fileEnding: fileType,
@@ -218,7 +203,7 @@ class ExportLM {
       }
     }
 
-    this.downloadFile(`${fileName}${fileEnding}`, modelString);
+    FileHelpers.downloadFile(`${fileName}${fileEnding}`, modelString);
   }
 
   // #endregion
