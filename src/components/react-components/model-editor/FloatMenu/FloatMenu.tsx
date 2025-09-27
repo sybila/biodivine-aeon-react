@@ -1,0 +1,43 @@
+import { useState } from 'react';
+import useModelEditorStatus from '../../../../stores/ModelEditor/useModelEditorStatus';
+import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
+
+const FloatMenu = () => {
+  const [currentHint, setCurrentHint] = useState<string>('');
+
+  const modelStatus = useModelEditorStatus((state) => state);
+
+  if (!modelStatus.floatingMenuInfo || !modelStatus.selectedItemInfo) {
+    return null;
+  }
+
+  return (
+    <div
+      className="flex flex-col h-auto w-auto gap-2 justify-around items-center z-9 select-none pointer-events-none"
+      style={{
+        position: 'absolute',
+        left: modelStatus.floatingMenuInfo.position[0] + 'px',
+        top:
+          modelStatus.floatingMenuInfo.position[1] +
+          60 * modelStatus.floatingMenuInfo.zoom +
+          'px',
+        transform:
+          'scale(' +
+          modelStatus.floatingMenuInfo.zoom * 0.75 +
+          ') translate(-23%, -33%)',
+      }}
+    >
+      <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-[var(--color-grey-blue-ultra-light)] pointer-events-auto">
+        <VariableMenuButtons
+          setHint={setCurrentHint}
+          selectedVariableId={modelStatus.selectedItemInfo.id}
+        />
+      </div>
+      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-[--var(--base-font-family)] text-center font-bold select-none pointer-none text-black">
+        {currentHint}
+      </span>
+    </div>
+  );
+};
+
+export default FloatMenu;
