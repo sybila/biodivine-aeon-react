@@ -1,5 +1,7 @@
+import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
+import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -105,7 +107,18 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             justifyHeader="start"
             headerText="Export"
           />
-          <TextButtonReact compWidth="90%" text="CSV" />
+          <TextButtonReact
+            compWidth="90%"
+            text="CSV"
+            handleClick={() =>
+              ResultsOperations.exportControlPerturbationsAsCsv(
+                results.perturbations,
+                `${useModelInfoStore
+                  .getState()
+                  .getModelName()}_control_perturbations_${Time.getCurrentTime()}`
+              )
+            }
+          />
         </div>
       </div>
     </section>
