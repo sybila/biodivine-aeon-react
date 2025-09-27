@@ -88,7 +88,10 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setObservability(regulatorId, targetId, !regulation.observable);
-      this._regulationChanged({ ...regulation, observable: !regulation.observable });
+      this._regulationChanged({
+        ...regulation,
+        observable: !regulation.observable,
+      });
     }
   }
 

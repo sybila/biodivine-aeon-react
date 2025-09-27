@@ -1,8 +1,8 @@
-import useRegulationsStore from "../../../stores/LiveModel/useRegulationsStore";
-import useUpdateFunctionsStore from "../../../stores/LiveModel/useUpdateFunctionsStore";
-import useVariablesStore from "../../../stores/LiveModel/useVariablesStore";
-import { EdgeMonotonicity, type UpdateFunctionMetadata } from "../../../types";
-import type { LiveModelClass } from "./LiveModel";
+import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
+import type { LiveModelClass } from './LiveModel';
 
 // import {
 //   ModelEditor,
@@ -27,15 +27,15 @@ class UpdateFunctionsLM {
     }
 
     const check = this._checkUpdateFunction(id, functionString);
-    if (typeof check === "string") {
-      return variable.name + " " + check; //Strings.invalidUpdateFunction(variable.name)
+    if (typeof check === 'string') {
+      return variable.name + ' ' + check; //Strings.invalidUpdateFunction(variable.name)
     }
 
     if (functionString.length === 0) {
       useUpdateFunctionsStore.getState().deleteUpdateFunctionId(id);
     } else {
       useUpdateFunctionsStore.getState().setUpdateFunction(id, {
-        functionString: functionString.replace(/\s+/, " "),
+        functionString: functionString.replace(/\s+/, ' '),
         metadata: check,
       });
     }
@@ -47,7 +47,7 @@ class UpdateFunctionsLM {
 
   private _updateFunctionModelFragment(id: number): string | undefined {
     const name = useVariablesStore.getState().getVariableName(id);
-    let fragment = "";
+    let fragment = '';
     const regulations = useRegulationsStore.getState().regulationsOf(id);
     const varNames = new Set<string>();
 
@@ -55,9 +55,11 @@ class UpdateFunctionsLM {
 
     for (const reg of regulations) {
       if (reg.regulator !== id) {
-        varNames.add(useVariablesStore.getState().getVariableName(reg.regulator)!);
+        varNames.add(
+          useVariablesStore.getState().getVariableName(reg.regulator)!
+        );
       }
-      fragment += this._liveModel.Regulations._regulationToString(reg) + "\n";
+      fragment += this._liveModel.Regulations._regulationToString(reg) + '\n';
     }
 
     for (const name of varNames) {
@@ -108,10 +110,10 @@ class UpdateFunctionsLM {
     if (functionString.length === 0) return { parameters: new Set() };
 
     let tokens = this._tokenize_update_function(functionString);
-    if (typeof tokens === "string") return tokens;
+    if (typeof tokens === 'string') return tokens;
 
     tokens = this._process_function_calls(tokens);
-    if (typeof tokens === "string") return tokens;
+    if (typeof tokens === 'string') return tokens;
 
     const names = new Set<{ name: string; cardinality: number }>();
     this._extract_names_with_cardinalities(tokens, names);
@@ -136,14 +138,13 @@ class UpdateFunctionsLM {
       }
 
       if (variable) {
-        const regulation = useRegulationsStore.getState().getRegulationId(
-          variable.id,
-          id
-        );
+        const regulation = useRegulationsStore
+          .getState()
+          .getRegulationId(variable.id, id);
         if (!regulation) {
           const myName = useVariablesStore.getState().getVariableName(id);
           const message = `Variable '${variable.name}' does not regulate '${myName}'.`;
-          if (confirm(message + " Do you want to create the regulation now?")) {
+          if (confirm(message + ' Do you want to create the regulation now?')) {
             this._liveModel.Regulations.addRegulation(
               false,
               variable.id,
@@ -158,7 +159,9 @@ class UpdateFunctionsLM {
       }
     }
 
-    for (const [k, existing] of useUpdateFunctionsStore.getState().getAllUpdateFunctions() ) {
+    for (const [k, existing] of useUpdateFunctionsStore
+      .getState()
+      .getAllUpdateFunctions()) {
       const functionVariableId: number = parseInt(k, 10);
       if (functionVariableId === id) continue;
 
@@ -170,9 +173,11 @@ class UpdateFunctionsLM {
           ) {
             return `Parameter '${myParam.name}' used with ${
               myParam.cardinality
-            } args, but '${useVariablesStore.getState().getVariableName(
-              functionVariableId
-            )}' uses it with ${parameter.cardinality}.`;
+            } args, but '${useVariablesStore
+              .getState()
+              .getVariableName(functionVariableId)}' uses it with ${
+              parameter.cardinality
+            }.`;
           }
         }
       }
@@ -190,9 +195,9 @@ class UpdateFunctionsLM {
       const token = tokens[i];
 
       if (
-        token.token === "name" &&
+        token.token === 'name' &&
         i + 1 < tokens.length &&
-        tokens[i + 1].token === "group"
+        tokens[i + 1].token === 'group'
       ) {
         const argTokens = tokens[i + 1].data;
         const args: string[] = [];
@@ -204,13 +209,13 @@ class UpdateFunctionsLM {
           while (j < argTokens.length) {
             const arg = argTokens[j];
 
-            if (arg.token !== "name") {
+            if (arg.token !== 'name') {
               return `Expected name, but found '${arg.text}'.`;
             }
 
-            const variable = useVariablesStore.getState().variableFromName(
-              arg.data
-            );
+            const variable = useVariablesStore
+              .getState()
+              .variableFromName(arg.data);
             if (!variable) {
               return `Unknown argument '${arg.data}'. Only variables allowed as arguments.`;
             }
@@ -220,7 +225,7 @@ class UpdateFunctionsLM {
 
             if (j < argTokens.length) {
               const next = argTokens[j];
-              if (next.token !== "comma") {
+              if (next.token !== 'comma') {
                 return `Expected ',', but found '${next.text}'.`;
               }
 
@@ -233,13 +238,13 @@ class UpdateFunctionsLM {
           }
         }
 
-        token.token = "call";
+        token.token = 'call';
         token.args = args;
 
         tokens.splice(i + 1, 1);
-      } else if (token.token === "group") {
+      } else if (token.token === 'group') {
         const result = this._process_function_calls(token.data);
-        if (typeof result === "string") return result;
+        if (typeof result === 'string') return result;
       }
     }
 
@@ -251,16 +256,16 @@ class UpdateFunctionsLM {
     names: Set<{ name: string; cardinality: number }>
   ) {
     for (let token of tokens) {
-      if (token.token === "name") {
+      if (token.token === 'name') {
         names.add({ name: token.data, cardinality: 0 });
       }
-      if (token.token === "call") {
+      if (token.token === 'call') {
         names.add({ name: token.data, cardinality: token.args.length });
         for (const arg of token.args) {
           names.add({ name: arg, cardinality: 0 });
         }
       }
-      if (token.token === "group") {
+      if (token.token === 'group') {
         this._extract_names_with_cardinalities(token.data, names);
       }
     }
@@ -282,37 +287,37 @@ class UpdateFunctionsLM {
       let c = str[i++];
       if (/\s/.test(c)) continue;
 
-      if (c === "!") result.push({ token: "not", text: "!" });
-      else if (c === ",") result.push({ token: "comma", text: "," });
-      else if (c === "&") result.push({ token: "and", text: "&" });
-      else if (c === "|") result.push({ token: "or", text: "|" });
-      else if (c === "^") result.push({ token: "xor", text: "^" });
-      else if (c === "=" && str[i] === ">") {
+      if (c === '!') result.push({ token: 'not', text: '!' });
+      else if (c === ',') result.push({ token: 'comma', text: ',' });
+      else if (c === '&') result.push({ token: 'and', text: '&' });
+      else if (c === '|') result.push({ token: 'or', text: '|' });
+      else if (c === '^') result.push({ token: 'xor', text: '^' });
+      else if (c === '=' && str[i] === '>') {
         i++;
-        result.push({ token: "imp", text: "=>" });
-      } else if (c === "<" && str[i] === "=" && str[i + 1] === ">") {
+        result.push({ token: 'imp', text: '=>' });
+      } else if (c === '<' && str[i] === '=' && str[i + 1] === '>') {
         i += 2;
-        result.push({ token: "iff", text: "<=>" });
-      } else if (c === ">") return { error: "Unexpected '>'." };
-      else if (c === ")")
+        result.push({ token: 'iff', text: '<=>' });
+      } else if (c === '>') return { error: "Unexpected '>'." };
+      else if (c === ')')
         return top
           ? { error: "Unexpected ')'." }
           : { data: result, continue_at: i };
-      else if (c === "(") {
+      else if (c === '(') {
         const nested = this._tokenize_update_function_recursive(str, i, false);
         if (nested.error) return { error: nested.error };
         i = nested.continue_at;
-        result.push({ token: "group", data: nested.data, text: "(...)" });
+        result.push({ token: 'group', data: nested.data, text: '(...)' });
       } else if (/[a-zA-Z0-9{}_]/.test(c)) {
         let name = c;
         while (i < str.length && /[a-zA-Z0-9{}_]/.test(str[i]))
           name += str[i++];
         result.push(
-          name === "true"
-            ? { token: "true", text: name }
-            : name === "false"
-            ? { token: "false", text: name }
-            : { token: "name", data: name, text: name }
+          name === 'true'
+            ? { token: 'true', text: name }
+            : name === 'false'
+            ? { token: 'false', text: name }
+            : { token: 'name', data: name, text: name }
         );
       } else {
         return { error: "Unexpected '" + c + "'." };
