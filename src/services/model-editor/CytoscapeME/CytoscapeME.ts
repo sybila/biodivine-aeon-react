@@ -8,6 +8,8 @@ import { LiveModel } from '../../global/LiveModel/LiveModel';
 import ModelEditor from '../ModelEditor/ModelEditor';
 import ControlEditor from '../ControlEditor/ControlEditor';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 
 const DOUBLE_CLICK_DELAY = 400;
 
@@ -15,7 +17,6 @@ const DOUBLE_CLICK_DELAY = 400;
 
 declare const cytoscape: any;
 
-// Todo-have locally
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
 const _add_box_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 4h16v16H4z"/><path fill="#6a7ea5" d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -345,14 +346,14 @@ class CytoscapeMEClass {
           selected.unselect();
         }
       }
+      useModelEditorStatus
+        .getState()
+        .setSelectedItemInfo({ type: 'variable', id: id });
       this.renderMenuForSelectedNode(node);
-      ModelEditor.selectVariable(id, true);
-      ControlEditor.selectVariable(id, true);
     });
     node.on('unselect', (e: any) => {
-      ////UI.Visible.toggleNodeMenu();
-      ModelEditor.selectVariable(id, false);
-      ControlEditor.selectVariable(id, false);
+      useModelEditorStatus.getState().setSelectedItemInfo(null);
+      useModelEditorStatus.getState().setFloatingMenuInfo(null); // hide menu
     });
     node.on('click', (e: any) => {
       this.lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
@@ -370,8 +371,11 @@ class CytoscapeMEClass {
       if (node.selected()) node.unselect(); // ensure menu is hidden, etc.
       this.cytoscape.remove(node);
     } else {
-      //Todo-error
-      console.log('[CytoscapeME] Cannot remove ' + id + ' - node not found.');
+      Message.showError(
+        'Cannot remove node from editor canvas: Internal Error (' +
+          id +
+          ' - node not found)'
+      );
     }
   }
 
@@ -573,7 +577,6 @@ class CytoscapeMEClass {
   /** Update the node menu to be shown exactly for this element
    * (including zoom and other node properties)
    * If the node is undefined, try to find it
-   * (element?)
    */
   private renderMenuForSelectedNode(node?: any) {
     if (node === undefined) {
@@ -582,8 +585,10 @@ class CytoscapeMEClass {
     }
     let zoom = this.cytoscape.zoom();
     let position = node.renderedPosition();
-    let height = node.height() * zoom;
-    //UI.Visible.toggleNodeMenu([position["x"], position["y"]], zoom);
+    //let height = node.height() * zoom;
+    useModelEditorStatus
+      .getState()
+      .setFloatingMenuInfo({ position: [position['x'], position['y']], zoom });
   }
 
   /** Update the edge menu to be shown exactly for the currently selected edge.

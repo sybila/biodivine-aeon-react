@@ -5,14 +5,13 @@ import type { ModelEditorVariableTableProps } from './ModelEditorVariableTablePr
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import VariableInfo from './VariableInfo/VariableInfo';
+import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
 }) => {
   const [hoverVariableId, setHoverVariableId] = useState<number | null>(null);
-  const [selectedVariableId, setSelectedVariableId] = useState<number | null>(
-    ModelEditor.getSelectedVariableId()
-  );
+  const modelEditorState = useModelEditorStatus((state) => state);
 
   const [hoverRegulation, setHoverRegulation] =
     useState<RegulationVariables | null>(null);
@@ -24,10 +23,6 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
 
   const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
     setHoverVariableId(turnOnHover ? id : null);
-  }, []);
-
-  const selectVariableInfo = useCallback((id: number, select: boolean) => {
-    setSelectedVariableId(select ? id : null);
   }, []);
 
   const hoverRegulationInfo = useCallback(
@@ -45,16 +40,10 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   );
 
   useEffect(() => {
-    ModelEditor.setSelectVariableFunction(selectVariableInfo);
     ModelEditor.setHoverVariableFunction(hoverVariableInfo);
     ModelEditor.setSelectRegulationFunction(selectRegulationInfo);
     ModelEditor.setHoverRegulationFunction(hoverRegulationInfo);
-  }, [
-    hoverVariableInfo,
-    selectVariableInfo,
-    hoverRegulationInfo,
-    selectRegulationInfo,
-  ]);
+  }, [hoverVariableInfo, hoverRegulationInfo, selectRegulationInfo]);
 
   const filterVariable = (variable: Variable) => {
     return (
@@ -78,7 +67,10 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
           key={variable.id}
           {...variable}
           hoverVariable={hoverVariableId === variable.id}
-          selectedVariable={selectedVariableId === variable.id}
+          selectedVariable={
+            modelEditorState.selectedItemInfo?.type === 'variable' &&
+            modelEditorState.selectedItemInfo?.id === variable.id
+          }
           hoverRegulation={
             hoverRegulation && hoverRegulation.target === variable.id
               ? hoverRegulation
