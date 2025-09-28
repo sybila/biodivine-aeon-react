@@ -1,6 +1,7 @@
 import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
+import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
 import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
@@ -91,7 +92,8 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
                 .addTab(
                   '/control-perturbations-table',
                   'Control Perturbations Table',
-                  () => {}
+                  undefined,
+                  () => usePerturbationFilterSortStore.getState().clear()
                 )
             }
           />

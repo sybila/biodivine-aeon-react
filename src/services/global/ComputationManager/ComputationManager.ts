@@ -217,6 +217,7 @@ class ComputationManagerClass {
       LiveModel.Models.loadModel(modelId);
       useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
         LiveModel.Models.loadModel(modelId);
+        () => LiveModel.Models.removeModel(modelId);
       });
     }
 

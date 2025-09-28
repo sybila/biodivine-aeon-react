@@ -99,6 +99,7 @@ class AttractorVisualizerClass {
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
           this.reloadVisualizer();
+          useAttractorVisualizerStatus.getState().clear();
         });
     }
 

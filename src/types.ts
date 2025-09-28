@@ -175,6 +175,8 @@ export type TabInfo = {
   path: string;
   /** Callback function to be executed when the tab is clicked */
   onClick?: () => void;
+  /** Callback function to be executed when the tab is removed/closed */
+  onClose?: () => void;
   /** Indicates if the tab is currently active */
   active: boolean;
 };
