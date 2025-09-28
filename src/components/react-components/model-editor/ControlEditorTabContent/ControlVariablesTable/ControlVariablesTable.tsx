@@ -76,7 +76,7 @@ const ControlVariablesTable: React.FC = () => {
    */
   const statusButtons: Array<[string, string, () => void]> = [
     [
-      'E',
+      'N',
       'var(--color-grey)',
       () =>
         ControlEditor.changeControlEnabledSelected(
@@ -85,7 +85,7 @@ const ControlVariablesTable: React.FC = () => {
         ),
     ],
     [
-      'N',
+      'E',
       'var(--color-yellow)',
       () =>
         ControlEditor.changeControlEnabledSelected(
