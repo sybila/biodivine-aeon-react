@@ -4,15 +4,12 @@ import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 
 const TabButton: React.FC<TabInfo & { deleteMode: boolean }> = ({
   id,
-  onClick,
-  onClose,
   active,
   deleteMode,
 }) => {
   const handleClick = () => {
     if (deleteMode) {
       if (id != 0) {
-        if (onClose) onClose();
         useTabsStore.getState().removeTab(id);
       }
       return;
@@ -23,10 +20,6 @@ const TabButton: React.FC<TabInfo & { deleteMode: boolean }> = ({
     }
 
     useTabsStore.getState().setActiveTab(id);
-
-    if (onClick) {
-      onClick();
-    }
   };
 
   return (

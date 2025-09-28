@@ -77,6 +77,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
       return;
     }
 
+    const onClose = get().openedTabs[id]?.onClose;
+
     set((state) => {
       const newTabs = { ...state.openedTabs };
 
@@ -87,6 +89,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
       delete newTabs[id];
       return { openedTabs: newTabs };
     });
+
+    if (onClose) onClose();
   },
 
   setActiveTab: (id: number, navigate: boolean = true) => {
@@ -100,6 +104,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
     });
 
     const tab = get().openedTabs[id];
+
+    if (tab?.onClick) tab.onClick();
+
     if (navigate && tab && tab.path) {
       router.navigate({ to: tab.path });
     }
@@ -113,6 +120,13 @@ const useTabsStore = create<TabsState>((set, get) => ({
   isEmpty: () => Object.keys(get().openedTabs).length === 0,
 
   clear: () => {
+    get()
+      .getAllTabs()
+      .forEach((tab) => {
+        if (tab.id !== 0 && tab.onClose) {
+          tab.onClose();
+        }
+      });
     set({
       openedTabs: {
         0: {
@@ -120,6 +134,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
           path: '/model-editor',
           type: 'Model Editor',
           active: true,
+          onClick: () => {
+            LiveModel.Models.loadModel(0);
+          },
         },
       },
     });
