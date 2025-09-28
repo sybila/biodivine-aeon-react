@@ -2,18 +2,18 @@ import { useState } from 'react';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
-
-import StateIcon from '../../assets/icons/state_overview.svg';
-import StabilityIcon from '../../assets/icons/stability_analysis.svg';
-import DecisionIcon from '../../assets/icons/make_decision.svg';
-import EyeIcon from '../../assets/icons/eye.svg';
-
 import KeepAlive from 'react-activation';
 import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
 import StabilityAnalysisTabContent from '../../components/react-components/attractor-bifurcation-explorer/StabilityAnalysisTabContent/StabilityAnalysisTabContent';
 import VisualOptionsTabContent from '../../components/react-components/attractor-bifurcation-explorer/VisualOptionsTabContent/VisualOptionsTabContent';
+import AttractorBifurcationExplorerServices from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+
+import StateIcon from '../../assets/icons/state_overview.svg';
+import StabilityIcon from '../../assets/icons/stability_analysis.svg';
+import DecisionIcon from '../../assets/icons/make_decision.svg';
+import EyeIcon from '../../assets/icons/eye.svg';
 
 type TabTypeME =
   | 'Overview'
@@ -48,6 +48,8 @@ const AttractorBifurcationExplorer: React.FC = () => {
 
     setActiveTab(tabType);
   };
+
+  AttractorBifurcationExplorerServices.openBifurcationTree();
 
   return (
     <>

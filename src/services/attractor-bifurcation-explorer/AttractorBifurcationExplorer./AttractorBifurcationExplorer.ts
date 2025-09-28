@@ -39,6 +39,9 @@ class AttractorBifurcationExplorerClass {
    */
   private precision: number = 100;
 
+  /** Indicates whether the bifurcation tree is empty (not loaded). */
+  private isEmpty = true;
+
   // #endregion
 
   // #region --- Math helpers ---
@@ -179,6 +182,13 @@ class AttractorBifurcationExplorerClass {
 
   // #region --- Bifurcation Tree Management ---
 
+  /** Opens the bifurcation tree, loading it if necessary. */
+  public openBifurcationTree(): void {
+    if (this.isEmpty) {
+      this.loadBifurcationTree();
+    }
+  }
+
   /** Inserts a bifurcation tree into CytoscapeABE.
    *  @param nodeList - () List of nodes to insert.
    *  @param fit - (boolean) Whether to fit the view after insertion. Default is true.
@@ -200,6 +210,7 @@ class AttractorBifurcationExplorerClass {
         }
       }
       CytoscapeABE.applyTreeLayout(fit);
+      this.isEmpty = false;
     }
   }
 
@@ -471,6 +482,16 @@ class AttractorBifurcationExplorerClass {
       behavior,
       vector,
     });
+  }
+
+  // #endregion
+
+  // #region --- Reset ---
+
+  public clear() {
+    CytoscapeABE.removeAll();
+    useBifurcationExplorerStatus.getState().clear();
+    this.isEmpty = true;
   }
 
   // #endregion

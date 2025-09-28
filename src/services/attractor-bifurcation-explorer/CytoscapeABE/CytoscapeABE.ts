@@ -54,9 +54,6 @@ class CytoscapeABEClass {
     this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
     this.cytoscape.on('grabon', this.handleDragStart.bind(this));
     this.cytoscape.on('dragfreeon', this.handleDragEnd.bind(this));
-
-    AttractorBifurcationExplorer.loadBifurcationTree();
-    this.fit();
   }
 
   private initOptions(): CytoscapeOptions {
