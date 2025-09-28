@@ -1,8 +1,11 @@
+import { useMemo } from 'react';
 import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
 import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
+import { Message } from '../../../../lit-components/message-wrapper';
 
 const ModelDescription: React.FC<{
   setShowModelDescription: (show: boolean) => void;
@@ -10,6 +13,13 @@ const ModelDescription: React.FC<{
   const modelDescription = useModelInfoStore((state) =>
     state.getModelDescription()
   );
+
+  const tabStore = useTabsStore((state) => state);
+
+  const isActiveWittness = useMemo(() => {
+    const activeTab = tabStore.getActiveTab();
+    return activeTab?.type === 'Witness';
+  }, [tabStore]);
 
   return (
     <section className="h-fit w-full flex flex-col items-center gap-3">
@@ -38,7 +48,13 @@ const ModelDescription: React.FC<{
         multiLine={true}
         value={modelDescription}
         handleChange={(value) => {
-          ModelEditor.setModelDescription(value);
+          if (isActiveWittness) {
+            Message.showError(
+              'Cannot change model description while on Witness tab. Change to Model Editor tab and try again.'
+            );
+          } else {
+            ModelEditor.setModelDescription(value);
+          }
         }}
       />
     </section>
