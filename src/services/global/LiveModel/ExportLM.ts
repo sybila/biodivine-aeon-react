@@ -139,7 +139,7 @@ class ExportLM {
         .getState()
         .regulationsOf(variable.id);
       for (let reg of regulations) {
-        result += this.liveModel.Regulations._regulationToString(reg) + '\n';
+        result += this.liveModel.Regulations.regulationToString(reg) + '\n';
       }
     }
 

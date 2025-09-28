@@ -59,7 +59,7 @@ class UpdateFunctionsLM {
           useVariablesStore.getState().getVariableName(reg.regulator)!
         );
       }
-      fragment += this._liveModel.Regulations._regulationToString(reg) + '\n';
+      fragment += this._liveModel.Regulations.regulationToString(reg) + '\n';
     }
 
     for (const name of varNames) {

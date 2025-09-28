@@ -4,14 +4,18 @@ import { EdgeMonotonicity, type Regulation } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import type { LiveModelClass } from './LiveModel';
 
-//import { ModelEditor } from "./Todo-imports";
-
 class RegulationsLM {
+  // #region --- Properties + Constructor ---
+
   private liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
   }
+
+  // #endregion
+
+  // #region --- Regulation Actions ---
 
   public addRegulation(
     modAllowed: boolean,
@@ -33,7 +37,7 @@ class RegulationsLM {
     };
 
     useRegulationsStore.getState().addRegulation(regulation);
-    this._regulationChanged(regulation);
+    this.regulationChanged(regulation);
     return true;
   }
 
@@ -52,18 +56,15 @@ class RegulationsLM {
     return true;
   }
 
-  // // Todo fix _
-  // public _removeRegulation(regulation: Regulation): boolean {
-  //   const exists = useRegulationsStore
-  //     .getState()
-  //     .getRegulationId(regulation.regulator, regulation.target);
-  //   if (exists) {
-  //     CytoscapeME.removeRegulation(regulation.regulator, regulation.target);
-  //     this._liveModel.Export.saveModel();
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  public regulationChanged(regulation: Regulation): void {
+    CytoscapeME.ensureRegulation(regulation);
+    this.liveModel.UpdateFunctions._validateUpdateFunction(regulation.target);
+    this.liveModel.Export.saveModel();
+  }
+
+  // #endregion
+
+  // #region --- Observability ---
 
   public setObservability(
     regulatorId: number,
@@ -77,7 +78,7 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setObservability(regulatorId, targetId, isObservable);
-      this._regulationChanged({ ...regulation, observable: isObservable });
+      this.regulationChanged({ ...regulation, observable: isObservable });
     }
   }
 
@@ -91,12 +92,16 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setObservability(regulatorId, targetId, !regulation.observable);
-      this._regulationChanged({
+      this.regulationChanged({
         ...regulation,
         observable: !regulation.observable,
       });
     }
   }
+
+  // #endregion
+
+  // #region --- Monotonicity ---
 
   public setMonotonicity(
     regulatorId: number,
@@ -110,7 +115,7 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, monotonicity);
-      this._regulationChanged({ ...regulation, monotonicity: monotonicity });
+      this.regulationChanged({ ...regulation, monotonicity: monotonicity });
     }
   }
 
@@ -129,12 +134,15 @@ class RegulationsLM {
       useRegulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, next);
-      this._regulationChanged({ ...regulation, monotonicity: next });
+      this.regulationChanged({ ...regulation, monotonicity: next });
     }
   }
 
-  // Todo fix _
-  public _regulationToString(regulation: Regulation): string {
+  // #endregion
+
+  // #region --- Regulation formating ---
+
+  public regulationToString(regulation: Regulation): string {
     const regulatorName = useVariablesStore
       .getState()
       .getVariableName(regulation.regulator);
@@ -154,12 +162,7 @@ class RegulationsLM {
     return `${regulatorName} ${arrow} ${targetName}`;
   }
 
-  //Todo update _
-  public _regulationChanged(regulation: Regulation): void {
-    CytoscapeME.ensureRegulation(regulation);
-    this.liveModel.UpdateFunctions._validateUpdateFunction(regulation.target);
-    this.liveModel.Export.saveModel();
-  }
+  // #endregion
 }
 
 export default RegulationsLM;

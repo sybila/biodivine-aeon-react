@@ -75,7 +75,7 @@ class VariablesLM {
         .filter((reg) => reg.regulator === id || reg.target === id);
 
       for (const reg of toRemove) {
-        this.liveModel.Regulations._removeRegulation(reg);
+        this.liveModel.Regulations.removeRegulation(reg.regulator, reg.target);
         updateTargets.push(reg.target);
       }
 
@@ -129,7 +129,7 @@ class VariablesLM {
 
     for (const reg of useRegulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
-        this.liveModel.Regulations._regulationChanged(reg);
+        this.liveModel.Regulations.regulationChanged(reg);
       }
     }
 
