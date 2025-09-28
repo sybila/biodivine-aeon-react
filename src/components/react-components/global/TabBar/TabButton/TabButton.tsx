@@ -1,9 +1,11 @@
 import type { TabInfo } from '../../../../../types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
+import TabOperations from '../../../../../services/global/Navigation/TabOperations';
 
 const TabButton: React.FC<TabInfo & { deleteMode: boolean }> = ({
   id,
+  type,
   active,
   deleteMode,
 }) => {
@@ -32,6 +34,9 @@ const TabButton: React.FC<TabInfo & { deleteMode: boolean }> = ({
       buttonActiveColor={
         deleteMode && id != 0 ? 'var(--color-darker-red)' : undefined
       }
+      iconSrc={TabOperations.getTabTypeIcon(type)}
+      iconAlt={type}
+      iconSize="67%"
     />
   );
 };
