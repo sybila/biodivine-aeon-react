@@ -27,6 +27,8 @@ const TabBar: React.FC = () => {
         />
       </section>
 
+      <div className="h-[90%] w-1 bg-black" />
+
       <div className="h-full min-w-[100px] max-w-[500px] overflow-x-auto flex items-center justify-start gap-2 px-2">
         {Object.values(tabs).map((tab) => (
           <TabButton key={tab.id} {...tab} deleteMode={deleteModeOn} />
