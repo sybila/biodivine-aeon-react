@@ -118,8 +118,7 @@ class ImportLM {
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
-    let keys = Object.keys(updateFunctions);
-    for (let key of keys) {
+    for (const key of Object.keys(updateFunctions)) {
       const variable = this.addVariableImport(
         useVariablesStore.getState().variableFromName(key),
         key,
@@ -127,21 +126,19 @@ class ImportLM {
         control[key]
       );
 
-      if (!variable) {
+      if (variable === undefined) {
         Message.showError(
           `Error: Update function for variable "${key}" cannot be set. Variable is not defined.`
         );
         continue;
       }
 
-      // We actually have to also set the function in the model because we don't update it from the set method...
-      //ModelEditor.setUpdateFunction(variable, updateFunctions[key]);
-      let error = this.liveModel.UpdateFunctions.setUpdateFunction(
+      const error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
         updateFunctions[key]
       );
       if (error !== undefined) {
-        //Warning.displayWarning(error);
+        Message.showError('Error while setting update function: ' + error);
       }
     }
   }
@@ -312,8 +309,6 @@ class ImportLM {
     for (const { id } of useVariablesStore.getState().getAllVariables()) {
       this.liveModel.UpdateFunctions._validateUpdateFunction(id);
     }
-
-    //UI.Visible.closeContent();
 
     return true; // no error
   }
