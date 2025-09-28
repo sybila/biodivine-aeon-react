@@ -1,16 +1,22 @@
 import { create } from 'zustand';
-import type { Position } from '../../types';
+import type { Position, RegulationVariables } from '../../types';
 
 type ModelEditorState = {
   /** The id of the currently selected item (variable or regulation).
    *  If null, no item is selected. */
-  selectedItemInfo: { type: 'variable' | 'regulation'; id: number } | null;
+  selectedItemInfo:
+    | { type: 'variable'; id: number }
+    | { type: 'regulation'; regulationIds: RegulationVariables }
+    | null;
 
   /** Sets the currently selected item (variable or regulation).
    *  If null, no item is selected.
    */
   setSelectedItemInfo: (
-    itemInfo: { type: 'variable' | 'regulation'; id: number } | null
+    itemInfo:
+      | { type: 'variable'; id: number }
+      | { type: 'regulation'; regulationIds: RegulationVariables }
+      | null
   ) => void;
 
   /** Information about the floating menu's position and zoom level.

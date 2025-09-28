@@ -441,12 +441,16 @@ class CytoscapeMEClass {
     };
 
     edge.on('select', (e: any) => {
-      ModelEditor.selectRegulation(edgeVars, true);
+      useModelEditorStatus
+        .getState()
+        .setSelectedItemInfo({ type: 'regulation', regulationIds: edgeVars });
+      ModelEditor.selectRegulation(edgeVars, true); // todo remove
       this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
-      ModelEditor.selectRegulation(edgeVars, false);
-      //UI.Visible.toggleEdgeMenu(); // hide menu
+      ModelEditor.selectRegulation(edgeVars, false); // todo remove
+      useModelEditorStatus.getState().setSelectedItemInfo(null);
+      useModelEditorStatus.getState().setFloatingMenuInfo(null);
     });
     edge.on('mouseover', (e: any) => {
       edge.addClass('hover');
@@ -599,13 +603,16 @@ class CytoscapeMEClass {
       edge = this.cytoscape.edges(':selected');
       if (edge.length == 0) return; // nothing selected
     }
-    let zoom = this.cytoscape.zoom();
-    let boundingBox = edge.renderedBoundingBox();
-    let position = [
+    const zoom = this.cytoscape.zoom();
+    const boundingBox = edge.renderedBoundingBox();
+    const position: [number, number] = [
       (boundingBox.x1 + boundingBox.x2) / 2,
       (boundingBox.y1 + boundingBox.y2) / 2,
     ];
-    //UI.Visible.toggleEdgeMenu(edge.data(), position, zoom);
+    useModelEditorStatus.getState().setFloatingMenuInfo({
+      position: position,
+      zoom,
+    });
   }
 
   // #endregion
