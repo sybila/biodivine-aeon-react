@@ -17,7 +17,7 @@ const remove_svg =
 
 declare const cytoscape: any;
 
-class CytoscapeABEClass {
+class CytoscapeABE {
   // #region --- Properties ---
 
   private cytoscape: any = undefined;
@@ -760,5 +760,4 @@ class CytoscapeABEClass {
   // #endregion
 }
 
-const CytoscapeABE = new CytoscapeABEClass();
 export default CytoscapeABE;

@@ -23,6 +23,8 @@ type TabTypeME =
   | null;
 
 const AttractorBifurcationExplorer: React.FC = () => {
+  /** Check if the BifurcationExplorerCanvas is initialized. */
+  const [initialized, setInitialized] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
 
   const renderTabContent = () => {
@@ -49,7 +51,9 @@ const AttractorBifurcationExplorer: React.FC = () => {
     setActiveTab(tabType);
   };
 
-  AttractorBifurcationExplorerServices.openBifurcationTree();
+  if (initialized) {
+    AttractorBifurcationExplorerServices.openBifurcationTree();
+  }
 
   return (
     <>
@@ -98,7 +102,10 @@ const AttractorBifurcationExplorer: React.FC = () => {
       </ContentTab>
 
       <KeepAlive>
-        <BifurcationExplorerCanvas />
+        <BifurcationExplorerCanvas
+          initialized={initialized}
+          setInitialized={setInitialized}
+        />
       </KeepAlive>
     </>
   );

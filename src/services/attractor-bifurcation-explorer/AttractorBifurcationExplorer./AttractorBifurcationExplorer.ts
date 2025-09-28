@@ -10,7 +10,6 @@ import type {
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
-import CytoscapeTreeEditor from '../CytoscapeABE/CytoscapeABE';
 
 // Sorting constants
 const SORT_INFORMATION_GAIN = 'sort-information-gain';
@@ -32,7 +31,7 @@ const SORTS = [
 ];
 
 class AttractorBifurcationExplorerClass {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   /** Last set precision in the VisualOptions of AttractorExplorer.
    *  Default precision is 100%
@@ -41,6 +40,20 @@ class AttractorBifurcationExplorerClass {
 
   /** Indicates whether the bifurcation tree is empty (not loaded). */
   private isEmpty = true;
+
+  private cytoscape: CytoscapeABE;
+
+  constructor() {
+    this.cytoscape = new CytoscapeABE();
+  }
+
+  // #endregion
+
+  // #region --- Initialization ---
+
+  public init(container: HTMLElement) {
+    this.cytoscape.init(container);
+  }
 
   // #endregion
 
@@ -139,7 +152,7 @@ class AttractorBifurcationExplorerClass {
     const sortCheckbox = document.getElementById(sort) as HTMLInputElement;
     if (sortCheckbox) sortCheckbox.checked = true;
 
-    const selected = CytoscapeTreeEditor.getSelectedNodeTreeData();
+    const selected = this.cytoscape.getSelectedNodeTreeData();
     if (selected) {
       // Todo - fix
       // this.renderAttributeTable(
@@ -175,7 +188,7 @@ class AttractorBifurcationExplorerClass {
 
   /** Returns total cardinality of the graph or -1 if not available */
   public getTotalCardinality(): number {
-    return CytoscapeABE.getTotalCardinality();
+    return this.cytoscape.getTotalCardinality();
   }
 
   // #endregion
@@ -186,10 +199,11 @@ class AttractorBifurcationExplorerClass {
   public openBifurcationTree(): void {
     if (this.isEmpty) {
       this.loadBifurcationTree();
+      this.fitTree();
     }
   }
 
-  /** Inserts a bifurcation tree into CytoscapeABE.
+  /** Inserts a bifurcation tree into this.cytoscape.
    *  @param nodeList - () List of nodes to insert.
    *  @param fit - (boolean) Whether to fit the view after insertion. Default is true.
    */
@@ -199,22 +213,22 @@ class AttractorBifurcationExplorerClass {
     clearCytoscape: boolean = true
   ): void {
     if (nodeList !== undefined && nodeList.length > 0) {
-      if (clearCytoscape) CytoscapeABE.removeAll();
+      if (clearCytoscape) this.cytoscape.removeAll();
       for (const n of nodeList) {
-        CytoscapeABE.ensureNode(n);
+        this.cytoscape.ensureNode(n);
       }
       for (const n of nodeList) {
         if (n.type === 'decision') {
-          CytoscapeABE.ensureEdge(n.id, n.left, false);
-          CytoscapeABE.ensureEdge(n.id, n.right, true);
+          this.cytoscape.ensureEdge(n.id, n.left, false);
+          this.cytoscape.ensureEdge(n.id, n.right, true);
         }
       }
-      CytoscapeABE.applyTreeLayout(fit);
+      this.cytoscape.applyTreeLayout(fit);
       this.isEmpty = false;
     }
   }
 
-  /** Loads the bifurcation tree from the compute engine and inserts it into the CytoscapeABE. */
+  /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
   public loadBifurcationTree(fit: boolean = true): void {
     ComputationManager.getBifurcationTree(fit);
   }
@@ -247,7 +261,7 @@ class AttractorBifurcationExplorerClass {
 
   /** Refreshes the selection in the AttractorBifurcationExplorer. */
   public refreshSelection(): void {
-    CytoscapeABE.refreshSelection();
+    this.cytoscape.refreshSelection();
   }
 
   /** Removes a node from Cytoscape. Should be used only after calling of the removeNode function.*/
@@ -257,14 +271,14 @@ class AttractorBifurcationExplorerClass {
   ) {
     if (removedNodes.length > 0) {
       for (const removed of removedNodes) {
-        CytoscapeABE.removeNode(removed.toString());
+        this.cytoscape.removeNode(removed.toString());
       }
     }
     if (node !== undefined) {
-      CytoscapeABE.ensureNode(node);
-      CytoscapeABE.refreshSelection(node.id.toString());
+      this.cytoscape.ensureNode(node);
+      this.cytoscape.refreshSelection(node.id.toString());
     } else {
-      CytoscapeABE.refreshSelection();
+      this.cytoscape.refreshSelection();
     }
   }
 
@@ -275,11 +289,11 @@ class AttractorBifurcationExplorerClass {
 
   /** Gets the necessary conditions for a specific node. */
   public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
-    return CytoscapeABE.getNodeNecessaryConditions(nodeId);
+    return this.cytoscape.getNodeNecessaryConditions(nodeId);
   }
 
   public moveNode(nodeId: string, steps: number): void {
-    CytoscapeABE.moveNode(nodeId, steps);
+    this.cytoscape.moveNode(nodeId, steps);
   }
 
   // #endregion
@@ -355,7 +369,7 @@ class AttractorBifurcationExplorerClass {
 
   /** Gets the current state of the switchable options in the visual options tab */
   public getSwitchableOptionsState(): VisualOptionsSwitchableABE {
-    return CytoscapeABE.getSwitchLayoutOptions();
+    return this.cytoscape.getSwitchLayoutOptions();
   }
 
   /** Set precision for the bifurcation tree. */
@@ -366,27 +380,27 @@ class AttractorBifurcationExplorerClass {
 
   /** Fits the bifurcation tree to the viewport. */
   public fitTree(): void {
-    CytoscapeABE.fit();
+    this.cytoscape.fit();
   }
 
   /** Resets the layout of the bifurcation tree. */
   public resetTreeLayout(): void {
-    CytoscapeABE.resetTreeLayout();
+    this.cytoscape.resetTreeLayout();
   }
 
   /** Sets the nodes to snap to their respective layers. */
   public toggleSnapNodesToLayers(): void {
-    CytoscapeABE.toggleSnapNodesToLayers();
+    this.cytoscape.toggleSnapNodesToLayers();
   }
 
   /** Animates layout changes in the Cytoscape instance. */
   public toggleAnimateLayoutChanges(): void {
-    CytoscapeABE.toggleAnimateLayoutChanges();
+    this.cytoscape.toggleAnimateLayoutChanges();
   }
 
   /** Toggles the positive class on the left side of the bifurcation tree. */
   public togglePositiveOnLeft(): void {
-    CytoscapeABE.togglePositiveOnLeft();
+    this.cytoscape.togglePositiveOnLeft();
   }
 
   // #endregion
@@ -489,7 +503,7 @@ class AttractorBifurcationExplorerClass {
   // #region --- Reset ---
 
   public clear() {
-    CytoscapeABE.removeAll();
+    this.cytoscape.removeAll();
     useBifurcationExplorerStatus.getState().clear();
     this.isEmpty = true;
   }
