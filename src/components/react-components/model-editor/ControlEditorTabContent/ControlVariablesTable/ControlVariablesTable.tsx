@@ -8,6 +8,7 @@ import { Loading } from '../../../../lit-components/loading-wrapper';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 
 const ControlVariablesTable: React.FC = () => {
   const [hoverId, setHoverId] = useState<number | null>(null);
@@ -55,17 +56,11 @@ const ControlVariablesTable: React.FC = () => {
     Loading.endLoading();
   };
 
-  const filterVariable = (variable: Variable) => {
-    return (
-      !variableSearchText ||
-      variableSearchText === '' ||
-      variable.name.startsWith(variableSearchText)
-    );
-  };
-
   const filteredVariables = useMemo(() => {
-    if (variableSearchText === '') return variables;
-    return variables.filter(filterVariable);
+    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+      variables,
+      variableSearchText
+    );
   }, [variables, variableSearchText]);
 
   /** Array of buttons for changing the Control-Enabled and Phenotype status of selected variables.

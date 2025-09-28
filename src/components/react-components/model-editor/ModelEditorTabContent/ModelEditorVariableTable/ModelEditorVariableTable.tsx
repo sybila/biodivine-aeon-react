@@ -6,6 +6,7 @@ import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import VariableInfo from './VariableInfo/VariableInfo';
 import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
@@ -45,15 +46,11 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
     ModelEditor.setHoverRegulationFunction(hoverRegulationInfo);
   }, [hoverVariableInfo, hoverRegulationInfo, selectRegulationInfo]);
 
-  const filterVariable = (variable: Variable) => {
-    return (
-      !searchText || searchText === '' || variable.name.startsWith(searchText)
-    );
-  };
-
   const filteredVariables = useMemo(() => {
-    if (searchText === '') return variables;
-    return variables.filter(filterVariable);
+    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+      variables,
+      searchText
+    );
   }, [variables, searchText]);
 
   return !filteredVariables || filteredVariables.length === 0 ? (
