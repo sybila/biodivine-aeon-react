@@ -5,11 +5,19 @@ import useRegulationsStore from '../../../../../stores/LiveModel/useRegulationsS
 
 import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
 import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
-import MonocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
-import MonocityActIcon from '../../../../../assets/icons/trending_up.svg';
-import MonocityInhIcon from '../../../../../assets/icons/trending_down.svg';
+import MonotocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
+import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
+import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
 import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import { useMemo } from 'react';
+import type { EdgeMonotonicity } from '../../../../../types';
+
+type MOButtonInfo = {
+  icon: string;
+  alt: string;
+  hint: string;
+  nextHintText: string;
+} | null;
 
 const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
   setHint,
@@ -22,62 +30,60 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
     )
   );
 
-  if (!regulationInfo)
-    return <span className="h-[36px] w-fit">Error: Regulation not found</span>;
+  const getObservabilityButtonInfo = (observable: boolean) => {
+    return !observable
+      ? {
+          icon: VisibilityOnIcon,
+          alt: 'O On',
+          hint: 'Observability on (O)',
+          nextHintText: 'Observability off (O)',
+        }
+      : {
+          icon: VisibilityOffIcon,
+          alt: 'O Off',
+          hint: 'Observability off (O)',
+          nextHintText: 'Observability on (O)',
+        };
+  };
 
-  const observabilityInfo: {
-    icon: string;
-    alt: string;
-    hint: string;
-    nextHintText: string;
-  } = useMemo(
-    () =>
-      !regulationInfo.observable
-        ? {
-            icon: VisibilityOnIcon,
-            alt: 'O On',
-            hint: 'Observability on (O)',
-            nextHintText: 'Observability off (O)',
-          }
-        : {
-            icon: VisibilityOffIcon,
-            alt: 'O Off',
-            hint: 'Observability off (O)',
-            nextHintText: 'Observability on (O)',
-          },
-    [regulationInfo]
-  );
-
-  const monocityInfo: {
-    icon: string;
-    alt: string;
-    hint: string;
-    nextHintText: string;
-  } = useMemo(() => {
-    switch (regulationInfo.monotonicity) {
+  const getMonotocityButtonInfo = (monotocity: EdgeMonotonicity) => {
+    switch (monotocity) {
       case 'unspecified':
         return {
-          icon: MonocityActIcon,
+          icon: MonotocityActIcon,
           alt: 'M Act',
           hint: 'Make activating (M)',
           nextHintText: 'Make inhibiting (M)',
         };
       case 'activation':
         return {
-          icon: MonocityInhIcon,
+          icon: MonotocityInhIcon,
           alt: 'M Inh',
           hint: 'Make inhibiting (M)',
           nextHintText: 'Monocity off (M)',
         };
       default:
         return {
-          icon: MonocityOffIcon,
+          icon: MonotocityOffIcon,
           alt: 'M Off',
           hint: 'Monocity off (M)',
           nextHintText: 'Make activating (M)',
         };
     }
-  }, [regulationInfo]);
+  };
+
+  const [observabilityInfo, monotocityInfo]: [MOButtonInfo, MOButtonInfo] =
+    useMemo(() => {
+      if (!regulationInfo) return [null, null];
+
+      return [
+        getObservabilityButtonInfo(regulationInfo.observable),
+        getMonotocityButtonInfo(regulationInfo.monotonicity),
+      ];
+    }, [regulationInfo]);
+
+  if (!regulationInfo || observabilityInfo === null || monotocityInfo === null)
+    return <span className="h-[36px] w-fit">Error: Regulation not found</span>;
 
   return (
     <div className="flex flex-row h-auto w-[99%] items-center">
@@ -95,16 +101,16 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         setHintText={setHint}
       />
       <FloatMenuButton
-        iconSrc={monocityInfo.icon}
-        iconAlt={monocityInfo.alt}
+        iconSrc={monotocityInfo.icon}
+        iconAlt={monotocityInfo.alt}
         onClick={() =>
           LiveModel.Regulations.toggleMonotonicity(
             regulationInfo.regulator,
             regulationInfo.target
           )
         }
-        hintText={monocityInfo.hint}
-        nextHintText={monocityInfo.nextHintText}
+        hintText={monotocityInfo.hint}
+        nextHintText={monotocityInfo.nextHintText}
         setHintText={setHint}
       />
       <FloatMenuButton
