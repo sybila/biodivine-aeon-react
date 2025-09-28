@@ -244,6 +244,14 @@ class ControlPerturbationsTable {
   }
 
   // #endregion
+
+  // #region --- Clear ---
+
+  public static clear(): void {
+    usePerturbationFilterSortStore.getState().clear();
+  }
+
+  // #endregion
 }
 
 export default ControlPerturbationsTable;

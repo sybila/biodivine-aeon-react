@@ -99,7 +99,7 @@ class AttractorVisualizerClass {
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
           this.reloadVisualizer();
-          useAttractorVisualizerStatus.getState().clear();
+          this.clear();
         });
     }
 
@@ -286,6 +286,14 @@ class AttractorVisualizerClass {
 
   public getWitness(): Array<[string, string]> | undefined {
     return this.attractorData?.witness;
+  }
+
+  // #endregion
+
+  // #region --- Clear ---
+
+  public clear(): void {
+    useAttractorVisualizerStatus.getState().clear();
   }
 
   // #endregion
