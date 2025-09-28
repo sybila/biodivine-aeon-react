@@ -27,6 +27,8 @@ type TabsState = {
   getTabById: (id: number) => TabInfo | undefined;
   /** Retrieves the first tab with a specific type. */
   getFirstTabWithType: (type: TabType) => TabInfo | undefined;
+  /** Retrieves the currently active tab. */
+  getActiveTab: () => TabInfo | undefined;
   /** Checks if there are any opened tabs. */
   isEmpty: () => boolean;
   /** Clears all opened tabs. Except for the Model Editor Tab */
@@ -130,6 +132,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
 
   getFirstTabWithType: (type: TabType) =>
     Object.values(get().openedTabs).find((tab) => tab.type === type),
+
+  getActiveTab: () => Object.values(get().openedTabs).find((tab) => tab.active),
 
   isEmpty: () => Object.keys(get().openedTabs).length === 0,
 
