@@ -20,6 +20,7 @@ class InfoLM {
     const modelName = useModelInfoStore.getState().getModelName();
     if (modelName !== name) {
       useModelInfoStore.getState().setModelName(name);
+      window.document.title = `Biodivine/Aeon - ${name}`;
       this.infoChanged();
     }
   }
