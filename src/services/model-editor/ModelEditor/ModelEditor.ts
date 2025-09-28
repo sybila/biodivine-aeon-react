@@ -178,13 +178,14 @@ class ModelEditorClass {
     return LiveModel.Export.stats();
   }
 
-  // #endregion
-
-  // #region --- Model Description ---
-
   /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
     LiveModel.Info.setModelDescription(description);
+  }
+
+  /** Sets the model name in the LiveModel */
+  public setModelName(name: string) {
+    LiveModel.Info.setModelName(name);
   }
 
   // #endregion
