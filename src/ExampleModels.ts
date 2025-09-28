@@ -1,5 +1,5 @@
 export const ExampleModels = {
-	g2a: `
+  g2a: `
 		#name:Asymmetric Cell Division A
 		#description:Info: A fully parametrised version of the asymmetric cell division model. The analysis of the model takes several seconds but should be still very fast. The model has a wide range of behaviour (9 classes in total).\\n\\nModel description:\\nCaulobacter crescentus is a model organism for the study of asymmetric division and cell type differentiation, as its cell division cycle generates a pair of daughter cells that differ from one another in their morphology and behaviour. One of these cells (called stalked) develops a structure that allows it to attach to solid surfaces and is the only one capable of dividing, while the other (called swarmer) develops a flagellum that allows it to move in liquid media and divides only after differentiating into a stalked cell type. Although many genes, proteins, and other molecules involved in the asymmetric division exhibited by C. Crescentus have been discovered and characterised during decades, it remains as a challenging task to understand how cell properties arise from the high number of interactions between these molecular components. This chapter describes a modeling approach based on the Boolean logic framework that provides a means for the integration of knowledge and study of the emergence of asymmetric division. The text illustrates how the simulation of simple logic models gives valuable insight into the dynamic behaviour of the regulatory and signalling networks driving the emergence of the phenotypes exhibited by C. crescentus. These models provide useful tools for the characterisation and analysis of other complex biological networks.\\n\\nCitation:\\nSánchez-Osorio, Ismael, Carlos A. Hernández-Martínez, and Agustino Martínez-Antonio. "Modeling Asymmetric Cell Division in Caulobacter crescentus Using a Boolean Logic Approach." Asymmetric Cell Division in Development, Differentiation and Cancer. Springer, Cham, 2017. 1-21.
 		#position:CtrA:419,94
@@ -24,7 +24,7 @@ export const ExampleModels = {
 		CcrM -> DnaA
 	`,
 
-	g2b: `
+  g2b: `
 		#name:Asymmetric Cell Division B
 		#description:Info: A parametrised version of the model taken directly from GinSim. The model should be trivial to analyse and have two stable attractors. By changing DivK -| PleC regulation to activating, one can potentially turn the two stable attractors into an oscillating one.\\n\\nModel description:\\nCaulobacter crescentus is a model organism for the study of asymmetric division and cell type differentiation, as its cell division cycle generates a pair of daughter cells that differ from one another in their morphology and behaviour. One of these cells (called stalked) develops a structure that allows it to attach to solid surfaces and is the only one capable of dividing, while the other (called swarmer) develops a flagellum that allows it to move in liquid media and divides only after differentiating into a stalked cell type. Although many genes, proteins, and other molecules involved in the asymmetric division exhibited by C. Crescentus have been discovered and characterised during decades, it remains as a challenging task to understand how cell properties arise from the high number of interactions between these molecular components. This chapter describes a modeling approach based on the Boolean logic framework that provides a means for the integration of knowledge and study of the emergence of asymmetric division. The text illustrates how the simulation of simple logic models gives valuable insight into the dynamic behaviour of the regulatory and signalling networks driving the emergence of the phenotypes exhibited by C. crescentus. These models provide useful tools for the characterisation and analysis of other complex biological networks.\\n\\nCitation:\\nSánchez-Osorio, Ismael, Carlos A. Hernández-Martínez, and Agustino Martínez-Antonio. "Modeling Asymmetric Cell Division in Caulobacter crescentus Using a Boolean Logic Approach." Asymmetric Cell Division in Development, Differentiation and Cancer. Springer, Cham, 2017. 1-21.
 		#position:DivL:750,160
@@ -50,7 +50,7 @@ export const ExampleModels = {
 		PleC -| DivJ
 	`,
 
-	buddingYeastOrlando: `
+  buddingYeastOrlando: `
 		#name:Budding yeast cell cycle (Orlando)
 		#description:Info: A fully parametric version of a smaller variant of the budding yeast model from GinSim. The analysis should be computable in several seconds. The model has various types of behaviour, but at most two attractors at the same time.\\n\\nModel description:\\nThis model is a direct transcription of the Boolean model published by Orlando et al. Synchronous simulation of this model yields a cyclic attractor gathering most trajectories in the state transition graph, which is robust to parameter choice, as reported in [1]. However, asynchronous simulations all lead to a stable state with all variables OFF, whatever the parameter set proposed by the authors, indicating that the oscillations observed in the synchronous simulations may not be sustained. See [2] for more details.\\n\\nCitation:\\nFAURÉ, Adrien; THIEFFRY, Denis. Logical modelling of cell cycle control in eukaryotes: a comparative study. Molecular BioSystems, 2009, 5.12: 1569-1581.
 		#position:CLN3:128,68
@@ -85,7 +85,7 @@ export const ExampleModels = {
 		$SBF: g(MBF, YOX1) & h(YHP1, CLN3) 
 	`,
 
-	buddingYeastIrons: `
+  buddingYeastIrons: `
 		#name:Budding yeast cell cycle
 		#description:Info: Almost fully instantiated version of a non-trivial model of a yeast cell cycle taken from GinSim. The model contains one large disordered component. The analysis of the model can take non-trivial time due to this large component, but shouldn't consume much memory since the model has almost no parameters.\\n\\nModel description:\\nThis model is a direct transcription of the Boolean model published by Irons, except for the specific temporisation system. Synchronous simulation of this model recovers the results obtained by Irons in absence of time delays (Fig. 3B in [1]), i.e. a single, cyclic attractor qualitatively consistent with available kinetic data.\\n\\nCitation:\\nIRONS, D. J. Logical analysis of the budding yeast cell cycle. Journal of theoretical biology, 2009, 257.4: 543-559.
 		#position:Yhp1:463,95
@@ -104,7 +104,7 @@ export const ExampleModels = {
 		$Cln2:SMBF
 		SMBF -> Cln2
 		#position:Clb2:225,269
-		$Clb2:((((((((!Clb2 & !Cdc20) & !CKI) & B) | (((!Clb2 & Cdc20) & !CKI) & !Cdh1) & B)) | ((((Clb2 & !SFF) & !Cdc20) & !CKI) & B)) | (((((Clb2 & !SFF) & Cdc20) & !CKI) & !Cdh1) & B)) | (((Clb2 & SFF) & !Cdc20) & !CKI)) | ((((Clb2 & SFF) & Cdc20) & !CKI) & !Cdh1))
+		$Clb2:((((((((!Clb2 & !Cdc20) & !CKI) & B) | ((((!Clb2 & Cdc20) & !CKI) & !Cdh1) & B)) | ((((Clb2 & !SFF) & !Cdc20) & !CKI) & B)) | (((((Clb2 & !SFF) & Cdc20) & !CKI) & !Cdh1) & B)) | (((Clb2 & SFF) & !Cdc20) & !CKI)) | ((((Clb2 & SFF) & Cdc20) & !CKI) & !Cdh1))
 		Clb2 -> Clb2
 		SFF -> Clb2
 		Cdc20 -| Clb2
@@ -121,7 +121,7 @@ export const ExampleModels = {
 		SFF -> Cdc20
 		M -> Cdc20
 		#position:SFF:313,314
-		$SFF:(((((((!Clb2 & !Cdc20) & !CKI) & B) | (((!Clb2 & Cdc20) & !CKI) & !Cdh1) & B)) | ((((Clb2 & !SFF) & !Cdc20) & !CKI) & B)) | (((((Clb2 & !SFF) & Cdc20) & !CKI) & !Cdh1) & B)) | (Clb2 & SFF))
+		$SFF:(((((((!Clb2 & !Cdc20) & !CKI) & B) | ((((!Clb2 & Cdc20) & !CKI) & !Cdh1) & B)) | ((((Clb2 & !SFF) & !Cdc20) & !CKI) & B)) | (((((Clb2 & !SFF) & Cdc20) & !CKI) & !Cdh1) & B)) | (Clb2 & SFF))
 		Clb2 -> SFF
 		SFF -> SFF
 		Cdc20 -| SFF
@@ -183,5 +183,4 @@ export const ExampleModels = {
 		M -> CD
 		CD -| CD
 	`,
-
-}
+};
