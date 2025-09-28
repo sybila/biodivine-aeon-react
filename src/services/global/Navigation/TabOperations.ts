@@ -31,6 +31,7 @@ class TabOperations {
     return !this.singleTabTypes.has(tabType);
   }
 
+  /** Returns the icon for a given tab type */
   public static getTabTypeIcon(tabType: TabType): string {
     return this.tabTypeToIcon[tabType] ?? '';
   }
