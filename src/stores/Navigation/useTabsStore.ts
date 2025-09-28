@@ -3,6 +3,7 @@ import type { TabInfo, TabType } from '../../types';
 import { LiveModel } from '../../services/global/LiveModel/LiveModel';
 import router from '../../router';
 import { Loading } from '../../components/lit-components/loading-wrapper';
+import TabOperations from '../../services/global/Navigation/TabOperations';
 
 type TabsState = {
   /** Property containing information about all opened tabs. */
@@ -24,6 +25,8 @@ type TabsState = {
   getAllTabs: () => TabInfo[];
   /** Retrieves a tab by ID. */
   getTabById: (id: number) => TabInfo | undefined;
+  /** Retrieves the first tab with a specific type. */
+  getFirstTabWithType: (type: TabType) => TabInfo | undefined;
   /** Checks if there are any opened tabs. */
   isEmpty: () => boolean;
   /** Clears all opened tabs. Except for the Model Editor Tab */
@@ -52,6 +55,14 @@ const useTabsStore = create<TabsState>((set, get) => ({
   ) => {
     if (type === 'Model Editor') {
       return 0;
+    }
+
+    if (!TabOperations.canOpenMoreThanOne(type)) {
+      const existingTab = get().getFirstTabWithType(type);
+      if (existingTab) {
+        get().setActiveTab(existingTab.id);
+        return existingTab.id;
+      }
     }
 
     const id = get().idNow;
@@ -116,6 +127,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
   getAllTabs: () => Object.values(get().openedTabs),
 
   getTabById: (id: number) => get().openedTabs[id],
+
+  getFirstTabWithType: (type: TabType) =>
+    Object.values(get().openedTabs).find((tab) => tab.type === type),
 
   isEmpty: () => Object.keys(get().openedTabs).length === 0,
 
