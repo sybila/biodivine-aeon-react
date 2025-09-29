@@ -181,7 +181,10 @@ class ExportLM {
     conversionFunction?: (aeonString: string) => Promise<string>
   ): Promise<void> {
     let modelString = this.exportAeon(true);
-    const fileName = useModelInfoStore.getState().getModelName() ?? 'model';
+    const modelName = useModelInfoStore.getState().getModelName();
+    const fileName = !useModelInfoStore.getState().getModelName()
+      ? 'model'
+      : modelName;
 
     if (!modelString) {
       Message.showError('Export Error: No variables in the model.');
