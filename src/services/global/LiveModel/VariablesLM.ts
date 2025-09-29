@@ -88,7 +88,7 @@ class VariablesLM {
       CytoscapeME.removeNode(id);
 
       if (this.liveModel.isEmpty()) {
-        //Todo - add QuickHelp;
+        //Todo - add QuickHelp ON;
       }
 
       this.liveModel.Export.saveModel();

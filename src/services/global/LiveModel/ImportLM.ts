@@ -1,9 +1,12 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import config from '../../../config';
+import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import Warning from '../Warning/Warning';
 import { LiveModel, type LiveModelClass } from './LiveModel';
 
 // import {
@@ -254,20 +257,37 @@ class ImportLM {
 
   // #region --- Import Aeon ---
 
+  /** Import a model from an Aeon file with warnings.
+   *  If there are results loaded or tabs open, warn the user that they will be lost.
+   *  If the model is not empty, warn the user that it will be erased.
+   */
+  public async importAeonWithWarnings(modelString: string): Promise<boolean> {
+    if (
+      useResultsStatus.getState().results != undefined ||
+      !useTabsStore.getState().isEmpty()
+    ) {
+      const proceed = await Warning.addImportModelResultsWarning();
+      if (!proceed) {
+        return false;
+      }
+    }
+
+    if (!this.liveModel.isEmpty()) {
+      const proceed = await Warning.addImportModelEraseModelWarning();
+      if (!proceed) {
+        return false;
+      }
+    }
+
+    return this.importAeon(modelString);
+  }
+
   /**
    * Import model from Aeon file, load it into the live model and save it as the main model.
    * If the import is successful, return true.
    */
-  public importAeon(modelString: string, erasePossible = false): boolean {
-    if (
-      (!erasePossible && !this.liveModel._modelModified()) ||
-      (!this.liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
-    ) {
-      // If there is some model loaded, let the user know it will be
-      // overwritten. If he decides not to do it, just return...
-      return false;
-    }
-
+  public importAeon(modelString: string): boolean {
+    Loading.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel._disable_dynamic_validation = true;
 
@@ -308,6 +328,7 @@ class ImportLM {
     this.liveModel._disable_dynamic_validation = false;
     this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
 
+    Loading.endLoading();
     return true; // no error
   }
 
@@ -334,7 +355,6 @@ class ImportLM {
       }
 
       const fileContent = e.target.result as string;
-      Loading.startLoading();
 
       try {
         const aeonModel = !formatToAeonFunction
@@ -345,7 +365,7 @@ class ImportLM {
           throw new Error('File format conversion failed.');
         }
 
-        this.importAeon(aeonModel);
+        await this.importAeonWithWarnings(aeonModel);
         this.liveModel.Models.addModel(aeonModel, 'main');
       } catch (error: any) {
         Message.showError(
@@ -353,7 +373,6 @@ class ImportLM {
         );
       } finally {
         element.value = '';
-        Loading.endLoading();
       }
     };
 
@@ -365,9 +384,8 @@ class ImportLM {
   // #region --- Import from local storage ---
 
   /** Loads model saved in the local storage of the browser. */
-  public loadFromLocalStorage(): void {
+  public async loadFromLocalStorage(): Promise<void> {
     try {
-      Loading.startLoading();
       const modelString = localStorage.getItem(
         config.localStorageModelName ?? 'lastModel'
       );
@@ -376,7 +394,7 @@ class ImportLM {
         modelString !== null &&
         modelString.length > 0
       ) {
-        this.importAeon(modelString);
+        await this.importAeonWithWarnings(modelString);
       } else {
         Message.showInfo(
           "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
@@ -388,8 +406,6 @@ class ImportLM {
       );
 
       console.log(e);
-    } finally {
-      Loading.endLoading();
     }
   }
 

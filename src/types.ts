@@ -384,3 +384,19 @@ export type ComputationStatus = {
 export type fileType = '.aeon' | '.sbml' | '.bnet';
 
 // #endregion
+
+// #region --- Warnings ---
+
+export type TextButton = {
+  text: string;
+  buttonWidth?: string;
+  action: () => void;
+};
+
+export type Warning = {
+  message: string;
+  buttons: Array<TextButton>;
+  nextWarning: Warning | null;
+};
+
+// #endregion

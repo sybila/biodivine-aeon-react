@@ -80,7 +80,7 @@ class ModelsLM {
     if (!model) return false;
 
     useLoadedModelStore.getState().setLoadedModel(id, model.type);
-    this.livemodel.Import.importAeon(model.modelAeonString, true);
+    this.livemodel.Import.importAeon(model.modelAeonString);
     return true;
   }
 
