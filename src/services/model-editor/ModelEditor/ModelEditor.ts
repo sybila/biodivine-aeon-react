@@ -73,8 +73,8 @@ class ModelEditorClass {
   }
 
   /** Removes a variable */
-  public removeVariable(id: number) {
-    LiveModel.Variables.removeVariable(id);
+  public async removeVariable(id: number) {
+    await LiveModel.Variables.removeVariable(id);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component

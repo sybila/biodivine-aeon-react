@@ -5,6 +5,8 @@ import WaiterFunction from '../../utilities/WaiterFunction';
 
 /** Service for managing warnings in the application */
 class Warning {
+  // #region --- Starting Computation Warning ---
+
   /** Adds a warning about starting a new computation that will clear results and close tabs. */
   public static addStartComputationResultsWarning(
     computationFunction: () => void
@@ -24,6 +26,61 @@ class Warning {
         ]
       );
   }
+
+  // #endregion
+
+  // #region --- Import Model Warnings ---
+
+  /** Adds a warning about importing a new model that will erase the current model.
+   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
+   */
+  public static async addImportModelEraseModelWarning(): Promise<boolean> {
+    return this.addWaiterFunctionWarning(
+      'Importing a new model will erase the current model. Do you want to proceed?',
+      () => {}
+    );
+  }
+
+  // #endregion
+
+  // #region --- Variable Warnings ---
+
+  /** Adds a warning about removing a variable and its associated regulations.
+   *  @param variableName - The name of the variable to be removed.
+   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
+   */
+  public static async addRemoveVariableWarning(
+    variableName: string
+  ): Promise<boolean> {
+    return this.addWaiterFunctionWarning(
+      `Are you sure you want to remove the variable "${variableName}"? This will also remove all associated regulations.`,
+      () => {}
+    );
+  }
+
+  // #endregion
+
+  // #region --- Universal Warnings ---
+
+  /** Adds a warning that performing operation will clear the results and close all tabs except for the Model Editor tab.
+   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
+   */
+  public static async addRemoveResultsWarning(
+    operation: string
+  ): Promise<boolean> {
+    return this.addWaiterFunctionWarning(
+      operation +
+        ' will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
+      () => {
+        useResultsStatus.getState().clear();
+        useTabsStore.getState().clear();
+      }
+    );
+  }
+
+  // #endregion
+
+  // #region --- Private Helper Functions ---
 
   /** Adds a warning using async waiter function for resolve.
    *  Returns a promise that resolves to true if the user proceeds, false otherwise.
@@ -53,28 +110,7 @@ class Warning {
     return waiter.promise();
   }
 
-  /** Adds a warning about importing a new model that will erase the current model.
-   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
-   */
-  public static async addImportModelEraseModelWarning(): Promise<boolean> {
-    return this.addWaiterFunctionWarning(
-      'Importing a new model will erase the current model. Do you want to proceed?',
-      () => {}
-    );
-  }
-
-  /** Adds a warning about importing a new model that will clear the results and close all tabs except for the Model Editor tab.
-   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
-   */
-  public static async addImportModelResultsWarning(): Promise<boolean> {
-    return this.addWaiterFunctionWarning(
-      'Importing a new model will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
-      () => {
-        useResultsStatus.getState().clear();
-        useTabsStore.getState().clear();
-      }
-    );
-  }
+  // #endregion
 }
 
 export default Warning;

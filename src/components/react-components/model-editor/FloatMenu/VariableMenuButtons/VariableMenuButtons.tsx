@@ -29,7 +29,11 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
       <FloatMenuButton
         iconSrc={DeleteIcon}
         iconAlt="⌫"
-        onClick={() => LiveModel.Variables.removeVariable(selectedVariableId)}
+        onClick={async () =>
+          await LiveModel.Variables.removeVariableWithWarnings(
+            selectedVariableId
+          )
+        }
         hintText="Remove (⌫)"
         setHintText={setHint}
       />

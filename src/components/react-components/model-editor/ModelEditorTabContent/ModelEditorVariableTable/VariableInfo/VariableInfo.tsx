@@ -143,7 +143,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={DeleteIcon}
           iconAlt="delete"
-          handleClick={() => ModelEditor.removeVariable(id)}
+          handleClick={async () => await ModelEditor.removeVariable(id)}
         ></IconButtonReact>
       </section>
 

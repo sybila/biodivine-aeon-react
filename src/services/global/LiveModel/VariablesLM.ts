@@ -6,6 +6,9 @@ import type { LiveModelClass } from './LiveModel';
 import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
+import Warning from '../Warning/Warning';
+import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
 
 /** Manage variables in the live model */
 class VariablesLM {
@@ -51,60 +54,81 @@ class VariablesLM {
 
     ComputationManager.resetMaxSize();
 
-    // Todo
-    //UI.Visible.setQuickHelpVisible(false);
+    // Todo - QuickHelp OFF;
 
     this.liveModel.UpdateFunctions.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
     return id;
   }
 
-  /** Remove a variable by its ID */
-  public removeVariable(id: number, force = false): void {
-    if (!force && !this.liveModel._modelModified()) return;
+  /** Removes variable and displays warnings if necessary
+   *  Returns true if the variable was removed, false otherwise.
+   *  Shows warnings if there are existing results or if the user needs to confirm variable removal.
+   */
+  public async removeVariableWithWarnings(id: number): Promise<boolean> {
+    const variable = useVariablesStore.getState().variableFromId(id);
+    if (!variable) return false;
 
+    if (
+      useResultsStatus.getState().results !== undefined ||
+      !useTabsStore.getState().isEmpty()
+    ) {
+      const proceed = await Warning.addRemoveResultsWarning(
+        'Removing a variable'
+      );
+
+      if (!proceed) return false;
+    }
+
+    if (!(await Warning.addRemoveVariableWarning(variable.name))) {
+      return false;
+    }
+
+    this.removeVariable(id);
+    return true;
+  }
+
+  /** Remove a variable by its ID */
+  public removeVariable(id: number): void {
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
 
-    if (force || confirm(variable.name)) {
-      //Strings.removeNodeCheck(variable.name)
-      const updateTargets: number[] = [];
-      const toRemove = useRegulationsStore
+    const updateTargets: number[] = [];
+    const toRemove = useRegulationsStore
+      .getState()
+      .getAllRegulations()
+      .filter((reg) => reg.regulator === id || reg.target === id);
+
+    for (const reg of toRemove) {
+      this.liveModel.Regulations.removeRegulation(reg.regulator, reg.target);
+      updateTargets.push(reg.target);
+    }
+
+    ComputationManager.resetMaxSize();
+
+    useVariablesStore.getState().removeVariable(id);
+    this.liveModel.Control.removeControlInfo(id);
+    this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
+
+    CytoscapeME.removeNode(id);
+
+    if (this.liveModel.isEmpty()) {
+      //Todo - add QuickHelp ON;
+    }
+
+    this.liveModel.Export.saveModel();
+
+    for (const affectedId of updateTargets) {
+      const fn = useUpdateFunctionsStore
         .getState()
-        .getAllRegulations()
-        .filter((reg) => reg.regulator === id || reg.target === id);
-
-      for (const reg of toRemove) {
-        this.liveModel.Regulations.removeRegulation(reg.regulator, reg.target);
-        updateTargets.push(reg.target);
+        .getUpdateFunctionId(affectedId);
+      if (fn !== undefined) {
+        this.liveModel.UpdateFunctions.setUpdateFunction(
+          affectedId,
+          fn.functionString
+        );
       }
-
-      ComputationManager.resetMaxSize();
-
-      useVariablesStore.getState().removeVariable(id);
-      this.liveModel.Control.removeControlInfo(id);
-      this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
-
-      CytoscapeME.removeNode(id);
-
-      if (this.liveModel.isEmpty()) {
-        //Todo - add QuickHelp ON;
-      }
-
-      this.liveModel.Export.saveModel();
-
-      for (const affectedId of updateTargets) {
-        const fn = useUpdateFunctionsStore
-          .getState()
-          .getUpdateFunctionId(affectedId);
-        if (fn !== undefined) {
-          this.liveModel.UpdateFunctions.setUpdateFunction(
-            affectedId,
-            fn.functionString
-          );
-        }
-        this.liveModel.UpdateFunctions.validateUpdateFunction(affectedId);
-      }
+      this.liveModel.UpdateFunctions.validateUpdateFunction(affectedId);
     }
   }
 
@@ -158,7 +182,7 @@ class VariablesLM {
 
     console.log('To remove:', toRemove);
     for (const id of toRemove) {
-      this.removeVariable(id, true);
+      this.removeVariable(id);
     }
 
     return toRemove.length;
@@ -177,7 +201,7 @@ class VariablesLM {
 
     console.log('To remove:', toRemove);
     for (const id of toRemove) {
-      this.removeVariable(id, true);
+      this.removeVariable(id);
     }
 
     return toRemove.length;
@@ -189,7 +213,7 @@ class VariablesLM {
 
   public clear() {
     for (const variable of useVariablesStore.getState().getAllVariables()) {
-      this.removeVariable(variable.id, true);
+      this.removeVariable(variable.id);
     }
   }
 

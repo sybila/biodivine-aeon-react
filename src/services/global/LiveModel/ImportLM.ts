@@ -266,7 +266,9 @@ class ImportLM {
       useResultsStatus.getState().results != undefined ||
       !useTabsStore.getState().isEmpty()
     ) {
-      const proceed = await Warning.addImportModelResultsWarning();
+      const proceed = await Warning.addRemoveResultsWarning(
+        'Importing a new model'
+      );
       if (!proceed) {
         return false;
       }
