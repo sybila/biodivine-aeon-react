@@ -2,6 +2,7 @@ import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
+import ComputationManager from '../ComputationManager/ComputationManager';
 import type { LiveModelClass } from './LiveModel';
 
 // import {
@@ -40,7 +41,7 @@ class UpdateFunctionsLM {
       });
     }
 
-    this._validateUpdateFunction(id);
+    this.validateUpdateFunction(id);
     this._liveModel.Export.saveModel();
     return undefined;
   }
@@ -74,34 +75,52 @@ class UpdateFunctionsLM {
     return fragment;
   }
 
-  public validateAllUpdateFunctions(): void {
-    for (const variable of useVariablesStore.getState().getAllVariables()) {
-      this._validateUpdateFunction(variable.id);
+  // #region --- Validation ---
+
+  /** Validates all update functions if the number of variables has changed since the last validation. */
+  public validateUpdateFunctionsIfNeeded(): void {
+    if (
+      this._liveModel._disable_dynamic_validation ||
+      !ComputationManager.isComputeEngineConnected()
+    )
+      return;
+
+    if (
+      useVariablesStore.getState().getAllVariables().length !==
+      Object.keys(useUpdateFunctionsStore.getState().updateFunctionStatus)
+        .length
+    ) {
+      this.validateAllUpdateFunctions();
     }
   }
 
-  public _validateUpdateFunction(id: number): void {
+  /** Validates all update functions and sets state of each update function in the ModelEditor tab. */
+  public validateAllUpdateFunctions(): void {
+    if (this._liveModel._disable_dynamic_validation) return;
+
+    useUpdateFunctionsStore.getState().resetUpdateFunctionStatus();
+    for (const variable of useVariablesStore.getState().getAllVariables()) {
+      this.validateUpdateFunction(variable.id);
+    }
+  }
+
+  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab. */
+  public validateUpdateFunction(id: number): void {
     if (this._liveModel._disable_dynamic_validation) return;
 
     const modelFragment = this._updateFunctionModelFragment(id);
     if (!modelFragment) {
-      //ModelEditor.setUpdateFunctionStatus(id, "", false);
+      useUpdateFunctionsStore.getState().setUpdateFunctionStatus(id, {
+        isError: false,
+        status: 'No regulators',
+      });
       return;
     }
 
-    //Todo fix type
-    /*ComputeEngine.validateUpdateFunction(modelFragment, (error: string, result: any) => {
-      if (error !== undefined) {
-        //ModelEditor.setUpdateFunctionStatus(id, `Error: ${error}`, true);
-      } else {
-        ModelEditor.setUpdateFunctionStatus(
-          id,
-          `Possible instantiations: ${result.cardinality}`,
-          false
-        );
-      }
-    });*/
+    ComputationManager.validateUpdateFunction(id, modelFragment);
   }
+
+  // #endregion
 
   public _checkUpdateFunction(
     id: number,

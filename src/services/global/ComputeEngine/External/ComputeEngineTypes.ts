@@ -43,3 +43,7 @@ export type AttractorExplorerResponse = {
   variables: Array<string>;
   witness: string;
 };
+
+export type ValidateUpdateFunctionResponse = {
+  cardinality: number;
+};

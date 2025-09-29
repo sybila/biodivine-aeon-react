@@ -58,7 +58,7 @@ class RegulationsLM {
 
   public regulationChanged(regulation: Regulation): void {
     CytoscapeME.ensureRegulation(regulation);
-    this.liveModel.UpdateFunctions._validateUpdateFunction(regulation.target);
+    this.liveModel.UpdateFunctions.validateUpdateFunction(regulation.target);
     this.liveModel.Export.saveModel();
   }
 

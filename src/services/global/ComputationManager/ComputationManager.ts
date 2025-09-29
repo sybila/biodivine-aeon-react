@@ -10,6 +10,7 @@ import type {
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
+  UpdateFunctionStatus,
 } from '../../../types';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
@@ -21,6 +22,8 @@ import { Loading } from '../../../components/lit-components/loading-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
+import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -43,6 +46,9 @@ class ComputationManagerClass {
     maxSize: undefined,
     maxNumberOfResults: 1000000,
   };
+
+  /** If not empty, blocks all computations with the given reason. */
+  private computationBlockingOperations: Record<string, string> = {};
 
   // #endregion
 
@@ -135,6 +141,10 @@ class ComputationManagerClass {
 
   // #region --- Connection Manager ---
 
+  public isComputeEngineConnected(): boolean {
+    return this.computeEngine.isConnected();
+  }
+
   public toggleConnection(): void {
     this.computeEngine.toggleConnection(this.setComputationStatus);
   }
@@ -151,6 +161,25 @@ class ComputationManagerClass {
     }
 
     this.computeEngine.computationCanStart();
+
+    const blockingOps = Object.keys(this.computationBlockingOperations);
+    if (blockingOps.length > 0) {
+      throw new Error(
+        `Cannot start computation: ${blockingOps[0]} is running. Try again later.`
+      );
+    }
+
+    const updateFunctionErrorVarID = useUpdateFunctionsStore
+      .getState()
+      .errorInUpdateFunctions();
+
+    if (updateFunctionErrorVarID !== undefined) {
+      throw new Error(
+        `Cannot start computation: Update function for variable '${useVariablesStore
+          .getState()
+          .getVariableName(updateFunctionErrorVarID)}' has errors.`
+      );
+    }
 
     if (this.computationMode === 'Control') {
       const [controlEnabled, inPhenotype] =
@@ -201,6 +230,51 @@ class ComputationManagerClass {
       Message.showInfo(warning);
     }
   };
+
+  // #endregion
+
+  // #region --- Update Functions ---
+
+  private validateUpdateFunctionCallback(
+    variableId: number,
+    response: UpdateFunctionStatus | undefined
+  ): void {
+    if (!response) {
+      Message.showError(
+        `Error validating update function for variable ${useVariablesStore
+          .getState()
+          .getVariableName(variableId)}`
+      );
+      useUpdateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+        status: 'Error validating update function',
+        isError: true,
+      });
+    } else {
+      useUpdateFunctionsStore
+        .getState()
+        .setUpdateFunctionStatus(variableId, response);
+    }
+
+    delete this.computationBlockingOperations[
+      'Validating update function ' + variableId
+    ];
+  }
+
+  /** Validates the update function for a specific variable and sets the status in the store */
+  public validateUpdateFunction(
+    variableId: number,
+    updateFunctionFragment: string
+  ): void {
+    this.computationBlockingOperations[
+      'Validating update function ' + variableId
+    ] = "'Validating update function'";
+
+    this.computeEngine.validateUpdateFunction(
+      variableId,
+      updateFunctionFragment,
+      this.validateUpdateFunctionCallback.bind(this)
+    );
+  }
 
   // #endregion
 

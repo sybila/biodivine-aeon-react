@@ -10,6 +10,7 @@ import AddIcon from '../../../../assets/icons/add_box.svg';
 import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
 import ModelDescription from './ModelDescription/ModelDescription';
 import ModelName from './ModelName/ModelName';
+import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 
 const ModelEditorTabContent: React.FC = () => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
@@ -24,6 +25,8 @@ const ModelEditorTabContent: React.FC = () => {
       setVariableSearchText(name);
     }
   };
+
+  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">

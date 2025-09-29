@@ -54,7 +54,7 @@ class VariablesLM {
     // Todo
     //UI.Visible.setQuickHelpVisible(false);
 
-    this.liveModel.UpdateFunctions._validateUpdateFunction(id);
+    this.liveModel.UpdateFunctions.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
     return id;
   }
@@ -88,7 +88,7 @@ class VariablesLM {
       CytoscapeME.removeNode(id);
 
       if (this.liveModel.isEmpty()) {
-        //UI.Visible.setQuickHelpVisible(true);
+        //Todo - add QuickHelp;
       }
 
       this.liveModel.Export.saveModel();
@@ -103,7 +103,7 @@ class VariablesLM {
             fn.functionString
           );
         }
-        this.liveModel.UpdateFunctions._validateUpdateFunction(affectedId);
+        this.liveModel.UpdateFunctions.validateUpdateFunction(affectedId);
       }
     }
   }

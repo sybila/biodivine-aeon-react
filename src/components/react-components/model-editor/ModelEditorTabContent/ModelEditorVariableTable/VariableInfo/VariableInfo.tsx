@@ -28,8 +28,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     !varName || varName === ''
   );
 
-  const [updateFunctionInfo, setUpdateFunctionInfo] = useState<string>('');
-
   const regulationsObj = useRegulationsStore((state) => state.regulations);
 
   const regulations = useMemo(
@@ -39,6 +37,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
   const updateFunction = useUpdateFunctionsStore(
     (state) => state.getUpdateFunctionId(id)?.functionString ?? ''
+  );
+  const updateFunctionStatus = useUpdateFunctionsStore(
+    (state) => state.updateFunctionStatus[id] ?? ''
   );
 
   const updateVariableName = (newName: string) => {
@@ -55,16 +56,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const changeUpdateFunction = (newFunction: string) => {
     const updateFunction: string = newFunction ?? '';
 
-    const error: string | undefined = ModelEditor.setUpdateFunction(
-      id,
-      updateFunction
-    );
-
-    if (error) {
-      setUpdateFunctionInfo(error);
-    } else {
-      setUpdateFunctionInfo('');
-    }
+    ModelEditor.setUpdateFunction(id, updateFunction);
   };
 
   const insertRegulators = () => {
@@ -185,9 +177,12 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></InvisibleInputReact>
       <span
         slot="extended-content"
-        className="h-[20px] w-full max-w-full mt-1.5 overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] text-nowrap"
+        className="min-h-[20px] max-h-[40px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] whitespace-pre-line"
+        style={{
+          color: updateFunctionStatus.isError ? 'var(--color-red)' : 'black',
+        }}
       >
-        {updateFunctionInfo}
+        {updateFunctionStatus.status}
       </span>
     </ExtendableContentReact>
   );

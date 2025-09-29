@@ -5,6 +5,7 @@ import ComputationManager from '../../../../services/global/ComputationManager/C
 import ControlCompParams from './ControlCompParams/ControlCompParams';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
+import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 
 const StartCompTabContent: React.FC = () => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
@@ -58,6 +59,8 @@ const StartCompTabContent: React.FC = () => {
         return null;
     }
   };
+
+  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-5">

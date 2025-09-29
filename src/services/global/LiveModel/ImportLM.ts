@@ -306,9 +306,7 @@ class ImportLM {
 
     // Re-enable server checks and run them.
     this.liveModel._disable_dynamic_validation = false;
-    for (const { id } of useVariablesStore.getState().getAllVariables()) {
-      this.liveModel.UpdateFunctions._validateUpdateFunction(id);
-    }
+    this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
 
     return true; // no error
   }
@@ -364,6 +362,8 @@ class ImportLM {
 
   // #endregion
 
+  // #region --- Import from local storage ---
+
   /** Loads model saved in the local storage of the browser. */
   public loadFromLocalStorage(): void {
     try {
@@ -392,6 +392,8 @@ class ImportLM {
       Loading.endLoading();
     }
   }
+
+  // #endregion
 }
 
 export default ImportLM;

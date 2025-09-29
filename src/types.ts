@@ -5,6 +5,8 @@ export type Variable = {
 
 export type Position = [number, number];
 
+// #region --- Update Function ---
+
 export type UpdateFunctionMetadata = {
   parameters: Set<{ name: string; cardinality: number }>;
 };
@@ -13,6 +15,10 @@ export type UpdateFunction = {
   functionString: string;
   metadata: UpdateFunctionMetadata;
 };
+
+export type UpdateFunctionStatus = { status: string; isError: boolean };
+
+// #endregion
 
 // #region --- Edge/Regulation ---
 
@@ -36,6 +42,8 @@ export const EdgeMonotonicity = {
 
 // #endregion
 
+// #region --- Models ---
+
 export type ModelStats = {
   maxInDegree: number;
   maxOutDegree: number;
@@ -44,12 +52,6 @@ export type ModelStats = {
   regulationCount: number;
   explicitParameters: string[];
 };
-
-export type ComputationModes = 'Attractor Analysis' | 'Control';
-
-export type fileType = '.aeon' | '.sbml' | '.bnet';
-
-// #region --- Models ---
 
 export type ModelType = 'main' | 'witness';
 
@@ -353,6 +355,10 @@ export type VisualOptionsSwitchableABE = {
 
 // #endregion
 
+// #region --- Computation ---
+
+export type ComputationModes = 'Attractor Analysis' | 'Control';
+
 export type TimestampResponse = {
   timestamp: number | undefined;
 };
@@ -370,3 +376,11 @@ export type ComputationStatus = {
   computationMode?: ComputationModes;
   additionalInfo?: Array<string>;
 };
+
+// #endregion
+
+// #region --- Files ---
+
+export type fileType = '.aeon' | '.sbml' | '.bnet';
+
+// #endregion
