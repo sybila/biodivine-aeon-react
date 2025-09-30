@@ -149,6 +149,10 @@ class ComputationManagerClass {
     this.computeEngine.toggleConnection(this.setComputationStatus);
   }
 
+  public computationIsRunning(): boolean {
+    return this.computeEngine.isWaitingForResults();
+  }
+
   // #endregion
 
   // #region --- Computation Status ---
