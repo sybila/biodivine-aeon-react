@@ -1,4 +1,5 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
+import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import type { ModelStats, RegulationVariables } from '../../../types';
@@ -180,7 +181,17 @@ class ModelEditorClass {
     id: number,
     updateFunction: string
   ): string | undefined {
-    return LiveModel.UpdateFunctions.setUpdateFunction(id, updateFunction);
+    const error = LiveModel.UpdateFunctions.setUpdateFunction(
+      id,
+      updateFunction
+    );
+
+    if (error) {
+      Message.showError('Update function not changed: ' + error);
+      return error;
+    }
+
+    return undefined;
   }
 
   // #endregion
@@ -231,13 +242,27 @@ class ModelEditorClass {
 
   // #region --- Open Content Overlay Windows ---
 
-  /** Opens the "Change Variable Name" overlay window */
+  /** Opens the "Change Variable Name" overlay window.
+   *  @param varId - The id of the variable to change the name of.
+   */
   public openChangeVarNameWindow(varId: number) {
     if (varId === undefined) return;
 
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
       content: <ChangeVarNameOverlayContent varId={varId} />,
+    });
+  }
+
+  /** Opens the "Change Update Function" overlay window.
+   *  @param varId - The id of the variable to change the update function of.
+   */
+  public openChangeUpdateFunctionWindow(varId: number) {
+    if (varId === undefined) return;
+
+    useOverlayWindowStore.getState().setCurrentContent({
+      header: 'Edit Update Function',
+      content: <ChangeUpFunOverlayContent varId={varId} />,
     });
   }
 }

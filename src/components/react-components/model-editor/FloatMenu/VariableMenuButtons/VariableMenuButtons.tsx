@@ -22,7 +22,9 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
       <FloatMenuButton
         iconSrc={EditFunctionIcon}
         iconAlt="F"
-        onClick={() => console.log('Button 2 clicked')}
+        onClick={() =>
+          ModelEditor.openChangeUpdateFunctionWindow(selectedVariableId)
+        }
         hintText="Edit update function (F)"
         setHintText={setHint}
       />
