@@ -1,5 +1,6 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
@@ -68,6 +69,12 @@ class LiveModelClass {
    *  Returns true if the model can be modified, false otherwise.
    */
   public modelCanBeModified(): boolean {
+    if (useLoadedModelStore.getState().loadedModelType !== 'main') {
+      Message.showError(
+        'You can only modify the model in the Model Editor. Please switch to the Model Editor to proceed.'
+      );
+      return false;
+    }
     if (
       !useTabsStore.getState().isEmpty() ||
       useResultsStatus.getState().results !== undefined
