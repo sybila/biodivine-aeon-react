@@ -1,6 +1,4 @@
-import { useMemo } from 'react';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
-import InvisibleInputReact from '../../../../lit-wrappers/InvisibleInputReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
 
 import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
@@ -9,12 +7,9 @@ import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import type { VariableInfoProps } from './VariableInfoProps';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
-import type { Regulation } from '../../../../../../types';
-import RegulationInfo from './RegulationInfo/RegulationInfo';
-import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
-import useUpdateFunctionsStore from '../../../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useRegulationsStore from '../../../../../../stores/LiveModel/useRegulationsStore';
 import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
+import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
+import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -24,69 +19,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverRegulation,
   selectedRegulation,
 }) => {
-  const regulationsObj = useRegulationsStore((state) => state.regulations);
-
-  const regulations = useMemo(
-    () => Object.values(regulationsObj).filter((r) => r.target === id),
-    [regulationsObj, id]
-  );
-
-  const updateFunction = useUpdateFunctionsStore(
-    (state) => state.getUpdateFunctionId(id)?.functionString ?? ''
-  );
-  const updateFunctionStatus = useUpdateFunctionsStore(
-    (state) => state.updateFunctionStatus[id] ?? ''
-  );
-
-  const changeUpdateFunction = (newFunction: string) => {
-    const updateFunction: string = newFunction ?? '';
-
-    ModelEditor.setUpdateFunction(id, updateFunction);
-  };
-
-  const insertRegulators = () => {
-    if (regulations.length === 0) {
-      return (
-        <section
-          slot="extended-content"
-          className="flex justify-center items-center h-[77px] max-h-[77px] w-full"
-        >
-          <SimpleHeaderReact
-            compHeight="20px"
-            headerText="No Regulators"
-            textFontSize="15px"
-            textFontFamily="FiraMono, monospace"
-            textFontWeight="normal"
-          ></SimpleHeaderReact>
-        </section>
-      );
-    }
-
-    return (
-      <section
-        slot="extended-content"
-        className="h-[77px] max-h-[77px] w-full overflow-auto"
-      >
-        {regulations.map((regulation: Regulation) => (
-          <RegulationInfo
-            key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
-            hover={
-              (hoverRegulation &&
-                hoverRegulation.regulator === regulation.regulator) ??
-              false
-            }
-            selected={
-              (selectedRegulation &&
-                selectedRegulation.regulator === regulation.regulator) ??
-              false
-            }
-            {...regulation}
-          ></RegulationInfo>
-        ))}
-      </section>
-    );
-  };
-
   return (
     <ExtendableContentReact
       compWidth="100%"
@@ -140,7 +72,15 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         textFontSize="12px"
       ></DotHeaderReact>
 
-      {insertRegulators()}
+      <section slot="extended-content" className="h-fit w-full">
+        <RegulationInfoList
+          varId={id}
+          height="77px"
+          width="100%"
+          hoverRegulation={hoverRegulation}
+          selectedRegulation={selectedRegulation}
+        />
+      </section>
 
       <DotHeaderReact
         slot="extended-content"
@@ -150,25 +90,18 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         textFontSize="12px"
       ></DotHeaderReact>
 
-      <InvisibleInputReact
-        slot="extended-content"
-        compHeight="28px"
-        compWidth="100%"
-        multiFontSize="16px"
-        multiLine={true}
-        placeholder={`$f_${name}(...)`}
-        value={updateFunction}
-        handleChange={changeUpdateFunction}
-      ></InvisibleInputReact>
-      <span
-        slot="extended-content"
-        className="min-h-[20px] max-h-[40px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] whitespace-pre-line"
-        style={{
-          color: updateFunctionStatus.isError ? 'var(--color-red)' : 'black',
-        }}
-      >
-        {updateFunctionStatus.status}
-      </span>
+      <section slot="extended-content" className="h-fit w-full">
+        <ChangeUpdateFunctionInput
+          varId={id}
+          compHeight="fit-content"
+          compWidth="100%"
+          inputFontSize="16px"
+          inputHeight="28px"
+          inputWidth="100%"
+          validationMinHeight="20px"
+          validationMaxHeight="40px"
+        />
+      </section>
     </ExtendableContentReact>
   );
 };

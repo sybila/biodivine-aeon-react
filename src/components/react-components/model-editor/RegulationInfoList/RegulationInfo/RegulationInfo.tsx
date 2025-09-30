@@ -1,5 +1,5 @@
-import ModelEditor from '../../../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useVariablesStore from '../../../../../../../stores/LiveModel/useVariablesStore';
+import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({
