@@ -3,6 +3,7 @@ import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunction
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
 import ComputationManager from '../ComputationManager/ComputationManager';
+import Warning from '../Warning/Warning';
 import type { LiveModelClass } from './LiveModel';
 
 // import {
@@ -161,19 +162,18 @@ class UpdateFunctionsLM {
           .getState()
           .getRegulationId(variable.id, id);
         if (!regulation) {
-          const myName = useVariablesStore.getState().getVariableName(id);
-          const message = `Variable '${variable.name}' does not regulate '${myName}'.`;
-          if (confirm(message + ' Do you want to create the regulation now?')) {
+          const myName =
+            useVariablesStore.getState().getVariableName(id) ?? 'Unknown';
+          Warning.addCreateMissingRegulationWarning(variable.name, myName, () =>
             this._liveModel.Regulations.addRegulation(
               false,
               variable.id,
               id,
               true,
               EdgeMonotonicity.unspecified
-            );
-          } else {
-            return message;
-          }
+            )
+          );
+          return `Variable '${variable.name}' does not regulate '${myName}'.`;
         }
       }
     }

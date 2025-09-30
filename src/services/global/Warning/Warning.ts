@@ -60,6 +60,32 @@ class Warning {
 
   // #endregion
 
+  // #region --- Regulation Warnings ---
+
+  /** Adds a warning about creating a missing regulation. */
+  public static addCreateMissingRegulationWarning(
+    regulatorName: string,
+    targetName: string,
+    createFunction: () => void
+  ): void {
+    useWarningStore
+      .getState()
+      .addWarning(
+        `Variable '${regulatorName}' does not regulate '${targetName}'. Do you want to create this regulation?`,
+        [
+          { text: 'Cancel', action: () => {} },
+          {
+            text: 'Proceed',
+            action: () => {
+              createFunction();
+            },
+          },
+        ]
+      );
+  }
+
+  // #endregion
+
   // #region --- Universal Warnings ---
 
   /** Adds a warning that performing operation will clear the results and close all tabs except for the Model Editor tab.
