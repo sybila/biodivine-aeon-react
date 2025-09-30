@@ -68,24 +68,13 @@ class VariablesLM {
    */
   public async removeVariableWithWarnings(id: number): Promise<boolean> {
     const variable = useVariablesStore.getState().variableFromId(id);
-    if (!variable) return false;
-
-    if (
-      useResultsStatus.getState().results !== undefined ||
-      !useTabsStore.getState().isEmpty()
-    ) {
-      const proceed = await Warning.addRemoveResultsWarning(
-        'Removing a variable'
-      );
-
-      if (!proceed) return false;
-    }
+    if (!variable || !this.liveModel.modelCanBeModified()) return false;
 
     if (!(await Warning.addRemoveVariableWarning(variable.name))) {
       return false;
     }
 
-    this.removeVariable(id);
+    this.removeVariable(id, true);
     return true;
   }
 
