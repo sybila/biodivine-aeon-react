@@ -24,9 +24,7 @@ class UpdateFunctionsLM {
     functionString: string,
     force: boolean = false
   ): string | undefined {
-    console.log('Set update function', force);
     if (!force && !this._liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment.');
       return 'Model cannot be modified at the moment.';
     }
 
@@ -37,7 +35,7 @@ class UpdateFunctionsLM {
 
     const check = this._checkUpdateFunction(id, functionString);
     if (typeof check === 'string') {
-      return variable.name + ' ' + check; //Strings.invalidUpdateFunction(variable.name)
+      return check;
     }
 
     if (functionString.length === 0) {
