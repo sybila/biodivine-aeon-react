@@ -12,6 +12,7 @@ import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import TabBar from '../../global/TabBar/TabBar';
 import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
+import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
@@ -78,7 +79,9 @@ const BaseLayout = () => {
         </OverlayWindowReact>
       ) : null}
 
-      <WarningOverlay zIndex="999999991" />
+      <WarningOverlay zIndex="999999992" />
+
+      <ContentOverlayWindow zIndex="999999991" />
 
       <PopUpBarReact
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
