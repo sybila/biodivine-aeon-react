@@ -7,8 +7,6 @@ import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useControlStore from '../../../stores/LiveModel/useControlStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
 
 /** Manage variables in the live model */
 class VariablesLM {
