@@ -12,6 +12,11 @@ const FloatMenu = () => {
     return null;
   }
 
+  console.log(
+    modelStatus.floatingMenuInfo.position,
+    modelStatus.floatingMenuInfo.zoom
+  );
+
   return (
     <div
       className="flex flex-col h-auto w-auto gap-2 justify-around items-center z-8 select-none pointer-events-none"
@@ -20,12 +25,13 @@ const FloatMenu = () => {
         left: modelStatus.floatingMenuInfo.position[0] + 'px',
         top:
           modelStatus.floatingMenuInfo.position[1] +
-          60 * modelStatus.floatingMenuInfo.zoom +
+          52 * modelStatus.floatingMenuInfo.zoom +
           'px',
         transform:
-          'scale(' +
+          'translate(-50%, -50%) scale(' +
           modelStatus.floatingMenuInfo.zoom * 0.75 +
-          ') translate(-23%, -33%)',
+          ')',
+        transformOrigin: 'top top',
       }}
     >
       <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-[var(--color-grey-blue-ultra-light)] pointer-events-auto">
