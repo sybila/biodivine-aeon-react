@@ -386,6 +386,10 @@ class ComputeEngine {
       );
     }
 
+    if (this.waitingForResults) {
+      throw new Error('Cannot start computation: Computation already running.');
+    }
+
     return;
   }
 
