@@ -269,15 +269,17 @@ class ComputationManagerClass {
     variableId: number,
     updateFunctionFragment: string
   ): void {
-    this.computationBlockingOperations[
-      'Validating update function ' + variableId
-    ] = "'Validating update function'";
+    if (this.isComputeEngineConnected()) {
+      this.computationBlockingOperations[
+        'Validating update function ' + variableId
+      ] = "'Validating update function'";
 
-    this.computeEngine.validateUpdateFunction(
-      variableId,
-      updateFunctionFragment,
-      this.validateUpdateFunctionCallback.bind(this)
-    );
+      this.computeEngine.validateUpdateFunction(
+        variableId,
+        updateFunctionFragment,
+        this.validateUpdateFunctionCallback.bind(this)
+      );
+    }
   }
 
   // #endregion
