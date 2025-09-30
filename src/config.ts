@@ -10,6 +10,17 @@ const config = {
   },
   /** Local storage key for the last model. */
   localStorageModelName: 'lastModel',
+  /** Download links for different versions of the compute engine. */
+  computeEngineDownloadLinks: {
+    windows:
+      'https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/Windows-x86-64bit-Compute-Engine.zip',
+    linux:
+      'https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/Linux-x86-64bit-Compute-Engine.zip',
+    macosIntel:
+      'https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/MacOs-x86-64bit-Compute-Engine.zip',
+    macosArm:
+      'https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/MacOs-arm64-Compute-Engine.zip',
+  },
 };
 
 export default config;
