@@ -1,4 +1,9 @@
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import ComputationManager from '../ComputationManager/ComputationManager';
+import Warning from '../Warning/Warning';
 import ControlLM from './ControlLM';
 import ExportLM from './ExportLM';
 import ImportLM from './ImportLM';
@@ -59,9 +64,25 @@ class LiveModelClass {
     useModelEditorStatus.getState().clear();
   }
 
-  // Todo update or remove
-  /** Function which blocks model modifications and initializes warning. */
-  public _modelModified(): boolean {
+  /** Function which blocks model modifications and initializes warnings || shows errors.
+   *  Returns true if the model can be modified, false otherwise.
+   */
+  public modelCanBeModified(): boolean {
+    if (
+      !useTabsStore.getState().isEmpty() ||
+      useResultsStatus.getState().results !== undefined
+    ) {
+      Warning.addModelModificationRemoveResultsWarning();
+      return false;
+    }
+
+    if (ComputationManager.computationIsRunning()) {
+      Message.showError(
+        'The model cannot be modified while a computation is running.'
+      );
+      return false;
+    }
+
     return true;
   }
 }

@@ -21,8 +21,15 @@ class UpdateFunctionsLM {
 
   public setUpdateFunction(
     id: number,
-    functionString: string
+    functionString: string,
+    force: boolean = false
   ): string | undefined {
+    console.log('Set update function', force);
+    if (!force && !this._liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment.');
+      return 'Model cannot be modified at the moment.';
+    }
+
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) {
       return `Unknown variable '${id}'.`;

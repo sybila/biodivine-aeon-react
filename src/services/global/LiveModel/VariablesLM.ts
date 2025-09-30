@@ -30,7 +30,8 @@ class VariablesLM {
     controllable: boolean = true,
     phenotype: any = null
   ): number | undefined {
-    if (!modAllowed && !this.liveModel._modelModified()) {
+    if (!modAllowed && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment add var.');
       return;
     }
 
@@ -89,7 +90,10 @@ class VariablesLM {
   }
 
   /** Remove a variable by its ID */
-  public removeVariable(id: number): void {
+  public removeVariable(id: number, force: boolean = false): void {
+    if (!force && !this.liveModel.modelCanBeModified())
+      return console.log('Model cannot be modified at the moment rem var.');
+
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
 
@@ -100,14 +104,18 @@ class VariablesLM {
       .filter((reg) => reg.regulator === id || reg.target === id);
 
     for (const reg of toRemove) {
-      this.liveModel.Regulations.removeRegulation(reg.regulator, reg.target);
+      this.liveModel.Regulations.removeRegulation(
+        reg.regulator,
+        reg.target,
+        force
+      );
       updateTargets.push(reg.target);
     }
 
     ComputationManager.resetMaxSize();
 
     useVariablesStore.getState().removeVariable(id);
-    this.liveModel.Control.removeControlInfo(id);
+    this.liveModel.Control.removeControlInfo(id, force);
     this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
     CytoscapeME.removeNode(id);
@@ -125,7 +133,8 @@ class VariablesLM {
       if (fn !== undefined) {
         this.liveModel.UpdateFunctions.setUpdateFunction(
           affectedId,
-          fn.functionString
+          fn.functionString,
+          force
         );
       }
       this.liveModel.UpdateFunctions.validateUpdateFunction(affectedId);
@@ -133,8 +142,15 @@ class VariablesLM {
   }
 
   /** Rename a variable by its ID */
-  public renameVariable(id: number, newName: string): string | undefined {
-    if (!this.liveModel._modelModified()) return;
+  public renameVariable(
+    id: number,
+    newName: string,
+    force: boolean = false
+  ): string | undefined {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment rename var.');
+      return;
+    }
 
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;
@@ -147,9 +163,6 @@ class VariablesLM {
     useVariablesStore.getState().renameVariable(id, newName);
 
     CytoscapeME.renameNode(id, newName);
-    //ControllableEditor.renameVariable(id, newName);
-    //PhenotypeEditor.renameVariable(id, newName);
-    //ModelEditor.renameVariable(id, newName, oldName);
 
     for (const reg of useRegulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
@@ -213,7 +226,7 @@ class VariablesLM {
 
   public clear() {
     for (const variable of useVariablesStore.getState().getAllVariables()) {
-      this.removeVariable(variable.id);
+      this.removeVariable(variable.id, true);
     }
   }
 

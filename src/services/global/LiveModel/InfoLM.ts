@@ -16,7 +16,12 @@ class InfoLM {
   // #endregion
 
   /** Set the model name and trigger UI update */
-  public setModelName(name: string): void {
+  public setModelName(name: string, force: boolean = false): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment set name.');
+      return;
+    }
+
     const modelName = useModelInfoStore.getState().getModelName();
     if (modelName !== name) {
       useModelInfoStore.getState().setModelName(name);
@@ -26,7 +31,15 @@ class InfoLM {
   }
 
   /** Set the model description and trigger UI update */
-  public setModelDescription(description: string): void {
+  public setModelDescription(
+    description: string,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment set desc.');
+      return;
+    }
+
     const modelDescription = useModelInfoStore.getState().getModelDescription();
     if (modelDescription !== description) {
       useModelInfoStore.getState().setModelDescription(description);

@@ -121,6 +121,7 @@ class ImportLM {
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
+    console.log('Set update functions', updateFunctions);
     for (const key of Object.keys(updateFunctions)) {
       const variable = this.addVariableImport(
         useVariablesStore.getState().variableFromName(key),
@@ -138,7 +139,8 @@ class ImportLM {
 
       const error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
-        updateFunctions[key]
+        updateFunctions[key],
+        true
       );
       if (error !== undefined) {
         Message.showError('Error while setting update function: ' + error);
@@ -289,6 +291,7 @@ class ImportLM {
    * If the import is successful, return true.
    */
   public importAeon(modelString: string): boolean {
+    console.log('Importing model...');
     Loading.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel._disable_dynamic_validation = true;
@@ -313,8 +316,8 @@ class ImportLM {
     this.liveModel.clear();
 
     // Set model metadata
-    LiveModel.Info.setModelName(modelName);
-    LiveModel.Info.setModelDescription(modelDescription);
+    LiveModel.Info.setModelName(modelName, true);
+    LiveModel.Info.setModelDescription(modelDescription, true);
 
     this.setRegulations(regulations, positions, control);
     this.liveModel.Import.setUpdateFunctions(

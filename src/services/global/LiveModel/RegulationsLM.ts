@@ -24,7 +24,8 @@ class RegulationsLM {
     isObservable: boolean,
     monotonicity: EdgeMonotonicity
   ): boolean | void {
-    if (!modAllowed && !this.liveModel._modelModified()) return;
+    if (!modAllowed && !this.liveModel.modelCanBeModified())
+      return console.log('Model cannot be modified at the moment add reg.');
 
     if (useRegulationsStore.getState().getRegulationId(regulatorId, targetId))
       return false;
@@ -41,8 +42,15 @@ class RegulationsLM {
     return true;
   }
 
-  public removeRegulation(regulatorId: number, targetId: number): boolean {
-    if (!this.liveModel._modelModified()) return false;
+  public removeRegulation(
+    regulatorId: number,
+    targetId: number,
+    force: boolean = false
+  ): boolean {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment rem reg.');
+      return false;
+    }
 
     const exists = useRegulationsStore
       .getState()
@@ -82,8 +90,13 @@ class RegulationsLM {
     }
   }
 
-  public toggleObservability(regulatorId: number, targetId: number): void {
-    if (!this.liveModel._modelModified()) return;
+  public toggleObservability(
+    regulatorId: number,
+    targetId: number,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified())
+      return console.log('Model cannot be modified at the moment toggle obs.');
 
     const regulation = useRegulationsStore
       .getState()
@@ -119,8 +132,13 @@ class RegulationsLM {
     }
   }
 
-  public toggleMonotonicity(regulatorId: number, targetId: number): void {
-    if (!this.liveModel._modelModified()) return;
+  public toggleMonotonicity(
+    regulatorId: number,
+    targetId: number,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified())
+      return console.log('Model cannot be modified at the moment toggle mono.');
 
     const regulation = useRegulationsStore
       .getState()

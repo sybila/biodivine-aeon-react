@@ -59,7 +59,8 @@ class ControlLM {
 
   /** Remove control information for a variable by its ID */
   public removeControlInfo(id: number, force = false): void {
-    if (!force && !this.liveModel._modelModified()) {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment rem control info.');
       return;
     }
 
@@ -92,8 +93,13 @@ class ControlLM {
   // #region --- Change Control Info ---
 
   /** Change control information for a variable by its ID */
-  public changePhenotypeById(id: number, phenotype: Phenotype): void {
-    if (!this.liveModel._modelModified()) {
+  public changePhenotypeById(
+    id: number,
+    phenotype: Phenotype,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log('Model cannot be modified at the moment change phen.');
       return;
     }
 
@@ -105,8 +111,15 @@ class ControlLM {
   }
 
   /** Change variable control enabled state by its ID */
-  public changeControlEnabledById(id: number, controlEnabled: boolean): void {
-    if (!this.liveModel._modelModified()) {
+  public changeControlEnabledById(
+    id: number,
+    controlEnabled: boolean,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log(
+        'Model cannot be modified at the moment change control enabled.'
+      );
       return;
     }
 

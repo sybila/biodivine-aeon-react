@@ -86,6 +86,34 @@ class Warning {
 
   // #endregion
 
+  // #region --- Model Modification Warning ---
+
+  /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
+  public static addModelModificationRemoveResultsWarning(): void {
+    useWarningStore
+      .getState()
+      .addWarning(
+        'Modifying the model will delete all results and close every tab except the Model Editor.',
+        [
+          {
+            text: 'Cancel',
+            buttonWidth: '150px',
+            action: () => {},
+          },
+          {
+            text: 'Delete Results',
+            buttonWidth: '150px',
+            action: () => {
+              useResultsStatus.getState().clear();
+              useTabsStore.getState().clear();
+            },
+          },
+        ]
+      );
+  }
+
+  // #endregion
+
   // #region --- Universal Warnings ---
 
   /** Adds a warning that performing operation will clear the results and close all tabs except for the Model Editor tab.

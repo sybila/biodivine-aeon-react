@@ -40,6 +40,8 @@ class ExportLM {
 
   // #endregion
 
+  // #region --- Model Stats ---
+
   /** Export stats object */
   public stats(): ModelStats {
     let maxInDegree = 0;
@@ -89,6 +91,10 @@ class ExportLM {
       explicitParameters,
     };
   }
+
+  // #endregion
+
+  // #region --- Export/Save Model ---
 
   /**
    * Export current model in Aeon text format, or undefined if model cannot be
@@ -154,8 +160,7 @@ class ExportLM {
     const modelString = this.exportAeon();
     const modelId = useLoadedModelStore.getState().loadedModelId;
 
-    if (!modelString || modelId === null) {
-      //Todo error
+    if (modelString === undefined || modelId === null) {
       return;
     }
     this.liveModel.Models.updateModel(modelId, modelString);
@@ -172,6 +177,8 @@ class ExportLM {
       console.log(e);
     }
   }
+
+  // #endregion
 
   // #region --- Export to File ---
 
