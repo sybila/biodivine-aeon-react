@@ -1,10 +1,10 @@
 import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
-
 import EditNameIcon from '../../../../../assets/icons/edit.svg';
 import EditFunctionIcon from '../../../../../assets/icons/functions.svg';
 import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import type { VariableMenuButtonsProps } from './VariableMenuButtonsProps';
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
+import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
 
 const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
   setHint,
@@ -15,7 +15,7 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
       <FloatMenuButton
         iconSrc={EditNameIcon}
         iconAlt="E"
-        onClick={() => console.log('todo open popup')}
+        onClick={() => ModelEditor.openChangeVarNameWindow(selectedVariableId)}
         hintText="Edit name (E)"
         setHintText={setHint}
       />

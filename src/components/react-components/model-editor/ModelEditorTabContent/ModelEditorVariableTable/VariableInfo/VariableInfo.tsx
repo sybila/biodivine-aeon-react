@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import InvisibleInputReact from '../../../../lit-wrappers/InvisibleInputReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
@@ -14,6 +14,7 @@ import RegulationInfo from './RegulationInfo/RegulationInfo';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import useUpdateFunctionsStore from '../../../../../../stores/LiveModel/useUpdateFunctionsStore';
 import useRegulationsStore from '../../../../../../stores/LiveModel/useRegulationsStore';
+import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -23,11 +24,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverRegulation,
   selectedRegulation,
 }) => {
-  const [varName, setVarName] = useState<string>(name);
-  const [nameError, setNameError] = useState<boolean>(
-    !varName || varName === ''
-  );
-
   const regulationsObj = useRegulationsStore((state) => state.regulations);
 
   const regulations = useMemo(
@@ -41,17 +37,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const updateFunctionStatus = useUpdateFunctionsStore(
     (state) => state.updateFunctionStatus[id] ?? ''
   );
-
-  const updateVariableName = (newName: string) => {
-    if (!newName || newName === '') {
-      setNameError(true);
-      return;
-    }
-
-    ModelEditor.changeVariableName(id, newName);
-    setVarName(newName);
-    setNameError(false);
-  };
 
   const changeUpdateFunction = (newFunction: string) => {
     const updateFunction: string = newFunction ?? '';
@@ -114,15 +99,15 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
     >
-      <InvisibleInputReact
-        slot="top-content"
-        compHeight="100%"
-        compWidth="60%"
-        value={varName}
-        placeholder="(variable name)"
-        error={nameError}
-        handleChange={updateVariableName}
-      ></InvisibleInputReact>
+      <section slot="top-content" className="h-full w-[60%]">
+        <VariableNameInput
+          height="100%"
+          width="100%"
+          singleFontSize="16px"
+          varId={id}
+          varName={name}
+        />
+      </section>
 
       <section
         slot="top-content"

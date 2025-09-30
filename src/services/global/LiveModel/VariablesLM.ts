@@ -135,7 +135,6 @@ class VariablesLM {
     force: boolean = false
   ): string | undefined {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment rename var.');
       return;
     }
 
@@ -144,7 +143,7 @@ class VariablesLM {
 
     const error = this.checkVariableName(id, newName);
     if (error !== undefined) {
-      return `${newName} ${error}`; //Strings.invalidVariableName(newName)
+      return error;
     }
 
     useVariablesStore.getState().renameVariable(id, newName);

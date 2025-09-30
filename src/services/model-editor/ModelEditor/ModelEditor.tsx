@@ -1,3 +1,6 @@
+import { Message } from '../../../components/lit-components/message-wrapper';
+import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
+import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import type { ModelStats, RegulationVariables } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
@@ -68,8 +71,18 @@ class ModelEditorClass {
   }
 
   /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string) {
-    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
+  public changeVariableName(id: number, newName: string): boolean {
+    if (newName != '') {
+      const error = LiveModel.Variables.renameVariable(id, newName);
+
+      if (error) {
+        Message.showError('Variable name not changed: ' + error);
+        return false;
+      }
+
+      return true;
+    }
+    return false;
   }
 
   /** Removes a variable */
@@ -215,6 +228,18 @@ class ModelEditorClass {
   }
 
   // #endregion
+
+  // #region --- Open Content Overlay Windows ---
+
+  /** Opens the "Change Variable Name" overlay window */
+  public openChangeVarNameWindow(varId: number) {
+    if (varId === undefined) return;
+
+    useOverlayWindowStore.getState().setCurrentContent({
+      header: 'Edit Variable Name',
+      content: <ChangeVarNameOverlayContent varId={varId} />,
+    });
+  }
 }
 
 const ModelEditor: ModelEditorClass = new ModelEditorClass();
