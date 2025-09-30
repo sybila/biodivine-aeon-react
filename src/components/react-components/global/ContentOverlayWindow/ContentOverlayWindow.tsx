@@ -20,7 +20,9 @@ const ContentOverlayWindow: React.FC<{ zIndex: string }> = ({ zIndex }) => {
       handleBackgroundClick={() => closeOverlay()}
       handleCloseClick={() => closeOverlay()}
       compZIndex={zIndex}
+      windWidth="auto"
       windMaxWidth="80%"
+      windHeight="auto"
       windMaxHeight="80%"
       windOverflowX="auto"
       windOverflowY="auto"
