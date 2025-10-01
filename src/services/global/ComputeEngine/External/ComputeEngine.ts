@@ -1,3 +1,4 @@
+import { Loading } from '../../../../components/lit-components/loading-wrapper';
 import config from '../../../../config';
 import type {
   AttractorData,
@@ -916,10 +917,12 @@ class ComputeEngine {
   }
 
   private getAttractorResults() {
+    Loading.startLoading();
     this.backendRequest(
       '/get_results',
       (error: string | undefined, response: AttractorResults) => {
         this.getResultsCallback(error, response, 'Attractor Analysis');
+        Loading.endLoading();
       },
       'GET'
     );
@@ -949,6 +952,7 @@ class ComputeEngine {
               },
           'Control'
         );
+        Loading.endLoading();
       },
       'GET'
     );
@@ -965,6 +969,7 @@ class ComputeEngine {
 
   /** Get control computation results and statistics. */
   private getControlResults() {
+    Loading.startLoading();
     this.backendRequest(
       '/get_control_results',
       (
@@ -977,6 +982,7 @@ class ComputeEngine {
           }
 
           this.getResultsCallback(error, undefined, 'Control');
+          Loading.endLoading();
           return;
         }
 
