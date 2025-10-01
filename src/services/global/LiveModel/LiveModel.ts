@@ -14,8 +14,6 @@ import RegulationsLM from './RegulationsLM';
 import UpdateFunctionsLM from './UpdateFunctionsLM';
 import VariablesLM from './VariablesLM';
 
-//import { ModelEditor, PhenotypeEditor, ControllableEditor  } from "./Todo-imports";
-
 /**
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
 	you want to modify the model, not the editor or graph directly.
@@ -24,11 +22,17 @@ import VariablesLM from './VariablesLM';
 	to reflect the current state of the model.
 */
 class LiveModelClass {
+  // #region --- Properties ---
+
   /** We use this to indicate that there is a batch of changes to the model that are being processed,
 	and we therefore shouldn't run intensive tasks (like function consistency checks on server).
 	It is the responsibility of the user of this flag to re-run these tasks AFTER the changes are done.
 	Currently we use this only in import. */
-  public _disable_dynamic_validation: boolean = false;
+  public disable_dynamic_validation: boolean = false;
+
+  // #endregion
+
+  // #region --- Submodules ---
 
   /** Functions and properties for managing multiple models. */
   Models: ModelsLM = new ModelsLM(this);
@@ -53,6 +57,10 @@ class LiveModelClass {
 
   /** Functions used for export of the model. */
   Export: ExportLM = new ExportLM(this);
+
+  // #endregion
+
+  // #region --- Global Live Model Functions ---
 
   /** True if the model has no variables. */
   public isEmpty(): boolean {
@@ -92,6 +100,8 @@ class LiveModelClass {
 
     return true;
   }
+
+  // #endregion
 }
 
 const LiveModel = new LiveModelClass();

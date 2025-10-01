@@ -15,6 +15,8 @@ class InfoLM {
 
   // #endregion
 
+  // #region --- Setters ---
+
   /** Set the model name and trigger UI update */
   public setModelName(name: string, force: boolean = false): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -47,10 +49,16 @@ class InfoLM {
     }
   }
 
+  // #endregion
+
+  // #region --- Setter helpers ---
+
   /** Called when info changes to save model */
   private infoChanged(): void {
     this.liveModel.Export.saveModel();
   }
+
+  // #endregion
 }
 
 export default InfoLM;

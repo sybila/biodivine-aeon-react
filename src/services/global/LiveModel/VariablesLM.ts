@@ -10,6 +10,9 @@ import Warning from '../Warning/Warning';
 
 /** Manage variables in the live model */
 class VariablesLM {
+  // #region --- Properties + Constructor ---
+
+  /** Counter for generating unique variable IDs */
   private idCounter = 0;
 
   private liveModel: LiveModelClass;
@@ -17,6 +20,8 @@ class VariablesLM {
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
   }
+
+  // #endregion
 
   // #region --- Variable Actions ---
 
@@ -162,6 +167,11 @@ class VariablesLM {
 
   // #endregion
 
+  // #region --- Pruning ---
+
+  /** Remove all variables that are not used in any regulation.
+   *  Returns the number of removed variables.
+   */
   public pruneConstants(force = false): number {
     const toRemove: number[] = [];
     const variables = useVariablesStore.getState().getAllVariables();
@@ -179,7 +189,6 @@ class VariablesLM {
       }
     }
 
-    console.log('To remove:', toRemove);
     for (const id of toRemove) {
       this.removeVariable(id);
     }
@@ -187,6 +196,9 @@ class VariablesLM {
     return toRemove.length;
   }
 
+  /** Remove all variables that have no outgoing regulations (no targets).
+   *  Returns the number of removed variables.
+   */
   public pruneOutputs(): number {
     const toRemove: number[] = [];
     const variables = useVariablesStore.getState().getAllVariables();
@@ -198,7 +210,6 @@ class VariablesLM {
       }
     }
 
-    console.log('To remove:', toRemove);
     for (const id of toRemove) {
       this.removeVariable(id);
     }
@@ -206,17 +217,13 @@ class VariablesLM {
     return toRemove.length;
   }
 
-  public isEmpty(): boolean {
-    return useVariablesStore.getState().isEmpty();
-  }
+  // #endregion
 
-  public clear() {
-    for (const variable of useVariablesStore.getState().getAllVariables()) {
-      this.removeVariable(variable.id, true);
-    }
-  }
+  // #region --- Validation ---
 
-  /** Check if a variable name is valid */
+  /** Check if a variable name is valid.
+   *  Returns undefined if the name is valid, otherwise returns an error message.
+   */
   private checkVariableName(id: number, name: string): string | undefined {
     if (typeof name !== 'string') return 'Name must be a string.';
     if (!/^[a-z0-9{}_]+$/i.test(name)) {
@@ -228,6 +235,24 @@ class VariablesLM {
     }
     return undefined;
   }
+
+  // #endregion
+
+  // #region --- Variables status ---
+
+  /** True if the model has no variables. */
+  public isEmpty(): boolean {
+    return useVariablesStore.getState().isEmpty();
+  }
+
+  /** Removes all variables from the model. */
+  public clear() {
+    for (const variable of useVariablesStore.getState().getAllVariables()) {
+      this.removeVariable(variable.id, true);
+    }
+  }
+
+  // #endregion
 }
 
 export default VariablesLM;

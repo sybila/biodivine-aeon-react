@@ -6,25 +6,30 @@ import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
 import type { LiveModelClass } from './LiveModel';
 
-// import {
-//   ModelEditor,
-//   ComputeEngine,
-//   Strings,
-// } from "./Todo-imports";
-
 class UpdateFunctionsLM {
-  private _liveModel: LiveModelClass;
+  // #region --- Properties + Constructor ---
+  private liveModel: LiveModelClass;
 
   constructor(liveModel: LiveModelClass) {
-    this._liveModel = liveModel;
+    this.liveModel = liveModel;
   }
 
+  // #endregion
+
+  // #region --- Update Function Operations ---
+
+  /** Sets update function for a variable.
+   *  @param id ID of the variable to set the update function for.
+   *  @param functionString The update function as a string.
+   *  @param force If true, bypasses model modification checks. (Warning - Doesn't bypass update function validation checks)
+   *  @returns An error message if the operation fails, otherwise undefined.
+   */
   public setUpdateFunction(
     id: number,
     functionString: string,
     force: boolean = false
   ): string | undefined {
-    if (!force && !this._liveModel.modelCanBeModified()) {
+    if (!force && !this.liveModel.modelCanBeModified()) {
       return 'Model cannot be modified at the moment.';
     }
 
@@ -33,7 +38,7 @@ class UpdateFunctionsLM {
       return `Unknown variable '${id}'.`;
     }
 
-    const check = this._checkUpdateFunction(id, functionString);
+    const check = this.checkUpdateFunction(id, functionString);
     if (typeof check === 'string') {
       return check;
     }
@@ -48,45 +53,25 @@ class UpdateFunctionsLM {
     }
 
     this.validateUpdateFunction(id);
-    this._liveModel.Export.saveModel();
+    this.liveModel.Export.saveModel();
     return undefined;
   }
 
-  private _updateFunctionModelFragment(id: number): string | undefined {
-    const name = useVariablesStore.getState().getVariableName(id);
-    let fragment = '';
-    const regulations = useRegulationsStore.getState().regulationsOf(id);
-    const varNames = new Set<string>();
-
-    if (regulations.length === 0) return undefined;
-
-    for (const reg of regulations) {
-      if (reg.regulator !== id) {
-        varNames.add(
-          useVariablesStore.getState().getVariableName(reg.regulator)!
-        );
-      }
-      fragment += this._liveModel.Regulations.regulationToString(reg) + '\n';
-    }
-
-    for (const name of varNames) {
-      fragment += `$${name}: false\n`;
-    }
-
-    const fun = useUpdateFunctionsStore.getState().getUpdateFunctionId(id);
-    if (fun) {
-      fragment += `$${name}: ${fun.functionString}\n`;
-    }
-
-    return fragment;
+  /** Deletes the update function for a variable.
+   *  @param id ID of the variable to delete the update function for.
+   */
+  public deleteUpdateFunctionId(id: number): void {
+    useUpdateFunctionsStore.getState().deleteUpdateFunctionId(id);
   }
+
+  // #endregion
 
   // #region --- Validation ---
 
   /** Validates all update functions if the number of variables has changed since the last validation. */
   public validateUpdateFunctionsIfNeeded(): void {
     if (
-      this._liveModel._disable_dynamic_validation ||
+      this.liveModel.disable_dynamic_validation ||
       !ComputationManager.isComputeEngineConnected()
     )
       return;
@@ -102,7 +87,7 @@ class UpdateFunctionsLM {
 
   /** Validates all update functions and sets state of each update function in the ModelEditor tab. */
   public validateAllUpdateFunctions(): void {
-    if (this._liveModel._disable_dynamic_validation) return;
+    if (this.liveModel.disable_dynamic_validation) return;
 
     useUpdateFunctionsStore.getState().resetUpdateFunctionStatus();
     for (const variable of useVariablesStore.getState().getAllVariables()) {
@@ -112,9 +97,9 @@ class UpdateFunctionsLM {
 
   /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab. */
   public validateUpdateFunction(id: number): void {
-    if (this._liveModel._disable_dynamic_validation) return;
+    if (this.liveModel.disable_dynamic_validation) return;
 
-    const modelFragment = this._updateFunctionModelFragment(id);
+    const modelFragment = this.updateFunctionModelFragment(id);
     if (!modelFragment) {
       useUpdateFunctionsStore.getState().setUpdateFunctionStatus(id, {
         isError: false,
@@ -128,20 +113,27 @@ class UpdateFunctionsLM {
 
   // #endregion
 
-  public _checkUpdateFunction(
+  // #region --- Create Metadata + Check Update Function Validity ---
+
+  /** Checks the validity of an update function and creates metadata about it.
+   *  @param id ID of the variable whose update function is to be checked.
+   *  @param functionString The update function as a string.
+   *  @returns An error message if the function is invalid, otherwise metadata about the function.
+   */
+  public checkUpdateFunction(
     id: number,
     functionString: string
   ): string | UpdateFunctionMetadata {
     if (functionString.length === 0) return { parameters: new Set() };
 
-    let tokens = this._tokenize_update_function(functionString);
+    let tokens = this.tokenizeUpdateFunction(functionString);
     if (typeof tokens === 'string') return tokens;
 
-    tokens = this._process_function_calls(tokens);
+    tokens = this.processFunctionCalls(tokens);
     if (typeof tokens === 'string') return tokens;
 
     const names = new Set<{ name: string; cardinality: number }>();
-    this._extract_names_with_cardinalities(tokens, names);
+    this.extractNamesWithCardinalities(tokens, names);
 
     const parameters = new Set<{ name: string; cardinality: number }>();
     for (const item of names) {
@@ -170,7 +162,7 @@ class UpdateFunctionsLM {
           const myName =
             useVariablesStore.getState().getVariableName(id) ?? 'Unknown';
           Warning.addCreateMissingRegulationWarning(variable.name, myName, () =>
-            this._liveModel.Regulations.addRegulation(
+            this.liveModel.Regulations.addRegulation(
               false,
               variable.id,
               id,
@@ -210,11 +202,129 @@ class UpdateFunctionsLM {
     return { parameters };
   }
 
-  public deleteUpdateFunctionId(id: number): void {
-    useUpdateFunctionsStore.getState().deleteUpdateFunctionId(id);
+  // #endregion
+
+  // #region --- Reformatting ---
+
+  /** Constructs a model fragment containing the update function and its regulators for validation purposes.
+   *  @param id ID of the variable whose update function is to be validated.
+   *  @returns A string representing the model fragment, or undefined if there are no regulators.
+   */
+  private updateFunctionModelFragment(id: number): string | undefined {
+    const name = useVariablesStore.getState().getVariableName(id);
+    let fragment = '';
+    const regulations = useRegulationsStore.getState().regulationsOf(id);
+    const varNames = new Set<string>();
+
+    if (regulations.length === 0) return undefined;
+
+    for (const reg of regulations) {
+      if (reg.regulator !== id) {
+        varNames.add(
+          useVariablesStore.getState().getVariableName(reg.regulator)!
+        );
+      }
+      fragment += this.liveModel.Regulations.regulationToString(reg) + '\n';
+    }
+
+    for (const name of varNames) {
+      fragment += `$${name}: false\n`;
+    }
+
+    const fun = useUpdateFunctionsStore.getState().getUpdateFunctionId(id);
+    if (fun) {
+      fragment += `$${name}: ${fun.functionString}\n`;
+    }
+
+    return fragment;
   }
 
-  private _process_function_calls(tokens: any[]): string | any[] {
+  /** Extracts variable names and their cardinalities from the given tokens. */
+  private extractNamesWithCardinalities(
+    tokens: any[],
+    names: Set<{ name: string; cardinality: number }>
+  ) {
+    for (let token of tokens) {
+      if (token.token === 'name') {
+        names.add({ name: token.data, cardinality: 0 });
+      }
+      if (token.token === 'call') {
+        names.add({ name: token.data, cardinality: token.args.length });
+        for (const arg of token.args) {
+          names.add({ name: arg, cardinality: 0 });
+        }
+      }
+      if (token.token === 'group') {
+        this.extractNamesWithCardinalities(token.data, names);
+      }
+    }
+  }
+
+  /** Tokenizes the given update function string into a structured format.
+   *  @param str The update function as a string.
+   *  @returns An array of tokens representing the structure of the update function, or an error message if tokenization fails.
+   */
+  private tokenizeUpdateFunction(str: string): string | any[] {
+    const result = this.tokenizeUpdateFunctionRecursive(str, 0, true);
+    return result.error ? result.error : result.data;
+  }
+
+  /** Helper function to tokenize the update function recursively. */
+  private tokenizeUpdateFunctionRecursive(
+    str: string,
+    i: number,
+    top: boolean
+  ): any {
+    let result: any[] = [];
+
+    while (i < str.length) {
+      let c = str[i++];
+      if (/\s/.test(c)) continue;
+
+      if (c === '!') result.push({ token: 'not', text: '!' });
+      else if (c === ',') result.push({ token: 'comma', text: ',' });
+      else if (c === '&') result.push({ token: 'and', text: '&' });
+      else if (c === '|') result.push({ token: 'or', text: '|' });
+      else if (c === '^') result.push({ token: 'xor', text: '^' });
+      else if (c === '=' && str[i] === '>') {
+        i++;
+        result.push({ token: 'imp', text: '=>' });
+      } else if (c === '<' && str[i] === '=' && str[i + 1] === '>') {
+        i += 2;
+        result.push({ token: 'iff', text: '<=>' });
+      } else if (c === '>') return { error: "Unexpected '>'." };
+      else if (c === ')')
+        return top
+          ? { error: "Unexpected ')'." }
+          : { data: result, continue_at: i };
+      else if (c === '(') {
+        const nested = this.tokenizeUpdateFunctionRecursive(str, i, false);
+        if (nested.error) return { error: nested.error };
+        i = nested.continue_at;
+        result.push({ token: 'group', data: nested.data, text: '(...)' });
+      } else if (/[a-zA-Z0-9{}_]/.test(c)) {
+        let name = c;
+        while (i < str.length && /[a-zA-Z0-9{}_]/.test(str[i]))
+          name += str[i++];
+        result.push(
+          name === 'true'
+            ? { token: 'true', text: name }
+            : name === 'false'
+            ? { token: 'false', text: name }
+            : { token: 'name', data: name, text: name }
+        );
+      } else {
+        return { error: "Unexpected '" + c + "'." };
+      }
+    }
+
+    return top ? { data: result, continue_at: i } : { error: "Expected ')'." };
+  }
+
+  /** Processes function calls in the tokenized update function.
+   *  @param tokens The tokenized update function.
+   */
+  private processFunctionCalls(tokens: any[]): string | any[] {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
 
@@ -267,7 +377,7 @@ class UpdateFunctionsLM {
 
         tokens.splice(i + 1, 1);
       } else if (token.token === 'group') {
-        const result = this._process_function_calls(token.data);
+        const result = this.processFunctionCalls(token.data);
         if (typeof result === 'string') return result;
       }
     }
@@ -275,81 +385,7 @@ class UpdateFunctionsLM {
     return tokens;
   }
 
-  private _extract_names_with_cardinalities(
-    tokens: any[],
-    names: Set<{ name: string; cardinality: number }>
-  ) {
-    for (let token of tokens) {
-      if (token.token === 'name') {
-        names.add({ name: token.data, cardinality: 0 });
-      }
-      if (token.token === 'call') {
-        names.add({ name: token.data, cardinality: token.args.length });
-        for (const arg of token.args) {
-          names.add({ name: arg, cardinality: 0 });
-        }
-      }
-      if (token.token === 'group') {
-        this._extract_names_with_cardinalities(token.data, names);
-      }
-    }
-  }
-
-  private _tokenize_update_function(str: string): string | any[] {
-    const result = this._tokenize_update_function_recursive(str, 0, true);
-    return result.error ? result.error : result.data;
-  }
-
-  private _tokenize_update_function_recursive(
-    str: string,
-    i: number,
-    top: boolean
-  ): any {
-    let result: any[] = [];
-
-    while (i < str.length) {
-      let c = str[i++];
-      if (/\s/.test(c)) continue;
-
-      if (c === '!') result.push({ token: 'not', text: '!' });
-      else if (c === ',') result.push({ token: 'comma', text: ',' });
-      else if (c === '&') result.push({ token: 'and', text: '&' });
-      else if (c === '|') result.push({ token: 'or', text: '|' });
-      else if (c === '^') result.push({ token: 'xor', text: '^' });
-      else if (c === '=' && str[i] === '>') {
-        i++;
-        result.push({ token: 'imp', text: '=>' });
-      } else if (c === '<' && str[i] === '=' && str[i + 1] === '>') {
-        i += 2;
-        result.push({ token: 'iff', text: '<=>' });
-      } else if (c === '>') return { error: "Unexpected '>'." };
-      else if (c === ')')
-        return top
-          ? { error: "Unexpected ')'." }
-          : { data: result, continue_at: i };
-      else if (c === '(') {
-        const nested = this._tokenize_update_function_recursive(str, i, false);
-        if (nested.error) return { error: nested.error };
-        i = nested.continue_at;
-        result.push({ token: 'group', data: nested.data, text: '(...)' });
-      } else if (/[a-zA-Z0-9{}_]/.test(c)) {
-        let name = c;
-        while (i < str.length && /[a-zA-Z0-9{}_]/.test(str[i]))
-          name += str[i++];
-        result.push(
-          name === 'true'
-            ? { token: 'true', text: name }
-            : name === 'false'
-            ? { token: 'false', text: name }
-            : { token: 'name', data: name, text: name }
-        );
-      } else {
-        return { error: "Unexpected '" + c + "'." };
-      }
-    }
-
-    return top ? { data: result, continue_at: i } : { error: "Expected ')'." };
-  }
+  // #endregion
 }
 
 export default UpdateFunctionsLM;

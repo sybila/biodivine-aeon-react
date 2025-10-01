@@ -9,14 +9,6 @@ import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
 import Warning from '../Warning/Warning';
 import { LiveModel, type LiveModelClass } from './LiveModel';
 
-// import {
-//   Warning,
-//   ModelEditor,
-//   Results,
-//   UI,
-//   Strings,
-// } from "./Todo-imports";
-
 class ImportLM {
   // #region --- Properties and Constructor ---
 
@@ -294,7 +286,7 @@ class ImportLM {
     console.log('Importing model...');
     Loading.startLoading();
     // Disable on-the-fly server checks.
-    this.liveModel._disable_dynamic_validation = true;
+    this.liveModel.disable_dynamic_validation = true;
 
     let modelName = '';
     let modelDescription = '';
@@ -330,7 +322,7 @@ class ImportLM {
     CytoscapeME.fit();
 
     // Re-enable server checks and run them.
-    this.liveModel._disable_dynamic_validation = false;
+    this.liveModel.disable_dynamic_validation = false;
     this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
 
     Loading.endLoading();
