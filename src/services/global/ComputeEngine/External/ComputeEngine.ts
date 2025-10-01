@@ -1,3 +1,4 @@
+import { Loading } from '../../../../components/lit-components/loading-wrapper';
 import config from '../../../../config';
 import type {
   AttractorData,
@@ -15,12 +16,14 @@ import type {
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   TimestampResponse,
+  UpdateFunctionStatus,
 } from '../../../../types';
 import type {
   AttractorResponse,
   ComputationInfo,
   ControlResponse,
   DeleteBifDecisionResponse,
+  ValidateUpdateFunctionResponse,
 } from './ComputeEngineTypes';
 
 class ComputeEngine {
@@ -60,7 +63,15 @@ class ComputeEngine {
 
   // #endregion
 
-  // #region --- Adress Setters/Getters ---
+  // #region --- Get Connection Status ---
+
+  public isConnected() {
+    return this.connected;
+  }
+
+  // #endregion
+
+  // #region --- Address Setters/Getters ---
 
   public setEngineAddress(newAddress: string) {
     if (newAddress) {
@@ -376,6 +387,10 @@ class ComputeEngine {
       );
     }
 
+    if (this.waitingForResults) {
+      throw new Error('Cannot start computation: Computation already running.');
+    }
+
     return;
   }
 
@@ -527,6 +542,61 @@ class ComputeEngine {
     );
 
     this.ping();
+  }
+
+  // #endregion
+
+  // #region --- Update Function Validation ---
+
+  /** Converts the response from the validate update function endpoint.
+   *  Returns undefined if response is undefined, else returns the status converted into UpdateFunctionStatus
+   */
+  private convertValidateUpdateFunctionResponse(
+    response: ValidateUpdateFunctionResponse | undefined,
+    error: string | undefined
+  ): UpdateFunctionStatus | undefined {
+    if (error) {
+      return { isError: true, status: error.replaceAll('<br>', '\n') };
+    }
+
+    if (response) {
+      return {
+        isError: response.cardinality === undefined,
+        status:
+          response.cardinality !== undefined
+            ? `Possible Instantiations: ${response.cardinality}`
+            : 'Error Validating Functions: No instantiations found',
+      };
+    }
+    return undefined;
+  }
+
+  /** Checks if update function is valid.
+   */
+  public validateUpdateFunction(
+    variableId: number,
+    updateFunctionFragment: string,
+    callback?: (
+      variableId: number,
+      response: UpdateFunctionStatus | undefined
+    ) => void
+  ): void {
+    if (this.connected) {
+      this.backendRequest(
+        '/check_update_function',
+        (
+          error: string | undefined,
+          response: ValidateUpdateFunctionResponse | undefined
+        ) => {
+          callback?.(
+            variableId,
+            this.convertValidateUpdateFunctionResponse(response, error)
+          );
+        },
+        'POST',
+        updateFunctionFragment
+      );
+    }
   }
 
   // #endregion
@@ -847,10 +917,12 @@ class ComputeEngine {
   }
 
   private getAttractorResults() {
+    Loading.startLoading();
     this.backendRequest(
       '/get_results',
       (error: string | undefined, response: AttractorResults) => {
         this.getResultsCallback(error, response, 'Attractor Analysis');
+        Loading.endLoading();
       },
       'GET'
     );
@@ -880,6 +952,7 @@ class ComputeEngine {
               },
           'Control'
         );
+        Loading.endLoading();
       },
       'GET'
     );
@@ -896,6 +969,7 @@ class ComputeEngine {
 
   /** Get control computation results and statistics. */
   private getControlResults() {
+    Loading.startLoading();
     this.backendRequest(
       '/get_control_results',
       (
@@ -908,6 +982,7 @@ class ComputeEngine {
           }
 
           this.getResultsCallback(error, undefined, 'Control');
+          Loading.endLoading();
           return;
         }
 

@@ -40,6 +40,8 @@ class ExportLM {
 
   // #endregion
 
+  // #region --- Model Stats ---
+
   /** Export stats object */
   public stats(): ModelStats {
     let maxInDegree = 0;
@@ -90,6 +92,10 @@ class ExportLM {
     };
   }
 
+  // #endregion
+
+  // #region --- Export/Save Model ---
+
   /**
    * Export current model in Aeon text format, or undefined if model cannot be
    * exported (no variables).
@@ -139,7 +145,7 @@ class ExportLM {
         .getState()
         .regulationsOf(variable.id);
       for (let reg of regulations) {
-        result += this.liveModel.Regulations._regulationToString(reg) + '\n';
+        result += this.liveModel.Regulations.regulationToString(reg) + '\n';
       }
     }
 
@@ -154,8 +160,7 @@ class ExportLM {
     const modelString = this.exportAeon();
     const modelId = useLoadedModelStore.getState().loadedModelId;
 
-    if (!modelString || modelId === null) {
-      //Todo error
+    if (modelString === undefined || modelId === null) {
       return;
     }
     this.liveModel.Models.updateModel(modelId, modelString);
@@ -173,6 +178,8 @@ class ExportLM {
     }
   }
 
+  // #endregion
+
   // #region --- Export to File ---
 
   /** Export current model to a file with the given file ending */
@@ -181,7 +188,10 @@ class ExportLM {
     conversionFunction?: (aeonString: string) => Promise<string>
   ): Promise<void> {
     let modelString = this.exportAeon(true);
-    const fileName = useModelInfoStore.getState().getModelName() ?? 'model';
+    const modelName = useModelInfoStore.getState().getModelName();
+    const fileName = !useModelInfoStore.getState().getModelName()
+      ? 'model'
+      : modelName;
 
     if (!modelString) {
       Message.showError('Export Error: No variables in the model.');

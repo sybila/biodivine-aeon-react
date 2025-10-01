@@ -7,6 +7,7 @@ const ContentTab: React.FC<ContentTabProps> = ({
   showTab = false,
   spaceOnTop = false,
   onClose,
+  overflowY = 'auto',
 }) => {
   if (!showTab) {
     return;
@@ -21,6 +22,7 @@ const ContentTab: React.FC<ContentTabProps> = ({
       }}
       compMaxHeight="98%"
       windHeight="auto"
+      windOverflowY={overflowY}
       headerText={headerText ?? ''}
       showHeader={true}
       showCloseButton={true}

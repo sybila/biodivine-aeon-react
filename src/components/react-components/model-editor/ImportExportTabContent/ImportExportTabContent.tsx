@@ -6,7 +6,6 @@ import { ExampleModels } from '../../../../ExampleModels';
 import { Message } from '../../../lit-components/message-wrapper';
 import { useEffect, useRef, useState } from 'react';
 import FileConvertors from '../../../../services/utilities/FileConvertors';
-import { Loading } from '../../../lit-components/loading-wrapper';
 import type { fileType } from '../../../../types';
 
 /** This component is used to display the Import/Export tab content in the Model Editor */
@@ -19,10 +18,8 @@ const ImportExportTabContent: React.FC = () => {
   const [acceptType, setAcceptType] = useState<fileType | ''>('');
   const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
 
-  const handleExampleImport = (exampleModel: string) => {
-    Loading.startLoading();
-    LiveModel.Import.importAeon(exampleModel);
-    Loading.endLoading();
+  const handleExampleImport = async (exampleModel: string) => {
+    await LiveModel.Import.importAeonWithWarnings(exampleModel);
   };
 
   useEffect(() => {
@@ -32,13 +29,15 @@ const ImportExportTabContent: React.FC = () => {
     }
   }, [acceptType, pendingFileDialog]);
 
-  const startFileImport = (
-    importFunction: (fileInput: HTMLInputElement & { files: FileList }) => void,
+  const startFileImport = async (
+    importFunction: (
+      fileInput: HTMLInputElement & { files: FileList }
+    ) => Promise<void>,
     accept: fileType | ''
   ) => {
-    fileHandlerRef.current = (
+    fileHandlerRef.current = async (
       fileInput: HTMLInputElement & { files: FileList }
-    ) => importFunction(fileInput);
+    ) => await importFunction(fileInput);
     setAcceptType(accept);
     setPendingFileDialog(true);
   };
@@ -47,15 +46,15 @@ const ImportExportTabContent: React.FC = () => {
     [
       'Last Model',
       'Browser Storage',
-      () => LiveModel.Import.loadFromLocalStorage(),
+      async () => await LiveModel.Import.loadFromLocalStorage(),
     ],
     [
       '.aeon',
       'Simple Text Format',
       () =>
         startFileImport(
-          (fileInput: HTMLInputElement & { files: FileList }) =>
-            LiveModel.Import.importFromFile(fileInput),
+          async (fileInput: HTMLInputElement & { files: FileList }) =>
+            await LiveModel.Import.importFromFile(fileInput),
           '.aeon'
         ),
     ],
@@ -64,8 +63,8 @@ const ImportExportTabContent: React.FC = () => {
       'Standard SBML L3',
       () => {
         startFileImport(
-          (fileInput: HTMLInputElement & { files: FileList }) =>
-            LiveModel.Import.importFromFile(
+          async (fileInput: HTMLInputElement & { files: FileList }) =>
+            await LiveModel.Import.importFromFile(
               fileInput,
               FileConvertors.sbmlToAeon
             ),
@@ -78,8 +77,8 @@ const ImportExportTabContent: React.FC = () => {
       'Boolnet Text Format',
       () => {
         startFileImport(
-          (fileInput: HTMLInputElement & { files: FileList }) =>
-            LiveModel.Import.importFromFile(
+          async (fileInput: HTMLInputElement & { files: FileList }) =>
+            await LiveModel.Import.importFromFile(
               fileInput,
               FileConvertors.bnetToAeon
             ),
@@ -117,20 +116,28 @@ const ImportExportTabContent: React.FC = () => {
   ];
 
   const exampleFirstColButtons: Array<[string, string, () => void]> = [
-    ['G2A', 'Cell Division', () => handleExampleImport(ExampleModels.g2a)],
-    ['G2B', 'Cell Division', () => handleExampleImport(ExampleModels.g2b)],
+    [
+      'G2A',
+      'Cell Division',
+      async () => await handleExampleImport(ExampleModels.g2a),
+    ],
+    [
+      'G2B',
+      'Cell Division',
+      async () => await handleExampleImport(ExampleModels.g2b),
+    ],
   ];
 
   const exampleSecondColButtons: Array<[string, string, () => void]> = [
     [
       'Orlando',
       'Budding Yeast',
-      () => handleExampleImport(ExampleModels.buddingYeastOrlando),
+      async () => await handleExampleImport(ExampleModels.buddingYeastOrlando),
     ],
     [
       'Irons',
       'Budding Yeast',
-      () => handleExampleImport(ExampleModels.buddingYeastIrons),
+      async () => await handleExampleImport(ExampleModels.buddingYeastIrons),
     ],
   ];
 

@@ -74,6 +74,7 @@ export class IconButton extends LitElement {
       justify-content: center;
       align-items: center;
       aspect-ratio: 1 / 1;
+      padding: 0;
       border: none;
       border-radius: var(--icon-button-border-radius, 24px);
       background-color: var(--icon-button-bg-color, #eceff1);
@@ -190,7 +191,7 @@ export class IconButton extends LitElement {
     const active = this.isActive ? 'active' : '';
 
     return html`
-      <div class="${hasTagClass} ${sizeClass} ">
+      <div part="container/tag" class="${hasTagClass} ${sizeClass} ">
         <button
           part="button"
           class="${sizeClass} ${active}"

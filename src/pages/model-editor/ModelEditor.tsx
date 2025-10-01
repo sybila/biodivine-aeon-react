@@ -19,6 +19,7 @@ import KeepAlive from 'react-activation';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import type { ModelType } from '../../types';
 import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
+import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 
 type TabTypeME =
   | 'Start Computation'
@@ -132,12 +133,15 @@ const ModelEditor: React.FC = () => {
       </SideButtonMenu>
 
       <ContentTab
+        overflowY="hidden"
         showTab={activeTab !== null}
         onClose={() => showHideTab(null)}
         headerText={activeTab ?? ''}
       >
         {renderTabContent()}
       </ContentTab>
+
+      <FloatMenu />
 
       <KeepAlive>
         <ModelEditorCanvas />

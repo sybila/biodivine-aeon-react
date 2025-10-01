@@ -1,18 +1,13 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import config from '../../../config';
+import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import Warning from '../Warning/Warning';
 import { LiveModel, type LiveModelClass } from './LiveModel';
-
-// import {
-//   Warning,
-//   ModelEditor,
-//   Results,
-//   UI,
-//   Strings,
-// } from "./Todo-imports";
 
 class ImportLM {
   // #region --- Properties and Constructor ---
@@ -118,8 +113,7 @@ class ImportLM {
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
-    let keys = Object.keys(updateFunctions);
-    for (let key of keys) {
+    for (const key of Object.keys(updateFunctions)) {
       const variable = this.addVariableImport(
         useVariablesStore.getState().variableFromName(key),
         key,
@@ -127,21 +121,20 @@ class ImportLM {
         control[key]
       );
 
-      if (!variable) {
+      if (variable === undefined) {
         Message.showError(
           `Error: Update function for variable "${key}" cannot be set. Variable is not defined.`
         );
         continue;
       }
 
-      // We actually have to also set the function in the model because we don't update it from the set method...
-      //ModelEditor.setUpdateFunction(variable, updateFunctions[key]);
-      let error = this.liveModel.UpdateFunctions.setUpdateFunction(
+      const error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
-        updateFunctions[key]
+        updateFunctions[key],
+        true
       );
       if (error !== undefined) {
-        //Warning.displayWarning(error);
+        Message.showError('Error while setting update function: ' + error);
       }
     }
   }
@@ -257,22 +250,41 @@ class ImportLM {
 
   // #region --- Import Aeon ---
 
+  /** Import a model from an Aeon file with warnings.
+   *  If there are results loaded or tabs open, warn the user that they will be lost.
+   *  If the model is not empty, warn the user that it will be erased.
+   */
+  public async importAeonWithWarnings(modelString: string): Promise<boolean> {
+    if (
+      useResultsStatus.getState().results != undefined ||
+      !useTabsStore.getState().isEmpty()
+    ) {
+      const proceed = await Warning.addRemoveResultsWarning(
+        'Importing a new model'
+      );
+      if (!proceed) {
+        return false;
+      }
+    }
+
+    if (!this.liveModel.isEmpty()) {
+      const proceed = await Warning.addImportModelEraseModelWarning();
+      if (!proceed) {
+        return false;
+      }
+    }
+
+    return this.importAeon(modelString);
+  }
+
   /**
    * Import model from Aeon file, load it into the live model and save it as the main model.
    * If the import is successful, return true.
    */
-  public importAeon(modelString: string, erasePossible = false): boolean {
-    if (
-      (!erasePossible && !this.liveModel._modelModified()) ||
-      (!this.liveModel.isEmpty() && !erasePossible && !confirm('Model erased')) //Strings.modelWillBeErased)
-    ) {
-      // If there is some model loaded, let the user know it will be
-      // overwritten. If he decides not to do it, just return...
-      return false;
-    }
-
+  public importAeon(modelString: string): boolean {
+    Loading.startLoading();
     // Disable on-the-fly server checks.
-    this.liveModel._disable_dynamic_validation = true;
+    this.liveModel.disable_dynamic_validation = true;
 
     let modelName = '';
     let modelDescription = '';
@@ -294,8 +306,8 @@ class ImportLM {
     this.liveModel.clear();
 
     // Set model metadata
-    LiveModel.Info.setModelName(modelName);
-    LiveModel.Info.setModelDescription(modelDescription);
+    LiveModel.Info.setModelName(modelName, true);
+    LiveModel.Info.setModelDescription(modelDescription, true);
 
     this.setRegulations(regulations, positions, control);
     this.liveModel.Import.setUpdateFunctions(
@@ -308,13 +320,10 @@ class ImportLM {
     CytoscapeME.fit();
 
     // Re-enable server checks and run them.
-    this.liveModel._disable_dynamic_validation = false;
-    for (const { id } of useVariablesStore.getState().getAllVariables()) {
-      this.liveModel.UpdateFunctions._validateUpdateFunction(id);
-    }
+    this.liveModel.disable_dynamic_validation = false;
+    this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
 
-    //UI.Visible.closeContent();
-
+    Loading.endLoading();
     return true; // no error
   }
 
@@ -341,7 +350,6 @@ class ImportLM {
       }
 
       const fileContent = e.target.result as string;
-      Loading.startLoading();
 
       try {
         const aeonModel = !formatToAeonFunction
@@ -352,7 +360,7 @@ class ImportLM {
           throw new Error('File format conversion failed.');
         }
 
-        this.importAeon(aeonModel);
+        await this.importAeonWithWarnings(aeonModel);
         this.liveModel.Models.addModel(aeonModel, 'main');
       } catch (error: any) {
         Message.showError(
@@ -360,7 +368,6 @@ class ImportLM {
         );
       } finally {
         element.value = '';
-        Loading.endLoading();
       }
     };
 
@@ -369,10 +376,11 @@ class ImportLM {
 
   // #endregion
 
+  // #region --- Import from local storage ---
+
   /** Loads model saved in the local storage of the browser. */
-  public loadFromLocalStorage(): void {
+  public async loadFromLocalStorage(): Promise<void> {
     try {
-      Loading.startLoading();
       const modelString = localStorage.getItem(
         config.localStorageModelName ?? 'lastModel'
       );
@@ -381,7 +389,7 @@ class ImportLM {
         modelString !== null &&
         modelString.length > 0
       ) {
-        this.importAeon(modelString);
+        await this.importAeonWithWarnings(modelString);
       } else {
         Message.showInfo(
           "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
@@ -393,10 +401,10 @@ class ImportLM {
       );
 
       console.log(e);
-    } finally {
-      Loading.endLoading();
     }
   }
+
+  // #endregion
 }
 
 export default ImportLM;

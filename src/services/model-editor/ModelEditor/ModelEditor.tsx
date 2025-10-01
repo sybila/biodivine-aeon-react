@@ -1,3 +1,7 @@
+import { Message } from '../../../components/lit-components/message-wrapper';
+import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
+import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
+import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import type { ModelStats, RegulationVariables } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
@@ -13,13 +17,6 @@ class ModelEditorClass {
   private hoverVariableInfo:
     | ((id: number, turnOnHover: boolean) => void)
     | null = null;
-
-  /** Function for toggling selected state of variables in the ModelEditorTabContent.tsx component */
-  private selectVariableInfo: ((id: number, select: boolean) => void) | null =
-    null;
-
-  /** Currently selected variable in the ModelEditorCanvas.tsx component */
-  private selectedVariableId: number | null = null;
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
@@ -48,26 +45,9 @@ class ModelEditorClass {
     this.hoverVariableInfo = hoverFunction;
   }
 
-  /** Sets select function for variables inside the ModelEditorTabContent.tsx (needs to be called before selectVariable function) */
-  public setSelectVariableFunction(
-    selectFunction: (id: number, select: boolean) => void
-  ) {
-    this.selectVariableInfo = selectFunction;
-  }
-
   // #endregion
 
-  // #region --- Variable Selection/Search ---
-
-  /** Returns last selected variable id in the ModelEditorCanvas.tsx component. Returns null if no variable is selected */
-  public getSelectedVariableId(): number | null {
-    return this.selectedVariableId;
-  }
-
-  /** Sets currently selected variable id in the ModelEditorCanvas.tsx component. id is null if no variable is selected */
-  public setSelectedVariableId(id: number | null) {
-    this.selectedVariableId = id;
-  }
+  // #region --- Variable Search ---
 
   /** Returns currently searched variable name in the ModelEditorTabContent.tsx component */
   public getVariableSearch(): string {
@@ -92,13 +72,23 @@ class ModelEditorClass {
   }
 
   /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string) {
-    if (newName != '') LiveModel.Variables.renameVariable(id, newName);
+  public changeVariableName(id: number, newName: string): boolean {
+    if (newName != '') {
+      const error = LiveModel.Variables.renameVariable(id, newName);
+
+      if (error) {
+        Message.showError('Variable name not changed: ' + error);
+        return false;
+      }
+
+      return true;
+    }
+    return false;
   }
 
   /** Removes a variable */
-  public removeVariable(id: number) {
-    LiveModel.Variables.removeVariable(id);
+  public async removeVariable(id: number) {
+    await LiveModel.Variables.removeVariable(id);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
@@ -108,17 +98,6 @@ class ModelEditorClass {
   public hoverVariable(id: number, turnOnHover: boolean) {
     if (this.hoverVariableInfo) {
       this.hoverVariableInfo(id, turnOnHover);
-    }
-  }
-
-  /** Toggles selected state on a variable in the ModelEditorTabContent.tsx component
-   * If `select` is true, it sets variable as selected; if false, it unselects it.
-   * (you must first set selectVariableInfo with setSelectVariableFunction before running this function)
-   */
-  public selectVariable(id: number, select: boolean) {
-    if (this.selectVariableInfo) {
-      this.setSelectedVariableId(select ? id : null);
-      this.selectVariableInfo(id, select);
     }
   }
 
@@ -202,7 +181,17 @@ class ModelEditorClass {
     id: number,
     updateFunction: string
   ): string | undefined {
-    return LiveModel.UpdateFunctions.setUpdateFunction(id, updateFunction);
+    const error = LiveModel.UpdateFunctions.setUpdateFunction(
+      id,
+      updateFunction
+    );
+
+    if (error) {
+      Message.showError('Update function not changed: ' + error);
+      return error;
+    }
+
+    return undefined;
   }
 
   // #endregion
@@ -213,13 +202,14 @@ class ModelEditorClass {
     return LiveModel.Export.stats();
   }
 
-  // #endregion
-
-  // #region --- Model Description ---
-
   /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
     LiveModel.Info.setModelDescription(description);
+  }
+
+  /** Sets the model name in the LiveModel */
+  public setModelName(name: string) {
+    LiveModel.Info.setModelName(name);
   }
 
   // #endregion
@@ -249,6 +239,32 @@ class ModelEditorClass {
   }
 
   // #endregion
+
+  // #region --- Open Content Overlay Windows ---
+
+  /** Opens the "Change Variable Name" overlay window.
+   *  @param varId - The id of the variable to change the name of.
+   */
+  public openChangeVarNameWindow(varId: number) {
+    if (varId === undefined) return;
+
+    useOverlayWindowStore.getState().setCurrentContent({
+      header: 'Edit Variable Name',
+      content: <ChangeVarNameOverlayContent varId={varId} />,
+    });
+  }
+
+  /** Opens the "Change Update Function" overlay window.
+   *  @param varId - The id of the variable to change the update function of.
+   */
+  public openChangeUpdateFunctionWindow(varId: number) {
+    if (varId === undefined) return;
+
+    useOverlayWindowStore.getState().setCurrentContent({
+      header: 'Edit Update Function',
+      content: <ChangeUpFunOverlayContent varId={varId} />,
+    });
+  }
 }
 
 const ModelEditor: ModelEditorClass = new ModelEditorClass();

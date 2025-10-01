@@ -1,6 +1,4 @@
-import { useMemo, useState } from 'react';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
-import InvisibleInputReact from '../../../../lit-wrappers/InvisibleInputReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
 
 import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
@@ -9,11 +7,9 @@ import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import type { VariableInfoProps } from './VariableInfoProps';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
-import type { Regulation } from '../../../../../../types';
-import RegulationInfo from './RegulationInfo/RegulationInfo';
-import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
-import useUpdateFunctionsStore from '../../../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useRegulationsStore from '../../../../../../stores/LiveModel/useRegulationsStore';
+import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
+import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
+import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -23,93 +19,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverRegulation,
   selectedRegulation,
 }) => {
-  const [varName, setVarName] = useState<string>(name);
-  const [nameError, setNameError] = useState<boolean>(
-    !varName || varName === ''
-  );
-
-  const [updateFunctionInfo, setUpdateFunctionInfo] = useState<string>('');
-
-  const regulationsObj = useRegulationsStore((state) => state.regulations);
-
-  const regulations = useMemo(
-    () => Object.values(regulationsObj).filter((r) => r.target === id),
-    [regulationsObj, id]
-  );
-
-  const updateFunction = useUpdateFunctionsStore(
-    (state) => state.getUpdateFunctionId(id)?.functionString ?? ''
-  );
-
-  const updateVariableName = (newName: string) => {
-    if (!newName || newName === '') {
-      setNameError(true);
-      return;
-    }
-
-    ModelEditor.changeVariableName(id, newName);
-    setVarName(newName);
-    setNameError(false);
-  };
-
-  const changeUpdateFunction = (newFunction: string) => {
-    const updateFunction: string = newFunction ?? '';
-
-    const error: string | undefined = ModelEditor.setUpdateFunction(
-      id,
-      updateFunction
-    );
-
-    if (error) {
-      setUpdateFunctionInfo(error);
-    } else {
-      setUpdateFunctionInfo('');
-    }
-  };
-
-  const insertRegulators = () => {
-    if (regulations.length === 0) {
-      return (
-        <section
-          slot="extended-content"
-          className="flex justify-center items-center h-[77px] max-h-[77px] w-full"
-        >
-          <SimpleHeaderReact
-            compHeight="20px"
-            headerText="No Regulators"
-            textFontSize="15px"
-            textFontFamily="FiraMono, monospace"
-            textFontWeight="normal"
-          ></SimpleHeaderReact>
-        </section>
-      );
-    }
-
-    return (
-      <section
-        slot="extended-content"
-        className="h-[77px] max-h-[77px] w-full overflow-auto"
-      >
-        {regulations.map((regulation: Regulation) => (
-          <RegulationInfo
-            key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
-            hover={
-              (hoverRegulation &&
-                hoverRegulation.regulator === regulation.regulator) ??
-              false
-            }
-            selected={
-              (selectedRegulation &&
-                selectedRegulation.regulator === regulation.regulator) ??
-              false
-            }
-            {...regulation}
-          ></RegulationInfo>
-        ))}
-      </section>
-    );
-  };
-
   return (
     <ExtendableContentReact
       compWidth="100%"
@@ -122,15 +31,15 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
     >
-      <InvisibleInputReact
-        slot="top-content"
-        compHeight="100%"
-        compWidth="60%"
-        value={varName}
-        placeholder="(variable name)"
-        error={nameError}
-        handleChange={updateVariableName}
-      ></InvisibleInputReact>
+      <section slot="top-content" className="h-full w-[60%]">
+        <VariableNameInput
+          height="100%"
+          width="100%"
+          singleFontSize="16px"
+          varId={id}
+          varName={name}
+        />
+      </section>
 
       <section
         slot="top-content"
@@ -151,7 +60,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={DeleteIcon}
           iconAlt="delete"
-          handleClick={() => ModelEditor.removeVariable(id)}
+          handleClick={async () => await ModelEditor.removeVariable(id)}
         ></IconButtonReact>
       </section>
 
@@ -163,7 +72,15 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         textFontSize="12px"
       ></DotHeaderReact>
 
-      {insertRegulators()}
+      <section slot="extended-content" className="h-fit w-full">
+        <RegulationInfoList
+          varId={id}
+          height="77px"
+          width="100%"
+          hoverRegulation={hoverRegulation}
+          selectedRegulation={selectedRegulation}
+        />
+      </section>
 
       <DotHeaderReact
         slot="extended-content"
@@ -173,22 +90,18 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         textFontSize="12px"
       ></DotHeaderReact>
 
-      <InvisibleInputReact
-        slot="extended-content"
-        compHeight="28px"
-        compWidth="100%"
-        multiFontSize="16px"
-        multiLine={true}
-        placeholder={`$f_${name}(...)`}
-        value={updateFunction}
-        handleChange={changeUpdateFunction}
-      ></InvisibleInputReact>
-      <span
-        slot="extended-content"
-        className="h-[20px] w-full max-w-full mt-1.5 overflow-x-auto overflow-y-hidden text-red-500 font-(family-name:--font-family-fira-mono) select-none leading-[100%] text-[95%] text-nowrap"
-      >
-        {updateFunctionInfo}
-      </span>
+      <section slot="extended-content" className="h-fit w-full">
+        <ChangeUpdateFunctionInput
+          varId={id}
+          compHeight="fit-content"
+          compWidth="100%"
+          inputFontSize="16px"
+          inputHeight="28px"
+          inputWidth="100%"
+          validationMinHeight="20px"
+          validationMaxHeight="40px"
+        />
+      </section>
     </ExtendableContentReact>
   );
 };

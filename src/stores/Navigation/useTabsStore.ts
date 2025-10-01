@@ -3,6 +3,7 @@ import type { TabInfo, TabType } from '../../types';
 import { LiveModel } from '../../services/global/LiveModel/LiveModel';
 import router from '../../router';
 import { Loading } from '../../components/lit-components/loading-wrapper';
+import TabOperations from '../../services/global/Navigation/TabOperations';
 
 type TabsState = {
   /** Property containing information about all opened tabs. */
@@ -10,7 +11,12 @@ type TabsState = {
   /** Property containing the ID of the next created tab. */
   idNow: number;
   /** Adds a new tab. */
-  addTab: (path: string, type: TabType, onClick?: () => void) => number;
+  addTab: (
+    path: string,
+    type: TabType,
+    onClick?: () => void,
+    onClose?: () => void
+  ) => number;
   /** Removes a tab by ID. */
   removeTab: (id: number) => void;
   /** Sets the active tab by ID. */
@@ -19,7 +25,11 @@ type TabsState = {
   getAllTabs: () => TabInfo[];
   /** Retrieves a tab by ID. */
   getTabById: (id: number) => TabInfo | undefined;
-  /** Checks if there are any opened tabs. */
+  /** Retrieves the first tab with a specific type. */
+  getFirstTabWithType: (type: TabType) => TabInfo | undefined;
+  /** Retrieves the currently active tab. */
+  getActiveTab: () => TabInfo | undefined;
+  /** Checks if there are any opened tabs except for the Model Editor Tab. */
   isEmpty: () => boolean;
   /** Clears all opened tabs. Except for the Model Editor Tab */
   clear: () => void;
@@ -39,9 +49,22 @@ const useTabsStore = create<TabsState>((set, get) => ({
   },
   idNow: 1,
 
-  addTab: (path: string, type: TabType, onClick?: () => void) => {
+  addTab: (
+    path: string,
+    type: TabType,
+    onClick?: () => void,
+    onClose?: () => void
+  ) => {
     if (type === 'Model Editor') {
       return 0;
+    }
+
+    if (!TabOperations.canOpenMoreThanOne(type)) {
+      const existingTab = get().getFirstTabWithType(type);
+      if (existingTab) {
+        get().setActiveTab(existingTab.id);
+        return existingTab.id;
+      }
     }
 
     const id = get().idNow;
@@ -49,6 +72,7 @@ const useTabsStore = create<TabsState>((set, get) => ({
       id,
       path,
       onClick,
+      onClose,
       type,
       active: false,
     };
@@ -66,6 +90,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
       return;
     }
 
+    const onClose = get().openedTabs[id]?.onClose;
+
     set((state) => {
       const newTabs = { ...state.openedTabs };
 
@@ -76,6 +102,8 @@ const useTabsStore = create<TabsState>((set, get) => ({
       delete newTabs[id];
       return { openedTabs: newTabs };
     });
+
+    if (onClose) onClose();
   },
 
   setActiveTab: (id: number, navigate: boolean = true) => {
@@ -89,6 +117,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
     });
 
     const tab = get().openedTabs[id];
+
+    if (tab?.onClick) tab.onClick();
+
     if (navigate && tab && tab.path) {
       router.navigate({ to: tab.path });
     }
@@ -99,9 +130,21 @@ const useTabsStore = create<TabsState>((set, get) => ({
 
   getTabById: (id: number) => get().openedTabs[id],
 
-  isEmpty: () => Object.keys(get().openedTabs).length === 0,
+  getFirstTabWithType: (type: TabType) =>
+    Object.values(get().openedTabs).find((tab) => tab.type === type),
+
+  getActiveTab: () => Object.values(get().openedTabs).find((tab) => tab.active),
+
+  isEmpty: () => Object.keys(get().openedTabs).length === 1,
 
   clear: () => {
+    get()
+      .getAllTabs()
+      .forEach((tab) => {
+        if (tab.id !== 0 && tab.onClose) {
+          tab.onClose();
+        }
+      });
     set({
       openedTabs: {
         0: {
@@ -109,6 +152,9 @@ const useTabsStore = create<TabsState>((set, get) => ({
           path: '/model-editor',
           type: 'Model Editor',
           active: true,
+          onClick: () => {
+            LiveModel.Models.loadModel(0);
+          },
         },
       },
     });

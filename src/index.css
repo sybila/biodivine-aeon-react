@@ -43,6 +43,7 @@
   --color-green: #4abd73;
   --color-green-light: #a8e6cf;
   --color-red: #d05d5d;
+  --color-darker-red: #b94a4a;
   --color-red-light: #f8b4b4;
   --color-yellow: #f3d491;
   --color-yellow-light: #ffe8aa;
@@ -68,6 +69,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
-  overflow: hidden;
+/** Scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--color-grey, #bebebe)
+    var(--color-grey-blue-ultra-light, #eceff1);
 }

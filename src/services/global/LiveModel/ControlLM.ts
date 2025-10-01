@@ -15,30 +15,20 @@ import type { LiveModelClass } from './LiveModel';
 
 /** Class to manage control information for live model variables */
 class ControlLM {
-  // #region --- Properties ---`
+  // #region --- Properties + Constructor ---
 
   /** Reference to the live model instance */
   private liveModel: LiveModelClass;
 
   private oscillation: Oscillation = 'allowed';
 
-  // #endregion
-
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
   }
 
-  // #region --- Oscillation ---
-
-  public setOscillation(oscillation: Oscillation): void {
-    this.oscillation = oscillation;
-  }
-
-  public getOscillation(): Oscillation {
-    return this.oscillation;
-  }
-
   // #endregion
+
+  // #region --- Getters ---
 
   /** Returns the number of variables set as Control-Enabled and in Phenotype .
    * @returns A tuple with the first element being the count of Control-Enabled variables,
@@ -55,15 +45,6 @@ class ControlLM {
       [0, 0]
     );
     return [controlEnabled, inPhenotype];
-  }
-
-  /** Remove control information for a variable by its ID */
-  public removeControlInfo(id: number, force = false): void {
-    if (!force && !this.liveModel._modelModified()) {
-      return;
-    }
-
-    useControlStore.getState().removeInfo(id);
   }
 
   /** Returns control statistics for the live model */
@@ -89,11 +70,29 @@ class ControlLM {
     return stats;
   }
 
+  // #endregion
+
+  // #region --- Oscillation ---
+
+  public setOscillation(oscillation: Oscillation): void {
+    this.oscillation = oscillation;
+  }
+
+  public getOscillation(): Oscillation {
+    return this.oscillation;
+  }
+
+  // #endregion
+
   // #region --- Change Control Info ---
 
   /** Change control information for a variable by its ID */
-  public changePhenotypeById(id: number, phenotype: Phenotype): void {
-    if (!this.liveModel._modelModified()) {
+  public changePhenotypeById(
+    id: number,
+    phenotype: Phenotype,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
       return;
     }
 
@@ -105,8 +104,15 @@ class ControlLM {
   }
 
   /** Change variable control enabled state by its ID */
-  public changeControlEnabledById(id: number, controlEnabled: boolean): void {
-    if (!this.liveModel._modelModified()) {
+  public changeControlEnabledById(
+    id: number,
+    controlEnabled: boolean,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      console.log(
+        'Model cannot be modified at the moment change control enabled.'
+      );
       return;
     }
 
@@ -117,6 +123,15 @@ class ControlLM {
     if (controlInfo) CytoscapeME.highlightControlEnabled([[id, controlInfo]]);
 
     ComputationManager.resetMaxSize();
+  }
+
+  /** Remove control information for a variable by its ID */
+  public removeControlInfo(id: number, force = false): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return;
+    }
+
+    useControlStore.getState().removeInfo(id);
   }
 
   // #endregion

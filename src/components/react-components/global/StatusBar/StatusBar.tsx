@@ -1,6 +1,5 @@
 import Time from '../../../../services/utilities/Time';
 import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 
 const StatusBar: React.FC = () => {
   const computeEngineStatus: string = useComputeEngineStatus(
@@ -25,13 +24,12 @@ const StatusBar: React.FC = () => {
   };
 
   return (
-    <SimpleHeaderReact
-      className="max-w-[calc(100% - 210px)] bg-[var(--color-secondary)] rounded-md px-3"
-      headerText={getStatusText()}
-      compHeight="100%"
-      compWidth="auto"
-      textColor={color}
-    />
+    <span
+      className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-[var(--color-secondary)] rounded-md px-3 truncate font-[var(--base-font-family)] text-[21px] select-none"
+      style={{ color: color, fontWeight: 'bold' }}
+    >
+      {getStatusText()}
+    </span>
   );
 };
 

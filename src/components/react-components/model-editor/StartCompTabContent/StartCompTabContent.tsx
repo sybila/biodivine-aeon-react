@@ -5,6 +5,10 @@ import ComputationManager from '../../../../services/global/ComputationManager/C
 import ControlCompParams from './ControlCompParams/ControlCompParams';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
+import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
+import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
+import useTabsStore from '../../../../stores/Navigation/useTabsStore';
+import Warning from '../../../../services/global/Warning/Warning';
 
 const StartCompTabContent: React.FC = () => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
@@ -16,12 +20,25 @@ const StartCompTabContent: React.FC = () => {
     setComputationMode(mode);
   };
 
-  const callComputationFunction = () => {
+  const getComputationFunction = () => {
     switch (computationMode) {
       case 'Attractor Analysis':
-        return ComputationManager.startAttractorAnalysis();
+        return () => ComputationManager.startAttractorAnalysis();
       case 'Control':
-        return ComputationManager.startControlComputation();
+        return () => ComputationManager.startControlComputation();
+    }
+  };
+
+  const showResultsWarningIfNeeded = () => {
+    const currentComputationFunction = getComputationFunction();
+
+    if (
+      useResultsStatus.getState().results ||
+      !useTabsStore.getState().isEmpty()
+    ) {
+      Warning.addStartComputationResultsWarning(currentComputationFunction);
+    } else {
+      currentComputationFunction();
     }
   };
 
@@ -59,6 +76,8 @@ const StartCompTabContent: React.FC = () => {
     }
   };
 
+  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+
   return (
     <div className="flex flex-col items-center w-full h-fit gap-5">
       <DotHeaderReact
@@ -73,7 +92,7 @@ const StartCompTabContent: React.FC = () => {
 
       <TextButtonReact
         text="Start Computation"
-        onClick={() => callComputationFunction()}
+        onClick={() => showResultsWarningIfNeeded()}
         compHeight="40px"
         compWidth="100%"
       />

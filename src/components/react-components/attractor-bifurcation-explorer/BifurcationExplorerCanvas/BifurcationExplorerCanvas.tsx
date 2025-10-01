@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import CytoscapeABE from '../../../../services/attractor-bifurcation-explorer/CytoscapeABE/CytoscapeABE';
+import { useEffect, useRef } from 'react';
+import AttractorBifurcationExplorer from '../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
-const BifurcationExplorerCanvas: React.FC = () => {
-  const [initialized, setInitialized] = useState<boolean>(false);
-
+const BifurcationExplorerCanvas: React.FC<{
+  initialized: boolean;
+  setInitialized: (initialized: boolean) => void;
+}> = ({ initialized, setInitialized }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -12,7 +13,7 @@ const BifurcationExplorerCanvas: React.FC = () => {
     }
 
     if (containerRef.current) {
-      CytoscapeABE.init(containerRef.current);
+      AttractorBifurcationExplorer.init(containerRef.current);
       setInitialized(true);
     }
   }, [initialized]);

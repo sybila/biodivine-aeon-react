@@ -38,6 +38,14 @@ class DataFormaters {
     const csvString = header + perturbationsAsArray.join('');
     return csvString;
   }
+
+  /** Converts a comma-separated string into an array of trimmed strings.
+   */
+  public static convertCommaSeparatedStringToArray(
+    text: string
+  ): Array<string> {
+    return text.split(',').map((item) => item.trim());
+  }
 }
 
 export default DataFormaters;

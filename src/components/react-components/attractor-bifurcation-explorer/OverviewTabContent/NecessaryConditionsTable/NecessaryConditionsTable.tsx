@@ -14,11 +14,11 @@ const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
         justifyHeader="start"
         headerText="Necessary Conditions"
       />
-      <div className="flex flex-col w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] gap-1 overflow-auto bg-[var(--color-grey-blue-ultra-light)] rounded-md p-2">
+      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-[var(--color-grey-blue-ultra-light)] rounded-md p-2">
         {necessaryConditions.map((condition, index) => (
           <div
             key={index}
-            className="min-h-[22px] min-w-full max-w-full overflow-auto"
+            className="min-h-[22px] max-h-[35px] min-w-full max-w-full overflow-auto mt-1"
           >
             <SimpleHeaderReact
               headerText={`- ${condition.name ?? 'unknown'}`}

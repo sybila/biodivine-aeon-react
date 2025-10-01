@@ -1,5 +1,5 @@
-import ModelEditor from '../../../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useVariablesStore from '../../../../../../../stores/LiveModel/useVariablesStore';
+import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({
@@ -84,7 +84,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
 
   return (
     <div
-      className={`h-[22px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) ${
+      className={`min-h-[24px] max-h-[40px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) ${
         !selected ? 'hover:bg-[var(--color-grey-blue-ultra-light)]' : ''
       } ${getRegulationBgColor()} leading-[100%] text-[98%] select-none`}
       onMouseEnter={() => {
@@ -94,10 +94,13 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
         ModelEditor.hoverRegulationCytoscape({ regulator, target }, false);
       }}
     >
-      <span className="h-fit w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[100%]">
+      <span
+        className="h-auto w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[16px]"
+        style={{ scrollbarWidth: 'thin' }}
+      >
         {regulatorVar.name ?? 'Unknown'}
       </span>
-      <span className="h-fit w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center">
+      <span className="h-auto w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center">
         {getRegulationIcon()}
       </span>
 

@@ -17,7 +17,7 @@ const remove_svg =
 
 declare const cytoscape: any;
 
-class CytoscapeABEClass {
+class CytoscapeABE {
   // #region --- Properties ---
 
   private cytoscape: any = undefined;
@@ -54,9 +54,6 @@ class CytoscapeABEClass {
     this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
     this.cytoscape.on('grabon', this.handleDragStart.bind(this));
     this.cytoscape.on('dragfreeon', this.handleDragEnd.bind(this));
-
-    AttractorBifurcationExplorer.loadBifurcationTree();
-    this.fit();
   }
 
   private initOptions(): CytoscapeOptions {
@@ -240,9 +237,8 @@ class CytoscapeABEClass {
 
   /** Function to handle node selection */
   private onSelect(e: EventObject) {
-    // Todo - add quick help for tree explorer - document.getElementById('quick-help-tree-explorer').classList.add('gone');
+    // Todo - add quick help for tree explorer
 
-    console.log(e.target.data());
     const data: CytoscapeNodeDataBE = e.target.data();
     if (data.action == 'remove') {
       if (!data.targetId) return;
@@ -763,5 +759,4 @@ class CytoscapeABEClass {
   // #endregion
 }
 
-const CytoscapeABE = new CytoscapeABEClass();
 export default CytoscapeABE;

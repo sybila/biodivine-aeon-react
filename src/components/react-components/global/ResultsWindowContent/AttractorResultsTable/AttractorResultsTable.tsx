@@ -4,11 +4,12 @@ import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
-
-import SplitIcon from '../../../../../assets/icons/split_icon.svg';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
 import Time from '../../../../../services/utilities/Time';
+import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+
+import SplitIcon from '../../../../../assets/icons/split_icon.svg';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
@@ -18,7 +19,9 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
       .getState()
       .addTab(
         '/attractor-bifurcation-explorer',
-        'Attractor Bifurcation Explorer'
+        'Attractor Bifurcation Explorer',
+        undefined,
+        () => AttractorBifurcationExplorer.clear()
       );
   };
 

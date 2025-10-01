@@ -22,18 +22,18 @@ const SelectVarFilterTableRow: React.FC<SelectVarFilterTableRowProp> = ({
 
   return (
     <section
-      className="h-[25px] w-full flex flex-row justify-between items-center font-[var(--base-font-family)] hover:bg-[var(--color-grey-blue-ultra-light)] cursor-pointer px-2 select-none"
+      className="min-h-[25px] max-h-[37px] w-full flex flex-row justify-between items-center font-[var(--base-font-family)] hover:bg-[var(--color-grey-blue-ultra-light)] cursor-pointer px-2 select-none"
       style={{
         backgroundColor: isSelected ? 'var(--color-grey-blue-light)' : '',
       }}
       onClick={() => toggleSelect(varName)}
     >
-      <span className="h-full max-w-[70%] whitespace-nowrap overflow-x-auto ">
+      <span className="h-auto max-h-full max-w-[70%] whitespace-nowrap overflow-x-auto overflow-y-hidden">
         {varName}
       </span>
       <div
         style={{ backgroundColor: getIndicatorColor() }}
-        className={`h-[80%] aspect-square rounded-3xl`}
+        className={`h-[19px] aspect-square rounded-3xl`}
       />
     </section>
   );

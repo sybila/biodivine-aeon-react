@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PertVariableFilterStatus } from '../../../../../types';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
 import { Loading } from '../../../../lit-components/loading-wrapper';
@@ -6,6 +6,7 @@ import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 
 const SelectVarFilterTable: React.FC<{
   variableNames: Array<string>;
@@ -83,6 +84,13 @@ const SelectVarFilterTable: React.FC<{
     ],
   ];
 
+  const filteredVariableNames = useMemo(() => {
+    return SearchAndFilterHelpers.filterStringsBySearchTerms(
+      variableNames,
+      searchText
+    );
+  }, [searchText, variableNames]);
+
   return (
     <div className="h-fit w-[95%] flex flex-col justify-start items-center gap-2">
       <section className="h-[30px] w-full flex flex-row justify-between items-center px-2">
@@ -113,17 +121,15 @@ const SelectVarFilterTable: React.FC<{
       />
 
       <section className="h-[150px] w-full overflow-y-auto overflow-x-hidden">
-        {variableNames
-          .filter((name) => !searchText || name.startsWith(searchText))
-          .map((name) => (
-            <SelectVarFilterTableRow
-              key={name}
-              varName={name}
-              isSelected={!!selectedVariables[name]}
-              toggleSelect={toggleVariableSelect}
-              pertStatus={filterVariables[name]}
-            />
-          ))}
+        {filteredVariableNames.map((name) => (
+          <SelectVarFilterTableRow
+            key={name}
+            varName={name}
+            isSelected={!!selectedVariables[name]}
+            toggleSelect={toggleVariableSelect}
+            pertStatus={filterVariables[name]}
+          />
+        ))}
       </section>
     </div>
   );

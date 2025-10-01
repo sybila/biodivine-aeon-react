@@ -15,17 +15,31 @@ class InfoLM {
 
   // #endregion
 
+  // #region --- Setters ---
+
   /** Set the model name and trigger UI update */
-  public setModelName(name: string): void {
+  public setModelName(name: string, force: boolean = false): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return;
+    }
+
     const modelName = useModelInfoStore.getState().getModelName();
     if (modelName !== name) {
       useModelInfoStore.getState().setModelName(name);
+      window.document.title = `Biodivine/Aeon - ${name}`;
       this.infoChanged();
     }
   }
 
   /** Set the model description and trigger UI update */
-  public setModelDescription(description: string): void {
+  public setModelDescription(
+    description: string,
+    force: boolean = false
+  ): void {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return;
+    }
+
     const modelDescription = useModelInfoStore.getState().getModelDescription();
     if (modelDescription !== description) {
       useModelInfoStore.getState().setModelDescription(description);
@@ -33,10 +47,16 @@ class InfoLM {
     }
   }
 
+  // #endregion
+
+  // #region --- Setter helpers ---
+
   /** Called when info changes to save model */
   private infoChanged(): void {
     this.liveModel.Export.saveModel();
   }
+
+  // #endregion
 }
 
 export default InfoLM;

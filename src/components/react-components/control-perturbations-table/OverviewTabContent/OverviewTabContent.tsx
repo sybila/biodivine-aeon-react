@@ -90,6 +90,7 @@ const OverviewTabContent: React.FC = () => {
         compWidth="99%"
         contentAlignI="safe center"
         contentJustifyC="center"
+        windOverflowY="hidden"
       >
         <div className="flex flex-row h-full w-auto font-[var(--base-font-family)] text-black select-none px-2">
           {controlEnabledPhenotypeVars.controlEnabledVars.map(
@@ -120,6 +121,7 @@ const OverviewTabContent: React.FC = () => {
         compWidth="99%"
         contentAlignI="safe center"
         contentJustifyC="center"
+        windOverflowY="hidden"
         onClick={() => setPhenotypeAsText(!phenAsText)}
       >
         <div className="flex flex-row h-full w-auto px-2">

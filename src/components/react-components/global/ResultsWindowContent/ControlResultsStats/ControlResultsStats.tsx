@@ -1,3 +1,4 @@
+import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
 import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
@@ -91,7 +92,8 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
                 .addTab(
                   '/control-perturbations-table',
                   'Control Perturbations Table',
-                  () => {}
+                  undefined,
+                  () => ControlPerturbationsTable.clear()
                 )
             }
           />

@@ -58,6 +58,7 @@ const SelectionButtons: React.FC<SelectionButtonsProps> = ({
           buttonBorderRadius={buttonBorderRadius}
           iconSrc={icon}
           iconAlt={alt}
+          iconSize="65%"
           handleClick={onClick}
         />
       ))}
