@@ -202,7 +202,6 @@ class ComputationManagerClass {
       }
     }
 
-    // Todo - add warning
     useResultsStatus.getState().clear();
     useTabsStore.getState().clear();
 

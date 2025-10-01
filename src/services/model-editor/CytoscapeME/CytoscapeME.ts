@@ -13,8 +13,6 @@ import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStat
 
 const DOUBLE_CLICK_DELAY = 400;
 
-//Todo UI functions + ModelEditor hover regulation
-
 declare const cytoscape: any;
 
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
@@ -444,11 +442,11 @@ class CytoscapeMEClass {
       useModelEditorStatus
         .getState()
         .setSelectedItemInfo({ type: 'regulation', regulationIds: edgeVars });
-      ModelEditor.selectRegulation(edgeVars, true); // todo remove
+      ModelEditor.selectRegulation(edgeVars, true); // Todo - move regulation select to useModelEditorStatus
       this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
-      ModelEditor.selectRegulation(edgeVars, false); // todo remove
+      ModelEditor.selectRegulation(edgeVars, false); // Todo - move regulation select to useModelEditorStatus
       useModelEditorStatus.getState().setSelectedItemInfo(null);
       useModelEditorStatus.getState().setFloatingMenuInfo(null);
     });

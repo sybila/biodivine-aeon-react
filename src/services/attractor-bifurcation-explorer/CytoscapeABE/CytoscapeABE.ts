@@ -237,7 +237,7 @@ class CytoscapeABE {
 
   /** Function to handle node selection */
   private onSelect(e: EventObject) {
-    // Todo - add quick help for tree explorer - document.getElementById('quick-help-tree-explorer').classList.add('gone');
+    // Todo - add quick help for tree explorer
 
     console.log(e.target.data());
     const data: CytoscapeNodeDataBE = e.target.data();
