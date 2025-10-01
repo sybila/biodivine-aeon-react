@@ -101,6 +101,8 @@ class AttractorBifurcationExplorerClass {
 
   // #region --- Sorting helpers ---
 
+  // Todo - add sorting to Attractor Bifurcation Explorer
+
   private compareInformationGain(a: any, b: any): number {
     return b.gain - a.gain;
   }
