@@ -113,7 +113,6 @@ class ImportLM {
     positions: Record<string, any>,
     control: Record<string, any>
   ): void {
-    console.log('Set update functions', updateFunctions);
     for (const key of Object.keys(updateFunctions)) {
       const variable = this.addVariableImport(
         useVariablesStore.getState().variableFromName(key),
@@ -283,7 +282,6 @@ class ImportLM {
    * If the import is successful, return true.
    */
   public importAeon(modelString: string): boolean {
-    console.log('Importing model...');
     Loading.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;

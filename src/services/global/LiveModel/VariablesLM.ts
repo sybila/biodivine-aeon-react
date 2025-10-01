@@ -34,7 +34,6 @@ class VariablesLM {
     phenotype: any = null
   ): number | undefined {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment add var.');
       return;
     }
 
@@ -83,8 +82,7 @@ class VariablesLM {
 
   /** Remove a variable by its ID */
   public removeVariable(id: number, force: boolean = false): void {
-    if (!force && !this.liveModel.modelCanBeModified())
-      return console.log('Model cannot be modified at the moment rem var.');
+    if (!force && !this.liveModel.modelCanBeModified()) return;
 
     const variable = useVariablesStore.getState().variableFromId(id);
     if (!variable) return;

@@ -93,7 +93,6 @@ class ControlLM {
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment change phen.');
       return;
     }
 
@@ -129,7 +128,6 @@ class ControlLM {
   /** Remove control information for a variable by its ID */
   public removeControlInfo(id: number, force = false): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment rem control info.');
       return;
     }
 

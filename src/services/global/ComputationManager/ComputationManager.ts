@@ -355,7 +355,6 @@ class ComputationManagerClass {
     try {
       this.computationCanStart(model);
     } catch (error: any) {
-      console.log('Error starting computation:', error.message);
       Message.showError(error.message);
       return;
     }
@@ -630,7 +629,6 @@ class ComputationManagerClass {
     try {
       this.computationCanStart(model);
     } catch (error: any) {
-      console.log('Error starting computation:', error.message);
       Message.showError(error.message);
       return;
     }

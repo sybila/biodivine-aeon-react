@@ -239,7 +239,6 @@ class CytoscapeABE {
   private onSelect(e: EventObject) {
     // Todo - add quick help for tree explorer
 
-    console.log(e.target.data());
     const data: CytoscapeNodeDataBE = e.target.data();
     if (data.action == 'remove') {
       if (!data.targetId) return;

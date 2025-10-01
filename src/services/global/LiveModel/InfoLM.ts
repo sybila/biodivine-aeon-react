@@ -20,7 +20,6 @@ class InfoLM {
   /** Set the model name and trigger UI update */
   public setModelName(name: string, force: boolean = false): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment set name.');
       return;
     }
 
@@ -38,7 +37,6 @@ class InfoLM {
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      console.log('Model cannot be modified at the moment set desc.');
       return;
     }
 
