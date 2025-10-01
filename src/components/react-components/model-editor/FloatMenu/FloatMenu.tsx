@@ -12,11 +12,6 @@ const FloatMenu = () => {
     return null;
   }
 
-  console.log(
-    modelStatus.floatingMenuInfo.position,
-    modelStatus.floatingMenuInfo.zoom
-  );
-
   return (
     <div
       className="flex flex-col h-auto w-auto gap-2 justify-around items-center z-8 select-none pointer-events-none"
