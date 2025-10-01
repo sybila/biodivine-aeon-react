@@ -39,18 +39,9 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
         />
       </div>
 
-      <div className="flex flex-row items-center justify-center h-full mx-[5%] w-[30%] max-w-[30%]">
-        <SimpleHeaderReact
-          compHeight="100%"
-          compWidth="fit-content"
-          lineHeight="30px"
-          textFontSize="18px"
-          textFontWeight="normal"
-          headerText={
-            !interpretationCount ? 'unknown' : interpretationCount.toString()
-          }
-        />
-      </div>
+      <span className="flex flex-row items-center justify-center-safe h-full overflow-x-auto overflow-y-hidden mx-[5%] w-[30%] font-[var(--base-font-family)] text-black text-[18px] select-none">
+        {!interpretationCount ? 'unknown' : interpretationCount.toString()}
+      </span>
 
       <div className="flex flex-row h-full w-[30%] items-center justify-center gap-2">
         <SimpleHeaderReact

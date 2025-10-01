@@ -69,6 +69,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
-  overflow: hidden;
+/** Scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--color-grey, #bebebe)
+    var(--color-grey-blue-ultra-light, #eceff1);
 }

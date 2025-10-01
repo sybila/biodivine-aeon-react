@@ -6,5 +6,6 @@ export interface ContentTabProps {
   showTab?: boolean;
   /** True if is used with the TopButtonMenu component, affects positioning of the menu */
   spaceOnTop?: boolean;
+  overflowY?: 'auto' | 'hidden' | 'scroll' | 'visible';
   onClose: () => void;
 }

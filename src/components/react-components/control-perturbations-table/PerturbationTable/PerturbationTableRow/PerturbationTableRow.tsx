@@ -45,13 +45,13 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     ];
 
     return (
-      <section className="flex flex-row w-full h-[32px] items-center rounded-md bg-white hover:bg-blue-50 transition-shadow shadow-sm border-b border-gray-200">
+      <section className="flex flex-row min-h-[32px] max-h-[45px] w-full items-center rounded-md bg-white hover:bg-blue-50 transition-shadow shadow-sm border-b border-gray-200">
         {cells.map((cell, index) => (
           <div
             key={index}
             onClick={handleClick[index]}
             style={{ width: cellSizes[index] }}
-            className="flex h-full justify-center-safe px-2 py-1 overflow-x-auto select-none font-[var(--base-font-family)] text-sm text-gray-700 whitespace-nowrap"
+            className="flex min-h-[25px] max-h-[45px] justify-center-safe px-2 py-1 overflow-x-auto overflow-y-hidden select-none font-[var(--base-font-family)] text-sm text-gray-700 whitespace-nowrap"
           >
             {cell}
           </div>

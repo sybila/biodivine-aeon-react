@@ -47,6 +47,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   return (
     <NonExtendableContentReact
       className="cursor-pointer"
+      compHeight="auto"
       compWidth="100%"
       contentOverflowX="visible"
       contentOverflowY="visible"
@@ -56,11 +57,11 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       onMouseLeave={() => ControlEditor.hoverVariableCytoscape(id, false)}
       onClick={() => toggleSelect(name)}
     >
-      <span className="h-full w-[60%] max-w-[60%] select-none overflow-auto text-[100%] font-(family-name:--font-family-fira-mono)">
+      <span className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)">
         {name}
       </span>
 
-      <section className="flex flex-row items-center justify-around h-full w-[39%] overflow-visible">
+      <section className="flex flex-row items-center justify-around h-[23px] w-[39%] overflow-visible">
         <div className="h-[95%] w-[40%]" onClick={(e) => e.stopPropagation()}>
           <TextIconButtonReact
             compHeight="100%"

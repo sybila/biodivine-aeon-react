@@ -133,6 +133,7 @@ const ModelEditor: React.FC = () => {
       </SideButtonMenu>
 
       <ContentTab
+        overflowY="hidden"
         showTab={activeTab !== null}
         onClose={() => showHideTab(null)}
         headerText={activeTab ?? ''}
