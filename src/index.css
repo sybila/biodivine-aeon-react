@@ -2,32 +2,32 @@
 
 @font-face {
   font-family: 'FiraMono';
-  src: url('./font/FiraMono-Regular.ttf');
+  src: url('/font/FiraMono-Regular.ttf');
 }
 
 @font-face {
   font-family: 'FiraMonoBold';
-  src: url('./font/FiraMono-Bold.ttf');
+  src: url('/font/FiraMono-Bold.ttf');
 }
 
 @font-face {
   font-family: 'FiraMonoBold';
-  src: url('./font/FiraMono-Bold.ttf');
+  src: url('/font/FiraMono-Bold.ttf');
 }
 
 @font-face {
   font-family: 'BaileyReg';
-  src: url('./font/Bailey-Regular.ttf');
+  src: url('/font/Bailey-Regular.ttf');
 }
 
 @font-face {
   font-family: 'BaileyBold';
-  src: url('./font/Bailey-Bold.ttf');
+  src: url('/font/Bailey-Bold.ttf');
 }
 
 @font-face {
   font-family: 'Symbols';
-  src: url('./font/Symbols.ttf');
+  src: url('/font/Symbols.ttf');
 }
 
 :root {
@@ -67,6 +67,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  font-family: 'FiraMono';
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 /** Scrollbar styling */
