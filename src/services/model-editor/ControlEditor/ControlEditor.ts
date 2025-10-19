@@ -1,6 +1,6 @@
 import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
-import type { ControlInfo, Phenotype } from '../../../types';
+import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../CytoscapeME/CytoscapeME';
 
@@ -177,6 +177,20 @@ class ControlEditorClass {
         this.changePhenotype(variableId, phenotype);
       }
     });
+  }
+
+  // #endregion
+
+  // #region --- Phenotype Oscillation Getter/Setter ---
+
+  /** Returns the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
+  public getPhenotypeOscillation(): Oscillation {
+    return LiveModel.Control.getOscillation();
+  }
+
+  /** Sets the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
+  public setPhenotypeOscillation(newOscillation: Oscillation) {
+    LiveModel.Control.setOscillation(newOscillation);
   }
 
   // #endregion

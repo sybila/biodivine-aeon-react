@@ -74,10 +74,12 @@ class ControlLM {
 
   // #region --- Oscillation ---
 
+  /** Sets the currently set phenotype oscillation state */
   public setOscillation(oscillation: Oscillation): void {
     this.oscillation = oscillation;
   }
 
+  /** Returns the currently set phenotype oscillation state */
   public getOscillation(): Oscillation {
     return this.oscillation;
   }

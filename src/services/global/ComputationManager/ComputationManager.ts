@@ -622,7 +622,7 @@ class ComputationManagerClass {
   public startControlComputation(): void {
     const model = LiveModel.Export.exportAeon();
 
-    const oscillation = LiveModel.Control.getOscillation() ?? 'Allowed';
+    const oscillation = LiveModel.Control.getOscillation() ?? 'allowed';
     const phenotypeControlEnabled =
       LiveModel.Control.getPhenotypeControlEnabledVars();
 
