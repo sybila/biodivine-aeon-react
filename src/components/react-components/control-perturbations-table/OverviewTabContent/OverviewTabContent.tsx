@@ -20,7 +20,13 @@ const OverviewTabContent: React.FC = () => {
       : undefined
   );
 
-  if (!controlStats) {
+  const controlPrecomputation = useResultsStatus((state) =>
+    state.type === 'Control'
+      ? (state.results as ControlResults).preComputationInfo
+      : undefined
+  );
+
+  if (!controlStats || !controlPrecomputation) {
     return <NoDataText text="No control computation results available." />;
   }
 
@@ -73,6 +79,15 @@ const OverviewTabContent: React.FC = () => {
         compWidth="99%"
         nameMaxWidth="30%"
         valueMaxWidth="68%"
+        valNameGap="2%"
+        addColon={true}
+      />
+      <StatEntryReact
+        statName="Phenotype Oscillation"
+        statValue={controlPrecomputation.oscillation.toString()}
+        compWidth="99%"
+        nameMaxWidth="50%"
+        valueMaxWidth="48%"
         valNameGap="2%"
         addColon={true}
       />
