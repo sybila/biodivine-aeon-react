@@ -58,7 +58,7 @@ const BaseLayout = () => {
   return (
     <div className="h-full w-full">
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
-        <StatusBar />
+        <StatusBar onClick={() => setActiveOverlayWindow('Compute Engine')} />
         <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
       </section>
 
