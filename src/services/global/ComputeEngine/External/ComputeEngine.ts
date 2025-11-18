@@ -201,8 +201,8 @@ class ComputeEngine {
 
     // If is the first ping with the compute (!this.connected) set version warning
     const versionWarning: string | undefined =
-      !this.connected && response['version'] != config.version
-        ? `Your AEON client version is ${config.version}, but your compute engine version is ${response['version']}. You may encounter compatibility issues. For best experience, please download recommended engine binary from the 'Compute Engine' panel.`
+      !this.connected && response['version'] != config.computeEngine.version
+        ? `Your AEON client version is ${config.computeEngine.version}, but your compute engine version is ${response['version']}. You may encounter compatibility issues. For best experience, please download recommended engine binary from the 'Compute Engine' panel.`
         : undefined;
 
     this.connected = true;
