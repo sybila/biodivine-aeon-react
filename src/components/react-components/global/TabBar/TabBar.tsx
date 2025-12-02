@@ -4,8 +4,11 @@ import TabButton from './TabButton/TabButton';
 import { useState } from 'react';
 
 import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
+import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
 
-const TabBar: React.FC = () => {
+const TabBar: React.FC<{
+  setTabBarHelpHover: (event: MouseEvent, text: string) => void;
+}> = ({ setTabBarHelpHover }) => {
   const [deleteModeOn, setDeleteModeOn] = useState(false);
 
   const tabs = useTabsStore((state) => state.openedTabs);
@@ -24,6 +27,10 @@ const TabBar: React.FC = () => {
             deleteModeOn ? 'var(--color-darker-red)' : undefined
           }
           onClick={() => setDeleteModeOn(!deleteModeOn)}
+          onMouseOver={(e) =>
+            setTabBarHelpHover(e.nativeEvent, 'Delete Tab Mode')
+          }
+          onMouseLeave={(e) => useHelpHoverStore.getState().clear()}
         />
       </section>
 
@@ -31,7 +38,12 @@ const TabBar: React.FC = () => {
 
       <div className="h-full min-w-[100px] max-w-[500px] overflow-x-auto flex items-center justify-start gap-2 px-2">
         {Object.values(tabs).map((tab) => (
-          <TabButton key={tab.id} {...tab} deleteMode={deleteModeOn} />
+          <TabButton
+            key={tab.id}
+            {...tab}
+            deleteMode={deleteModeOn}
+            setHelpHover={setTabBarHelpHover}
+          />
         ))}
       </div>
     </div>

@@ -13,6 +13,8 @@ import TabBar from '../../global/TabBar/TabBar';
 import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
 import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
+import HelpHover from '../../global/HelpHover/HelpHover';
+import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
@@ -55,10 +57,14 @@ const BaseLayout = () => {
     }
   };
 
+  const setNavBarHelpHover = (event: MouseEvent, text: string) => {
+    useHelpHoverStore.getState().setHelpHover(event, text, -85);
+  };
+
   return (
     <div className="h-full w-full">
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
-        <StatusBar />
+        <StatusBar onClick={() => setActiveOverlayWindow('Compute Engine')} />
         <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
       </section>
 
@@ -79,9 +85,11 @@ const BaseLayout = () => {
         </OverlayWindowReact>
       ) : null}
 
-      <WarningOverlay zIndex="999999992" />
+      <WarningOverlay zIndex="999999993" />
 
       <ContentOverlayWindow zIndex="999999991" />
+
+      <HelpHover zIndex={999999992} />
 
       <PopUpBarReact
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
@@ -93,8 +101,9 @@ const BaseLayout = () => {
             setActiveOverlayWindow('Compute Engine')
           }
           handleResultsClick={() => setActiveOverlayWindow('Results')}
+          setNavBarHelpHover={setNavBarHelpHover}
         >
-          <TabBar />
+          <TabBar setTabBarHelpHover={setNavBarHelpHover} />
         </NavigationDockContent>
       </PopUpBarReact>
 

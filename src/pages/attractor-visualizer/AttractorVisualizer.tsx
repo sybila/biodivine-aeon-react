@@ -3,17 +3,32 @@ import AttractorVisCanvas from '../../components/react-components/attractor-visu
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
 import WittnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WittnessUpdateFunctionsTabContent/WittnessUpdateFunctionsTabContent';
 
 import StateIcon from '../../assets/icons/state_overview.svg';
 import UpdateFuncitons from '../../assets/icons/update_functions.svg';
+import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 
 type TabTypeAV = 'State Overview' | 'Wittness Update Functions' | null;
 
 const AttractorVisualizer = () => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
+  const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
+
+  const selectedNodeState = useAttractorVisualizerStatus(
+    (state) => state.selectedNodeState
+  );
+
+  useEffect(() => {
+    if (selectedNodeState != null && !overviewAutoOpened) {
+      setActiveTab('State Overview');
+      setOverviewAutoOpened(true);
+    } else if (selectedNodeState == null) {
+      setOverviewAutoOpened(false);
+    }
+  }, [selectedNodeState]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -45,7 +60,7 @@ const AttractorVisualizer = () => {
           iconAlt="State"
           showTag={true}
           tagText="State Overview"
-        ></IconButtonReact>
+        />
         <IconButtonReact
           isActive={activeTab === 'Wittness Update Functions'}
           onClick={() => showHideTab('Wittness Update Functions')}
@@ -53,7 +68,7 @@ const AttractorVisualizer = () => {
           iconAlt="Update Functions"
           showTag={true}
           tagText="Wittness Update Functions"
-        ></IconButtonReact>
+        />
       </SideButtonMenu>
 
       <ContentTab

@@ -1,6 +1,9 @@
 const config = {
-  version: '5.0.0 React',
+  /** AEON frontend version. */
+  version: '0.6.0',
   computeEngine: {
+    /** Compute Engine version. */
+    version: '0.5.0-SNAPSHOT',
     /** Initial status of the compute engine. */
     initialStatus: 'Disconnected',
     /** Initial color of the compute engine status. */

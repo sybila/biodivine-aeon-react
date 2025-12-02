@@ -8,7 +8,7 @@ import { AliveScope } from 'react-activation';
 function App() {
   return (
     <AliveScope>
-      <div className="h-screen w-screen max-h-screen min-w-screen bg-[var(--color-bg-base)] relative">
+      <div className="h-screen w-screen max-h-screen min-w-screen bg-[var(--color-bg-base)] fixed inset-0">
         <MessageWrapperReact>
           <LoadingWrapperReact>
             <LoadingIndicatorReact slot="loading-component" />

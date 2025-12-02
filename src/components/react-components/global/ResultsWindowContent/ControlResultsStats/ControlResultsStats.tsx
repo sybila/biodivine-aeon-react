@@ -52,6 +52,11 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
               results.stats.maximalPerturbationRobustness
             )}%`}
           />
+          <StatEntryReact
+            compWidth="100%"
+            statName="Phenotype Oscillation"
+            statValue={results.preComputationInfo.oscillation.toString()}
+          />
         </div>
       </section>
     );
