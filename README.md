@@ -108,3 +108,10 @@ Bypass Security Warning: MacOS may block the execution of the file if it is from
 ### MacOS (arm64 - Apple Silicon)
 
 Same steps as Intel macOS.
+
+## 🗂️ AEON Home Page
+
+The repository additionally contains the AEON Home Page (/aeon-home.html) used to display available versions of the AEON frontend.
+This page is designed for internal Sybila deployment; the links to documentation and frontend builds work only on the Sybila server.
+
+A live version is available at: 👉 https://biodivine.fi.muni.cz/aeon/
