@@ -1,3 +1,4 @@
+import config from '../../../../config';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
@@ -8,7 +9,6 @@ import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
 import type { ComputationStatus } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import Time from '../../../../services/utilities/Time';
-import DownloadComputeEngine from './DownloadComputeEngine/DownloadComputeEngine';
 import SeparatorLine from '../SeparatorLine/SeparatorLine';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import useOverlayWindowStore from '../../../../stores/ContentOverlayWindow/useOverlayWindowStore';
@@ -116,10 +116,7 @@ const ComputeEngineWindowContent = () => {
   };
 
   const openComputeEngineOverlay = () => {
-    useOverlayWindowStore.getState().setCurrentContent({
-      header: 'Select Your Operating System',
-      content: <DownloadComputeEngine />,
-    });
+    window.open(config.computeEngine.downloadLink, '_blank', 'noopener,noreferrer');
   };
 
   return (
