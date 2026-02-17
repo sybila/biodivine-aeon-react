@@ -1,10 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import type {
-  ModelEditorItem,
-  RegulationVariables,
-  Variable,
-} from '../../../../../types';
+import { useMemo } from 'react';
+import type { ModelEditorItem, Variable } from '../../../../../types';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -54,7 +49,9 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
         <VariableInfo
           key={variable.id}
           {...variable}
-          hoverVariable={!!hoverVariableId && hoverVariableId === variable.id}
+          hoverVariable={
+            hoverVariableId !== null && hoverVariableId === variable.id
+          }
           selectedVariable={selectedVariableId === variable.id}
           hoverRegulation={
             hoverRegulation && hoverRegulation.target === variable.id
