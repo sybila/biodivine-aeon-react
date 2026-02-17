@@ -5,6 +5,14 @@ export type Variable = {
 
 export type Position = [number, number];
 
+// #region --- Model Editor Status ---
+
+export type ModelEditorItem =
+  | { type: 'variable'; id: number }
+  | { type: 'regulation'; regulationIds: RegulationVariables };
+
+// #endregion
+
 // #region --- Update Function ---
 
 export type UpdateFunctionMetadata = {

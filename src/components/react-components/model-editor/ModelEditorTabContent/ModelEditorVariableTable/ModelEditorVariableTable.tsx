@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import type { RegulationVariables, Variable } from '../../../../../types';
+import type {
+  ModelEditorItem,
+  RegulationVariables,
+  Variable,
+} from '../../../../../types';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -11,40 +15,27 @@ import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndF
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
 }) => {
-  const [hoverVariableId, setHoverVariableId] = useState<number | null>(null);
-  const modelEditorState = useModelEditorStatus((state) => state);
+  const selectedItemInfo: ModelEditorItem | null = useModelEditorStatus(
+    (state) => state.selectedItemInfo
+  );
+  const hoverItemInfo: ModelEditorItem | null = useModelEditorStatus(
+    (state) => state.hoverItemInfo
+  );
 
-  const [hoverRegulation, setHoverRegulation] =
-    useState<RegulationVariables | null>(null);
-  const [selectedRegulation, setSelectedRegulation] =
-    useState<RegulationVariables | null>(null);
+  const hoverVariableId =
+    hoverItemInfo?.type === 'variable' ? hoverItemInfo.id : null;
+  const selectedVariableId =
+    selectedItemInfo?.type === 'variable' ? selectedItemInfo.id : null;
+
+  const hoverRegulation =
+    hoverItemInfo?.type === 'regulation' ? hoverItemInfo.regulationIds : null;
+  const selectedRegulation =
+    selectedItemInfo?.type === 'regulation'
+      ? selectedItemInfo.regulationIds
+      : null;
 
   const variablesObj = useVariablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
-
-  const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
-    setHoverVariableId(turnOnHover ? id : null);
-  }, []);
-
-  const hoverRegulationInfo = useCallback(
-    (regulation: RegulationVariables, turnOnHover: boolean) => {
-      setHoverRegulation(turnOnHover ? regulation : null);
-    },
-    []
-  );
-
-  const selectRegulationInfo = useCallback(
-    (regulation: RegulationVariables, select: boolean) => {
-      setSelectedRegulation(select ? regulation : null);
-    },
-    []
-  );
-
-  useEffect(() => {
-    ModelEditor.setHoverVariableFunction(hoverVariableInfo);
-    ModelEditor.setSelectRegulationFunction(selectRegulationInfo);
-    ModelEditor.setHoverRegulationFunction(hoverRegulationInfo);
-  }, [hoverVariableInfo, hoverRegulationInfo, selectRegulationInfo]);
 
   const filteredVariables = useMemo(() => {
     return SearchAndFilterHelpers.filterVariablesBySearchTerms(
@@ -63,11 +54,8 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
         <VariableInfo
           key={variable.id}
           {...variable}
-          hoverVariable={hoverVariableId === variable.id}
-          selectedVariable={
-            modelEditorState.selectedItemInfo?.type === 'variable' &&
-            modelEditorState.selectedItemInfo?.id === variable.id
-          }
+          hoverVariable={!!hoverVariableId && hoverVariableId === variable.id}
+          selectedVariable={selectedVariableId === variable.id}
           hoverRegulation={
             hoverRegulation && hoverRegulation.target === variable.id
               ? hoverRegulation

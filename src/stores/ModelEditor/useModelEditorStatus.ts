@@ -1,23 +1,29 @@
 import { create } from 'zustand';
-import type { Position, RegulationVariables } from '../../types';
+import type {
+  ModelEditorItem,
+  Position,
+  RegulationVariables,
+} from '../../types';
 
 type ModelEditorState = {
-  /** The id of the currently selected item (variable or regulation).
+  /** Info about the currently selected item (variable or regulation).
    *  If null, no item is selected. */
-  selectedItemInfo:
-    | { type: 'variable'; id: number }
-    | { type: 'regulation'; regulationIds: RegulationVariables }
-    | null;
+  selectedItemInfo: ModelEditorItem | null;
 
   /** Sets the currently selected item (variable or regulation).
    *  If null, no item is selected.
    */
-  setSelectedItemInfo: (
-    itemInfo:
-      | { type: 'variable'; id: number }
-      | { type: 'regulation'; regulationIds: RegulationVariables }
-      | null
-  ) => void;
+  setSelectedItemInfo: (itemInfo: ModelEditorItem | null) => void;
+
+  /** Info about currently hovered item (variable or regulation).
+   *  If null, no item is hovered.
+   */
+  hoverItemInfo: ModelEditorItem | null;
+
+  /** Sets the currently hovered item (variable or regulation).
+   *  If null, no item is hovered.
+   */
+  setHoverItemInfo: (itemInfo: ModelEditorItem | null) => void;
 
   /** Information about the floating menu's position and zoom level.
    *  If null, the floating menu is hidden.
@@ -41,10 +47,16 @@ type ModelEditorState = {
 const useModelEditorStatus = create<ModelEditorState>((set) => ({
   selectedItemInfo: null,
   setSelectedItemInfo: (itemInfo) => set({ selectedItemInfo: itemInfo }),
+  hoverItemInfo: null,
+  setHoverItemInfo: (itemInfo) => set({ hoverItemInfo: itemInfo }),
   floatingMenuInfo: null,
   setFloatingMenuInfo: (info) => set({ floatingMenuInfo: info }),
   clear: () => {
-    set({ selectedItemInfo: null, floatingMenuInfo: null });
+    set({
+      selectedItemInfo: null,
+      hoverItemInfo: null,
+      floatingMenuInfo: null,
+    });
   },
 }));
 
