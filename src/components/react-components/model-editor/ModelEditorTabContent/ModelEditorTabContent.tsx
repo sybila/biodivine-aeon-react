@@ -16,6 +16,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   modelEditorServ,
   regulationsStore,
   variablesStore,
+  updateFunctionsStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     modelEditorServ.getVariableSearch()
@@ -64,7 +65,11 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
               />
             </section>
 
-            <ModelStatsTable />
+            <ModelStatsTable
+              regulationsStore={regulationsStore}
+              updateFunctionsStore={updateFunctionsStore}
+              variablesStore={variablesStore}
+            />
           </section>
 
           <section className="flex flex-row justify-between w-full h-[30px] gap-1">

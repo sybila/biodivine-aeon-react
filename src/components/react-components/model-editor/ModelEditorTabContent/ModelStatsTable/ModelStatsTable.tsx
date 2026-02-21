@@ -1,17 +1,19 @@
 import { useMemo } from 'react';
 import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useRegulationsStore from '../../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { ModelStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
+import type { ModelStatsTableProps } from './ModelStatsTableProps';
 
-const ModelStatsTable: React.FC = () => {
-  const variablesObj = useVariablesStore((state) => state.variables);
-  const updateFunctions = useUpdateFunctionsStore(
+const ModelStatsTable: React.FC<ModelStatsTableProps> = ({
+  regulationsStore,
+  updateFunctionsStore,
+  variablesStore,
+}) => {
+  const variablesObj = variablesStore((state) => state.variables);
+  const updateFunctions = updateFunctionsStore(
     (state) => state.updateFunctions
   );
-  const regulationsObj = useRegulationsStore((state) => state.regulations);
+  const regulationsObj = regulationsStore((state) => state.regulations);
 
   const stats: ModelStats = useMemo(() => {
     return ModelEditor.getModelStats();

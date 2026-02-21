@@ -42,6 +42,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   controlStore,
   regulationsStore,
   variablesStore,
+  updateFunctionsStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = useLoadedModelStore(
@@ -79,6 +80,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             modelEditorServ={modelEditorServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
+            updateFunctionsStore={updateFunctionsStore}
           />
         );
       case 'Control Editor':
