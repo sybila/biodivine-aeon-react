@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Variable } from '../../../types';
-import type { VariablesStatus } from './VariableStatus';
+import type { VariablesStatus } from './VariablesStatus';
 
 // Zustand store for managing variables in the LiveModel
 // Provides actions for adding, removing, renaming, and querying variables
