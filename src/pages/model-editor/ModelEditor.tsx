@@ -20,6 +20,7 @@ import ExportTabContent from '../../components/react-components/model-editor/Exp
 import type { ModelType } from '../../types';
 import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
+import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
   | 'Start Computation'
@@ -30,7 +31,9 @@ type TabTypeME =
   | 'Visual Options'
   | null;
 
-const ModelEditor: React.FC = () => {
+const ModelEditor: React.FC<ModelEditorProps> = ({
+  modelEditorStatusStore,
+}) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = useLoadedModelStore(
     (state) => state.loadedModelType
@@ -141,7 +144,7 @@ const ModelEditor: React.FC = () => {
         {renderTabContent()}
       </ContentTab>
 
-      <FloatMenu />
+      <FloatMenu modelEditorStatusStore={modelEditorStatusStore} />
 
       <KeepAlive>
         <ModelEditorCanvas />
