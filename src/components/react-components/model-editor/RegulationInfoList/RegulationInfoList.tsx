@@ -12,6 +12,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
   selectedRegulation,
   modelEditorServ,
   regulationsStore,
+  variablesStore,
 }) => {
   const regulationsObj = regulationsStore((state) => state.regulations);
 
@@ -53,6 +54,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
             false
           }
           modelEditorServ={modelEditorServ}
+          variablesStore={variablesStore}
           {...regulation}
         ></RegulationInfo>
       ))}

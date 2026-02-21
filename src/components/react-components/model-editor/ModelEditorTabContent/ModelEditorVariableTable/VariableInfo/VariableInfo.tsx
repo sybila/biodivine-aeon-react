@@ -17,6 +17,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   selectedRegulation,
   modelEditorServ,
   regulationsStore,
+  variablesStore,
 }) => {
   return (
     <ExtendableContentReact
@@ -81,6 +82,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           selectedRegulation={selectedRegulation}
           modelEditorServ={modelEditorServ}
           regulationsStore={regulationsStore}
+          variablesStore={variablesStore}
         />
       </section>
 

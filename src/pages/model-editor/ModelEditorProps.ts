@@ -5,6 +5,7 @@ import type { ModelVisualizationInt } from '../../services/model-editor/ModelVis
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
 import type { RegulationsStatus } from '../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { VariablesStatus } from '../../stores/LiveModel/VariableStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -26,6 +27,7 @@ export type ModelEditorProps = {
   resultsStatusStore: ZustandStore<ResultsStatus>;
   controlStore: ZustandStore<ControlStatus>;
   regulationsStore: ZustandStore<RegulationsStatus>;
+  variablesStore: ZustandStore<VariablesStatus>;
 
   // # endregion
 };

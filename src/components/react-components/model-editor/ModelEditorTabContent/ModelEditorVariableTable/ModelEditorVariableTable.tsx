@@ -11,6 +11,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
   modelEditorServ,
   regulationsStore,
+  variablesStore,
 }) => {
   const selectedItemInfo: ModelEditorItem | null = useModelEditorStatus(
     (state) => state.selectedItemInfo
@@ -65,8 +66,9 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
               ? selectedRegulation
               : undefined
           }
-          regulationsStore={regulationsStore}
           modelEditorServ={modelEditorServ}
+          regulationsStore={regulationsStore}
+          variablesStore={variablesStore}
         />
       ))}
     </section>

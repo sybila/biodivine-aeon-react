@@ -1,4 +1,3 @@
-import useVariablesStore from '../../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({
@@ -9,8 +8,9 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   hover,
   selected,
   modelEditorServ,
+  variablesStore,
 }) => {
-  const regulatorVar = useVariablesStore((state) =>
+  const regulatorVar = variablesStore((state) =>
     state.variableFromId(regulator)
   );
 
