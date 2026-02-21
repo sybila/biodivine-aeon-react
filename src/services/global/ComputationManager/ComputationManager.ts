@@ -4,7 +4,7 @@ import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationEx
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import type {
   AttractorData,

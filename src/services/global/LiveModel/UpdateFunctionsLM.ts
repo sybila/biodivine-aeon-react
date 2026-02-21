@@ -1,6 +1,6 @@
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';

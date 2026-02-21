@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { UpdateFunction, UpdateFunctionStatus } from '../../types';
-import useVariablesStore from './VariableStore/useVariablesStore';
+import useVariablesStore from './VariablesStore/useVariablesStore';
 
 /**
  * Zustand store for update functions.

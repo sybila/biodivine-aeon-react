@@ -5,7 +5,7 @@ import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useR
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type {
   ControlInfo,
   fileType,

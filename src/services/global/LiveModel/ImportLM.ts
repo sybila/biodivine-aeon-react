@@ -2,7 +2,7 @@ import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import config from '../../../config';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
