@@ -1,4 +1,3 @@
-import { use } from 'react';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
@@ -11,12 +10,13 @@ import type {
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
+import type { ModelEditorInt } from './ModelEditorInt';
 
 /**
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
     right elements when needed, etc.
 */
-class ModelEditorClass {
+class ModelEditorClass implements ModelEditorInt {
   // #region --- Properties ---
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
