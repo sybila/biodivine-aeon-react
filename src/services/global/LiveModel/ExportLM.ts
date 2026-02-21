@@ -2,9 +2,9 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import config from '../../../config';
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type {
   ControlInfo,

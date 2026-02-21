@@ -3,7 +3,7 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import type {

@@ -1,4 +1,4 @@
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/useUpdateFunctionsStore';
+import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
