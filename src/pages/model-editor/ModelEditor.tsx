@@ -38,6 +38,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   computationManagerServ,
   modelEditorStatusStore,
   tabStore,
+  resultsStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = useLoadedModelStore(
@@ -61,6 +62,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <StartCompTabContent
             computationManagerServ={computationManagerServ}
             tabStore={tabStore}
+            resultsStatusStore={resultsStatusStore}
           />
         );
       case 'Import/Export':

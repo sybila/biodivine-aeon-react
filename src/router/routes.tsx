@@ -7,6 +7,7 @@ import ComputationManager from '../services/global/ComputationManager/Computatio
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
+import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../stores/Navigation/useTabsStore';
 import { rootRoute } from './root';
@@ -29,6 +30,7 @@ export const modelEditorRoute = createRoute({
       computationManagerServ={ComputationManager}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}
+      resultsStatusStore={useResultsStatus}
     />
   ),
 });
@@ -56,6 +58,7 @@ export const WitnessRoute = createRoute({
       computationManagerServ={ComputationManager}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}
+      resultsStatusStore={useResultsStatus}
     />
   ),
 });
