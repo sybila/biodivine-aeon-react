@@ -9,7 +9,7 @@ import type {
   PhenotypeControlEnabledVars,
   PhenotypeVars,
 } from '../../../types';
-import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import type { LiveModelClass } from './LiveModel';
 

@@ -10,7 +10,7 @@ import type {
   RegulationVariables,
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
-import CytoscapeME from '../CytoscapeME/CytoscapeME';
+import CytoscapeME from '../ModelVisualization/CytoscapeME';
 
 /**
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/CytoscapeME/CytoscapeME';
+import CytoscapeME from '../../../../services/model-editor/ModelVisualization/CytoscapeME';
 
 const ModelEditorCanvas: React.FC = () => {
   const [initialized, setInitialized] = useState<boolean>(false);

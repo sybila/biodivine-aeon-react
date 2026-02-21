@@ -5,7 +5,7 @@ import useResultsStatus from '../../../stores/ComputationManager/useResultsStatu
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import { EdgeMonotonicity, type Variable } from '../../../types';
-import CytoscapeME from '../../model-editor/CytoscapeME/CytoscapeME';
+import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
 import Warning from '../Warning/Warning';
 import { LiveModel, type LiveModelClass } from './LiveModel';
 
