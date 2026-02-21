@@ -63,7 +63,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Control Editor':
         return <ControlEditorTabContent />;
       case 'Visual Options':
-        return <VisualOptionsTabContent />;
+        return (
+          <VisualOptionsTabContent modelVisualization={modelVisualization} />
+        );
       default:
         return null;
     }

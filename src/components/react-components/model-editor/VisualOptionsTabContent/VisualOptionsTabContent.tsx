@@ -1,22 +1,28 @@
 import { useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/ModelVisualization/CytoscapeME';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { VisualOptionsButtonSection } from '../../../../types';
+import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';
 
-const VisualOptionsTabContent = () => {
+const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
+  modelVisualization,
+}) => {
   const [activeButtons, setActiveButtons] = useState<Record<string, boolean>>({
-    Phenotype: CytoscapeME.isPhenotypeHighlighted(),
-    'Control-Enabled': CytoscapeME.isControlEnabledHighlighted(),
+    Phenotype: modelVisualization.isPhenotypeHighlighted(),
+    'Control-Enabled': modelVisualization.isControlEnabledHighlighted(),
   });
 
   const layouts: VisualOptionsButtonSection = {
     headerText: 'Variable Layouts',
     buttons: [
-      ['Organic', () => CytoscapeME.layoutCose(), false],
-      ['Hierarchical', () => CytoscapeME.layoutDagre(), false],
-      ['Phenotype', () => CytoscapeME.layoutPhenotype(), false],
-      ['Control-Enabled', () => CytoscapeME.layoutControlEnabled(), false],
+      ['Organic', () => modelVisualization.layoutCose(), false],
+      ['Hierarchical', () => modelVisualization.layoutDagre(), false],
+      ['Phenotype', () => modelVisualization.layoutPhenotype(), false],
+      [
+        'Control-Enabled',
+        () => modelVisualization.layoutControlEnabled(),
+        false,
+      ],
     ],
   };
 
@@ -26,7 +32,7 @@ const VisualOptionsTabContent = () => {
       [
         'Phenotype',
         () => {
-          CytoscapeME.highlightPhenotype();
+          modelVisualization.highlightPhenotype();
           setActiveButtons((prev) => ({
             ...prev,
             Phenotype: !prev['Phenotype'],
@@ -37,7 +43,7 @@ const VisualOptionsTabContent = () => {
       [
         'Control-Enabled',
         () => {
-          CytoscapeME.highlightControlEnabled();
+          modelVisualization.highlightControlEnabled();
           setActiveButtons((prev) => ({
             ...prev,
             'Control-Enabled': !prev['Control-Enabled'],
