@@ -32,6 +32,7 @@ type TabTypeME =
   | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
+  modelVisualization,
   modelEditorStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
@@ -147,7 +148,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <FloatMenu modelEditorStatusStore={modelEditorStatusStore} />
 
       <KeepAlive>
-        <ModelEditorCanvas />
+        <ModelEditorCanvas modelVisualization={modelVisualization} />
       </KeepAlive>
     </>
   );
