@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/ModelVisualization/CytoscapeME';
 import type { ModelEditorCanvasProps } from './ModelEditorCanvasProps';
 
 const ModelEditorCanvas: React.FC<ModelEditorCanvasProps> = ({
