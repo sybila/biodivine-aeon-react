@@ -3,12 +3,23 @@ import type { ControlEditorInt } from '../../services/model-editor/ControlEditor
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
+import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
 
 export type ModelEditorProps = {
+  // # region --- Services ---
+
   modelVisualization: ModelVisualizationInt;
   modelEditorServ: ModelEditorInt;
   controlEditorServ: ControlEditorInt;
   computationManagerServ: ComputationManagerInt;
+
+  // # endregion
+
+  // # region --- Zustand Stores ---
+
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  tabStore: ZustandStore<TabsState>;
+
+  // # endregion
 };
