@@ -1,12 +1,12 @@
+import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
+import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type { ControlInfo, Position, Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import type { LiveModelClass } from './LiveModel';
-import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
-import useControlStore from '../../../stores/LiveModel/useControlStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
+import type { LiveModelClass } from './LiveModel';
 
 /** Manage variables in the live model */
 class VariablesLM {

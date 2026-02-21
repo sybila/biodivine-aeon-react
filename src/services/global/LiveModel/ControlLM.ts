@@ -1,4 +1,4 @@
-import useControlStore from '../../../stores/LiveModel/useControlStore';
+import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type {
   ControlEnabledVars,

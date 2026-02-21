@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
-import type { ControlInfo, ControlStats } from '../../../../../types';
-import useControlStore from '../../../../../stores/LiveModel/useControlStore';
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
+import useControlStore from '../../../../../stores/LiveModel/ControlStore/useControlStore';
+import type { ControlInfo, ControlStats } from '../../../../../types';
+import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 
 const ControlStatsTable: React.FC = () => {
   const controlInfo: Record<number, ControlInfo> = useControlStore(

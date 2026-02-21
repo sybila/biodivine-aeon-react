@@ -1,4 +1,4 @@
-import useControlStore from '../../../../../../stores/LiveModel/useControlStore';
+import useControlStore from '../../../../../../stores/LiveModel/ControlStore/useControlStore';
 import type { ControlInfo } from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
