@@ -12,6 +12,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   computationManagerServ,
   tabStore,
   resultsStatusStore,
+  controlStore,
 }) => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
     computationManagerServ.getComputationMode()
@@ -73,7 +74,10 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
     switch (computationMode) {
       case 'Control':
         return (
-          <ControlCompParams computationManagerServ={computationManagerServ} />
+          <ControlCompParams
+            computationManagerServ={computationManagerServ}
+            controlStore={controlStore}
+          />
         );
       default:
         return null;

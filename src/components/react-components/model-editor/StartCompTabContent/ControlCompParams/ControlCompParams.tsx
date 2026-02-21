@@ -1,4 +1,3 @@
-import useControlStore from '../../../../../stores/LiveModel/ControlStore/useControlStore';
 import type { ControlInfo } from '../../../../../types';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../../lit-wrappers/NumberInputReact';
@@ -7,8 +6,9 @@ import type { ControlCompParamsProps } from './ControlCompParamsProps';
 
 const ControlCompParams: React.FC<ControlCompParamsProps> = ({
   computationManagerServ,
+  controlStore,
 }) => {
-  const controlInfo: Record<number, ControlInfo> = useControlStore(
+  const controlInfo: Record<number, ControlInfo> = controlStore(
     (state) => state.controlInfo
   );
 

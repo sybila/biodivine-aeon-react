@@ -22,6 +22,7 @@ export type ModelEditorProps = {
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
   tabStore: ZustandStore<TabsState>;
   resultsStatusStore: ZustandStore<ResultsStatus>;
+  controlStore: ZustandStore<ControlStatus>;
 
   // # endregion
 };
