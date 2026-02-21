@@ -1,14 +1,15 @@
 import { useMemo } from 'react';
-import type { ModelEditorItem, Variable } from '../../../../../types';
-import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
-import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import VariableInfo from './VariableInfo/VariableInfo';
-import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
+import type { ModelEditorItem, Variable } from '../../../../../types';
+import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
+import VariableInfo from './VariableInfo/VariableInfo';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
+  modelEditorServ,
 }) => {
   const selectedItemInfo: ModelEditorItem | null = useModelEditorStatus(
     (state) => state.selectedItemInfo
@@ -63,6 +64,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
               ? selectedRegulation
               : undefined
           }
+          modelEditorServ={modelEditorServ}
         />
       ))}
     </section>

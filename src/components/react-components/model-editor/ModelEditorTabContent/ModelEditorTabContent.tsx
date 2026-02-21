@@ -1,27 +1,29 @@
 import { useState } from 'react';
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import TextInputReact from '../../lit-wrappers/TextInputReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
+import TextInputReact from '../../lit-wrappers/TextInputReact';
+import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 
 import AddIcon from '../../../../assets/icons/add_box.svg';
-import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
-import ModelDescription from './ModelDescription/ModelDescription';
-import ModelName from './ModelName/ModelName';
 import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
+import ModelDescription from './ModelDescription/ModelDescription';
+import type { ModelEditorTabContentProps } from './ModelEditorTabContentProps';
+import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
+import ModelName from './ModelName/ModelName';
 
-const ModelEditorTabContent: React.FC = () => {
+const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
+  modelEditorServ,
+}) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
-    ModelEditor.getVariableSearch()
+    modelEditorServ.getVariableSearch()
   );
   const [showModelDescription, setShowModelDescription] =
     useState<boolean>(false);
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
-      ModelEditor.setVariableSearch(name);
+      modelEditorServ.setVariableSearch(name);
       setVariableSearchText(name);
     }
   };
@@ -30,9 +32,12 @@ const ModelEditorTabContent: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
-      <ModelName />
+      <ModelName modelEditorServ={modelEditorServ} />
       {showModelDescription ? (
-        <ModelDescription setShowModelDescription={setShowModelDescription} />
+        <ModelDescription
+          setShowModelDescription={setShowModelDescription}
+          modelEditorServ={modelEditorServ}
+        />
       ) : (
         <>
           <section className="flex flex-col items-center w-full h-fit gap-3">
@@ -76,7 +81,7 @@ const ModelEditorTabContent: React.FC = () => {
               iconHeight="19px"
               text="Add Variable"
               handleClick={() => {
-                ModelEditor.addVariable();
+                modelEditorServ.addVariable();
               }}
             />
           </section>
@@ -88,7 +93,10 @@ const ModelEditorTabContent: React.FC = () => {
             value={variableSearchText}
           />
 
-          <ModelEditorVariableTable searchText={variableSearchText} />
+          <ModelEditorVariableTable
+            searchText={variableSearchText}
+            modelEditorServ={modelEditorServ}
+          />
         </>
       )}
     </div>

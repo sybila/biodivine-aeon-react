@@ -1,21 +1,23 @@
-import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
+import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import EditNameIcon from '../../../../../assets/icons/edit.svg';
 import EditFunctionIcon from '../../../../../assets/icons/functions.svg';
-import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
-import type { VariableMenuButtonsProps } from './VariableMenuButtonsProps';
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
+import type { VariableMenuButtonsProps } from './VariableMenuButtonsProps';
 
 const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
   setHint,
   selectedVariableId,
+  modelEditorServ,
 }) => {
   return (
     <div className="flex flex-row h-auto w-[99%] items-center">
       <FloatMenuButton
         iconSrc={EditNameIcon}
         iconAlt="E"
-        onClick={() => ModelEditor.openChangeVarNameWindow(selectedVariableId)}
+        onClick={() =>
+          modelEditorServ.openChangeVarNameWindow(selectedVariableId)
+        }
         hintText="Edit name (E)"
         setHintText={setHint}
       />
@@ -23,7 +25,7 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
         iconSrc={EditFunctionIcon}
         iconAlt="F"
         onClick={() =>
-          ModelEditor.openChangeUpdateFunctionWindow(selectedVariableId)
+          modelEditorServ.openChangeUpdateFunctionWindow(selectedVariableId)
         }
         hintText="Edit update function (F)"
         setHintText={setHint}

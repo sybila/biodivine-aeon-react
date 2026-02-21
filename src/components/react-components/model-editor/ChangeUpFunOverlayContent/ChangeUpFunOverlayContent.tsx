@@ -1,9 +1,13 @@
 import type React from 'react';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import type { ChangeUpFunOverlayContentProps } from './ChangeUpFunOverlayContentProps';
 
-const ChangeUpFunOverlayContent: React.FC<{ varId: number }> = ({ varId }) => {
+const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
+  varId,
+  modelEditorServ,
+}) => {
   return (
     <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
       <DotHeaderReact
@@ -20,6 +24,7 @@ const ChangeUpFunOverlayContent: React.FC<{ varId: number }> = ({ varId }) => {
           width="100%"
           hoverRegulation={undefined}
           selectedRegulation={undefined}
+          modelEditorServ={modelEditorServ}
         />
       </div>
 
@@ -41,6 +46,7 @@ const ChangeUpFunOverlayContent: React.FC<{ varId: number }> = ({ varId }) => {
           inputWidth="350px"
           validationMinHeight="40px"
           validationMaxHeight="50px"
+          modelEditorServ={modelEditorServ}
         />
       </div>
     </div>

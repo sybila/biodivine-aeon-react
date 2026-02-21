@@ -1,15 +1,12 @@
+import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
+import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
+import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
-
-import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
-
-import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
-import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
-import type { VariableInfoProps } from './VariableInfoProps';
-import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
-import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
 import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
+import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
+import type { VariableInfoProps } from './VariableInfoProps';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -18,6 +15,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   selectedVariable,
   hoverRegulation,
   selectedRegulation,
+  modelEditorServ,
 }) => {
   return (
     <ExtendableContentReact
@@ -28,8 +26,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       topContentOverflowY="visible"
       hover={hoverVariable}
       active={selectedVariable}
-      handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
-      handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
+      handleMouseEnter={() => modelEditorServ.hoverVariableCytoscape(id, true)}
+      handleMouseLeave={() => modelEditorServ.hoverVariableCytoscape(id, false)}
     >
       <section slot="top-content" className="h-full w-[60%]">
         <VariableNameInput
@@ -38,6 +36,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           singleFontSize="16px"
           varId={id}
           varName={name}
+          onUpdate={modelEditorServ.changeVariableName}
         />
       </section>
 
@@ -51,7 +50,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={SearchIcon}
           iconAlt="find"
-          handleClick={() => ModelEditor.zoomOnVariable(id)}
+          handleClick={() => modelEditorServ.zoomOnVariable(id)}
         ></IconButtonReact>
 
         <IconButtonReact
@@ -60,7 +59,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={DeleteIcon}
           iconAlt="delete"
-          handleClick={async () => await ModelEditor.removeVariable(id)}
+          handleClick={async () => await modelEditorServ.removeVariable(id)}
         ></IconButtonReact>
       </section>
 
@@ -79,6 +78,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           width="100%"
           hoverRegulation={hoverRegulation}
           selectedRegulation={selectedRegulation}
+          modelEditorServ={modelEditorServ}
         />
       </section>
 
@@ -100,6 +100,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           inputWidth="100%"
           validationMinHeight="20px"
           validationMaxHeight="40px"
+          modelEditorServ={modelEditorServ}
         />
       </section>
     </ExtendableContentReact>

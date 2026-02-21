@@ -1,9 +1,10 @@
 import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
+import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
 
-const ChangeVarNameOverlayContent: React.FC<{ varId: number }> = ({
-  varId,
-}) => {
+const ChangeVarNameOverlayContent: React.FC<
+  ChangeVariableNameOverlayContentProps
+> = ({ varId, modelEditorServ }) => {
   const varName = useVariablesStore.getState().variables[varId]?.name ?? '';
 
   return (
@@ -15,6 +16,7 @@ const ChangeVarNameOverlayContent: React.FC<{ varId: number }> = ({
           singleFontSize="25px"
           varId={varId}
           varName={varName}
+          onUpdate={modelEditorServ.changeVariableName}
         />
       </div>
     </div>

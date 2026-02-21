@@ -33,6 +33,7 @@ type TabTypeME =
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
   modelVisualization,
+  modelEditorServ,
   controlEditorServ,
   modelEditorStatusStore,
 }) => {
@@ -60,7 +61,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Export Witness':
         return <ExportTabContent />;
       case 'Model Editor':
-        return <ModelEditorTabContent />;
+        return <ModelEditorTabContent modelEditorServ={modelEditorServ} />;
       case 'Control Editor':
         return (
           <ControlEditorTabContent controlEditorServ={controlEditorServ} />
@@ -150,7 +151,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         {renderTabContent()}
       </ContentTab>
 
-      <FloatMenu modelEditorStatusStore={modelEditorStatusStore} />
+      <FloatMenu
+        modelEditorStatusStore={modelEditorStatusStore}
+        modelEditorServ={modelEditorServ}
+      />
 
       <KeepAlive>
         <ModelEditorCanvas modelVisualization={modelVisualization} />

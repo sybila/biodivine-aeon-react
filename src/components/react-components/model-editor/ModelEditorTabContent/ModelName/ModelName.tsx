@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+
 import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
-import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import { Message } from '../../../../lit-components/message-wrapper';
+import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
+import type { ModelNameProps } from './ModelNameProps';
 
-const ModelName: React.FC = () => {
+const ModelName: React.FC<ModelNameProps> = ({ modelEditorServ }) => {
   const modelName = useModelInfoStore((state) => state.modelName);
   const tabStore = useTabsStore((state) => state);
 
@@ -28,7 +29,7 @@ const ModelName: React.FC = () => {
             'Cannot change model name while on Witness tab. Change to Model Editor tab and try again.'
           );
         } else {
-          ModelEditor.setModelName(value);
+          modelEditorServ.setModelName(value);
         }
       }}
     />

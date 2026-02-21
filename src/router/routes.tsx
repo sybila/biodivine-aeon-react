@@ -4,6 +4,7 @@ import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualiz
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
+import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
 import { rootRoute } from './root';
@@ -21,6 +22,7 @@ export const modelEditorRoute = createRoute({
   component: () => (
     <ModelEditor
       modelVisualization={CytoscapeME}
+      modelEditorServ={ModelEditorServ}
       controlEditorServ={ControlEditor}
       modelEditorStatusStore={useModelEditorStatus}
     />
@@ -45,6 +47,7 @@ export const WitnessRoute = createRoute({
   component: () => (
     <ModelEditor
       modelVisualization={CytoscapeME}
+      modelEditorServ={ModelEditorServ}
       controlEditorServ={ControlEditor}
       modelEditorStatusStore={useModelEditorStatus}
     />

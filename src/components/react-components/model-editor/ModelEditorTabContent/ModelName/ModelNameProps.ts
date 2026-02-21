@@ -1,7 +1,5 @@
 import type { ModelEditorInt } from '../../../../../services/model-editor/ModelEditor/ModelEditorInt';
 
-export type VariableMenuButtonsProps = {
-  setHint: (text: string) => void;
-  selectedVariableId: number;
+export type ModelNameProps = {
   modelEditorServ: ModelEditorInt;
 };

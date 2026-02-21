@@ -1,3 +1,4 @@
+import type { ModelEditorInt } from '../../../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { RegulationVariables, Variable } from '../../../../../../types';
 
 export type VariableInfoProps = Variable & {
@@ -5,4 +6,5 @@ export type VariableInfoProps = Variable & {
   selectedVariable: boolean;
   hoverRegulation: RegulationVariables | undefined;
   selectedRegulation: RegulationVariables | undefined;
+  modelEditorServ: ModelEditorInt;
 };

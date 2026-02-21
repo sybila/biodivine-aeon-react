@@ -1,16 +1,18 @@
 import { useMemo } from 'react';
 import useRegulationsStore from '../../../../stores/LiveModel/useRegulationsStore';
+import type { Regulation } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
-import type { Regulation, RegulationVariables } from '../../../../types';
+import type { RegulationInfoListProps } from './RegulationInfoListProps';
 
-const RegulationInfoList: React.FC<{
-  varId: number;
-  height: string;
-  width: string;
-  hoverRegulation: RegulationVariables | undefined;
-  selectedRegulation: RegulationVariables | undefined;
-}> = ({ varId, height, width, hoverRegulation, selectedRegulation }) => {
+const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
+  varId,
+  height,
+  width,
+  hoverRegulation,
+  selectedRegulation,
+  modelEditorServ,
+}) => {
   const regulationsObj = useRegulationsStore((state) => state.regulations);
 
   const regulations = useMemo(
@@ -50,6 +52,7 @@ const RegulationInfoList: React.FC<{
               selectedRegulation.regulator === regulation.regulator) ??
             false
           }
+          modelEditorServ={modelEditorServ}
           {...regulation}
         ></RegulationInfo>
       ))}

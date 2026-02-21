@@ -248,7 +248,9 @@ class ModelEditorClass implements ModelEditorInt {
 
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
-      content: <ChangeVarNameOverlayContent varId={varId} />,
+      content: (
+        <ChangeVarNameOverlayContent varId={varId} modelEditorServ={this} />
+      ),
     });
   }
 
@@ -260,7 +262,9 @@ class ModelEditorClass implements ModelEditorInt {
 
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
-      content: <ChangeUpFunOverlayContent varId={varId} />,
+      content: (
+        <ChangeUpFunOverlayContent varId={varId} modelEditorServ={this} />
+      ),
     });
   }
 }
