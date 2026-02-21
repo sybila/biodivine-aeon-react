@@ -4,6 +4,8 @@ import ModelEditor from '../pages/model-editor/ModelEditor';
 import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explorer/AttractorBifurcationExplorer';
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
+import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
+import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 
 // Redirect root path '/' to '/model-editor'
 export const defaultRedirect = createRoute({
@@ -15,7 +17,12 @@ export const defaultRedirect = createRoute({
 export const modelEditorRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/model-editor',
-  component: ModelEditor,
+  component: () => (
+    <ModelEditor
+      modelVisualization={CytoscapeME}
+      modelEditorStatusStore={useModelEditorStatus}
+    />
+  ),
 });
 
 export const AttractorBifurcationExplorerRoute = createRoute({
@@ -33,7 +40,12 @@ export const AttractorVisualizerRoute = createRoute({
 export const WitnessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/witness',
-  component: ModelEditor,
+  component: () => (
+    <ModelEditor
+      modelVisualization={CytoscapeME}
+      modelEditorStatusStore={useModelEditorStatus}
+    />
+  ),
 });
 
 export const ControlPerturbationsTableRoute = createRoute({

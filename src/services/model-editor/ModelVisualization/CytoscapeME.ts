@@ -1,15 +1,16 @@
 import { type CytoscapeOptions } from 'cytoscape';
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useControlStore from '../../../stores/LiveModel/useControlStore';
+import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import {
   EdgeMonotonicity,
   type ControlInfo,
   type RegulationVariables,
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
-import ModelEditor from '../ModelEditor/ModelEditor';
 import ControlEditor from '../ControlEditor/ControlEditor';
-import useControlStore from '../../../stores/LiveModel/useControlStore';
-import { Message } from '../../../components/lit-components/message-wrapper';
-import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
+import ModelEditor from '../ModelEditor/ModelEditor';
+import type { ModelVisualizationInt } from './ModelVisualizationInt';
 
 const DOUBLE_CLICK_DELAY = 400;
 
@@ -22,7 +23,7 @@ const _add_box_svg =
 /** Responsible for managing the cytoscape editor object. It has its own representation of the graph,
  * but it should never be updated directly. Instead, always use LiveModel to specify updates.
  */
-class CytoscapeMEClass {
+class CytoscapeMEClass implements ModelVisualizationInt {
   // #region --- Properties ---
 
   // Reference to the cytoscape library "god object"

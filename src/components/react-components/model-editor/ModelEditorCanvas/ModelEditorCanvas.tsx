@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/CytoscapeME/CytoscapeME';
+import type { ModelEditorCanvasProps } from './ModelEditorCanvasProps';
 
-const ModelEditorCanvas: React.FC = () => {
+const ModelEditorCanvas: React.FC<ModelEditorCanvasProps> = ({
+  modelVisualization,
+}) => {
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -12,7 +14,7 @@ const ModelEditorCanvas: React.FC = () => {
     }
 
     if (containerRef.current) {
-      CytoscapeME.init(containerRef.current);
+      modelVisualization.init(containerRef.current);
       setInitialized(true);
     }
   }, [initialized]);

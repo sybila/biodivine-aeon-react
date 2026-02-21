@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import useModelEditorStatus from '../../../../stores/ModelEditor/useModelEditorStatus';
 import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 import RegulationMenuButtons from './RegulationMenuButtons/RegulationMenuButtons';
+import type { FloatMenuProps } from './FloatMenuProps';
 
-const FloatMenu = () => {
+const FloatMenu: React.FC<FloatMenuProps> = ({ modelEditorStatusStore }) => {
   const [currentHint, setCurrentHint] = useState<string>('');
 
-  const modelStatus = useModelEditorStatus((state) => state);
+  const modelStatus = modelEditorStatusStore((state) => state);
 
   if (!modelStatus.floatingMenuInfo || !modelStatus.selectedItemInfo) {
     return null;

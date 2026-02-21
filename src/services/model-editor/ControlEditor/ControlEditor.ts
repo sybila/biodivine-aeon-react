@@ -2,7 +2,7 @@ import useControlStore from '../../../stores/LiveModel/useControlStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
-import CytoscapeME from '../CytoscapeME/CytoscapeME';
+import CytoscapeME from '../ModelVisualization/CytoscapeME';
 
 class ControlEditorClass {
   // #region --- Properties ---

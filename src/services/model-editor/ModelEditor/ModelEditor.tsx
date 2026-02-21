@@ -1,10 +1,16 @@
+import { use } from 'react';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
-import type { ModelStats, RegulationVariables } from '../../../types';
+import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
+import type {
+  ModelEditorItem,
+  ModelStats,
+  RegulationVariables,
+} from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
-import CytoscapeME from '../CytoscapeME/CytoscapeME';
+import CytoscapeME from '../ModelVisualization/CytoscapeME';
 
 /**
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
@@ -13,37 +19,8 @@ import CytoscapeME from '../CytoscapeME/CytoscapeME';
 class ModelEditorClass {
   // #region --- Properties ---
 
-  /** Function for toggling hover state of variables in the ModelEditorTabContent.tsx component */
-  private hoverVariableInfo:
-    | ((id: number, turnOnHover: boolean) => void)
-    | null = null;
-
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
-
-  /** Function for toggling hover state of regulations in the ModelEditorTabContent.tsx component */
-  private hoverRegulationInfo:
-    | ((regulation: RegulationVariables, turnOnHover: boolean) => void)
-    | null = null;
-
-  /** Function for toggling selected state of regulations in the ModelEditorTabContent.tsx component */
-  private selectRegulationInfo:
-    | ((regulation: RegulationVariables, select: boolean) => void)
-    | null = null;
-
-  /** Currently selected regulation in the ModelEditorCanvas.tsx component */
-  private selectedRegulation: RegulationVariables | null = null;
-
-  // #endregion
-
-  // #region --- Hover/Select Variable Function Setters ---
-
-  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
-  public setHoverVariableFunction(
-    hoverFunction: (id: number, turnOnHover: boolean) => void
-  ) {
-    this.hoverVariableInfo = hoverFunction;
-  }
 
   // #endregion
 
@@ -93,33 +70,26 @@ class ModelEditorClass {
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
    */
   public hoverVariable(id: number, turnOnHover: boolean) {
-    if (this.hoverVariableInfo) {
-      this.hoverVariableInfo(id, turnOnHover);
+    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+
+    if (hoverInfo?.type === 'variable') {
+      if (!turnOnHover) {
+        useModelEditorStatus.getState().setHoverItemInfo(null);
+        return;
+      }
+
+      if (hoverInfo.id === id) {
+        return;
+      }
     }
-  }
 
-  // #endregion
-
-  // #region --- Hover/Select Regulation Function Setters ---
-
-  /** Sets hover function for regulations inside the ModelEditorTabContent.tsx (needs to be called before hoverRegulation function) */
-  public setHoverRegulationFunction(
-    hoverFunction: (
-      regulation: RegulationVariables,
-      turnOnHover: boolean
-    ) => void
-  ) {
-    this.hoverRegulationInfo = hoverFunction;
-  }
-
-  /** Sets select function for regulations inside the ModelEditorTabContent.tsx (needs to be called before selectRegulation function) */
-  public setSelectRegulationFunction(
-    selectFunction: (regulation: RegulationVariables, select: boolean) => void
-  ) {
-    this.selectRegulationInfo = selectFunction;
+    if (turnOnHover) {
+      useModelEditorStatus
+        .getState()
+        .setHoverItemInfo({ type: 'variable', id });
+    }
   }
 
   // #endregion
@@ -128,35 +98,63 @@ class ModelEditorClass {
 
   /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
   public getSelectedRegulation(): RegulationVariables | null {
-    return this.selectedRegulation;
+    const selectedItemInfo: ModelEditorItem | null =
+      useModelEditorStatus.getState().selectedItemInfo;
+
+    return selectedItemInfo?.type === 'regulation'
+      ? selectedItemInfo.regulationIds
+      : null;
   }
 
   /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
   public setSelectedRegulation(regulation: RegulationVariables | null) {
-    this.selectedRegulation = regulation;
+    useModelEditorStatus
+      .getState()
+      .setSelectedItemInfo(
+        regulation ? { type: 'regulation', regulationIds: regulation } : null
+      );
   }
 
   /** Toggles hover state on a regulation in the ModelEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set hoverRegulationInfo with setHoverRegulationFunction before running this function)
    */
   public hoverRegulation(
     regulation: RegulationVariables,
     turnOnHover: boolean
   ) {
-    if (this.hoverRegulationInfo) {
-      this.hoverRegulationInfo(regulation, turnOnHover);
+    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+
+    if (hoverInfo?.type === 'regulation') {
+      if (!turnOnHover) {
+        useModelEditorStatus.getState().setHoverItemInfo(null);
+        return;
+      }
+    }
+
+    if (turnOnHover) {
+      useModelEditorStatus
+        .getState()
+        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
     }
   }
 
   /** Toggles selected state on a regulation in the ModelEditorTabContent.tsx component
    * If `select` is true, it sets regulation as selected; if false, it unselects it.
-   * (you must first set selectRegulationInfo with setSelectRegulationFunction before running this function)
    */
   public selectRegulation(regulation: RegulationVariables, select: boolean) {
-    if (this.selectRegulationInfo) {
-      this.setSelectedRegulation(select ? regulation : null);
-      this.selectRegulationInfo(regulation, select);
+    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+
+    if (hoverInfo?.type === 'regulation') {
+      if (!select) {
+        useModelEditorStatus.getState().setHoverItemInfo(null);
+        return;
+      }
+    }
+
+    if (select) {
+      useModelEditorStatus
+        .getState()
+        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
     }
   }
 

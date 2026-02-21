@@ -10,8 +10,9 @@ const config = {
     initialStatusColor: 'red',
     /** This is default url for the compute engine. */
     defaultURL: 'http://localhost:8000',
-    /** URL with instructions for downloading and running the compute engine. **/    
-    downloadLink: 'https://github.com/sybila/biodivine-aeon-server/releases/tag/v0.7.1',
+    /** URL with instructions for downloading and running the compute engine. **/
+    downloadLink:
+      'https://github.com/sybila/biodivine-aeon-server/releases/tag/v0.7.1',
   },
   /** Local storage key for the last model. */
   localStorageModelName: 'lastModel',
