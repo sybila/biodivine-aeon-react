@@ -3,8 +3,9 @@ import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
+import type { ControlEditorInt } from './ControlEditorInt';
 
-class ControlEditorClass {
+class ControlEditorClass implements ControlEditorInt {
   // #region --- Properties ---
 
   /** Function for toggling hover state of variables in ControlEditorTabContent.tsx component */
