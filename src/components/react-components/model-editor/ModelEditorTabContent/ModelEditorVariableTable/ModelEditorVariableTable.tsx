@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
 import type { ModelEditorItem, Variable } from '../../../../../types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';

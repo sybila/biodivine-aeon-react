@@ -1,7 +1,7 @@
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { ControlInfo, Position, Variable } from '../../../types';
 import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
 import ComputationManager from '../ComputationManager/ComputationManager';

@@ -1,5 +1,5 @@
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
 import { EdgeMonotonicity, type Regulation } from '../../../types';
 import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
 import type { LiveModelClass } from './LiveModel';

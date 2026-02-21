@@ -1,5 +1,5 @@
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type {
   ControlEnabledVars,
   ControlInfo,

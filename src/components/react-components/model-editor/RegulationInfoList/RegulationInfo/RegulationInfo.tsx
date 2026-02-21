@@ -1,4 +1,4 @@
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({

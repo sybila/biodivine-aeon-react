@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
 import useRegulationsStore from '../../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { ModelStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 

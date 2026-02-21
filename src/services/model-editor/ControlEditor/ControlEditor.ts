@@ -1,5 +1,5 @@
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';

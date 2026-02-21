@@ -1,4 +1,4 @@
-import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
 import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
 

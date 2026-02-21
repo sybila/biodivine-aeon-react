@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import useVariablesStore from '../../../../../stores/LiveModel/VariableStore/useVariablesStore';
 import type { Variable } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
