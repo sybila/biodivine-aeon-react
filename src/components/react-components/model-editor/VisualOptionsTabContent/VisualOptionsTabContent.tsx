@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/CytoscapeME/CytoscapeME';
+import CytoscapeME from '../../../../services/model-editor/ModelVisualization/CytoscapeME';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { VisualOptionsButtonSection } from '../../../../types';
