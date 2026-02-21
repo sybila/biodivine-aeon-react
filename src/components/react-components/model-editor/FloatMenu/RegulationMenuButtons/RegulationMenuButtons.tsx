@@ -1,15 +1,15 @@
-import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
+import useRegulationsStore from '../../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
 import type { RegulationMenuButtonsProps } from './RegulationMenuButtonsProps';
-import useRegulationsStore from '../../../../../stores/LiveModel/useRegulationsStore';
 
-import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
-import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
-import MonotocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
-import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
-import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
-import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import { useMemo } from 'react';
+import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
+import MonotocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
+import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
+import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
+import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
+import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
 import type { EdgeMonotonicity } from '../../../../../types';
 
 type MOButtonInfo = {

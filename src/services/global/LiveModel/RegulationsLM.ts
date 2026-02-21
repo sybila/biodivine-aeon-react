@@ -1,4 +1,4 @@
-import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type Regulation } from '../../../types';
 import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';

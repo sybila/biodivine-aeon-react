@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useRegulationsStore from '../../../../stores/LiveModel/useRegulationsStore';
+import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import type { Regulation } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfo from './RegulationInfo/RegulationInfo';

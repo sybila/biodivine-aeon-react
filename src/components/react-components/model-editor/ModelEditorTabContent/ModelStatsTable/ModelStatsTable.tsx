@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import useRegulationsStore from "../../../../../stores/LiveModel/useRegulationsStore";
-import useUpdateFunctionsStore from "../../../../../stores/LiveModel/useUpdateFunctionsStore";
-import useVariablesStore from "../../../../../stores/LiveModel/useVariablesStore";
-import ModelEditor from "../../../../../services/model-editor/ModelEditor/ModelEditor";
-import StatEntryReact from "../../../lit-wrappers/StatEntryReact";
-import type { ModelStats } from "../../../../../types";
+import { useMemo } from 'react';
+import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
+import useRegulationsStore from '../../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../../../stores/LiveModel/useUpdateFunctionsStore';
+import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import type { ModelStats } from '../../../../../types';
+import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 
 const ModelStatsTable: React.FC = () => {
   const variablesObj = useVariablesStore((state) => state.variables);

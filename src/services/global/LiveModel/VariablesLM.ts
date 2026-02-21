@@ -1,5 +1,5 @@
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type { ControlInfo, Position, Variable } from '../../../types';

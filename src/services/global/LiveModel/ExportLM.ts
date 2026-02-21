@@ -1,9 +1,9 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import config from '../../../config';
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
-import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import type {

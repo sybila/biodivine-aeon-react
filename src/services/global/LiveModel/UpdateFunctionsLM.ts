@@ -1,4 +1,4 @@
-import useRegulationsStore from '../../../stores/LiveModel/useRegulationsStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
@@ -310,8 +310,8 @@ class UpdateFunctionsLM {
           name === 'true'
             ? { token: 'true', text: name }
             : name === 'false'
-            ? { token: 'false', text: name }
-            : { token: 'name', data: name, text: name }
+              ? { token: 'false', text: name }
+              : { token: 'name', data: name, text: name }
         );
       } else {
         return { error: "Unexpected '" + c + "'." };
