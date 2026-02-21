@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import Warning from '../../../../services/global/Warning/Warning';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { ComputationModes } from '../../../../types';
 import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';

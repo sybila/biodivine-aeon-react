@@ -1,8 +1,8 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';

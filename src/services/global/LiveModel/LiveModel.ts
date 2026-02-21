@@ -1,5 +1,5 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';

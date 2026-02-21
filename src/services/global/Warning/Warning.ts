@@ -1,4 +1,4 @@
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import useWarningStore from '../../../stores/Warning/useWarningStore';
 import WaiterFunction from '../../utilities/WaiterFunction';

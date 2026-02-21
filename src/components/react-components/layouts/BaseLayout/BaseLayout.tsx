@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
+import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
 import PopUpBarReact from '../../lit-wrappers/PopUpBarReact';
-import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 
-import DockIcon from '../../../../assets/icons/dock-arrow.svg';
-import StatusBar from '../../global/StatusBar/StatusBar';
-import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
-import TabBar from '../../global/TabBar/TabBar';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
+import DockIcon from '../../../../assets/icons/dock-arrow.svg';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
 import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
 import HelpHover from '../../global/HelpHover/HelpHover';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import StatusBar from '../../global/StatusBar/StatusBar';
+import TabBar from '../../global/TabBar/TabBar';
+import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
+import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 
 type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 

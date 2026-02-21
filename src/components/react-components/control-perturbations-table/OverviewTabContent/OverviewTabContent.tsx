@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
 import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
 import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
+import DataFormaters from '../../../../services/utilities/DataFormaters';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { ControlResults } from '../../../../types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
-import DataFormaters from '../../../../services/utilities/DataFormaters';
 
 const OverviewTabContent: React.FC = () => {
   const [phenAsText, setPhenotypeAsText] = useState<boolean>(false);

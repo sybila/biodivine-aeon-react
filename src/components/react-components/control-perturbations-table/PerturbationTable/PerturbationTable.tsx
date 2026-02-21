@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import { type ControlResults } from '../../../../types';
-import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
 import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import { type ControlResults } from '../../../../types';
 import { Loading } from '../../../lit-components/loading-wrapper';
+import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
 const PerturbationTable: React.FC<{
   startFilter: boolean;
   startSort: boolean;

@@ -1,13 +1,13 @@
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
 import { type ControlResults } from '../../../../types';
 import NoDataText from '../../global/NoDataText/NoDataText';
+import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 
 const FilterTabContent: React.FC<{
   setStartFilter: (value: boolean) => void;
