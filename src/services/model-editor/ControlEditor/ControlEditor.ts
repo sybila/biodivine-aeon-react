@@ -5,6 +5,8 @@ import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
 import type { ControlEditorInt } from './ControlEditorInt';
 
+// TODO: Rework hover functionality of this class to use stores
+
 class ControlEditorClass implements ControlEditorInt {
   // #region --- Properties ---
 
