@@ -1,23 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ControlEditor from '../../../../../services/model-editor/ControlEditor/ControlEditor';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import type { Variable } from '../../../../../types';
-import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
-import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import { Loading } from '../../../../lit-components/loading-wrapper';
-import TextInputReact from '../../../lit-wrappers/TextInputReact';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
+import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import type { ControlVariablesTableProps } from './ControlVariablesTableProps';
+import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 
-const ControlVariablesTable: React.FC = () => {
+const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
+  controlEditorServ,
+}) => {
   const [hoverId, setHoverId] = useState<number | null>(null);
   const [variableSearchText, setVariableSearchText] = useState<string>(
-    ControlEditor.getVariableSearch()
+    controlEditorServ.getVariableSearch()
   );
   const [selectedVariables, setSelectedVariables] = useState<
     Record<string, boolean>
-  >(ControlEditor.getSelectedVariables());
+  >(controlEditorServ.getSelectedVariables());
 
   const variablesObj = useVariablesStore((state) => state.variables);
 
@@ -32,19 +34,19 @@ const ControlVariablesTable: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    ControlEditor.setHoverVariableFunction(hoverVariableInfo);
+    controlEditorServ.setHoverVariableFunction(hoverVariableInfo);
   }, [hoverVariableInfo]);
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
-      ControlEditor.setVariableSearch(name);
+      controlEditorServ.setVariableSearch(name);
       setVariableSearchText(name);
     }
   };
 
   const updateSelectedVariables = (newSelected: Record<string, boolean>) => {
     setSelectedVariables(newSelected);
-    ControlEditor.setSelectVariables(newSelected);
+    controlEditorServ.setSelectVariables(newSelected);
   };
 
   const toggleVariableSelect = (variableName: string) => {
@@ -74,7 +76,7 @@ const ControlVariablesTable: React.FC = () => {
       'N',
       'var(--color-grey)',
       () =>
-        ControlEditor.changeControlEnabledSelected(
+        controlEditorServ.changeControlEnabledSelected(
           Object.entries(selectedVariables),
           false
         ),
@@ -83,7 +85,7 @@ const ControlVariablesTable: React.FC = () => {
       'E',
       'var(--color-yellow)',
       () =>
-        ControlEditor.changeControlEnabledSelected(
+        controlEditorServ.changeControlEnabledSelected(
           Object.entries(selectedVariables),
           true
         ),
@@ -92,7 +94,7 @@ const ControlVariablesTable: React.FC = () => {
       'N',
       'var(--color-grey)',
       () =>
-        ControlEditor.changePhenotypeSelected(
+        controlEditorServ.changePhenotypeSelected(
           Object.entries(selectedVariables),
           null
         ),
@@ -101,7 +103,7 @@ const ControlVariablesTable: React.FC = () => {
       'T',
       'var(--color-green)',
       () =>
-        ControlEditor.changePhenotypeSelected(
+        controlEditorServ.changePhenotypeSelected(
           Object.entries(selectedVariables),
           true
         ),
@@ -110,7 +112,7 @@ const ControlVariablesTable: React.FC = () => {
       'F',
       'var(--color-red)',
       () =>
-        ControlEditor.changePhenotypeSelected(
+        controlEditorServ.changePhenotypeSelected(
           Object.entries(selectedVariables),
           false
         ),
@@ -165,6 +167,7 @@ const ControlVariablesTable: React.FC = () => {
               hover={hoverId === variable.id}
               selected={selectedVariables[variable.name] ?? false}
               toggleSelect={toggleVariableSelect}
+              controlEditorServ={controlEditorServ}
             />
           ))}
         </section>

@@ -1,3 +1,5 @@
+import type { Oscillation, Phenotype } from '../../../types';
+
 /**
  * Interface for ControlEditor functionality of the ModelEditor page.
  */
@@ -68,7 +70,7 @@ export interface ControlEditorInt {
   // #region --- Phenotype Actions ---
 
   /** Changes the phenotype state of a variable by its ID */
-  changePhenotype(id: number, phenotype: any): void;
+  changePhenotype(id: number, phenotype: Phenotype): void;
 
   /** Toggles the phenotype state of a variable by its ID */
   togglePhenotype(id: number): void;
@@ -84,7 +86,7 @@ export interface ControlEditorInt {
    */
   changePhenotypeSelected(
     selectedVariables: Array<[string, boolean]>,
-    phenotype: any
+    phenotype: Phenotype
   ): void;
 
   // #endregion
@@ -92,10 +94,10 @@ export interface ControlEditorInt {
   // #region --- Phenotype Oscillation Getter/Setter ---
 
   /** Returns the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
-  getPhenotypeOscillation(): any;
+  getPhenotypeOscillation(): Oscillation;
 
   /** Sets the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
-  setPhenotypeOscillation(newOscillation: any): void;
+  setPhenotypeOscillation(newOscillation: Oscillation): void;
 
   // #endregion
 

@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react';
-import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
-import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
-import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
+import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
+import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
+import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 
-import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
-import FileIcon from '../../assets/icons/file_copy-48px.svg';
-import ModelIcon from '../../assets/icons/model-48px.svg';
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
+import FileIcon from '../../assets/icons/file_copy-48px.svg';
+import ModelIcon from '../../assets/icons/model-48px.svg';
+import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 
+import KeepAlive from 'react-activation';
+import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
+import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
+import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
-import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import KeepAlive from 'react-activation';
-import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
-import type { ModelType } from '../../types';
 import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
-import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
+import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
@@ -33,6 +33,7 @@ type TabTypeME =
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
   modelVisualization,
+  controlEditorServ,
   modelEditorStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
@@ -61,7 +62,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Model Editor':
         return <ModelEditorTabContent />;
       case 'Control Editor':
-        return <ControlEditorTabContent />;
+        return (
+          <ControlEditorTabContent controlEditorServ={controlEditorServ} />
+        );
       case 'Visual Options':
         return (
           <VisualOptionsTabContent modelVisualization={modelVisualization} />

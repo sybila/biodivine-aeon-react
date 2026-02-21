@@ -1,11 +1,12 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import { rootRoute } from './root';
-import ModelEditor from '../pages/model-editor/ModelEditor';
 import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explorer/AttractorBifurcationExplorer';
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
-import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
+import ModelEditor from '../pages/model-editor/ModelEditor';
+import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
+import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
+import { rootRoute } from './root';
 
 // Redirect root path '/' to '/model-editor'
 export const defaultRedirect = createRoute({
@@ -20,6 +21,7 @@ export const modelEditorRoute = createRoute({
   component: () => (
     <ModelEditor
       modelVisualization={CytoscapeME}
+      controlEditorServ={ControlEditor}
       modelEditorStatusStore={useModelEditorStatus}
     />
   ),
@@ -43,6 +45,7 @@ export const WitnessRoute = createRoute({
   component: () => (
     <ModelEditor
       modelVisualization={CytoscapeME}
+      controlEditorServ={ControlEditor}
       modelEditorStatusStore={useModelEditorStatus}
     />
   ),
