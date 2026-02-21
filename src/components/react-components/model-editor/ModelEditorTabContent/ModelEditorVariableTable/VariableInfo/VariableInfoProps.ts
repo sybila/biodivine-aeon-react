@@ -1,4 +1,6 @@
 import type { ModelEditorInt } from '../../../../../../services/model-editor/ModelEditor/ModelEditorInt';
+import type { RegulationsStatus } from '../../../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
 import type { RegulationVariables, Variable } from '../../../../../../types';
 
 export type VariableInfoProps = Variable & {
@@ -7,4 +9,5 @@ export type VariableInfoProps = Variable & {
   hoverRegulation: RegulationVariables | undefined;
   selectedRegulation: RegulationVariables | undefined;
   modelEditorServ: ModelEditorInt;
+  regulationsStore: ZustandStore<RegulationsStatus>;
 };

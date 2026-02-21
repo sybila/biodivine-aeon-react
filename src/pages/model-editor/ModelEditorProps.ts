@@ -3,6 +3,8 @@ import type { ControlEditorInt } from '../../services/model-editor/ControlEditor
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
+import type { RegulationsStatus } from '../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -23,6 +25,7 @@ export type ModelEditorProps = {
   tabStore: ZustandStore<TabsState>;
   resultsStatusStore: ZustandStore<ResultsStatus>;
   controlStore: ZustandStore<ControlStatus>;
+  regulationsStore: ZustandStore<RegulationsStatus>;
 
   // # endregion
 };

@@ -14,6 +14,7 @@ import ModelName from './ModelName/ModelName';
 
 const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   modelEditorServ,
+  regulationsStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     modelEditorServ.getVariableSearch()
@@ -96,6 +97,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           <ModelEditorVariableTable
             searchText={variableSearchText}
             modelEditorServ={modelEditorServ}
+            regulationsStore={regulationsStore}
           />
         </>
       )}

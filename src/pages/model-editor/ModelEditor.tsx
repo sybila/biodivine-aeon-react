@@ -40,6 +40,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   tabStore,
   resultsStatusStore,
   controlStore,
+  regulationsStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = useLoadedModelStore(
@@ -72,7 +73,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Export Witness':
         return <ExportTabContent />;
       case 'Model Editor':
-        return <ModelEditorTabContent modelEditorServ={modelEditorServ} />;
+        return (
+          <ModelEditorTabContent
+            modelEditorServ={modelEditorServ}
+            regulationsStore={regulationsStore}
+          />
+        );
       case 'Control Editor':
         return (
           <ControlEditorTabContent controlEditorServ={controlEditorServ} />

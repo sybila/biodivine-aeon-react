@@ -7,6 +7,7 @@ import type { ChangeUpFunOverlayContentProps } from './ChangeUpFunOverlayContent
 const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   varId,
   modelEditorServ,
+  regulationsStore,
 }) => {
   return (
     <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
@@ -25,6 +26,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           hoverRegulation={undefined}
           selectedRegulation={undefined}
           modelEditorServ={modelEditorServ}
+          regulationsStore={regulationsStore}
         />
       </div>
 

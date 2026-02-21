@@ -2,6 +2,7 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type {
   ModelEditorItem,
@@ -263,7 +264,11 @@ class ModelEditorClass implements ModelEditorInt {
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
       content: (
-        <ChangeUpFunOverlayContent varId={varId} modelEditorServ={this} />
+        <ChangeUpFunOverlayContent
+          varId={varId}
+          modelEditorServ={this}
+          regulationsStore={useRegulationsStore}
+        />
       ),
     });
   }
