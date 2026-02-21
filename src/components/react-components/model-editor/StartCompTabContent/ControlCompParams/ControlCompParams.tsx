@@ -1,11 +1,13 @@
-import ComputationManager from '../../../../../services/global/ComputationManager/ComputationManager';
+import useControlStore from '../../../../../stores/LiveModel/useControlStore';
+import type { ControlInfo } from '../../../../../types';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import useControlStore from '../../../../../stores/LiveModel/useControlStore';
-import type { ControlInfo } from '../../../../../types';
+import type { ControlCompParamsProps } from './ControlCompParamsProps';
 
-const ControlCompParams: React.FC = () => {
+const ControlCompParams: React.FC<ControlCompParamsProps> = ({
+  computationManagerServ,
+}) => {
   const controlInfo: Record<number, ControlInfo> = useControlStore(
     (state) => state.controlInfo
   );
@@ -30,22 +32,22 @@ const ControlCompParams: React.FC = () => {
     [() => number, (value: number | undefined) => void, number, number, number]
   > = [
     [
-      () => ComputationManager.getMinRobustness(),
-      (v) => ComputationManager.setMinRobustness(v),
+      () => computationManagerServ.getMinRobustness(),
+      (v) => computationManagerServ.setMinRobustness(v),
       0,
       100,
       0.1,
     ],
     [
-      () => ComputationManager.getMaxSize(),
-      (v) => ComputationManager.setMaxSize(v),
+      () => computationManagerServ.getMaxSize(),
+      (v) => computationManagerServ.setMaxSize(v),
       1,
       numberOfEnabled,
       1,
     ],
     [
-      () => ComputationManager.getMaxNumberOfResults(),
-      (v) => ComputationManager.setMaxNumberOfResults(v),
+      () => computationManagerServ.getMaxNumberOfResults(),
+      (v) => computationManagerServ.setMaxNumberOfResults(v),
       1,
       100,
       1,

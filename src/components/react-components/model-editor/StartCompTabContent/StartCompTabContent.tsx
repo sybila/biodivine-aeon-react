@@ -1,31 +1,33 @@
 import { useState } from 'react';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import type { ComputationModes } from '../../../../types';
-import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
-import ControlCompParams from './ControlCompParams/ControlCompParams';
-import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
 import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
+import Warning from '../../../../services/global/Warning/Warning';
 import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 import useTabsStore from '../../../../stores/Navigation/useTabsStore';
-import Warning from '../../../../services/global/Warning/Warning';
+import type { ComputationModes } from '../../../../types';
+import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import ControlCompParams from './ControlCompParams/ControlCompParams';
+import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 
-const StartCompTabContent: React.FC = () => {
+const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
+  computationManagerServ,
+}) => {
   const [computationMode, setComputationMode] = useState<ComputationModes>(
-    ComputationManager.getComputationMode()
+    computationManagerServ.getComputationMode()
   );
 
   const changeComputationMode = (mode: ComputationModes) => {
-    ComputationManager.setComputationMode(mode);
+    computationManagerServ.setComputationMode(mode);
     setComputationMode(mode);
   };
 
   const getComputationFunction = () => {
     switch (computationMode) {
       case 'Attractor Analysis':
-        return () => ComputationManager.startAttractorAnalysis();
+        return () => computationManagerServ.startAttractorAnalysis();
       case 'Control':
-        return () => ComputationManager.startControlComputation();
+        return () => computationManagerServ.startControlComputation();
     }
   };
 
@@ -70,7 +72,9 @@ const StartCompTabContent: React.FC = () => {
   const renderParams = () => {
     switch (computationMode) {
       case 'Control':
-        return <ControlCompParams />;
+        return (
+          <ControlCompParams computationManagerServ={computationManagerServ} />
+        );
       default:
         return null;
     }

@@ -35,6 +35,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   modelVisualization,
   modelEditorServ,
   controlEditorServ,
+  computationManagerServ,
   modelEditorStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
@@ -55,7 +56,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Start Computation':
-        return <StartCompTabContent />;
+        return (
+          <StartCompTabContent
+            computationManagerServ={computationManagerServ}
+          />
+        );
       case 'Import/Export':
         return <ImportExportTabContent />;
       case 'Export Witness':

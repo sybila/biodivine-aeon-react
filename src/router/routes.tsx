@@ -3,6 +3,7 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
+import ComputationManager from '../services/global/ComputationManager/ComputationManager';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
@@ -24,6 +25,7 @@ export const modelEditorRoute = createRoute({
       modelVisualization={CytoscapeME}
       modelEditorServ={ModelEditorServ}
       controlEditorServ={ControlEditor}
+      computationManagerServ={ComputationManager}
       modelEditorStatusStore={useModelEditorStatus}
     />
   ),
@@ -49,6 +51,7 @@ export const WitnessRoute = createRoute({
       modelVisualization={CytoscapeME}
       modelEditorServ={ModelEditorServ}
       controlEditorServ={ControlEditor}
+      computationManagerServ={ComputationManager}
       modelEditorStatusStore={useModelEditorStatus}
     />
   ),
