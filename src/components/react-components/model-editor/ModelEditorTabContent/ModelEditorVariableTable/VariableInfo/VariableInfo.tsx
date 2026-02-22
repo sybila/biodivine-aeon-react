@@ -18,6 +18,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   modelEditorServ,
   regulationsStore,
   variablesStore,
+  updateFunctionsStore,
 }) => {
   return (
     <ExtendableContentReact
@@ -105,6 +106,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           validationMinHeight="20px"
           validationMaxHeight="40px"
           modelEditorServ={modelEditorServ}
+          variablesStore={variablesStore}
+          updateFunctionsStore={updateFunctionsStore}
         />
       </section>
     </ExtendableContentReact>

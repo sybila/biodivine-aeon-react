@@ -11,6 +11,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   regulationsStore,
   variablesStore,
   modelEditorStatusStore,
+  updateFunctionsStore,
 }) => {
   const selectedItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.selectedItemInfo
@@ -68,6 +69,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
           modelEditorServ={modelEditorServ}
           regulationsStore={regulationsStore}
           variablesStore={variablesStore}
+          updateFunctionsStore={updateFunctionsStore}
         />
       ))}
     </section>

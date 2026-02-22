@@ -115,6 +115,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}
+            updateFunctionsStore={updateFunctionsStore}
           />
         </>
       )}

@@ -1,5 +1,3 @@
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
 
@@ -13,15 +11,17 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   validationMaxHeight,
   varId,
   modelEditorServ,
+  variablesStore,
+  updateFunctionsStore,
 }) => {
-  const varName = useVariablesStore(
+  const varName = variablesStore(
     (state) => state.variables[varId].name ?? 'Unknown'
   );
 
-  const updateFunction = useUpdateFunctionsStore(
+  const updateFunction = updateFunctionsStore(
     (state) => state.getUpdateFunctionId(varId)?.functionString ?? ''
   );
-  const updateFunctionStatus = useUpdateFunctionsStore(
+  const updateFunctionStatus = updateFunctionsStore(
     (state) => state.updateFunctionStatus[varId] ?? ''
   );
 

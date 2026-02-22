@@ -9,6 +9,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   modelEditorServ,
   regulationsStore,
   variablesStore,
+  updateFunctionsStore,
 }) => {
   return (
     <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
@@ -51,6 +52,8 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           validationMinHeight="40px"
           validationMaxHeight="50px"
           modelEditorServ={modelEditorServ}
+          variablesStore={variablesStore}
+          updateFunctionsStore={updateFunctionsStore}
         />
       </div>
     </div>

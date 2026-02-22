@@ -3,6 +3,7 @@ import ChangeUpFunOverlayContent from '../../../components/react-components/mode
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type {
@@ -274,6 +275,7 @@ class ModelEditorClass implements ModelEditorInt {
           modelEditorServ={this}
           regulationsStore={useRegulationsStore}
           variablesStore={useVariablesStore}
+          updateFunctionsStore={useUpdateFunctionsStore}
         />
       ),
     });
