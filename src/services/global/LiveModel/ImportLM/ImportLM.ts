@@ -1,15 +1,16 @@
-import { Loading } from '../../../components/lit-components/loading-wrapper';
-import { Message } from '../../../components/lit-components/message-wrapper';
-import config from '../../../config';
-import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import { EdgeMonotonicity, type Variable } from '../../../types';
-import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import Warning from '../Warning/Warning';
-import { LiveModel, type LiveModelClass } from './LiveModel';
+import { Loading } from '../../../../components/lit-components/loading-wrapper';
+import { Message } from '../../../../components/lit-components/message-wrapper';
+import config from '../../../../config';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import useTabsStore from '../../../../stores/Navigation/useTabsStore';
+import { EdgeMonotonicity, type Variable } from '../../../../types';
+import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
+import Warning from '../../Warning/Warning';
+import { LiveModel, type LiveModelClass } from '../LiveModel';
+import type { ImportLMInt } from './ImportLMInt';
 
-class ImportLM {
+class ImportLM implements ImportLMInt {
   // #region --- Properties and Constructor ---
 
   private liveModel: LiveModelClass;
@@ -310,11 +311,7 @@ class ImportLM {
     LiveModel.Info.setModelDescription(modelDescription, true);
 
     this.setRegulations(regulations, positions, control);
-    this.liveModel.Import.setUpdateFunctions(
-      updateFunctions,
-      positions,
-      control
-    );
+    this.setUpdateFunctions(updateFunctions, positions, control);
     this.insertNotConnected(positions, control);
 
     CytoscapeME.fit();

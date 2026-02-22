@@ -9,7 +9,8 @@ import ControlLM from './ControlLM/ControlLM';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
 import ExportLM from './ExportLM/ExportLM';
 import type { ExportLMInt } from './ExportLM/ExportLMInt';
-import ImportLM from './ImportLM';
+import ImportLM from './ImportLM/ImportLM';
+import type { ImportLMInt } from './ImportLM/ImportLMInt';
 import InfoLM from './InfoLM';
 import ModelsLM from './ModelsLM';
 import RegulationsLM from './RegulationsLM';
@@ -55,7 +56,7 @@ class LiveModelClass {
   Control: ControlLMInt = new ControlLM(this);
 
   /** Functions used when importing model from Aeon format. */
-  Import: ImportLM = new ImportLM(this);
+  Import: ImportLMInt = new ImportLM(this);
 
   /** Functions used for export of the model. */
   Export: ExportLMInt = new ExportLM(this);
