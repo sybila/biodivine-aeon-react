@@ -1,9 +1,10 @@
-import type { ModelSave, ModelType } from '../../../types';
-import type { LiveModelClass } from './LiveModel';
-import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
+import useLoadedModelStore from '../../../../stores/LiveModel/useLoadedModelStore';
+import type { ModelSave, ModelType } from '../../../../types';
+import type { LiveModelClass } from '../LiveModel';
+import type { ModelsLMInt } from './ModelsLMInt';
 
 /** Class for managing multiple models in the LiveModel. */
-class ModelsLM {
+class ModelsLM implements ModelsLMInt {
   // #region --- Properties and Constructor ---
 
   /** Stores model saves by their IDs. The main model is always stored under ID 0. */

@@ -13,7 +13,8 @@ import ImportLM from './ImportLM/ImportLM';
 import type { ImportLMInt } from './ImportLM/ImportLMInt';
 import InfoLM from './InfoLM/InfoLM';
 import type { InfoLMInt } from './InfoLM/InfoLMInt';
-import ModelsLM from './ModelsLM';
+import ModelsLM from './ModelsLM/ModelsLM';
+import type { ModelsLMInt } from './ModelsLM/ModelsLMInt';
 import RegulationsLM from './RegulationsLM';
 import UpdateFunctionsLM from './UpdateFunctionsLM';
 import VariablesLM from './VariablesLM';
@@ -39,7 +40,7 @@ class LiveModelClass {
   // #region --- Submodules ---
 
   /** Functions and properties for managing multiple models. */
-  Models: ModelsLM = new ModelsLM(this);
+  Models: ModelsLMInt = new ModelsLM(this);
 
   /** Functions and properties for managing model information such as name and description. */
   Info: InfoLMInt = new InfoLM(this);
