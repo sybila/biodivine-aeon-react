@@ -1,10 +1,11 @@
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import { EdgeMonotonicity, type Regulation } from '../../../types';
-import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import type { LiveModelClass } from './LiveModel';
+import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import { EdgeMonotonicity, type Regulation } from '../../../../types';
+import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
+import type { LiveModelClass } from '../LiveModel';
+import type { RegulationsLMInt } from './RegulationsLMInt';
 
-class RegulationsLM {
+class RegulationsLM implements RegulationsLMInt {
   // #region --- Properties + Constructor ---
 
   private liveModel: LiveModelClass;
