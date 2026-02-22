@@ -1,10 +1,11 @@
-import useModelInfoStore from '../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import type { LiveModelClass } from './LiveModel';
+import useModelInfoStore from '../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
+import type { LiveModelClass } from '../LiveModel';
+import type { InfoLMInt } from './InfoLMInt';
 
 /**
  * Class for storing and updating model meta-information such as name and description.
  */
-class InfoLM {
+class InfoLM implements InfoLMInt {
   // #region --- Properties + Constructor ---
 
   private liveModel: LiveModelClass;

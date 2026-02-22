@@ -11,7 +11,8 @@ import ExportLM from './ExportLM/ExportLM';
 import type { ExportLMInt } from './ExportLM/ExportLMInt';
 import ImportLM from './ImportLM/ImportLM';
 import type { ImportLMInt } from './ImportLM/ImportLMInt';
-import InfoLM from './InfoLM';
+import InfoLM from './InfoLM/InfoLM';
+import type { InfoLMInt } from './InfoLM/InfoLMInt';
 import ModelsLM from './ModelsLM';
 import RegulationsLM from './RegulationsLM';
 import UpdateFunctionsLM from './UpdateFunctionsLM';
@@ -41,7 +42,7 @@ class LiveModelClass {
   Models: ModelsLM = new ModelsLM(this);
 
   /** Functions and properties for managing model information such as name and description. */
-  Info: InfoLM = new InfoLM(this);
+  Info: InfoLMInt = new InfoLM(this);
 
   /** Functions and properties used for operations with variables of the model. (adding, removing, renaming, getting all,...)*/
   Variables: VariablesLM = new VariablesLM(this);
