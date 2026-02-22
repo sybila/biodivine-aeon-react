@@ -1,11 +1,10 @@
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
 import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
 
 const ChangeVarNameOverlayContent: React.FC<
   ChangeVariableNameOverlayContentProps
-> = ({ varId, modelEditorServ }) => {
-  const varName = useVariablesStore.getState().variables[varId]?.name ?? '';
+> = ({ varId, modelEditorServ, variablesStore }) => {
+  const varName = variablesStore.getState().variables[varId]?.name ?? '';
 
   return (
     <div className="flex justify-center items-center h-[90px] w-[300px]">
