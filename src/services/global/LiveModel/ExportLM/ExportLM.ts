@@ -1,22 +1,23 @@
-import { Message } from '../../../components/lit-components/message-wrapper';
-import config from '../../../config';
-import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useModelInfoStore from '../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import { Message } from '../../../../components/lit-components/message-wrapper';
+import config from '../../../../config';
+import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
+import useModelInfoStore from '../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
+import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useLoadedModelStore from '../../../../stores/LiveModel/useLoadedModelStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type {
   ControlInfo,
   fileType,
   ModelStats,
   Variable,
-} from '../../../types';
-import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import FileHelpers from '../../utilities/FileHelpers';
-import type { LiveModelClass } from './LiveModel';
+} from '../../../../types';
+import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
+import FileHelpers from '../../../utilities/FileHelpers';
+import type { LiveModelClass } from '../LiveModel';
+import type { ExportLMInt } from './ExportLMInt';
 
-class ExportLM {
+class ExportLM implements ExportLMInt {
   // #region --- Properties + Constructor ---
 
   /** Reference to the parent LiveModel class. */

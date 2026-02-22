@@ -7,7 +7,8 @@ import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
 import ControlLM from './ControlLM/ControlLM';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
-import ExportLM from './ExportLM';
+import ExportLM from './ExportLM/ExportLM';
+import type { ExportLMInt } from './ExportLM/ExportLMInt';
 import ImportLM from './ImportLM';
 import InfoLM from './InfoLM';
 import ModelsLM from './ModelsLM';
@@ -57,7 +58,7 @@ class LiveModelClass {
   Import: ImportLM = new ImportLM(this);
 
   /** Functions used for export of the model. */
-  Export: ExportLM = new ExportLM(this);
+  Export: ExportLMInt = new ExportLM(this);
 
   // #endregion
 
