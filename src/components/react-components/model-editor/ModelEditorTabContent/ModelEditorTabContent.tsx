@@ -19,6 +19,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   updateFunctionsStore,
   tabStore,
   modelInfoStore,
+  modelEditorStatusStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     modelEditorServ.getVariableSearch()
@@ -111,6 +112,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             modelEditorServ={modelEditorServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
+            modelEditorStatusStore={modelEditorStatusStore}
           />
         </>
       )}

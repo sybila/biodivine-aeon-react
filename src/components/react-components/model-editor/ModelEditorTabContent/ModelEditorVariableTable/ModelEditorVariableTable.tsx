@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
-import useVariablesStore from '../../../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
 import type { ModelEditorItem, Variable } from '../../../../../types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
@@ -12,11 +10,12 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   modelEditorServ,
   regulationsStore,
   variablesStore,
+  modelEditorStatusStore,
 }) => {
-  const selectedItemInfo: ModelEditorItem | null = useModelEditorStatus(
+  const selectedItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.selectedItemInfo
   );
-  const hoverItemInfo: ModelEditorItem | null = useModelEditorStatus(
+  const hoverItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.hoverItemInfo
   );
 
@@ -32,7 +31,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
       ? selectedItemInfo.regulationIds
       : null;
 
-  const variablesObj = useVariablesStore((state) => state.variables);
+  const variablesObj = variablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
 
   const filteredVariables = useMemo(() => {

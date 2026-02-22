@@ -84,6 +84,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             updateFunctionsStore={updateFunctionsStore}
             tabStore={tabStore}
             modelInfoStore={modelInfoStore}
+            modelEditorStatusStore={modelEditorStatusStore}
           />
         );
       case 'Control Editor':
