@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
-import useVariablesStore from '../../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { Variable } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
@@ -12,6 +11,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
+  variablesStore,
 }) => {
   const [hoverId, setHoverId] = useState<number | null>(null);
   const [variableSearchText, setVariableSearchText] = useState<string>(
@@ -21,7 +21,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     Record<string, boolean>
   >(controlEditorServ.getSelectedVariables());
 
-  const variablesObj = useVariablesStore((state) => state.variables);
+  const variablesObj = variablesStore((state) => state.variables);
 
   const variables = Object.values(variablesObj);
 

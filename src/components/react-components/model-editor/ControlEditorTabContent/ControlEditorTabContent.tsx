@@ -10,6 +10,7 @@ import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOs
 const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   controlEditorServ,
   controlStore,
+  variablesStore,
 }) => {
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
     controlEditorServ.getPhenotypeOscillation()
@@ -50,7 +51,10 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
         />
       </section>
 
-      <ControlVariablesTable controlEditorServ={controlEditorServ} />
+      <ControlVariablesTable
+        controlEditorServ={controlEditorServ}
+        variablesStore={variablesStore}
+      />
     </div>
   );
 };

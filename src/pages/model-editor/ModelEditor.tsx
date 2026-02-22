@@ -92,6 +92,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <ControlEditorTabContent
             controlEditorServ={controlEditorServ}
             controlStore={controlStore}
+            variablesStore={variablesStore}
           />
         );
       case 'Visual Options':
