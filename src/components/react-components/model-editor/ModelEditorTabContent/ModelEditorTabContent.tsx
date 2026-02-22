@@ -47,6 +47,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
         <ModelDescription
           setShowModelDescription={setShowModelDescription}
           modelEditorServ={modelEditorServ}
+          tabStore={tabStore}
+          modelInfoStore={modelInfoStore}
         />
       ) : (
         <>

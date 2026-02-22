@@ -1,6 +1,4 @@
 import { useMemo } from 'react';
-import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import { Message } from '../../../../lit-components/message-wrapper';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
@@ -10,17 +8,19 @@ import type { ModelDescriptionProps } from './ModelDescriptionProps';
 const ModelDescription: React.FC<ModelDescriptionProps> = ({
   setShowModelDescription,
   modelEditorServ,
+  tabStore,
+  modelInfoStore,
 }) => {
-  const modelDescription = useModelInfoStore((state) =>
+  const modelDescription = modelInfoStore((state) =>
     state.getModelDescription()
   );
 
-  const tabStore = useTabsStore((state) => state);
+  const tabState = tabStore((state) => state);
 
   const isActiveWittness = useMemo(() => {
-    const activeTab = tabStore.getActiveTab();
+    const activeTab = tabState.getActiveTab();
     return activeTab?.type === 'Witness';
-  }, [tabStore]);
+  }, [tabState]);
 
   return (
     <section className="h-fit w-full flex flex-col items-center gap-3">
