@@ -179,6 +179,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <FloatMenu
         modelEditorStatusStore={modelEditorStatusStore}
         modelEditorServ={modelEditorServ}
+        regulationsStore={regulationsStore}
       />
 
       <KeepAlive>

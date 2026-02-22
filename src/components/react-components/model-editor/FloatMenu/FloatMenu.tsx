@@ -6,6 +6,7 @@ import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 const FloatMenu: React.FC<FloatMenuProps> = ({
   modelEditorServ,
   modelEditorStatusStore,
+  regulationsStore,
 }) => {
   const [currentHint, setCurrentHint] = useState<string>('');
 
@@ -37,6 +38,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
           <RegulationMenuButtons
             setHint={setCurrentHint}
             selectedRegulationIds={modelStatus.selectedItemInfo.regulationIds}
+            regulationsStore={regulationsStore}
           />
         ) : (
           <VariableMenuButtons

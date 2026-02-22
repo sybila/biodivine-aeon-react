@@ -1,5 +1,4 @@
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
-import useRegulationsStore from '../../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
 import type { RegulationMenuButtonsProps } from './RegulationMenuButtonsProps';
 
@@ -22,8 +21,9 @@ type MOButtonInfo = {
 const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
   setHint,
   selectedRegulationIds,
+  regulationsStore,
 }) => {
-  const regulationInfo = useRegulationsStore((state) =>
+  const regulationInfo = regulationsStore((state) =>
     state.getRegulationId(
       selectedRegulationIds.regulator,
       selectedRegulationIds.target
