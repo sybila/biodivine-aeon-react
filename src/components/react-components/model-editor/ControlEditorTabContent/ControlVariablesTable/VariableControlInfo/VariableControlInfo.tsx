@@ -1,4 +1,3 @@
-import useControlStore from '../../../../../../stores/LiveModel/ControlStore/useControlStore';
 import type { ControlInfo } from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
@@ -15,8 +14,9 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   selected,
   toggleSelect,
   controlEditorServ,
+  controlStore,
 }) => {
-  const controlInfo: ControlInfo | undefined = useControlStore((state) =>
+  const controlInfo: ControlInfo | undefined = controlStore((state) =>
     state.getVariableControlInfo(id)
   );
 

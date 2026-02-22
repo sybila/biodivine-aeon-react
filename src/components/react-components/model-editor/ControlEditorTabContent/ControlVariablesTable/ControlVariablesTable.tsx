@@ -12,6 +12,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   variablesStore,
+  controlStore,
 }) => {
   const [hoverId, setHoverId] = useState<number | null>(null);
   const [variableSearchText, setVariableSearchText] = useState<string>(
@@ -168,6 +169,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               selected={selectedVariables[variable.name] ?? false}
               toggleSelect={toggleVariableSelect}
               controlEditorServ={controlEditorServ}
+              controlStore={controlStore}
             />
           ))}
         </section>

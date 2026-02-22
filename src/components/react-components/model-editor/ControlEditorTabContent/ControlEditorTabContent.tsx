@@ -54,6 +54,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
       <ControlVariablesTable
         controlEditorServ={controlEditorServ}
         variablesStore={variablesStore}
+        controlStore={controlStore}
       />
     </div>
   );
