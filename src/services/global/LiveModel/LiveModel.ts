@@ -5,7 +5,8 @@ import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStat
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
-import ControlLM from './ControlLM';
+import ControlLM from './ControlLM/ControlLM';
+import type { ControlLMInt } from './ControlLM/ControlLMInt';
 import ExportLM from './ExportLM';
 import ImportLM from './ImportLM';
 import InfoLM from './InfoLM';
@@ -50,7 +51,7 @@ class LiveModelClass {
   Regulations: RegulationsLM = new RegulationsLM(this);
 
   /** Functions connected with setting control parameters of the models variables. */
-  Control: ControlLM = new ControlLM(this);
+  Control: ControlLMInt = new ControlLM(this);
 
   /** Functions used when importing model from Aeon format. */
   Import: ImportLM = new ImportLM(this);

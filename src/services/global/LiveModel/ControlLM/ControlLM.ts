@@ -1,5 +1,5 @@
-import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type {
   ControlEnabledVars,
   ControlInfo,
@@ -8,13 +8,14 @@ import type {
   Phenotype,
   PhenotypeControlEnabledVars,
   PhenotypeVars,
-} from '../../../types';
-import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import ComputationManager from '../ComputationManager/ComputationManager';
-import type { LiveModelClass } from './LiveModel';
+} from '../../../../types';
+import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
+import ComputationManager from '../../ComputationManager/ComputationManager';
+import type { LiveModelClass } from '../LiveModel';
+import type { ControlLMInt } from './ControlLMInt';
 
 /** Class to manage control information for live model variables */
-class ControlLM {
+class ControlLM implements ControlLMInt {
   // #region --- Properties + Constructor ---
 
   /** Reference to the live model instance */
