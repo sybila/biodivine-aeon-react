@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
-import useControlStore from '../../../../../stores/LiveModel/ControlStore/useControlStore';
 import type { ControlInfo, ControlStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
+import type { ControlStatsTableProps } from './ControlStatsTableProps';
 
-const ControlStatsTable: React.FC = () => {
-  const controlInfo: Record<number, ControlInfo> = useControlStore(
+const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
+  controlStore,
+}) => {
+  const controlInfo: Record<number, ControlInfo> = controlStore(
     (state) => state.controlInfo
   );
 

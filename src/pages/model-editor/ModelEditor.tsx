@@ -89,7 +89,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         );
       case 'Control Editor':
         return (
-          <ControlEditorTabContent controlEditorServ={controlEditorServ} />
+          <ControlEditorTabContent
+            controlEditorServ={controlEditorServ}
+            controlStore={controlStore}
+          />
         );
       case 'Visual Options':
         return (
