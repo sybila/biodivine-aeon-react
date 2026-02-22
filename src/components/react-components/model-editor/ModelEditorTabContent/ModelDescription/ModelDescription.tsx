@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
+import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import { Message } from '../../../../lit-components/message-wrapper';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';

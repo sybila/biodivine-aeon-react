@@ -1,4 +1,4 @@
-import useModelInfoStore from '../../../stores/LiveModel/useModelInfoStore';
+import useModelInfoStore from '../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import type { LiveModelClass } from './LiveModel';
 
 /**

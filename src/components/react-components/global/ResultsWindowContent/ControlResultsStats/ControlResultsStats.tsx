@@ -2,7 +2,7 @@ import ControlPerturbationsTable from '../../../../../services/control-perturbat
 import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
-import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
+import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';

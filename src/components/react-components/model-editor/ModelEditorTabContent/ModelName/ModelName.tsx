@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
+import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import { Message } from '../../../../lit-components/message-wrapper';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
