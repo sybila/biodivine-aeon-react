@@ -9,6 +9,7 @@ import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useControlStore from '../stores/LiveModel/ControlStore/useControlStore';
+import useModelInfoStore from '../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import useRegulationsStore from '../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../stores/LiveModel/VariablesStore/useVariablesStore';
@@ -39,6 +40,7 @@ export const modelEditorRoute = createRoute({
       regulationsStore={useRegulationsStore}
       variablesStore={useVariablesStore}
       updateFunctionsStore={useUpdateFunctionsStore}
+      modelInfoStore={useModelInfoStore}
     />
   ),
 });
@@ -71,6 +73,7 @@ export const WitnessRoute = createRoute({
       regulationsStore={useRegulationsStore}
       variablesStore={useVariablesStore}
       updateFunctionsStore={useUpdateFunctionsStore}
+      modelInfoStore={useModelInfoStore}
     />
   ),
 });

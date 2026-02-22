@@ -1,19 +1,21 @@
 import { useMemo } from 'react';
 
-import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import { Message } from '../../../../lit-components/message-wrapper';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import type { ModelNameProps } from './ModelNameProps';
 
-const ModelName: React.FC<ModelNameProps> = ({ modelEditorServ }) => {
-  const modelName = useModelInfoStore((state) => state.modelName);
-  const tabStore = useTabsStore((state) => state);
+const ModelName: React.FC<ModelNameProps> = ({
+  modelEditorServ,
+  tabStore,
+  modelInfoStore,
+}) => {
+  const modelName = modelInfoStore((state) => state.modelName);
+  const tabState = tabStore((state) => state);
 
-  const isActiveWittness = useMemo(() => {
-    const activeTab = tabStore.getActiveTab();
+  const isActiveWitness = useMemo(() => {
+    const activeTab = tabState.getActiveTab();
     return activeTab?.type === 'Witness';
-  }, [tabStore]);
+  }, [tabState]);
 
   return (
     <InvisibleInputReact
@@ -24,7 +26,7 @@ const ModelName: React.FC<ModelNameProps> = ({ modelEditorServ }) => {
       singleTextAlign="center"
       value={modelName ?? undefined}
       handleChange={(value) => {
-        if (isActiveWittness) {
+        if (isActiveWitness) {
           Message.showError(
             'Cannot change model name while on Witness tab. Change to Model Editor tab and try again.'
           );

@@ -17,6 +17,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
+  tabStore,
+  modelInfoStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     modelEditorServ.getVariableSearch()
@@ -35,7 +37,11 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
-      <ModelName modelEditorServ={modelEditorServ} />
+      <ModelName
+        modelEditorServ={modelEditorServ}
+        tabStore={tabStore}
+        modelInfoStore={modelInfoStore}
+      />
       {showModelDescription ? (
         <ModelDescription
           setShowModelDescription={setShowModelDescription}
