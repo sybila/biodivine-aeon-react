@@ -32,6 +32,7 @@ type TabTypeME =
   | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
+  liveModelServ,
   modelVisualization,
   modelEditorServ,
   controlEditorServ,
@@ -65,6 +66,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Start Computation':
         return (
           <StartCompTabContent
+            liveModelServ={liveModelServ}
             computationManagerServ={computationManagerServ}
             tabStore={tabStore}
             resultsStatusStore={resultsStatusStore}

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import Warning from '../../../../services/global/Warning/Warning';
 import type { ComputationModes } from '../../../../types';
 import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
@@ -9,6 +8,7 @@ import ControlCompParams from './ControlCompParams/ControlCompParams';
 import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 
 const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
+  liveModelServ,
   computationManagerServ,
   tabStore,
   resultsStatusStore,
@@ -84,7 +84,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
     }
   };
 
-  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+  liveModelServ.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-5">
