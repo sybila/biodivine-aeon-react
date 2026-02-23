@@ -3,6 +3,7 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
+import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
 import ComputationManager from '../services/global/ComputationManager/ComputationManager';
 import { LiveModel } from '../services/global/LiveModel/LiveModel';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
@@ -87,6 +88,7 @@ export const ControlPerturbationsTableRoute = createRoute({
   path: '/control-perturbations-table',
   component: () => (
     <ControlPerturbationsTable
+      controlPerturbationsTableServ={ControlPerturbationsTableServ}
       resultsStatusStore={useResultsStatus}
       perturbationFilterSortStore={usePerturbationFilterSortStore}
     />
