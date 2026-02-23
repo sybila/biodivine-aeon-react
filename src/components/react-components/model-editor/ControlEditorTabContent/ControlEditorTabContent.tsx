@@ -8,6 +8,7 @@ import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable
 import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOscillationButton';
 
 const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
+  liveModelServ,
   controlEditorServ,
   controlStore,
   variablesStore,
@@ -25,7 +26,10 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
           justifyHeader="start"
         />
 
-        <ControlStatsTable controlStore={controlStore} />
+        <ControlStatsTable
+          liveModelServ={liveModelServ}
+          controlStore={controlStore}
+        />
       </section>
 
       <section className="flex flex-col items-center w-full h-fit gap-3">

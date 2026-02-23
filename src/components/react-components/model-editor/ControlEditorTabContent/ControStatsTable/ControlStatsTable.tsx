@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
 import type { ControlInfo, ControlStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { ControlStatsTableProps } from './ControlStatsTableProps';
 
 const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
+  liveModelServ,
   controlStore,
 }) => {
   const controlInfo: Record<number, ControlInfo> = controlStore(
@@ -12,7 +12,7 @@ const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
   );
 
   const stats: ControlStats = useMemo(
-    () => LiveModel.Control.getControlStats(),
+    () => liveModelServ.Control.getControlStats(),
     [controlInfo]
   );
 
