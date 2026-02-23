@@ -13,6 +13,7 @@ import ImportLM from './ImportLM/ImportLM';
 import type { ImportLMInt } from './ImportLM/ImportLMInt';
 import InfoLM from './InfoLM/InfoLM';
 import type { InfoLMInt } from './InfoLM/InfoLMInt';
+import type { LiveModelInt } from './LiveModelInt';
 import ModelsLM from './ModelsLM/ModelsLM';
 import type { ModelsLMInt } from './ModelsLM/ModelsLMInt';
 import RegulationsLM from './RegulationsLM/RegulationsLM';
@@ -26,10 +27,10 @@ import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
 	you want to modify the model, not the editor or graph directly.
 
-	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `CytoscapeME`
+	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `ModelVisualization`
 	to reflect the current state of the model.
 */
-class LiveModelClass {
+class LiveModelClass implements LiveModelInt {
   // #region --- Properties ---
 
   /** We use this to indicate that there is a batch of changes to the model that are being processed,
