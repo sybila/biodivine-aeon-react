@@ -76,7 +76,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Import/Export':
         return <ImportExportTabContent liveModelServ={liveModelServ} />;
       case 'Export Witness':
-        return <ExportTabContent />;
+        return <ExportTabContent liveModelServ={liveModelServ} />;
       case 'Model Editor':
         return (
           <ModelEditorTabContent

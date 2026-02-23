@@ -1,20 +1,23 @@
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 
 import FileConvertors from '../../../../services/utilities/FileConvertors';
+import type { ExportTabContentProps } from './ExportTabContentProps';
 
 /** This component is used to display the Export tab content in the witness mode of the Model Editor */
-const ExportTabContent: React.FC = () => {
+const ExportTabContent: React.FC<ExportTabContentProps> = ({
+  liveModelServ,
+}) => {
   const buttonsFirstCol: Array<[string, string, () => void]> = [
     [
       '.aeon',
       'Simple Text Format',
-      () => LiveModel.Export.exportToFile('.aeon'),
+      () => liveModelServ.Export.exportToFile('.aeon'),
     ],
     [
       '.bnet',
       'Boolnet Text Format',
-      () => LiveModel.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
+      () =>
+        liveModelServ.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
     ],
   ];
 
@@ -22,13 +25,14 @@ const ExportTabContent: React.FC = () => {
     [
       '.sbml (Parametrized)',
       'Parametrized Model',
-      () => LiveModel.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
+      () =>
+        liveModelServ.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
     ],
     [
       '.sbml (Instantiated)',
       'Wittness Model',
       () =>
-        LiveModel.Export.exportToFile(
+        liveModelServ.Export.exportToFile(
           '.sbml',
           FileConvertors.aeonToSbmlInstantiated
         ),
