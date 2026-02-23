@@ -1,15 +1,16 @@
-import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import type { ControlInfo, Position, Variable } from '../../../types';
-import CytoscapeME from '../../model-editor/ModelVisualization/CytoscapeME';
-import ComputationManager from '../ComputationManager/ComputationManager';
-import Warning from '../Warning/Warning';
-import type { LiveModelClass } from './LiveModel';
+import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
+import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { ControlInfo, Position, Variable } from '../../../../types';
+import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
+import ComputationManager from '../../ComputationManager/ComputationManager';
+import Warning from '../../Warning/Warning';
+import type { LiveModelClass } from '../LiveModel';
+import type { VariablesLMInt } from './VariablesLMInt';
 
 /** Manage variables in the live model */
-class VariablesLM {
+class VariablesLM implements VariablesLMInt {
   // #region --- Properties + Constructor ---
 
   /** Counter for generating unique variable IDs */

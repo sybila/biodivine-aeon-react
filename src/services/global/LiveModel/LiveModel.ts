@@ -19,7 +19,8 @@ import RegulationsLM from './RegulationsLM/RegulationsLM';
 import type { RegulationsLMInt } from './RegulationsLM/RegulationsLMInt';
 import UpdateFunctionsLM from './UpdateFunctionsLM/UpdateFunctionsLM';
 import type { UpdateFunctionsLMInt } from './UpdateFunctionsLM/UpdateFunctionsLMInt';
-import VariablesLM from './VariablesLM';
+import VariablesLM from './VariablesLM/VariablesLM';
+import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 
 /**
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
@@ -48,7 +49,7 @@ class LiveModelClass {
   Info: InfoLMInt = new InfoLM(this);
 
   /** Functions and properties used for operations with variables of the model. (adding, removing, renaming, getting all,...)*/
-  Variables: VariablesLM = new VariablesLM(this);
+  Variables: VariablesLMInt = new VariablesLM(this);
 
   /** Functions and properties used for operations with variables update functions. (setting, validating, updating,...) */
   UpdateFunctions: UpdateFunctionsLMInt = new UpdateFunctionsLM(this);
