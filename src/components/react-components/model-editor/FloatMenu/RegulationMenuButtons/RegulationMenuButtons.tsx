@@ -1,4 +1,3 @@
-import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
 import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
 import type { RegulationMenuButtonsProps } from './RegulationMenuButtonsProps';
 
@@ -21,6 +20,7 @@ type MOButtonInfo = {
 const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
   setHint,
   selectedRegulationIds,
+  liveModelServ,
   regulationsStore,
 }) => {
   const regulationInfo = regulationsStore((state) =>
@@ -91,7 +91,7 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={observabilityInfo.icon}
         iconAlt={observabilityInfo.alt}
         onClick={() =>
-          LiveModel.Regulations.toggleObservability(
+          liveModelServ.Regulations.toggleObservability(
             regulationInfo.regulator,
             regulationInfo.target
           )
@@ -104,7 +104,7 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={monotocityInfo.icon}
         iconAlt={monotocityInfo.alt}
         onClick={() =>
-          LiveModel.Regulations.toggleMonotonicity(
+          liveModelServ.Regulations.toggleMonotonicity(
             regulationInfo.regulator,
             regulationInfo.target
           )
@@ -117,7 +117,7 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={DeleteIcon}
         iconAlt="⌫"
         onClick={() =>
-          LiveModel.Regulations.removeRegulation(
+          liveModelServ.Regulations.removeRegulation(
             regulationInfo.regulator,
             regulationInfo.target
           )

@@ -39,6 +39,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
           <RegulationMenuButtons
             setHint={setCurrentHint}
             selectedRegulationIds={modelStatus.selectedItemInfo.regulationIds}
+            liveModelServ={liveModelServ}
             regulationsStore={regulationsStore}
           />
         ) : (
