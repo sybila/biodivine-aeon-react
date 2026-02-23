@@ -17,9 +17,9 @@ import type { ControlPerturbationTableProps } from './ControlPerturbationTablePr
 
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
-const ControlPerturbationsTable: React.FC<
-  ControlPerturbationTableProps
-> = () => {
+const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
+  perturbationFilterSortStore,
+}) => {
   const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
 
   /** Trigger which is used to start filtering of perturbations. */
@@ -42,7 +42,11 @@ const ControlPerturbationsTable: React.FC<
         );
       case 'Sorting':
         return (
-          <SortTabContent startSort={startSort} setStartSort={setStartSort} />
+          <SortTabContent
+            startSort={startSort}
+            setStartSort={setStartSort}
+            perturbationFilterSortStore={perturbationFilterSortStore}
+          />
         );
       case 'Pages':
         return (

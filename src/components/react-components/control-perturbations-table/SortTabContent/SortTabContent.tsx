@@ -1,14 +1,15 @@
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import SortButtonSection from './SortButtonSection/SortButtonSection';
+import type { SortTabContentProps } from './SortTabContentProps';
 
-const SortTabContent: React.FC<{
-  startSort: boolean;
-  setStartSort: (value: boolean) => void;
-}> = ({ startSort, setStartSort }) => {
-  const filtersAndSorts = usePerturbationFilterSortStore((state) => state);
+const SortTabContent: React.FC<SortTabContentProps> = ({
+  startSort,
+  setStartSort,
+  perturbationFilterSortStore,
+}) => {
+  const filtersAndSorts = perturbationFilterSortStore((state) => state);
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pt-2 pb-2">
       <SeparatorLine />
