@@ -1,22 +1,25 @@
+import { useState } from 'react';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import { useState } from 'react';
 
-import OverviewIcon from '../../assets/icons/overview.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
-import SortingIcon from '../../assets/icons/sorting.svg';
+import OverviewIcon from '../../assets/icons/overview.svg';
 import PagesIcon from '../../assets/icons/pages.svg';
+import SortingIcon from '../../assets/icons/sorting.svg';
 
-import PerturbationTable from '../../components/react-components/control-perturbations-table/PerturbationTable/PerturbationTable';
-import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
-import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import FilterTabContent from '../../components/react-components/control-perturbations-table/FilterTabContent/FilterTabContent';
+import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import PagesTabContent from '../../components/react-components/control-perturbations-table/PagesTabContent/PagesTabContent';
+import PerturbationTable from '../../components/react-components/control-perturbations-table/PerturbationTable/PerturbationTable';
 import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
+import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
+import type { ControlPerturbationTableProps } from './ControlPerturbationTableProps';
 
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
-const ControlPerturbationsTable = () => {
+const ControlPerturbationsTable: React.FC<
+  ControlPerturbationTableProps
+> = () => {
   const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
 
   /** Trigger which is used to start filtering of perturbations. */

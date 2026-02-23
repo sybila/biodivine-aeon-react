@@ -1,5 +1,5 @@
 import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import { type ControlResults } from '../../../../types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';

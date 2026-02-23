@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import usePerturbationFilterSortStore from '../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import usePerturbationFilterSortStore from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import {
   PertVariableFilterStatus,
   type ControlResult,

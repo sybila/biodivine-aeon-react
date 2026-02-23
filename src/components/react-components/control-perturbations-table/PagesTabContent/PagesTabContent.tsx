@@ -1,5 +1,5 @@
+import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import PageSelectorReact from '../../lit-wrappers/PageSelectorReact';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
 
 const PagesTabContent: React.FC<{
   setStartFilter: (value: boolean) => void;

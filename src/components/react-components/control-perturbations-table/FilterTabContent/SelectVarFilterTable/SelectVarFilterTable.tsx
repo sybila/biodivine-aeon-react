@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
-import { PertVariableFilterStatus } from '../../../../../types';
-import TextInputReact from '../../../lit-wrappers/TextInputReact';
-import { Loading } from '../../../../lit-components/loading-wrapper';
-import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
-import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
-import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
+import { PertVariableFilterStatus } from '../../../../../types';
+import { Loading } from '../../../../lit-components/loading-wrapper';
+import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 
 const SelectVarFilterTable: React.FC<{
   variableNames: Array<string>;
