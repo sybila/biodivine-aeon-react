@@ -1,13 +1,13 @@
 import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import EditNameIcon from '../../../../../assets/icons/edit.svg';
 import EditFunctionIcon from '../../../../../assets/icons/functions.svg';
-import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
 import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
 import type { VariableMenuButtonsProps } from './VariableMenuButtonsProps';
 
 const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
   setHint,
   selectedVariableId,
+  liveModelServ,
   modelEditorServ,
 }) => {
   return (
@@ -34,7 +34,7 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
         iconSrc={DeleteIcon}
         iconAlt="⌫"
         onClick={async () =>
-          await LiveModel.Variables.removeVariableWithWarnings(
+          await liveModelServ.Variables.removeVariableWithWarnings(
             selectedVariableId
           )
         }

@@ -4,6 +4,7 @@ import RegulationMenuButtons from './RegulationMenuButtons/RegulationMenuButtons
 import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 
 const FloatMenu: React.FC<FloatMenuProps> = ({
+  liveModelServ,
   modelEditorServ,
   modelEditorStatusStore,
   regulationsStore,
@@ -44,6 +45,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
           <VariableMenuButtons
             setHint={setCurrentHint}
             selectedVariableId={modelStatus.selectedItemInfo.id}
+            liveModelServ={liveModelServ}
             modelEditorServ={modelEditorServ}
           />
         )}
