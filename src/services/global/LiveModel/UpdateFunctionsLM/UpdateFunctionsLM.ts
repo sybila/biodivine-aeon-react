@@ -1,12 +1,16 @@
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import { EdgeMonotonicity, type UpdateFunctionMetadata } from '../../../types';
-import ComputationManager from '../ComputationManager/ComputationManager';
-import Warning from '../Warning/Warning';
-import type { LiveModelClass } from './LiveModel';
+import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import {
+  EdgeMonotonicity,
+  type UpdateFunctionMetadata,
+} from '../../../../types';
+import ComputationManager from '../../ComputationManager/ComputationManager';
+import Warning from '../../Warning/Warning';
+import type { LiveModelClass } from '../LiveModel';
+import type { UpdateFunctionsLMInt } from './UpdateFunctionsLMInt';
 
-class UpdateFunctionsLM {
+class UpdateFunctionsLM implements UpdateFunctionsLMInt {
   // #region --- Properties + Constructor ---
   private liveModel: LiveModelClass;
 

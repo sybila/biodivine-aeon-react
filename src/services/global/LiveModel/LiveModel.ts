@@ -17,7 +17,8 @@ import ModelsLM from './ModelsLM/ModelsLM';
 import type { ModelsLMInt } from './ModelsLM/ModelsLMInt';
 import RegulationsLM from './RegulationsLM/RegulationsLM';
 import type { RegulationsLMInt } from './RegulationsLM/RegulationsLMInt';
-import UpdateFunctionsLM from './UpdateFunctionsLM';
+import UpdateFunctionsLM from './UpdateFunctionsLM/UpdateFunctionsLM';
+import type { UpdateFunctionsLMInt } from './UpdateFunctionsLM/UpdateFunctionsLMInt';
 import VariablesLM from './VariablesLM';
 
 /**
@@ -50,7 +51,7 @@ class LiveModelClass {
   Variables: VariablesLM = new VariablesLM(this);
 
   /** Functions and properties used for operations with variables update functions. (setting, validating, updating,...) */
-  UpdateFunctions: UpdateFunctionsLM = new UpdateFunctionsLM(this);
+  UpdateFunctions: UpdateFunctionsLMInt = new UpdateFunctionsLM(this);
 
   /** Functions and properties used for operations with regulations. (adding, removing, setting observability,...) */
   Regulations: RegulationsLMInt = new RegulationsLM(this);
