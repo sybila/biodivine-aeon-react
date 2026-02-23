@@ -18,6 +18,7 @@ import type { ControlPerturbationTableProps } from './ControlPerturbationTablePr
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
 const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
+  resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
@@ -130,6 +131,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           startFilter={startFilter}
           startSort={startSort}
           setNextPageExists={setNextPageExists}
+          resultsStatusStore={resultsStatusStore}
         />
       </div>
     </>

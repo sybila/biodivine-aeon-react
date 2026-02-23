@@ -87,6 +87,7 @@ export const ControlPerturbationsTableRoute = createRoute({
   path: '/control-perturbations-table',
   component: () => (
     <ControlPerturbationsTable
+      resultsStatusStore={useResultsStatus}
       perturbationFilterSortStore={usePerturbationFilterSortStore}
     />
   ),

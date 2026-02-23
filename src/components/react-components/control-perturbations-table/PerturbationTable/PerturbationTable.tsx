@@ -1,17 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import { type ControlResults } from '../../../../types';
 import { Loading } from '../../../lit-components/loading-wrapper';
+import type { PerturbationTableProps } from './PerturbationTableProps';
 import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
-const PerturbationTable: React.FC<{
-  startFilter: boolean;
-  startSort: boolean;
-  setNextPageExists: (value: boolean) => void;
-}> = ({ startFilter, startSort, setNextPageExists }) => {
+
+const PerturbationTable: React.FC<PerturbationTableProps> = ({
+  startFilter,
+  startSort,
+  setNextPageExists,
+  resultsStatusStore,
+}) => {
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
 
-  const perturbations = useResultsStatus((state) =>
+  const perturbations = resultsStatusStore((state) =>
     state.type === 'Control' && state.results
       ? (state.results as ControlResults).perturbations
       : undefined
