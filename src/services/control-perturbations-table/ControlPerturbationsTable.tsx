@@ -6,18 +6,19 @@ import {
   type PertTableSort,
   type Perturbation,
 } from '../../types';
+import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
-class ControlPerturbationsTable {
+class ControlPerturbationsTableClass implements ControlPerturbationsTableInt {
   // #region --- Properties ---
 
   /** Current max number of perturbations on a page in the Perturbations Table */
-  private static pageSize: number = 100;
+  private pageSize: number = 100;
 
   // #endregion
 
   // #region --- Getters ---
 
-  public static getPageSize(): number {
+  public getPageSize(): number {
     return this.pageSize;
   }
 
@@ -30,7 +31,7 @@ class ControlPerturbationsTable {
    *  on index 1 the element contains perturbation variables and their values in text (VariableName: true, VariableName2: false).
    *  Each tuple represents one variable in the perturbation.
    */
-  public static formatPerturbation(
+  public formatPerturbation(
     perturbationArray: Array<[string, boolean]>
   ): [JSX.Element, JSX.Element] {
     if (perturbationArray.length === 0) {
@@ -82,7 +83,7 @@ class ControlPerturbationsTable {
   // #region --- Perturbations Filtering ---
 
   /** Filters perturbations by variables they contain and their perturbation status. */
-  private static filterOutPertByVariables(
+  private filterOutPertByVariables(
     perturbation: Perturbation,
     perturbationFilterVariables: Record<string, PertVariableFilterStatus>
   ): boolean {
@@ -110,7 +111,7 @@ class ControlPerturbationsTable {
   /** Filters perturbation by different criteria.
    *  Returns true if the perturbation passes the filter, false otherwise.
    */
-  public static filterPerturbation = (
+  public filterPerturbation = (
     pertInfo: ControlResult,
     minNumInterp: number | undefined,
     minRobust: number | undefined,
@@ -132,7 +133,7 @@ class ControlPerturbationsTable {
    *  Returns tuple where on index 0 is the array of filtered perturbations
    *  and on index 1 is boolean indicating if there is next page === there are more perturbations that pass the filter
    */
-  public static filterPerturbations(
+  public filterPerturbations(
     perturbations: Array<ControlResult>
   ): [Array<ControlResult>, boolean] {
     const filterState = usePerturbationFilterSortStore.getState();
@@ -169,7 +170,7 @@ class ControlPerturbationsTable {
   // #region --- Perturbations Sorting ---
 
   /** Compares two perturbations by their ID. */
-  private static compareById = (
+  private compareById = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
@@ -179,7 +180,7 @@ class ControlPerturbationsTable {
   /** Compares two perturbations by their size (number of variables in the perturbation).
    *  Used for sorting perturbations.
    */
-  private static compareBySize = (
+  private compareBySize = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
@@ -190,14 +191,14 @@ class ControlPerturbationsTable {
   };
 
   /** Compares two perturbations by their number of interpretations. */
-  private static compareByInterpretations = (
+  private compareByInterpretations = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
     return pertA.color_count - pertB.color_count;
   };
 
-  private static comparePerturbations = (
+  private comparePerturbations = (
     pertA: ControlResult,
     pertB: ControlResult,
     sort: PertTableSort
@@ -215,7 +216,7 @@ class ControlPerturbationsTable {
   /** Sorts perturbations by primary and secondary sort criteria from usePerturbationFilterSortStore.
    *  Returns new array of sorted perturbations.
    */
-  public static sortPerturbations(
+  public sortPerturbations(
     perturbations: Array<ControlResult>
   ): Array<ControlResult> {
     const sortState = usePerturbationFilterSortStore.getState();
@@ -247,11 +248,13 @@ class ControlPerturbationsTable {
 
   // #region --- Clear ---
 
-  public static clear(): void {
+  public clear(): void {
     usePerturbationFilterSortStore.getState().clear();
   }
 
   // #endregion
 }
+
+const ControlPerturbationsTable = new ControlPerturbationsTableClass();
 
 export default ControlPerturbationsTable;
