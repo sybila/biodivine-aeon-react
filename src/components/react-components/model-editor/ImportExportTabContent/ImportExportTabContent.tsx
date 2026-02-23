@@ -1,15 +1,16 @@
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-
-import { ExampleModels } from '../../../../ExampleModels';
-import { Message } from '../../../lit-components/message-wrapper';
 import { useEffect, useRef, useState } from 'react';
+import { ExampleModels } from '../../../../ExampleModels';
 import FileConvertors from '../../../../services/utilities/FileConvertors';
 import type { fileType } from '../../../../types';
+import { Message } from '../../../lit-components/message-wrapper';
+import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import type { ImportExportTabContentProps } from './ImportExportTabContentProps';
 
 /** This component is used to display the Import/Export tab content in the Model Editor */
-const ImportExportTabContent: React.FC = () => {
+const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
+  liveModelServ,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fileHandlerRef = useRef<
@@ -19,7 +20,7 @@ const ImportExportTabContent: React.FC = () => {
   const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
 
   const handleExampleImport = async (exampleModel: string) => {
-    await LiveModel.Import.importAeonWithWarnings(exampleModel);
+    await liveModelServ.Import.importAeonWithWarnings(exampleModel);
   };
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const ImportExportTabContent: React.FC = () => {
     [
       'Last Model',
       'Browser Storage',
-      async () => await LiveModel.Import.loadFromLocalStorage(),
+      async () => await liveModelServ.Import.loadFromLocalStorage(),
     ],
     [
       '.aeon',
@@ -54,7 +55,7 @@ const ImportExportTabContent: React.FC = () => {
       () =>
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(fileInput),
+            await liveModelServ.Import.importFromFile(fileInput),
           '.aeon'
         ),
     ],
@@ -64,7 +65,7 @@ const ImportExportTabContent: React.FC = () => {
       () => {
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(
+            await liveModelServ.Import.importFromFile(
               fileInput,
               FileConvertors.sbmlToAeon
             ),
@@ -78,7 +79,7 @@ const ImportExportTabContent: React.FC = () => {
       () => {
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(
+            await liveModelServ.Import.importFromFile(
               fileInput,
               FileConvertors.bnetToAeon
             ),
@@ -92,18 +93,19 @@ const ImportExportTabContent: React.FC = () => {
     [
       '.aeon',
       'Simple Text Format',
-      () => LiveModel.Export.exportToFile('.aeon'),
+      () => liveModelServ.Export.exportToFile('.aeon'),
     ],
     [
       '.sbml (Parametrized)',
       'Parametrized Model',
-      () => LiveModel.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
+      () =>
+        liveModelServ.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
     ],
     [
       '.sbml (Instantiated)',
       'Wittness Model',
       () =>
-        LiveModel.Export.exportToFile(
+        liveModelServ.Export.exportToFile(
           '.sbml',
           FileConvertors.aeonToSbmlInstantiated
         ),
@@ -111,7 +113,8 @@ const ImportExportTabContent: React.FC = () => {
     [
       '.bnet',
       'Boolnet Text Format',
-      () => LiveModel.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
+      () =>
+        liveModelServ.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
     ],
   ];
 
