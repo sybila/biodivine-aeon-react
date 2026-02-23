@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
 import type { ModelStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { ModelStatsTableProps } from './ModelStatsTableProps';
 
 const ModelStatsTable: React.FC<ModelStatsTableProps> = ({
+  modelEditorServ,
   regulationsStore,
   updateFunctionsStore,
   variablesStore,
@@ -16,7 +16,7 @@ const ModelStatsTable: React.FC<ModelStatsTableProps> = ({
   const regulationsObj = regulationsStore((state) => state.regulations);
 
   const stats: ModelStats = useMemo(() => {
-    return ModelEditor.getModelStats();
+    return modelEditorServ.getModelStats();
   }, [variablesObj, updateFunctions, regulationsObj]);
 
   const insertStats = () => {

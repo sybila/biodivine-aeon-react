@@ -75,6 +75,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             </section>
 
             <ModelStatsTable
+              modelEditorServ={modelEditorServ}
               regulationsStore={regulationsStore}
               updateFunctionsStore={updateFunctionsStore}
               variablesStore={variablesStore}
