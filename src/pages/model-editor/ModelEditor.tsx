@@ -80,6 +80,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Model Editor':
         return (
           <ModelEditorTabContent
+            liveModelServ={liveModelServ}
             modelEditorServ={modelEditorServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}

@@ -1,3 +1,4 @@
+import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
@@ -8,6 +9,7 @@ import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
 export type ModelEditorTabContentProps = {
+  liveModelServ: LiveModelInt;
   modelEditorServ: ModelEditorInt;
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;

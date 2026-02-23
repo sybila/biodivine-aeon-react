@@ -6,13 +6,13 @@ import TextInputReact from '../../lit-wrappers/TextInputReact';
 import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 
 import AddIcon from '../../../../assets/icons/add_box.svg';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 import ModelDescription from './ModelDescription/ModelDescription';
 import type { ModelEditorTabContentProps } from './ModelEditorTabContentProps';
 import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
 import ModelName from './ModelName/ModelName';
 
 const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
+  liveModelServ,
   modelEditorServ,
   regulationsStore,
   variablesStore,
@@ -34,7 +34,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
     }
   };
 
-  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+  liveModelServ.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
