@@ -1,7 +1,6 @@
 import { memo, useMemo, useState } from 'react';
-import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
-import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
 import DataFormaters from '../../../../../services/utilities/DataFormaters';
+import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
   ({
@@ -11,6 +10,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     perturbation,
     cellSizes,
     useTextVisualization = false,
+    controlPerturbationsTableServ,
   }) => {
     const [textVisualization, setTextVisualization] =
       useState<boolean>(useTextVisualization);
@@ -21,7 +21,9 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
 
     /** Memoized formatted perturbation in the form of JSX elements [coloredFormat, textFormat] */
     const formatedPerturbation = useMemo(() => {
-      return ControlPerturbationsTable.formatPerturbation(perturbationArray);
+      return controlPerturbationsTableServ.formatPerturbation(
+        perturbationArray
+      );
     }, [perturbationArray]);
 
     /** Data for each cell inside the row */

@@ -94,6 +94,7 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
             perturbation={row.perturbation}
             cellSizes={cellSizes}
             useTextVisualization={perturbationsAsText}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
           />
         ))}
       </div>
