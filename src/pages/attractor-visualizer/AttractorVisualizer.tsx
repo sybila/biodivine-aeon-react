@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import KeepAlive from 'react-activation';
 import AttractorVisCanvas from '../../components/react-components/attractor-visualizer/AttractorVisCanvas/AttractorVisCanvas';
 import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
-import WittnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WittnessUpdateFunctionsTabContent/WitnessUpdateFunctionsTabContent';
+import WitnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WitnessUpdateFunctionsTabContent/WitnessUpdateFunctionsTabContent';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
@@ -35,7 +35,7 @@ const AttractorVisualizer = () => {
       case 'State Overview':
         return <StateOverviewTabContent />;
       case 'Wittness Update Functions':
-        return <WittnessUpdateFunctionsTabContent />;
+        return <WitnessUpdateFunctionsTabContent />;
       default:
         return null;
     }
