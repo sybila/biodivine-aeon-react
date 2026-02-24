@@ -92,7 +92,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
       </ContentTab>
 
       <KeepAlive>
-        <AttractorVisCanvas />
+        <AttractorVisCanvas attractorVisualizerServ={attractorVisualizerServ} />
       </KeepAlive>
     </>
   );
