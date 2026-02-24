@@ -9,6 +9,7 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   startSort,
   setNextPageExists,
   controlPerturbationsTableServ,
+  dataFormatersServ,
   resultsStatusStore,
 }) => {
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
@@ -95,6 +96,7 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
             cellSizes={cellSizes}
             useTextVisualization={perturbationsAsText}
             controlPerturbationsTableServ={controlPerturbationsTableServ}
+            dataFormatersServ={dataFormatersServ}
           />
         ))}
       </div>

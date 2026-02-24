@@ -1,5 +1,4 @@
 import { memo, useMemo, useState } from 'react';
-import DataFormaters from '../../../../../services/utilities/DataFormaters/DataFormaters';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
@@ -11,6 +10,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     cellSizes,
     useTextVisualization = false,
     controlPerturbationsTableServ,
+    dataFormatersServ,
   }) => {
     const [textVisualization, setTextVisualization] =
       useState<boolean>(useTextVisualization);
@@ -34,7 +34,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
         : formatedPerturbation[0],
       perturbationArray.length,
       numberOfInterpretations,
-      DataFormaters.convertRobustnessToPercentage(robustness),
+      dataFormatersServ.convertRobustnessToPercentage(robustness),
     ];
 
     /** Handles click events for each cell */

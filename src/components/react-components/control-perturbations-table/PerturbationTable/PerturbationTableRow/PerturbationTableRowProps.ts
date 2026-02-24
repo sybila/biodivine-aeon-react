@@ -1,4 +1,5 @@
 import type { ControlPerturbationsTableInt } from '../../../../../services/control-perturbations-table/ControlPerturbationsTableInt';
+import type { DataFormatersInt } from '../../../../../services/utilities/DataFormaters/DataFormatersInt';
 import type { Perturbation } from '../../../../../types';
 
 export type PerturbationTableRowProps = {
@@ -11,4 +12,5 @@ export type PerturbationTableRowProps = {
   /** If true, perturbations are visualized in the text format (example: VariableName: true, VariableName2: false) */
   useTextVisualization?: boolean;
   controlPerturbationsTableServ: ControlPerturbationsTableInt;
+  dataFormatersServ: DataFormatersInt;
 };

@@ -148,6 +148,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           setNextPageExists={setNextPageExists}
           controlPerturbationsTableServ={controlPerturbationsTableServ}
           resultsStatusStore={resultsStatusStore}
+          dataFormatersServ={dataFormatersServ}
         />
       </div>
     </>
