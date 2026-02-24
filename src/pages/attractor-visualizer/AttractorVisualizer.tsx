@@ -12,7 +12,7 @@ import UpdateFuncitons from '../../assets/icons/update_functions.svg';
 import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
 
-type TabTypeAV = 'State Overview' | 'Wittness Update Functions' | null;
+type TabTypeAV = 'State Overview' | 'Witness Update Functions' | null;
 
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
@@ -37,7 +37,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
     switch (activeTab) {
       case 'State Overview':
         return <StateOverviewTabContent />;
-      case 'Wittness Update Functions':
+      case 'Witness Update Functions':
         return (
           <WitnessUpdateFunctionsTabContent
             attractorVisualizerServ={attractorVisualizerServ}
@@ -69,12 +69,12 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
           tagText="State Overview"
         />
         <IconButtonReact
-          isActive={activeTab === 'Wittness Update Functions'}
-          onClick={() => showHideTab('Wittness Update Functions')}
+          isActive={activeTab === 'Witness Update Functions'}
+          onClick={() => showHideTab('Witness Update Functions')}
           iconSrc={UpdateFuncitons}
           iconAlt="Update Functions"
           showTag={true}
-          tagText="Wittness Update Functions"
+          tagText="Witness Update Functions"
         />
       </SideButtonMenu>
 
