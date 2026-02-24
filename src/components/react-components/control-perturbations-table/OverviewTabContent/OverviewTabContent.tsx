@@ -1,26 +1,28 @@
 import { useMemo, useState } from 'react';
-import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import DataFormaters from '../../../../services/utilities/DataFormaters';
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { ControlResults } from '../../../../types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
+import type { OverviewTabContentProps } from './OverviewTabContentProps';
 
-const OverviewTabContent: React.FC = () => {
+const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
+  liveModelServ,
+  controlPerturbationsTableServ,
+  dataFormatersServ,
+  resultsStatusStore,
+}) => {
   const [phenAsText, setPhenotypeAsText] = useState<boolean>(false);
 
   // We know that when type is 'Control', results is ControlResults
-  const controlStats = useResultsStatus((state) =>
+  const controlStats = resultsStatusStore((state) =>
     state.type === 'Control'
       ? (state.results as ControlResults).stats
       : undefined
   );
 
-  const controlPrecomputation = useResultsStatus((state) =>
+  const controlPrecomputation = resultsStatusStore((state) =>
     state.type === 'Control'
       ? (state.results as ControlResults).preComputationInfo
       : undefined
@@ -31,12 +33,12 @@ const OverviewTabContent: React.FC = () => {
   }
 
   const controlEnabledPhenotypeVars = useMemo(() => {
-    return LiveModel.Control.getPhenotypeControlEnabledVars();
+    return liveModelServ.Control.getPhenotypeControlEnabledVars();
   }, [controlStats]);
 
   const formatedPhenotype = useMemo(
     () =>
-      ControlPerturbationsTable.formatPerturbation(
+      controlPerturbationsTableServ.formatPerturbation(
         Object.entries(controlEnabledPhenotypeVars.phenotypeVars)
       ),
     [controlEnabledPhenotypeVars]
@@ -64,7 +66,7 @@ const OverviewTabContent: React.FC = () => {
       />
       <StatEntryReact
         statName="Maximal Robustness (%)"
-        statValue={DataFormaters.convertRobustnessToPercentage(
+        statValue={dataFormatersServ.convertRobustnessToPercentage(
           controlStats.maximalPerturbationRobustness
         )}
         compWidth="99%"

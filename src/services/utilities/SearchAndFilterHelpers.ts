@@ -1,5 +1,5 @@
 import type { Variable } from '../../types';
-import DataFormaters from './DataFormaters';
+import DataFormaters from './DataFormaters/DataFormaters';
 
 class SearchAndFilterHelpers {
   /** Tests if the evaluated string starts with any of the search terms in the array */

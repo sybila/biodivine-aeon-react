@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from 'react';
-import DataFormaters from '../../../../../services/utilities/DataFormaters';
+import DataFormaters from '../../../../../services/utilities/DataFormaters/DataFormaters';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(

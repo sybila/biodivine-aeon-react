@@ -9,6 +9,7 @@ import { LiveModel } from '../services/global/LiveModel/LiveModel';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
+import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
 import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
 import usePerturbationFilterSortStore from '../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import useControlStore from '../stores/LiveModel/ControlStore/useControlStore';
@@ -88,7 +89,9 @@ export const ControlPerturbationsTableRoute = createRoute({
   path: '/control-perturbations-table',
   component: () => (
     <ControlPerturbationsTable
+      liveModelServ={LiveModel}
       controlPerturbationsTableServ={ControlPerturbationsTableServ}
+      dataFormatersServ={DataFormaters}
       resultsStatusStore={useResultsStatus}
       perturbationFilterSortStore={usePerturbationFilterSortStore}
     />

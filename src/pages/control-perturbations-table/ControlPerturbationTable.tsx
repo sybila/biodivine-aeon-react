@@ -18,7 +18,9 @@ import type { ControlPerturbationTableProps } from './ControlPerturbationTablePr
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
 const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
+  liveModelServ,
   controlPerturbationsTableServ,
+  dataFormatersServ,
   resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
@@ -34,7 +36,14 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
-        return <OverviewTabContent />;
+        return (
+          <OverviewTabContent
+            liveModelServ={liveModelServ}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            dataFormatersServ={dataFormatersServ}
+            resultsStatusStore={resultsStatusStore}
+          />
+        );
       case 'Filters':
         return (
           <FilterTabContent

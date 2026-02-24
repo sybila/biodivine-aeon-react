@@ -1,6 +1,6 @@
 import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
 import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
-import DataFormaters from '../../../../../services/utilities/DataFormaters';
+import DataFormaters from '../../../../../services/utilities/DataFormaters/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
 import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import useTabsStore from '../../../../../stores/Navigation/useTabsStore';

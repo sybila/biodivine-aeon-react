@@ -1,9 +1,10 @@
-import type { ControlResult } from '../../types';
+import type { ControlResult } from '../../../types';
+import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */
-class DataFormaters {
+class DataFormatersClass implements DataFormatersInt {
   /** Converts a robustness value from decimal fraction to a percentage string. */
-  public static convertRobustnessToPercentage(robustness: number): string {
+  public convertRobustnessToPercentage(robustness: number): string {
     if (robustness === undefined) {
       return 'unknown';
     }
@@ -14,7 +15,7 @@ class DataFormaters {
   /** Converts an array of perturbations to a CSV string.
    *  Each perturbation is represented as a row in the CSV, with columns for id, perturbation, size, number of interpretations, and robustness percentage.
    */
-  public static convertPerturbationsToCsvString(
+  public convertPerturbationsToCsvString(
     perturbations: Array<ControlResult>
   ): string {
     const perturbationsAsArray = perturbations.map((perturbation) => {
@@ -41,11 +42,11 @@ class DataFormaters {
 
   /** Converts a comma-separated string into an array of trimmed strings.
    */
-  public static convertCommaSeparatedStringToArray(
-    text: string
-  ): Array<string> {
+  public convertCommaSeparatedStringToArray(text: string): Array<string> {
     return text.split(',').map((item) => item.trim());
   }
 }
+
+const DataFormaters = new DataFormatersClass();
 
 export default DataFormaters;

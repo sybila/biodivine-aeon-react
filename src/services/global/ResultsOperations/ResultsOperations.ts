@@ -1,5 +1,5 @@
 import type { ControlResult } from '../../../types';
-import DataFormaters from '../../utilities/DataFormaters';
+import DataFormaters from '../../utilities/DataFormaters/DataFormaters';
 import FileHelpers from '../../utilities/FileHelpers';
 
 /** Class for performing operations on results. (eg. exporting to CSV) */
