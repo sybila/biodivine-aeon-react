@@ -8,10 +8,11 @@ import type {
   VisNode,
 } from '../../types';
 import ComputationManager from '../global/ComputationManager/ComputationManager';
+import type { AttractorVisualizerInt } from './AttractorVisualizerInt';
 
 declare const vis: any;
 
-class AttractorVisualizerClass {
+class AttractorVisualizerClass implements AttractorVisualizerInt {
   // #region --- Properties ---
 
   /** Currently loaded attractor data. */
