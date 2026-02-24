@@ -28,9 +28,7 @@ class DataFormatersClass implements DataFormatersInt {
               .join(' ');
       return `${perturbation.id},${perturbationAsString},${
         perturbationEntries.length
-      },${
-        perturbation.color_count
-      },${DataFormaters.convertRobustnessToPercentage(
+      },${perturbation.color_count},${this.convertRobustnessToPercentage(
         perturbation.robustness
       )}\n`;
     });
