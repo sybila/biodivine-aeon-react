@@ -1,9 +1,10 @@
-import type { Variable } from '../../types';
-import DataFormaters from './DataFormaters/DataFormaters';
+import type { Variable } from '../../../types';
+import DataFormaters from '../DataFormaters/DataFormaters';
+import type { SearchAndFilterHelpersInt } from './SearchAndFilterHelpersInt';
 
-class SearchAndFilterHelpers {
+class SearchAndFilterHelpersClass implements SearchAndFilterHelpersInt {
   /** Tests if the evaluated string starts with any of the search terms in the array */
-  private static startsWithInArray(
+  private startsWithInArray(
     evaluatedString: string,
     searchTermAsArray: string[]
   ): boolean {
@@ -18,7 +19,7 @@ class SearchAndFilterHelpers {
   /** Filters the variables by the search terms created from comma-separated search text string.
    *  If last character of searchText is a comma, returns the original array.
    */
-  public static filterVariablesBySearchTerms(
+  public filterVariablesBySearchTerms(
     variables: Variable[],
     searchText: string | undefined
   ): Variable[] {
@@ -32,14 +33,14 @@ class SearchAndFilterHelpers {
     }
 
     return variables.filter((variable) =>
-      SearchAndFilterHelpers.startsWithInArray(variable.name, searchTerms)
+      this.startsWithInArray(variable.name, searchTerms)
     );
   }
 
   /** Filters an array of strings by the search terms created from comma-separated search text string.
    *  If last character of searchText is a comma, returns the original array.
    */
-  public static filterStringsBySearchTerms(
+  public filterStringsBySearchTerms(
     strings: string[],
     searchText: string | undefined
   ): string[] {
@@ -52,10 +53,10 @@ class SearchAndFilterHelpers {
       return strings;
     }
 
-    return strings.filter((str) =>
-      SearchAndFilterHelpers.startsWithInArray(str, searchTerms)
-    );
+    return strings.filter((str) => this.startsWithInArray(str, searchTerms));
   }
 }
+
+const SearchAndFilterHelpers = new SearchAndFilterHelpersClass();
 
 export default SearchAndFilterHelpers;

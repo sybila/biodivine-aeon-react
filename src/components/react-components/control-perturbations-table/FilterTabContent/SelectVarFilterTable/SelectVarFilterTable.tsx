@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import { PertVariableFilterStatus } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';

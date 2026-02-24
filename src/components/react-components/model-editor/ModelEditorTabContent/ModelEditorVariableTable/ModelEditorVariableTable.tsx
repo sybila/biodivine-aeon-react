@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import type { ModelEditorItem, Variable } from '../../../../../types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
