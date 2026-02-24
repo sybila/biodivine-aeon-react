@@ -56,6 +56,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             setStartFilter={setStartFilter}
             startFilter={startFilter}
             nextPageExists={nextPageExists}
+            perturbationFilterSortStore={perturbationFilterSortStore}
           />
         );
       default:
