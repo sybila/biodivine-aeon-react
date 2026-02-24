@@ -1,11 +1,13 @@
-import AttractorVisualizer from '../../../../services/attractor-visualizer/AttractorVisualizer';
-import useAttractorVisualizerStatus from '../../../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import { Message } from '../../../lit-components/message-wrapper';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import type { StateOverviewTabContentProps } from './StateOverviewTabContentPropts';
 
-const StateOverviewTabContent = () => {
-  const selectedState = useAttractorVisualizerStatus(
+const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
+  attractorVisualizerServ,
+  attractorVisualizerStatusStore,
+}) => {
+  const selectedState = attractorVisualizerStatusStore(
     (state) => state.selectedNodeState
   );
 
@@ -46,7 +48,7 @@ const StateOverviewTabContent = () => {
     }
 
     const variableNames: string[] | undefined =
-      AttractorVisualizer.getStateVariables();
+      attractorVisualizerServ.getStateVariables();
 
     if (!variableNames) {
       Message.showError(

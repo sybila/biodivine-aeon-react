@@ -9,18 +9,18 @@ import IconButtonReact from '../../components/react-components/lit-wrappers/Icon
 
 import StateIcon from '../../assets/icons/state_overview.svg';
 import UpdateFuncitons from '../../assets/icons/update_functions.svg';
-import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
 
 type TabTypeAV = 'State Overview' | 'Witness Update Functions' | null;
 
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
+  attractorVisualizerStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
   const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
 
-  const selectedNodeState = useAttractorVisualizerStatus(
+  const selectedNodeState = attractorVisualizerStatusStore(
     (state) => state.selectedNodeState
   );
 
@@ -36,7 +36,12 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   const renderTabContent = () => {
     switch (activeTab) {
       case 'State Overview':
-        return <StateOverviewTabContent />;
+        return (
+          <StateOverviewTabContent
+            attractorVisualizerServ={attractorVisualizerServ}
+            attractorVisualizerStatusStore={attractorVisualizerStatusStore}
+          />
+        );
       case 'Witness Update Functions':
         return (
           <WitnessUpdateFunctionsTabContent

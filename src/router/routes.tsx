@@ -12,6 +12,7 @@ import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
 import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
+import useAttractorVisualizerStatus from '../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
 import usePerturbationFilterSortStore from '../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import useControlStore from '../stores/LiveModel/ControlStore/useControlStore';
@@ -62,7 +63,10 @@ export const AttractorVisualizerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/attractor-visualizer',
   component: () => (
-    <AttractorVisualizer attractorVisualizerServ={AttractorVisualizerServ} />
+    <AttractorVisualizer
+      attractorVisualizerServ={AttractorVisualizerServ}
+      attractorVisualizerStatusStore={useAttractorVisualizerStatus}
+    />
   ),
 });
 
