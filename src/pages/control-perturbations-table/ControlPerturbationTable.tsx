@@ -49,6 +49,8 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           <FilterTabContent
             setStartFilter={setStartFilter}
             startFilter={startFilter}
+            resultsStatusStore={resultsStatusStore}
+            perturbationFilterSortStore={perturbationFilterSortStore}
           />
         );
       case 'Sorting':

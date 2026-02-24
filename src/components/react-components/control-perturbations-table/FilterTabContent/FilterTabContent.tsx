@@ -1,5 +1,3 @@
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import { type ControlResults } from '../../../../types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
@@ -7,14 +5,17 @@ import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import type { FilterTabContentProps } from './FilterTabContentProps';
 import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 
-const FilterTabContent: React.FC<{
-  setStartFilter: (value: boolean) => void;
-  startFilter: boolean;
-}> = ({ setStartFilter, startFilter }) => {
+const FilterTabContent: React.FC<FilterTabContentProps> = ({
+  setStartFilter,
+  startFilter,
+  resultsStatusStore,
+  perturbationFilterSortStore,
+}) => {
   // We know that when type is 'Control', results is ControlResults
-  const controlInfo: ControlResults | undefined = useResultsStatus((state) =>
+  const controlInfo: ControlResults | undefined = resultsStatusStore((state) =>
     state.type === 'Control' ? (state.results as ControlResults) : undefined
   );
 
@@ -23,7 +24,7 @@ const FilterTabContent: React.FC<{
   }
 
   const getCurrentMinRobustness = () => {
-    const currentRob = usePerturbationFilterSortStore.getState().minRobustness;
+    const currentRob = perturbationFilterSortStore.getState().minRobustness;
     return currentRob != undefined ? currentRob * 100 : undefined;
   };
 
@@ -40,11 +41,9 @@ const FilterTabContent: React.FC<{
       min: 1,
       max: 100,
       step: 1,
-      value: usePerturbationFilterSortStore.getState().maxSize,
+      value: perturbationFilterSortStore.getState().maxSize,
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
-          .getState()
-          .setMaxSize(value ?? undefined);
+        perturbationFilterSortStore.getState().setMaxSize(value ?? undefined);
       },
     },
     {
@@ -52,10 +51,9 @@ const FilterTabContent: React.FC<{
       min: 1,
       max: 100,
       step: 1,
-      value:
-        usePerturbationFilterSortStore.getState().minNumberOfInterpretations,
+      value: perturbationFilterSortStore.getState().minNumberOfInterpretations,
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
+        perturbationFilterSortStore
           .getState()
           .setMinNumberOfInterpretations(value ?? undefined);
       },
@@ -67,7 +65,7 @@ const FilterTabContent: React.FC<{
       step: 0.1,
       value: getCurrentMinRobustness(),
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
+        perturbationFilterSortStore
           .getState()
           .setMinRobustness(value != undefined ? value / 100 : undefined);
       },
@@ -126,7 +124,7 @@ const FilterTabContent: React.FC<{
         textFontWeight="bold"
         text="Apply Filters"
         onClick={() => {
-          usePerturbationFilterSortStore.getState().setPageNumber(1);
+          perturbationFilterSortStore.getState().setPageNumber(1);
           setStartFilter(!startFilter);
         }}
       />
