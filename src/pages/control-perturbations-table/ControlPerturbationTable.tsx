@@ -21,6 +21,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   liveModelServ,
   controlPerturbationsTableServ,
   dataFormatersServ,
+  searchAndFilterHelpersServ,
   resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
@@ -49,6 +50,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           <FilterTabContent
             setStartFilter={setStartFilter}
             startFilter={startFilter}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             resultsStatusStore={resultsStatusStore}
             perturbationFilterSortStore={perturbationFilterSortStore}
           />

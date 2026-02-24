@@ -11,6 +11,7 @@ import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 const FilterTabContent: React.FC<FilterTabContentProps> = ({
   setStartFilter,
   startFilter,
+  searchAndFilterHelpersServ,
   resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
@@ -114,6 +115,8 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
       />
       <SelectVarFilterTable
         variableNames={controlInfo.preComputationInfo.controlEnabledVars}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        perturbationFilterSortStore={perturbationFilterSortStore}
       />
 
       <SeparatorLine />

@@ -1,23 +1,24 @@
 import { useMemo, useState } from 'react';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
-import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
 import { PertVariableFilterStatus } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import type { SelectVarFilterTableProps } from './SelectVarFilterTableProps';
 import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 
-const SelectVarFilterTable: React.FC<{
-  variableNames: Array<string>;
-}> = ({ variableNames }) => {
+const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
+  variableNames,
+  searchAndFilterHelpersServ,
+  perturbationFilterSortStore,
+}) => {
   const [selectedVariables, setSelectedVariables] = useState<
     Record<string, boolean>
   >({});
 
   const [searchText, setSearchText] = useState('');
 
-  const filterVariables = usePerturbationFilterSortStore(
+  const filterVariables = perturbationFilterSortStore(
     (state) => state.perturbationVariables
   );
 
@@ -46,7 +47,7 @@ const SelectVarFilterTable: React.FC<{
       }
     });
 
-    usePerturbationFilterSortStore
+    perturbationFilterSortStore
       .getState()
       .setPerturbationVariables(newFilterVariables);
     Loading.endLoading();
@@ -85,7 +86,7 @@ const SelectVarFilterTable: React.FC<{
   ];
 
   const filteredVariableNames = useMemo(() => {
-    return SearchAndFilterHelpers.filterStringsBySearchTerms(
+    return searchAndFilterHelpersServ.filterStringsBySearchTerms(
       variableNames,
       searchText
     );
