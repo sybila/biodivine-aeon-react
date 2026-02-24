@@ -3,6 +3,7 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
+import AttractorVisualizerServ from '../services/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
 import ComputationManager from '../services/global/ComputationManager/ComputationManager';
 import { LiveModel } from '../services/global/LiveModel/LiveModel';
@@ -60,7 +61,9 @@ export const AttractorBifurcationExplorerRoute = createRoute({
 export const AttractorVisualizerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/attractor-visualizer',
-  component: AttractorVisualizer,
+  component: () => (
+    <AttractorVisualizer attractorVisualizerServ={AttractorVisualizerServ} />
+  ),
 });
 
 export const WitnessRoute = createRoute({

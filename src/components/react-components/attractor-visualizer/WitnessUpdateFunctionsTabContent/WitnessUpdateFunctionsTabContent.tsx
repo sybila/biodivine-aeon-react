@@ -1,18 +1,20 @@
-import AttractorVisualizer from '../../../../services/attractor-visualizer/AttractorVisualizer';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
+import type { WitnessUpdateFunctionsTabContentProps } from './WitnessUpdateFunctionsTabContentProps';
 
-const WittnessUpdateFunctionsTabContent = () => {
-  const wittnessUpdateFunctions: Array<[string, string]> | undefined =
-    AttractorVisualizer.getWitness();
+const WitnessUpdateFunctionsTabContent: React.FC<
+  WitnessUpdateFunctionsTabContentProps
+> = ({ attractorVisualizerServ }) => {
+  const witnessUpdateFunctions: Array<[string, string]> | undefined =
+    attractorVisualizerServ.getWitness();
 
-  if (!wittnessUpdateFunctions || wittnessUpdateFunctions.length <= 0) {
+  if (!witnessUpdateFunctions || witnessUpdateFunctions.length <= 0) {
     return <NoDataText text="No witness update functions available." />;
   }
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[60px] max-h-[500px] gap-1 pt-2 overflow-y-auto">
-      {wittnessUpdateFunctions.map(([variableName, updateFunction], index) => (
+      {witnessUpdateFunctions.map(([variableName, updateFunction], index) => (
         <StatEntryReact
           key={index}
           compWidth="98%"
@@ -30,4 +32,4 @@ const WittnessUpdateFunctionsTabContent = () => {
   );
 };
 
-export default WittnessUpdateFunctionsTabContent;
+export default WitnessUpdateFunctionsTabContent;

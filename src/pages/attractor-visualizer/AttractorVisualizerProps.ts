@@ -1,0 +1,5 @@
+import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
+
+export type AttractorVisualizerProps = {
+  attractorVisualizerServ: AttractorVisualizerInt;
+};
