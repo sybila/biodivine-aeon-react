@@ -1,11 +1,11 @@
 import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { DecisionMixedNode, LeafNode } from '../../../../types';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import NoDataText from '../../global/NoDataText/NoDataText';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import BehaviorClassTable from './BehaviorClassTable/BehaviorClassTable';
 import NecessaryConditionsTable from './NecessaryConditionsTable/NecessaryConditionsTable';
 import NodeStatTable from './NodeStatTable/NodeStatTable';
-import WittnessAttractorRow from './WittnesAttractorRow/WittnessAttractorRow';
+import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 
 const OverviewTabContent: React.FC = () => {
   const selectedNode: LeafNode | DecisionMixedNode | null =
@@ -39,7 +39,7 @@ const OverviewTabContent: React.FC = () => {
         <NodeStatTable {...selectedNode} />
 
         {selectedNode.type === 'leaf' ? (
-          <WittnessAttractorRow leafNodeId={selectedNode.id} />
+          <WitnessAttractorRow leafNodeId={selectedNode.id} />
         ) : null}
 
         {selectedNode.classes ? (

@@ -2,7 +2,7 @@ import AttractorBifurcationExplorer from '../../../../../services/attractor-bifu
 import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 
-const WittnessAttractorRow: React.FC<{
+const WitnessAttractorRow: React.FC<{
   leafNodeId: number;
 }> = ({ leafNodeId }) => {
   return (
@@ -10,7 +10,7 @@ const WittnessAttractorRow: React.FC<{
       <SeparatorLine />
       <section className="h-[25px] w-full flex flex-row justify-around items-center px-2 gap-2">
         <TextButtonReact
-          text="Wittness"
+          text="Witness"
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
@@ -30,4 +30,4 @@ const WittnessAttractorRow: React.FC<{
   );
 };
 
-export default WittnessAttractorRow;
+export default WitnessAttractorRow;
