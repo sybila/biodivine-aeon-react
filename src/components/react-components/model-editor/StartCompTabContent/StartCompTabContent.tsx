@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Warning from '../../../../services/global/Warning/Warning';
 import type { ComputationModes } from '../../../../types';
 import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
@@ -10,6 +9,7 @@ import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   liveModelServ,
   computationManagerServ,
+  warningServ,
   tabStore,
   resultsStatusStore,
   controlStore,
@@ -39,7 +39,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
       resultsStatusStore.getState().results ||
       !tabStore.getState().isEmpty()
     ) {
-      Warning.addStartComputationResultsWarning(currentComputationFunction);
+      warningServ.addStartComputationResultsWarning(currentComputationFunction);
     } else {
       currentComputationFunction();
     }

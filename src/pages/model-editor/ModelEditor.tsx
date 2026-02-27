@@ -38,6 +38,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   controlEditorServ,
   computationManagerServ,
   searchAndFilterHelpersServ,
+  warningServ,
   modelEditorStatusStore,
   fileConvertorsServ,
   tabStore,
@@ -70,6 +71,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <StartCompTabContent
             liveModelServ={liveModelServ}
             computationManagerServ={computationManagerServ}
+            warningServ={warningServ}
             tabStore={tabStore}
             resultsStatusStore={resultsStatusStore}
             controlStore={controlStore}

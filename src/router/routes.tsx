@@ -8,6 +8,7 @@ import AttractorVisualizerServ from '../services/attractor-visualizer/AttractorV
 import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
 import ComputationManager from '../services/global/ComputationManager/ComputationManager';
 import { LiveModel } from '../services/global/LiveModel/LiveModel';
+import Warning from '../services/global/Warning/Warning';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
@@ -46,6 +47,7 @@ export const modelEditorRoute = createRoute({
       controlEditorServ={ControlEditor}
       computationManagerServ={ComputationManager}
       searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      warningServ={Warning}
       fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}
@@ -93,6 +95,7 @@ export const WitnessRoute = createRoute({
       controlEditorServ={ControlEditor}
       computationManagerServ={ComputationManager}
       searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      warningServ={Warning}
       fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}

@@ -1,5 +1,6 @@
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
@@ -25,6 +26,7 @@ export type ModelEditorProps = {
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   fileConvertorsServ: FileConvertorsInt;
+  warningServ: WarningInt;
 
   // # endregion
 
