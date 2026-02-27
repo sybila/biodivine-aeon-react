@@ -1,7 +1,7 @@
 import { Message } from '../../../lit-components/message-wrapper';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import type { StateOverviewTabContentProps } from './StateOverviewTabContentPropts';
+import type { StateOverviewTabContentProps } from './StateOverviewTabContentProps';
 
 const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
   attractorVisualizerServ,
