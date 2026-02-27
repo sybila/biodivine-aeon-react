@@ -51,7 +51,13 @@ const AttractorBifurcationExplorer: React.FC<
           />
         );
       case 'Make Decision':
-        return <MakeDecisionTabContent />;
+        return (
+          <MakeDecisionTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          />
+        );
       case 'Visual Options':
         return (
           <VisualOptionsTabContent

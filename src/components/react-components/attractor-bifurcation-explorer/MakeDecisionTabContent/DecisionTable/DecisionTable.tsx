@@ -1,17 +1,19 @@
-import useBifurcationExplorerStatus from '../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 
-import PlusIcon from '../../../../../assets/icons/add_box.svg';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 import { useState } from 'react';
+import PlusIcon from '../../../../../assets/icons/add_box.svg';
+import type { DecisionTableProps } from './DecisionTableProps';
+import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 
-const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
+const DecisionTable: React.FC<DecisionTableProps> = ({
   nodeId,
   nodeCardinality,
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  bifurcationExplorerStatusStore,
 }) => {
   const [decisionsOpened, setDecisionsOpened] = useState(false);
-  const decisions = useBifurcationExplorerStatus(
+  const decisions = bifurcationExplorerStatusStore(
     (state) => state.availableDecisions
   );
 
@@ -25,7 +27,7 @@ const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
         iconSrc={PlusIcon}
         handleClick={() => {
           if (!decisions) {
-            AttractorBifurcationExplorer.getDecisions(nodeId);
+            attractorBifurcationExplorerServ.getDecisions(nodeId);
           }
           setDecisionsOpened(true);
         }}
@@ -42,6 +44,8 @@ const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
             decision={decision}
             nodeId={nodeId}
             nodeCardinality={nodeCardinality}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
           />
         ))}
       </>
