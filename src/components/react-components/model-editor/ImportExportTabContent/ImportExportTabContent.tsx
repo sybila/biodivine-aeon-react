@@ -109,7 +109,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
     ],
     [
       '.sbml (Instantiated)',
-      'Wittness Model',
+      'Witness Model',
       () =>
         liveModelServ.Export.exportToFile(
           '.sbml',
