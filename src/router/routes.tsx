@@ -13,6 +13,7 @@ import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
 import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
+import useBifurcationExplorerStatus from '../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import useAttractorVisualizerStatus from '../stores/AttractorVisualizer/useAttractorVisualizerStatus';
 import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
 import usePerturbationFilterSortStore from '../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
@@ -60,6 +61,7 @@ export const AttractorBifurcationExplorerRoute = createRoute({
   component: () => (
     <AttractorBifurcationExplorer
       attractorBifurcationExplorerServ={AttractorBifurcationExplorerServ}
+      bifurcationExplorerStatusStore={useBifurcationExplorerStatus}
     />
   ),
 });

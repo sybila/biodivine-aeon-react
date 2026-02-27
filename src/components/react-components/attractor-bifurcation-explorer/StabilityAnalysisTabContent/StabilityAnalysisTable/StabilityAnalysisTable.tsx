@@ -1,10 +1,13 @@
-import useBifurcationExplorerStatus from '../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { StabilityAnalysisTableProps } from './StabilityAnalysisTableProps';
 import StabilityAnalysisTableRow from './StabilityAnalysisTableRow/StabilityAnalysisTableRow';
 
-const StabilityAnalysisTable = () => {
-  const stabilityResults = useBifurcationExplorerStatus(
+const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
+  attractorBifurcationExplorerServ,
+  bifurcationExplorerStatusStore,
+}) => {
+  const stabilityResults = bifurcationExplorerStatusStore(
     (state) => state.stabilityData
   );
 
@@ -28,6 +31,10 @@ const StabilityAnalysisTable = () => {
               key={index}
               {...variableStabilityData}
               computedBehavior={stabilityResults.computedBehavior}
+              attractorBifurcationExplorerServ={
+                attractorBifurcationExplorerServ
+              }
+              bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
             />
           )
         )}

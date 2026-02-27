@@ -1,18 +1,17 @@
 import { Fragment } from 'react';
-import type {
-  StabilityAnalysisModes,
-  StabilityAnalysisVariable,
-  VariableStability,
-} from '../../../../../../types';
+import type { VariableStability } from '../../../../../../types';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
-import useBifurcationExplorerStatus from '../../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import AttractorBifurcationExplorer from '../../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import type { StabilityAnalysisTableRowProps } from './StabilityAnalysisTableRowProps';
 
-const StabilityAnalysisTableRow: React.FC<
-  StabilityAnalysisVariable & { computedBehavior: StabilityAnalysisModes }
-> = ({ variable, computedBehavior, data }) => {
-  const selectedNode = useBifurcationExplorerStatus(
+const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
+  variable,
+  computedBehavior,
+  data,
+  attractorBifurcationExplorerServ,
+  bifurcationExplorerStatusStore,
+}) => {
+  const selectedNode = bifurcationExplorerStatusStore(
     (state) => state.selectedNode
   );
 
@@ -91,7 +90,7 @@ const StabilityAnalysisTableRow: React.FC<
       [
         'Witness',
         () =>
-          AttractorBifurcationExplorer.openStabilityWitness(
+          attractorBifurcationExplorerServ.openStabilityWitness(
             selectedNode?.id ?? null,
             variable,
             computedBehavior,
@@ -101,7 +100,7 @@ const StabilityAnalysisTableRow: React.FC<
       [
         'Attractor',
         () =>
-          AttractorBifurcationExplorer.openStabilityAttractor(
+          attractorBifurcationExplorerServ.openStabilityAttractor(
             selectedNode?.id ?? null,
             variable,
             computedBehavior,

@@ -1,10 +1,12 @@
-import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import StabilityAnalysisSelector from './StabilityAnalysisSelector/StabilityAnalysisSelector';
+import type { StabilityAnalysisTabContentProps } from './StabilityAnalysisTabContentProps';
 import StabilityAnalysisTable from './StabilityAnalysisTable/StabilityAnalysisTable';
 
-const StabilityAnalysisTabContent = () => {
-  const selectedNode = useBifurcationExplorerStatus(
+const StabilityAnalysisTabContent: React.FC<
+  StabilityAnalysisTabContentProps
+> = ({ attractorBifurcationExplorerServ, bifurcationExplorerStatusStore }) => {
+  const selectedNode = bifurcationExplorerStatusStore(
     (state) => state.selectedNode
   );
 
@@ -14,8 +16,14 @@ const StabilityAnalysisTabContent = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-3">
-      <StabilityAnalysisSelector nodeId={selectedNode.id} />
-      <StabilityAnalysisTable />
+      <StabilityAnalysisSelector
+        nodeId={selectedNode.id}
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+      />
+      <StabilityAnalysisTable
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+      />
     </div>
   );
 };
