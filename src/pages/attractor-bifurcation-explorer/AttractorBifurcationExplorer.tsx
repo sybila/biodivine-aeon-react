@@ -132,6 +132,7 @@ const AttractorBifurcationExplorer: React.FC<
         <BifurcationExplorerCanvas
           initialized={initialized}
           setInitialized={setInitialized}
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
         />
       </KeepAlive>
     </>
