@@ -29,6 +29,6 @@ class BehaviorClassOperationsClass implements BehaviorClassOperationsInt {
   }
 }
 
-const BehaviorClassOperations = BehaviorClassOperationsClass;
+const BehaviorClassOperations = new BehaviorClassOperationsClass();
 
 export default BehaviorClassOperations;
