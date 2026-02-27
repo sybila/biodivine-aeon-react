@@ -1,5 +1,5 @@
 import AttractorBifurcationExplorer from '../../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
+import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import type { Decision, DecisionBehaviorClass } from '../../../../../../types';
 import BehaviorClassLegend from '../../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import SeparatorLine from '../../../../global/SeparatorLine/SeparatorLine';

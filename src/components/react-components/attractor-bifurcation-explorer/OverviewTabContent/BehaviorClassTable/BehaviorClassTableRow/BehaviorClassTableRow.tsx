@@ -1,4 +1,4 @@
-import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
+import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { BehaviorClassTableRowProps } from './BehaviorClassTableRowProps';
 
