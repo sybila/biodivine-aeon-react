@@ -14,6 +14,7 @@ import ModelName from './ModelName/ModelName';
 const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   liveModelServ,
   modelEditorServ,
+  searchAndFilterHelpersServ,
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
@@ -113,6 +114,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           <ModelEditorVariableTable
             searchText={variableSearchText}
             modelEditorServ={modelEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}

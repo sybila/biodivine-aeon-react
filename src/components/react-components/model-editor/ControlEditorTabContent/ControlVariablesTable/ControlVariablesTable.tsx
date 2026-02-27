@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import type { Variable } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
@@ -11,6 +10,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
+  searchAndFilterHelpersServ,
   variablesStore,
   controlStore,
 }) => {
@@ -60,7 +60,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   };
 
   const filteredVariables = useMemo(() => {
-    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+    return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
       variables,
       variableSearchText
     );

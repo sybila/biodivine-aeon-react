@@ -37,6 +37,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   modelEditorServ,
   controlEditorServ,
   computationManagerServ,
+  searchAndFilterHelpersServ,
   modelEditorStatusStore,
   tabStore,
   resultsStatusStore,
@@ -82,6 +83,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <ModelEditorTabContent
             liveModelServ={liveModelServ}
             modelEditorServ={modelEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             updateFunctionsStore={updateFunctionsStore}
@@ -95,6 +97,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <ControlEditorTabContent
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
           />

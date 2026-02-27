@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import type { ModelEditorItem, Variable } from '../../../../../types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
@@ -8,6 +7,7 @@ import VariableInfo from './VariableInfo/VariableInfo';
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
   modelEditorServ,
+  searchAndFilterHelpersServ,
   regulationsStore,
   variablesStore,
   modelEditorStatusStore,
@@ -36,7 +36,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   const variables = Object.values(variablesObj);
 
   const filteredVariables = useMemo(() => {
-    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+    return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
       variables,
       searchText
     );

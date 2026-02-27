@@ -10,6 +10,7 @@ import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOs
 const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   liveModelServ,
   controlEditorServ,
+  searchAndFilterHelpersServ,
   controlStore,
   variablesStore,
 }) => {
@@ -57,6 +58,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
 
       <ControlVariablesTable
         controlEditorServ={controlEditorServ}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         variablesStore={variablesStore}
         controlStore={controlStore}
       />
