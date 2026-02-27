@@ -1,11 +1,11 @@
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 
-import FileConvertors from '../../../../services/utilities/FileConvertors/FileConvertors';
 import type { ExportTabContentProps } from './ExportTabContentProps';
 
 /** This component is used to display the Export tab content in the witness mode of the Model Editor */
 const ExportTabContent: React.FC<ExportTabContentProps> = ({
   liveModelServ,
+  fileConvertorsServ,
 }) => {
   const buttonsFirstCol: Array<[string, string, () => void]> = [
     [
@@ -20,7 +20,7 @@ const ExportTabContent: React.FC<ExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.bnet',
           async (aeonString: string) =>
-            await FileConvertors.aeonToBnet(aeonString)
+            await fileConvertorsServ.aeonToBnet(aeonString)
         ),
     ],
   ];
@@ -33,7 +33,7 @@ const ExportTabContent: React.FC<ExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.sbml',
           async (aeonString: string) =>
-            await FileConvertors.aeonToSbml(aeonString)
+            await fileConvertorsServ.aeonToSbml(aeonString)
         ),
     ],
     [
@@ -43,7 +43,7 @@ const ExportTabContent: React.FC<ExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.sbml',
           async (aeonString: string) =>
-            await FileConvertors.aeonToSbmlInstantiated(aeonString)
+            await fileConvertorsServ.aeonToSbmlInstantiated(aeonString)
         ),
     ],
   ];

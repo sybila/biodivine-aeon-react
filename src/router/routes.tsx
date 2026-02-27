@@ -13,6 +13,7 @@ import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
 import BehaviorClassOperations from '../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
+import FileConvertors from '../services/utilities/FileConvertors/FileConvertors';
 import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import useBifurcationExplorerStatus from '../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import useAttractorVisualizerStatus from '../stores/AttractorVisualizer/useAttractorVisualizerStatus';
@@ -45,6 +46,7 @@ export const modelEditorRoute = createRoute({
       controlEditorServ={ControlEditor}
       computationManagerServ={ComputationManager}
       searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}
       resultsStatusStore={useResultsStatus}
@@ -91,6 +93,7 @@ export const WitnessRoute = createRoute({
       controlEditorServ={ControlEditor}
       computationManagerServ={ComputationManager}
       searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
       tabStore={useTabsStore}
       resultsStatusStore={useResultsStatus}

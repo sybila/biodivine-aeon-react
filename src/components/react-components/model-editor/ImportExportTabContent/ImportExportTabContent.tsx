@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { ExampleModels } from '../../../../ExampleModels';
-import FileConvertors from '../../../../services/utilities/FileConvertors/FileConvertors';
 import type { fileType } from '../../../../types';
 import { Message } from '../../../lit-components/message-wrapper';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
@@ -10,6 +9,7 @@ import type { ImportExportTabContentProps } from './ImportExportTabContentProps'
 /** This component is used to display the Import/Export tab content in the Model Editor */
 const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
   liveModelServ,
+  fileConvertorsServ,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +68,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
             await liveModelServ.Import.importFromFile(
               fileInput,
               async (aeonString: string) =>
-                await FileConvertors.sbmlToAeon(aeonString)
+                await fileConvertorsServ.sbmlToAeon(aeonString)
             ),
           '.sbml'
         );
@@ -83,7 +83,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
             await liveModelServ.Import.importFromFile(
               fileInput,
               async (aeonString: string) =>
-                await FileConvertors.bnetToAeon(aeonString)
+                await fileConvertorsServ.bnetToAeon(aeonString)
             ),
           '.bnet'
         );
@@ -104,7 +104,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.sbml',
           async (aeonString: string) =>
-            await FileConvertors.aeonToSbml(aeonString)
+            await fileConvertorsServ.aeonToSbml(aeonString)
         ),
     ],
     [
@@ -114,7 +114,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.sbml',
           async (aeonString: string) =>
-            await FileConvertors.aeonToSbmlInstantiated(aeonString)
+            await fileConvertorsServ.aeonToSbmlInstantiated(aeonString)
         ),
     ],
     [
@@ -124,7 +124,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
         liveModelServ.Export.exportToFile(
           '.bnet',
           async (aeonString: string) =>
-            await FileConvertors.aeonToBnet(aeonString)
+            await fileConvertorsServ.aeonToBnet(aeonString)
         ),
     ],
   ];

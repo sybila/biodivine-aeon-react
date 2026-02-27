@@ -3,6 +3,7 @@ import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt'
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
+import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/FileConvertorsInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
@@ -23,6 +24,7 @@ export type ModelEditorProps = {
   controlEditorServ: ControlEditorInt;
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
+  fileConvertorsServ: FileConvertorsInt;
 
   // # endregion
 
