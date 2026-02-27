@@ -3,6 +3,7 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
+import AttractorBifurcationExplorerServ from '../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import AttractorVisualizerServ from '../services/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
 import ComputationManager from '../services/global/ComputationManager/ComputationManager';
@@ -56,7 +57,11 @@ export const modelEditorRoute = createRoute({
 export const AttractorBifurcationExplorerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/attractor-bifurcation-explorer',
-  component: AttractorBifurcationExplorer,
+  component: () => (
+    <AttractorBifurcationExplorer
+      attractorBifurcationExplorerServ={AttractorBifurcationExplorerServ}
+    />
+  ),
 });
 
 export const AttractorVisualizerRoute = createRoute({
