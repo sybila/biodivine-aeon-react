@@ -11,6 +11,7 @@ import { LiveModel } from '../services/global/LiveModel/LiveModel';
 import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
 import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
+import BehaviorClassOperations from '../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
 import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
 import useBifurcationExplorerStatus from '../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
@@ -61,6 +62,7 @@ export const AttractorBifurcationExplorerRoute = createRoute({
   component: () => (
     <AttractorBifurcationExplorer
       attractorBifurcationExplorerServ={AttractorBifurcationExplorerServ}
+      behaviorClassOperationsServ={BehaviorClassOperations}
       bifurcationExplorerStatusStore={useBifurcationExplorerStatus}
     />
   ),

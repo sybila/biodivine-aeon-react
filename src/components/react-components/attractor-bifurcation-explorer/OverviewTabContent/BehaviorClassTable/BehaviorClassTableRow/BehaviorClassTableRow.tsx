@@ -1,4 +1,3 @@
-import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { BehaviorClassTableRowProps } from './BehaviorClassTableRowProps';
 
@@ -6,10 +5,13 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
   distribution,
   interpretationCount,
   behaviorClassJSON,
+  behaviorClassOperationsServ,
 }) => {
   const behaviorClass =
-    BehaviorClassOperations.normalizeClasses(undefined, behaviorClassJSON) ??
-    'unclassified';
+    behaviorClassOperationsServ.normalizeClasses(
+      undefined,
+      behaviorClassJSON
+    ) ?? 'unclassified';
 
   const createDistributionString = () => {
     if (distribution[0] < 0 || distribution[1] < 0) return 'unknown';

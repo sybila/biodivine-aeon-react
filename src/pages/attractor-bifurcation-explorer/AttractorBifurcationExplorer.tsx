@@ -24,7 +24,11 @@ type TabTypeME =
 
 const AttractorBifurcationExplorer: React.FC<
   AttractorBifurcationExplorerProps
-> = ({ attractorBifurcationExplorerServ, bifurcationExplorerStatusStore }) => {
+> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  bifurcationExplorerStatusStore,
+}) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
@@ -35,6 +39,7 @@ const AttractorBifurcationExplorer: React.FC<
         return (
           <OverviewTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
           />
         );

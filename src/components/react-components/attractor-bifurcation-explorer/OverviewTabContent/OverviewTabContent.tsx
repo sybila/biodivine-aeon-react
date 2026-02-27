@@ -9,6 +9,7 @@ import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 
 const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
   bifurcationExplorerStatusStore,
 }) => {
   const selectedNode: LeafNode | DecisionMixedNode | null =
@@ -57,6 +58,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
             nodeCardinality={selectedNode.cardinality}
             isLeaf={selectedNode.type === 'leaf'}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
           />
         ) : null}
 

@@ -9,6 +9,7 @@ const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
   nodeCardinality,
   isLeaf,
   attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
 }) => {
   const renderTable = () => {
     return (
@@ -41,6 +42,7 @@ const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
               key={index}
               interpretationCount={behaviorClass.cardinality}
               behaviorClassJSON={behaviorClass.class ?? ''}
+              behaviorClassOperationsServ={behaviorClassOperationsServ}
               distribution={[
                 attractorBifurcationExplorerServ.mathPercent(
                   behaviorClass.cardinality,

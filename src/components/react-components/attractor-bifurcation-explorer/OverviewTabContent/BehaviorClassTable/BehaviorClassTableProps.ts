@@ -1,4 +1,5 @@
 import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { BehaviorClassOperationsInt } from '../../../../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { AttractorClassBE } from '../../../../../types';
 
 export type BehaviorClassTableProps = {
@@ -6,4 +7,5 @@ export type BehaviorClassTableProps = {
   nodeCardinality: number;
   isLeaf: boolean;
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
+  behaviorClassOperationsServ: BehaviorClassOperationsInt;
 };
