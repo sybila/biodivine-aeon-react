@@ -1,10 +1,11 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import type { WitnessAttractorRowProps } from './WitnessAttractorRowProps';
 
-const WitnessAttractorRow: React.FC<{
-  leafNodeId: number;
-}> = ({ leafNodeId }) => {
+const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
+  leafNodeId,
+  attractorBifurcationExplorerServ,
+}) => {
   return (
     <>
       <SeparatorLine />
@@ -14,7 +15,7 @@ const WitnessAttractorRow: React.FC<{
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
-            AttractorBifurcationExplorer.openLeafNodeWitness(leafNodeId)
+            attractorBifurcationExplorerServ.openLeafNodeWitness(leafNodeId)
           }
         />
         <TextButtonReact
@@ -22,7 +23,7 @@ const WitnessAttractorRow: React.FC<{
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
-            AttractorBifurcationExplorer.openLeafNodeAttractor(leafNodeId)
+            attractorBifurcationExplorerServ.openLeafNodeAttractor(leafNodeId)
           }
         />
       </section>

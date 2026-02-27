@@ -1,15 +1,15 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import type { AttractorClassBE } from '../../../../../types';
 import BehaviorClassLegend from '../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { BehaviorClassTableProps } from './BehaviorClassTableProps';
 import BehaviorClassTableRow from './BehaviorClassTableRow/BehaviorClassTableRow';
 
-const BehaviorClassTable: React.FC<{
-  classes: AttractorClassBE[];
-  nodeCardinality: number;
-  isLeaf: boolean;
-}> = ({ classes, nodeCardinality, isLeaf }) => {
+const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
+  classes,
+  nodeCardinality,
+  isLeaf,
+  attractorBifurcationExplorerServ,
+}) => {
   const renderTable = () => {
     return (
       <section className="flex flex-col w-full h-fit items-center justify-center gap-2">
@@ -42,11 +42,11 @@ const BehaviorClassTable: React.FC<{
               interpretationCount={behaviorClass.cardinality}
               behaviorClassJSON={behaviorClass.class ?? ''}
               distribution={[
-                AttractorBifurcationExplorer.mathPercent(
+                attractorBifurcationExplorerServ.mathPercent(
                   behaviorClass.cardinality,
                   nodeCardinality
                 ) ?? -1,
-                AttractorBifurcationExplorer.mathDimPercent(
+                attractorBifurcationExplorerServ.mathDimPercent(
                   behaviorClass.cardinality,
                   nodeCardinality
                 ) ?? -1,

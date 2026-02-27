@@ -32,7 +32,12 @@ const AttractorBifurcationExplorer: React.FC<
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
-        return <OverviewTabContent />;
+        return (
+          <OverviewTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          />
+        );
       case 'Stability Analysis':
         return (
           <StabilityAnalysisTabContent

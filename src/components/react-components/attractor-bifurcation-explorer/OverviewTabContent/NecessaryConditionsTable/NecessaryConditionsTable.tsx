@@ -1,10 +1,13 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { NecessaryConditionTableProps } from './NecessaryConditionTableProps';
 
-const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
+const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
+  nodeId,
+  attractorBifurcationExplorerServ,
+}) => {
   const necessaryConditions =
-    AttractorBifurcationExplorer.getNodeNecessaryConditions(nodeId);
+    attractorBifurcationExplorerServ.getNodeNecessaryConditions(nodeId);
 
   return (
     <section className="flex flex-col justify-center items-center h-fit w-full gap-1 mb-2">
@@ -28,8 +31,8 @@ const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
                 condition.positive === true
                   ? 'var(--color-green)'
                   : condition.positive === false
-                  ? 'var(--color-red)'
-                  : 'black'
+                    ? 'var(--color-red)'
+                    : 'black'
               }
               className="text-nowrap"
             />
