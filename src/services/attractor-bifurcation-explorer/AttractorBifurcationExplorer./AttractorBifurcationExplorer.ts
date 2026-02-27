@@ -10,6 +10,7 @@ import type {
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import ComputationManager from '../../global/ComputationManager/ComputationManager';
 import CytoscapeABE from '../CytoscapeABE/CytoscapeABE';
+import type { AttractorBifurcationExplorerInt } from './AttractorBifurcationExplorerInt';
 
 // Sorting constants
 const SORT_INFORMATION_GAIN = 'sort-information-gain';
@@ -30,7 +31,7 @@ const SORTS = [
   SORT_ALPHABETICAL,
 ];
 
-class AttractorBifurcationExplorerClass {
+class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerInt {
   // #region --- Properties + Constructor ---
 
   /** Last set precision in the VisualOptions of AttractorExplorer.
