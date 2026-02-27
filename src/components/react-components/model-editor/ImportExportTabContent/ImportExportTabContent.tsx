@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ExampleModels } from '../../../../ExampleModels';
-import FileConvertors from '../../../../services/utilities/FileConvertors';
+import FileConvertors from '../../../../services/utilities/FileConvertors/FileConvertors';
 import type { fileType } from '../../../../types';
 import { Message } from '../../../lit-components/message-wrapper';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
@@ -67,7 +67,8 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
           async (fileInput: HTMLInputElement & { files: FileList }) =>
             await liveModelServ.Import.importFromFile(
               fileInput,
-              FileConvertors.sbmlToAeon
+              async (aeonString: string) =>
+                await FileConvertors.sbmlToAeon(aeonString)
             ),
           '.sbml'
         );
@@ -81,7 +82,8 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
           async (fileInput: HTMLInputElement & { files: FileList }) =>
             await liveModelServ.Import.importFromFile(
               fileInput,
-              FileConvertors.bnetToAeon
+              async (aeonString: string) =>
+                await FileConvertors.bnetToAeon(aeonString)
             ),
           '.bnet'
         );
@@ -99,7 +101,11 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
       '.sbml (Parametrized)',
       'Parametrized Model',
       () =>
-        liveModelServ.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
+        liveModelServ.Export.exportToFile(
+          '.sbml',
+          async (aeonString: string) =>
+            await FileConvertors.aeonToSbml(aeonString)
+        ),
     ],
     [
       '.sbml (Instantiated)',
@@ -107,14 +113,19 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
       () =>
         liveModelServ.Export.exportToFile(
           '.sbml',
-          FileConvertors.aeonToSbmlInstantiated
+          async (aeonString: string) =>
+            await FileConvertors.aeonToSbmlInstantiated(aeonString)
         ),
     ],
     [
       '.bnet',
       'Boolnet Text Format',
       () =>
-        liveModelServ.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
+        liveModelServ.Export.exportToFile(
+          '.bnet',
+          async (aeonString: string) =>
+            await FileConvertors.aeonToBnet(aeonString)
+        ),
     ],
   ];
 
