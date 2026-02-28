@@ -107,7 +107,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     this.phenotypeShown = false;
 
     this.liveModel.Export.setGetNodePositionFunction((variableId: number) => {
-      this.getNodePosition(variableId);
+      return this.getNodePosition(variableId);
     });
 
     this.liveModel.Control.addOnControlChangeCallback(
