@@ -2,6 +2,13 @@
  * Interface to allow import of models into the live model.
  */
 export interface ImportLMInt {
+  // #region --- Import Callbacks ---
+
+  /** Adds callback which runs after import is complete */
+  addOnImportCallback(callback: () => void): void;
+
+  // #endregion
+
   // #region --- Import Aeon ---
 
   /** Import a model from an Aeon file with warnings.

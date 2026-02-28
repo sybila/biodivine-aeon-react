@@ -5,7 +5,6 @@ import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus
 import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useTabsStore from '../../../../stores/Navigation/useTabsStore';
 import { EdgeMonotonicity, type Variable } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
 import Warning from '../../Warning/Warning';
 import { LiveModel, type LiveModelClass } from '../LiveModel';
 import type { ImportLMInt } from './ImportLMInt';
@@ -15,8 +14,31 @@ class ImportLM implements ImportLMInt {
 
   private liveModel: LiveModelClass;
 
+  private onImport: Array<() => void>;
+
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
+
+    this.onImport = [];
+  }
+
+  // #endregion
+
+  // #region --- Import Callbacks ---
+
+  private runOnImportCallbacks(): void {
+    try {
+      this.onImport.forEach((callback) => callback());
+    } catch (e) {
+      console.error('Error running onImport callback: ' + e);
+    }
+  }
+
+  /** Adds callback which runs after import is complete */
+  public addOnImportCallback(callback: () => void): void {
+    if (callback !== undefined) {
+      this.onImport.push(callback);
+    }
   }
 
   // #endregion
@@ -314,11 +336,11 @@ class ImportLM implements ImportLMInt {
     this.setUpdateFunctions(updateFunctions, positions, control);
     this.insertNotConnected(positions, control);
 
-    CytoscapeME.fit();
-
     // Re-enable server checks and run them.
     this.liveModel.disable_dynamic_validation = false;
     this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
+
+    this.runOnImportCallbacks();
 
     Loading.endLoading();
     return true; // no error

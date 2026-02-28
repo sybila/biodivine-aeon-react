@@ -119,6 +119,10 @@ class CytoscapeMEClass implements ModelVisualizationInt {
         this.highlightPhenotype(inputNodes);
       }
     );
+
+    this.liveModel.Import.addOnImportCallback(() => {
+      this.fit();
+    });
   }
 
   private initOptions(): CytoscapeOptions {
