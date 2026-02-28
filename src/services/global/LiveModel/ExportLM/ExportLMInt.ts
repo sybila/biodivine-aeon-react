@@ -1,4 +1,4 @@
-import type { fileType, ModelStats } from '../../../../types';
+import type { fileType, ModelStats, Position } from '../../../../types';
 
 /**
  * Interface to allow export of currently loaded model.
@@ -8,6 +8,15 @@ export interface ExportLMInt {
 
   /** Export stats object */
   stats(): ModelStats;
+
+  // #endregion
+
+  // #region --- Setters ---
+
+  /** Sets the function that is used to retrieve node positions from ModelVisualization */
+  setGetNodePositionFunction(
+    func: (variableId: number) => Position | undefined
+  ): void;
 
   // #endregion
 

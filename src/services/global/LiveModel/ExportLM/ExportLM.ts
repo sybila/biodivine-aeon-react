@@ -10,9 +10,9 @@ import type {
   ControlInfo,
   fileType,
   ModelStats,
+  Position,
   Variable,
 } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
 import FileHelpers from '../../../utilities/FileHelpers';
 import type { LiveModelClass } from '../LiveModel';
 import type { ExportLMInt } from './ExportLMInt';
@@ -22,6 +22,11 @@ class ExportLM implements ExportLMInt {
 
   /** Reference to the parent LiveModel class. */
   private liveModel: LiveModelClass;
+
+  /** Function which returns Position of a node in ModelVisualization */
+  private getNodePositionFunction: (
+    variableId: number
+  ) => Position | undefined = (_) => undefined;
 
   /** Indicates whether local storage is available. */
   private hasLocalStorage: boolean;
@@ -36,6 +41,18 @@ class ExportLM implements ExportLMInt {
       this.hasLocalStorage = true;
     } catch (e) {
       this.hasLocalStorage = false;
+    }
+  }
+
+  // #endregion
+
+  // #region --- Setters ---
+
+  public setGetNodePositionFunction(
+    func: (variableId: number) => Position | undefined
+  ): void {
+    if (func != undefined) {
+      this.getNodePositionFunction = func;
     }
   }
 
@@ -120,7 +137,7 @@ class ExportLM implements ExportLMInt {
     for (const variable of variables) {
       const varName = variable?.name;
 
-      const position = CytoscapeME.getNodePosition(variable.id);
+      const position = this.getNodePositionFunction(variable.id);
       if (position !== undefined) {
         result += `#position:${varName}:${position}\n`;
       }

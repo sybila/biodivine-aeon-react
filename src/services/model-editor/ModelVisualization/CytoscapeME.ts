@@ -1,13 +1,18 @@
 import { type CytoscapeOptions } from 'cytoscape';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
+import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
   type ControlInfo,
+  type Position,
   type RegulationVariables,
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
+import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import ControlEditor from '../ControlEditor/ControlEditor';
 import ModelEditor from '../ModelEditor/ModelEditor';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';
@@ -24,7 +29,7 @@ const _add_box_svg =
  * but it should never be updated directly. Instead, always use LiveModel to specify updates.
  */
 class CytoscapeMEClass implements ModelVisualizationInt {
-  // #region --- Properties ---
+  // #region --- Properties + constructor ---
 
   // Reference to the cytoscape library "god object"
   private cytoscape: any = undefined;
@@ -39,6 +44,22 @@ class CytoscapeMEClass implements ModelVisualizationInt {
   private phenotypeShown: boolean | undefined = undefined;
   /** Reference to the container element, where the cytoscape graph is rendered. */
   private container: HTMLElement | null = null;
+
+  /** Reference to LiveModel object which is responsible for managing currently loaded model */
+  private liveModel: LiveModelInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    controlStore: ZustandStore<ControlStatus>,
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+  ) {
+    this.liveModel = liveModel;
+    this.controlStore = controlStore;
+    this.modelEditorStatusStore = modelEditorStatusStore;
+  }
 
   // #endregion
 
@@ -73,7 +94,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
         this.lastClickTimestamp &&
         now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
-        LiveModel.Variables.addVariable(false, [
+        this.liveModel.Variables.addVariable(false, [
           e.position['x'],
           e.position['y'],
         ]);
@@ -84,12 +105,16 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     this.controlEnabledShown = false;
     this.phenotypeShown = false;
 
-    LiveModel.Control.addOnControlChangeCallback(
+    this.liveModel.Export.setGetNodePositionFunction((variableId: number) => {
+      this.getNodePosition(variableId);
+    });
+
+    this.liveModel.Control.addOnControlChangeCallback(
       (inputNodes?: [number, ControlInfo][] | null) => {
         this.highlightControlEnabled(inputNodes);
       }
     );
-    LiveModel.Control.addOnPhenotypeChangeCallback(
+    this.liveModel.Control.addOnPhenotypeChangeCallback(
       (inputNodes?: [number, ControlInfo][] | null) => {
         this.highlightPhenotype(inputNodes);
       }
@@ -298,7 +323,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
       // Add the edge to the live model
       complete: (sourceNode: any, targetNode: any, addedEles: any) => {
         if (
-          !LiveModel.Regulations.addRegulation(
+          !this.liveModel.Regulations.addRegulation(
             false,
             Number(sourceNode.id()),
             Number(targetNode.id()),
@@ -332,7 +357,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     this.highlightControlEnabled([
       [
         id,
-        useControlStore.getState().getVariableControlInfo(id) ?? {
+        this.controlStore.getState().getVariableControlInfo(id) ?? {
           controlEnabled: true,
           phenotype: null,
         },
@@ -356,14 +381,14 @@ class CytoscapeMEClass implements ModelVisualizationInt {
           selected.unselect();
         }
       }
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setSelectedItemInfo({ type: 'variable', id: id });
       this.renderMenuForSelectedNode(node);
     });
     node.on('unselect', (e: any) => {
-      useModelEditorStatus.getState().setSelectedItemInfo(null);
-      useModelEditorStatus.getState().setFloatingMenuInfo(null); // hide menu
+      this.modelEditorStatusStore.getState().setSelectedItemInfo(null);
+      this.modelEditorStatusStore.getState().setFloatingMenuInfo(null); // hide menu
     });
     node.on('click', (e: any) => {
       this.lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
@@ -429,7 +454,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
   }
 
   /** Get the position of the node with the given id, or undefined if the node does not exist. */
-  public getNodePosition(id: number): [number, number] | undefined {
+  public getNodePosition(id: number): Position | undefined {
     let node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       let position = node.position();
@@ -451,16 +476,16 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     };
 
     edge.on('select', (e: any) => {
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setSelectedItemInfo({ type: 'regulation', regulationIds: edgeVars });
-      ModelEditor.selectRegulation(edgeVars, true); // Todo - move regulation select to useModelEditorStatus
+      ModelEditor.selectRegulation(edgeVars, true); // Todo - move regulation select to this.modelEditorStatusStore
       this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
-      ModelEditor.selectRegulation(edgeVars, false); // Todo - move regulation select to useModelEditorStatus
-      useModelEditorStatus.getState().setSelectedItemInfo(null);
-      useModelEditorStatus.getState().setFloatingMenuInfo(null);
+      ModelEditor.selectRegulation(edgeVars, false); // Todo - move regulation select to this.modelEditorStatusStore
+      this.modelEditorStatusStore.getState().setSelectedItemInfo(null);
+      this.modelEditorStatusStore.getState().setFloatingMenuInfo(null);
     });
     edge.on('mouseover', (e: any) => {
       edge.addClass('hover');
@@ -600,7 +625,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     let zoom = this.cytoscape.zoom();
     let position = node.renderedPosition();
     //let height = node.height() * zoom;
-    useModelEditorStatus
+    this.modelEditorStatusStore
       .getState()
       .setFloatingMenuInfo({ position: [position['x'], position['y']], zoom });
   }
@@ -619,7 +644,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
       (boundingBox.x1 + boundingBox.x2) / 2,
       (boundingBox.y1 + boundingBox.y2) / 2,
     ];
-    useModelEditorStatus.getState().setFloatingMenuInfo({
+    this.modelEditorStatusStore.getState().setFloatingMenuInfo({
       position: position,
       zoom,
     });
@@ -667,7 +692,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     const nodes: Array<[Number, ControlInfo]> = [];
     const variables: Record<string, number> = {};
 
-    useControlStore
+    this.controlStore
       .getState()
       .getAllInfoIds()
       .forEach(([id, info]) => {
@@ -724,7 +749,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     var nodes: Array<[number, ControlInfo]> | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = useControlStore.getState().getAllInfoIds();
+      nodes = this.controlStore.getState().getAllInfoIds();
       this.controlEnabledShown = !this.controlEnabledShown;
     } else {
       nodes = inputNodes;
@@ -751,7 +776,7 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     var nodes: Array<[number, ControlInfo]> | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = useControlStore.getState().getAllInfoIds();
+      nodes = this.controlStore.getState().getAllInfoIds();
       this.phenotypeShown = !this.phenotypeShown;
     } else {
       nodes = inputNodes;
@@ -782,6 +807,10 @@ class CytoscapeMEClass implements ModelVisualizationInt {
   // #endregion
 }
 
-const CytoscapeME: CytoscapeMEClass = new CytoscapeMEClass();
+const CytoscapeME: CytoscapeMEClass = new CytoscapeMEClass(
+  LiveModel,
+  useControlStore,
+  useModelEditorStatus
+);
 
 export default CytoscapeME;
