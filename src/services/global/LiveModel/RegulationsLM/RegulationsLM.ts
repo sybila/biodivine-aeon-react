@@ -1,7 +1,6 @@
 import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import { EdgeMonotonicity, type Regulation } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
 import type { LiveModelClass } from '../LiveModel';
 import type { RegulationsLMInt } from './RegulationsLMInt';
 
@@ -10,8 +9,46 @@ class RegulationsLM implements RegulationsLMInt {
 
   private liveModel: LiveModelClass;
 
+  /** Function which removes regulation from ModelVisualization */
+  private removeFromModelVisualizationFunction: (
+    regulatorId: number,
+    targetId: number
+  ) => void = (_: number, __: number) => {
+    console.warn(
+      'RegulationsLM: No function set to remove regulation from model visualization'
+    );
+  };
+
+  /** Function which ensures regulation in ModelVisualization */
+  private ensureInModelVisualizationFunction: (regulation: Regulation) => void =
+    (_: Regulation) => {
+      console.warn(
+        'RegulationsLM: No function set to ensure regulation in model visualization'
+      );
+    };
+
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
+  }
+
+  // #endregion
+
+  // #region --- Setters for Model Visualization functions ---
+
+  public setRemoveFromModelVisualizationFunction(
+    func: (regulatorId: number, targetId: number) => void
+  ): void {
+    if (func != undefined) {
+      this.removeFromModelVisualizationFunction = func;
+    }
+  }
+
+  public setEnsureInModelVisualizationFunction(
+    func: (regulation: Regulation) => void
+  ): void {
+    if (func != undefined) {
+      this.ensureInModelVisualizationFunction = func;
+    }
   }
 
   // #endregion
@@ -56,7 +93,7 @@ class RegulationsLM implements RegulationsLMInt {
       .getRegulationId(regulatorId, targetId);
     if (!exists) return false;
 
-    CytoscapeME.removeRegulation(regulatorId, targetId);
+    this.removeFromModelVisualizationFunction(regulatorId, targetId);
 
     useRegulationsStore.getState().removeRegulation(regulatorId, targetId);
     this.liveModel.Export.saveModel();
@@ -64,7 +101,8 @@ class RegulationsLM implements RegulationsLMInt {
   }
 
   public regulationChanged(regulation: Regulation): void {
-    CytoscapeME.ensureRegulation(regulation);
+    this.ensureInModelVisualizationFunction(regulation);
+
     this.liveModel.UpdateFunctions.validateUpdateFunction(regulation.target);
     this.liveModel.Export.saveModel();
   }

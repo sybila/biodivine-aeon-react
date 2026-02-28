@@ -9,6 +9,7 @@ import {
   EdgeMonotonicity,
   type ControlInfo,
   type Position,
+  type Regulation,
   type RegulationVariables,
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
@@ -123,6 +124,18 @@ class CytoscapeMEClass implements ModelVisualizationInt {
     this.liveModel.Import.addOnImportCallback(() => {
       this.fit();
     });
+
+    this.liveModel.Regulations.setRemoveFromModelVisualizationFunction(
+      (regulatorId: number, targetId: number) => {
+        this.removeRegulation(regulatorId, targetId);
+      }
+    );
+
+    this.liveModel.Regulations.setEnsureInModelVisualizationFunction(
+      (regulation: Regulation) => {
+        this.ensureRegulation(regulation);
+      }
+    );
   }
 
   private initOptions(): CytoscapeOptions {
