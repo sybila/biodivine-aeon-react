@@ -1,6 +1,8 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
@@ -59,7 +61,12 @@ class LiveModelClass implements LiveModelInt {
   Regulations: RegulationsLMInt = new RegulationsLM(this);
 
   /** Functions connected with setting control parameters of the models variables. */
-  Control: ControlLMInt = new ControlLM(this);
+  Control: ControlLMInt = new ControlLM(
+    this,
+    ComputationManager,
+    useControlStore,
+    useVariablesStore
+  );
 
   /** Functions used when importing model from Aeon format. */
   Import: ImportLMInt = new ImportLM(this);
