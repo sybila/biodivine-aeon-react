@@ -1,5 +1,4 @@
 import type { ControlInfo } from '../../../../../../types';
-import useControlStore from '../../../../../../stores/LiveModel/useControlStore';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
@@ -7,7 +6,6 @@ import type { VariableControlInfoProps } from './VariableControlInfoProps';
 
 import ContrIcon from '../../../../../../assets/icons/control-enabled-button.svg';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';
-import ControlEditor from '../../../../../../services/model-editor/ControlEditor/ControlEditor';
 
 const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   id,
@@ -15,8 +13,10 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   hover,
   selected,
   toggleSelect,
+  controlEditorServ,
+  controlStore,
 }) => {
-  const controlInfo: ControlInfo | undefined = useControlStore((state) =>
+  const controlInfo: ControlInfo | undefined = controlStore((state) =>
     state.getVariableControlInfo(id)
   );
 
@@ -53,8 +53,8 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       contentOverflowY="visible"
       hover={hover}
       active={selected}
-      onMouseEnter={() => ControlEditor.hoverVariableCytoscape(id, true)}
-      onMouseLeave={() => ControlEditor.hoverVariableCytoscape(id, false)}
+      onMouseEnter={() => controlEditorServ.hoverVariableCytoscape(id, true)}
+      onMouseLeave={() => controlEditorServ.hoverVariableCytoscape(id, false)}
       onClick={() => toggleSelect(name)}
     >
       <span className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)">
@@ -73,7 +73,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             iconAlt="Control-Enabled Icon"
             buttonColor={getControlButtonColor(false)}
             buttonHoverColor={getControlButtonColor(true)}
-            handleClick={() => ControlEditor.toggleControlEnabled(id)}
+            handleClick={() => controlEditorServ.toggleControlEnabled(id)}
           />
         </div>
 
@@ -88,7 +88,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             iconAlt="Phenotype Icon"
             buttonColor={getPhenButtonColor(false)}
             buttonHoverColor={getPhenButtonColor(true)}
-            handleClick={() => ControlEditor.togglePhenotype(id)}
+            handleClick={() => controlEditorServ.togglePhenotype(id)}
           />
         </div>
       </section>

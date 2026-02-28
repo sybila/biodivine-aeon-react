@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react';
-import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
-import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
-import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
+import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
+import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
+import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 
-import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
-import FileIcon from '../../assets/icons/file_copy-48px.svg';
-import ModelIcon from '../../assets/icons/model-48px.svg';
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
+import FileIcon from '../../assets/icons/file_copy-48px.svg';
+import ModelIcon from '../../assets/icons/model-48px.svg';
+import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 
+import KeepAlive from 'react-activation';
+import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
+import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
+import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
-import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import KeepAlive from 'react-activation';
-import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
-import type { ModelType } from '../../types';
 import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
-import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
+import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
@@ -32,8 +32,22 @@ type TabTypeME =
   | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
+  liveModelServ,
   modelVisualization,
+  modelEditorServ,
+  controlEditorServ,
+  computationManagerServ,
+  searchAndFilterHelpersServ,
+  warningServ,
   modelEditorStatusStore,
+  fileConvertorsServ,
+  tabStore,
+  resultsStatusStore,
+  controlStore,
+  regulationsStore,
+  variablesStore,
+  updateFunctionsStore,
+  modelInfoStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = useLoadedModelStore(
@@ -53,15 +67,54 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Start Computation':
-        return <StartCompTabContent />;
+        return (
+          <StartCompTabContent
+            liveModelServ={liveModelServ}
+            computationManagerServ={computationManagerServ}
+            warningServ={warningServ}
+            tabStore={tabStore}
+            resultsStatusStore={resultsStatusStore}
+            controlStore={controlStore}
+          />
+        );
       case 'Import/Export':
-        return <ImportExportTabContent />;
+        return (
+          <ImportExportTabContent
+            liveModelServ={liveModelServ}
+            fileConvertorsServ={fileConvertorsServ}
+          />
+        );
       case 'Export Witness':
-        return <ExportTabContent />;
+        return (
+          <ExportTabContent
+            liveModelServ={liveModelServ}
+            fileConvertorsServ={fileConvertorsServ}
+          />
+        );
       case 'Model Editor':
-        return <ModelEditorTabContent />;
+        return (
+          <ModelEditorTabContent
+            liveModelServ={liveModelServ}
+            modelEditorServ={modelEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            regulationsStore={regulationsStore}
+            variablesStore={variablesStore}
+            updateFunctionsStore={updateFunctionsStore}
+            tabStore={tabStore}
+            modelInfoStore={modelInfoStore}
+            modelEditorStatusStore={modelEditorStatusStore}
+          />
+        );
       case 'Control Editor':
-        return <ControlEditorTabContent />;
+        return (
+          <ControlEditorTabContent
+            liveModelServ={liveModelServ}
+            controlEditorServ={controlEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            controlStore={controlStore}
+            variablesStore={variablesStore}
+          />
+        );
       case 'Visual Options':
         return (
           <VisualOptionsTabContent modelVisualization={modelVisualization} />
@@ -147,7 +200,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         {renderTabContent()}
       </ContentTab>
 
-      <FloatMenu modelEditorStatusStore={modelEditorStatusStore} />
+      <FloatMenu
+        liveModelServ={liveModelServ}
+        modelEditorServ={modelEditorServ}
+        modelEditorStatusStore={modelEditorStatusStore}
+        regulationsStore={regulationsStore}
+      />
 
       <KeepAlive>
         <ModelEditorCanvas modelVisualization={modelVisualization} />

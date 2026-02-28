@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import AttractorBifurcationExplorer from '../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import type {
   VisualOptionsButtonSection,
   VisualOptionsSwitchableABE,
@@ -7,24 +6,27 @@ import type {
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ValueSliderReact from '../../lit-wrappers/ValueSliderReact';
+import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';
 
-const VisualOptionsTabContent = () => {
+const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
+  attractorBifurcationExplorerServ,
+}) => {
   const [activeButtons, setActiveButtons] =
     useState<VisualOptionsSwitchableABE>(
-      AttractorBifurcationExplorer.getSwitchableOptionsState()
+      attractorBifurcationExplorerServ.getSwitchableOptionsState()
     );
 
   const [precision, setPrecision] = useState<number>(
-    AttractorBifurcationExplorer.getLastPrecision()
+    attractorBifurcationExplorerServ.getLastPrecision()
   );
 
   const resetLayout: VisualOptionsButtonSection = {
     headerText: 'Reset Layout',
     buttons: [
-      ['Fit', () => AttractorBifurcationExplorer.fitTree(), false],
+      ['Fit', () => attractorBifurcationExplorerServ.fitTree(), false],
       [
         'Reset Layout',
-        () => AttractorBifurcationExplorer.resetTreeLayout(),
+        () => attractorBifurcationExplorerServ.resetTreeLayout(),
         false,
       ],
     ],
@@ -36,7 +38,7 @@ const VisualOptionsTabContent = () => {
       [
         'Animate Layout Changes',
         () => {
-          AttractorBifurcationExplorer.toggleAnimateLayoutChanges();
+          attractorBifurcationExplorerServ.toggleAnimateLayoutChanges();
           setActiveButtons((prev) => ({ ...prev, animate: !prev.animate }));
         },
         activeButtons.animate ?? false,
@@ -44,7 +46,7 @@ const VisualOptionsTabContent = () => {
       [
         'Snap Nodes To Layers',
         () => {
-          AttractorBifurcationExplorer.toggleSnapNodesToLayers();
+          attractorBifurcationExplorerServ.toggleSnapNodesToLayers();
           setActiveButtons((prev) => ({
             ...prev,
             snapLayers: !prev.snapLayers,
@@ -55,7 +57,7 @@ const VisualOptionsTabContent = () => {
       [
         'Positive On the Left',
         () => {
-          AttractorBifurcationExplorer.togglePositiveOnLeft();
+          attractorBifurcationExplorerServ.togglePositiveOnLeft();
           setActiveButtons((prev) => ({
             ...prev,
             positiveOnLeft: !prev.positiveOnLeft,
@@ -128,7 +130,7 @@ const VisualOptionsTabContent = () => {
             handleInput={setPrecision}
             handleChange={(newPrecision: number) => {
               setPrecision(newPrecision);
-              AttractorBifurcationExplorer.setPrecision(newPrecision);
+              attractorBifurcationExplorerServ.setPrecision(newPrecision);
             }}
             step={0.01}
             minValue={50}

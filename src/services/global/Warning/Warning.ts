@@ -1,16 +1,15 @@
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import useWarningStore from '../../../stores/Warning/useWarningStore';
 import WaiterFunction from '../../utilities/WaiterFunction';
+import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
-class Warning {
+class WarningClass implements WarningInt {
   // #region --- Starting Computation Warning ---
 
   /** Adds a warning about starting a new computation that will clear results and close tabs. */
-  public static addStartComputationResultsWarning(
-    computationFunction: () => void
-  ) {
+  public addStartComputationResultsWarning(computationFunction: () => void) {
     useWarningStore
       .getState()
       .addWarning(
@@ -34,7 +33,7 @@ class Warning {
   /** Adds a warning about importing a new model that will erase the current model.
    *  Returns a promise that resolves to true if the user proceeds, false otherwise.
    */
-  public static async addImportModelEraseModelWarning(): Promise<boolean> {
+  public async addImportModelEraseModelWarning(): Promise<boolean> {
     return this.addWaiterFunctionWarning(
       'Importing a new model will erase the current model. Do you want to proceed?',
       () => {}
@@ -49,7 +48,7 @@ class Warning {
    *  @param variableName - The name of the variable to be removed.
    *  Returns a promise that resolves to true if the user proceeds, false otherwise.
    */
-  public static async addRemoveVariableWarning(
+  public async addRemoveVariableWarning(
     variableName: string
   ): Promise<boolean> {
     return this.addWaiterFunctionWarning(
@@ -63,7 +62,7 @@ class Warning {
   // #region --- Regulation Warnings ---
 
   /** Adds a warning about creating a missing regulation. */
-  public static addCreateMissingRegulationWarning(
+  public addCreateMissingRegulationWarning(
     regulatorName: string,
     targetName: string,
     createFunction: () => void
@@ -89,7 +88,7 @@ class Warning {
   // #region --- Model Modification Warning ---
 
   /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
-  public static addModelModificationRemoveResultsWarning(): void {
+  public addModelModificationRemoveResultsWarning(): void {
     useWarningStore
       .getState()
       .addWarning(
@@ -119,9 +118,7 @@ class Warning {
   /** Adds a warning that performing operation will clear the results and close all tabs except for the Model Editor tab.
    *  Returns a promise that resolves to true if the user proceeds, false otherwise.
    */
-  public static async addRemoveResultsWarning(
-    operation: string
-  ): Promise<boolean> {
+  public async addRemoveResultsWarning(operation: string): Promise<boolean> {
     return this.addWaiterFunctionWarning(
       operation +
         ' will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
@@ -139,7 +136,7 @@ class Warning {
   /** Adds a warning using async waiter function for resolve.
    *  Returns a promise that resolves to true if the user proceeds, false otherwise.
    */
-  private static async addWaiterFunctionWarning(
+  private async addWaiterFunctionWarning(
     message: string,
     action: () => void
   ): Promise<boolean> {
@@ -166,5 +163,7 @@ class Warning {
 
   // #endregion
 }
+
+const Warning = new WarningClass();
 
 export default Warning;

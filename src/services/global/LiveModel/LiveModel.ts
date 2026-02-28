@@ -1,27 +1,36 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
-import ControlLM from './ControlLM';
-import ExportLM from './ExportLM';
-import ImportLM from './ImportLM';
-import InfoLM from './InfoLM';
-import ModelsLM from './ModelsLM';
-import RegulationsLM from './RegulationsLM';
-import UpdateFunctionsLM from './UpdateFunctionsLM';
-import VariablesLM from './VariablesLM';
+import ControlLM from './ControlLM/ControlLM';
+import type { ControlLMInt } from './ControlLM/ControlLMInt';
+import ExportLM from './ExportLM/ExportLM';
+import type { ExportLMInt } from './ExportLM/ExportLMInt';
+import ImportLM from './ImportLM/ImportLM';
+import type { ImportLMInt } from './ImportLM/ImportLMInt';
+import InfoLM from './InfoLM/InfoLM';
+import type { InfoLMInt } from './InfoLM/InfoLMInt';
+import type { LiveModelInt } from './LiveModelInt';
+import ModelsLM from './ModelsLM/ModelsLM';
+import type { ModelsLMInt } from './ModelsLM/ModelsLMInt';
+import RegulationsLM from './RegulationsLM/RegulationsLM';
+import type { RegulationsLMInt } from './RegulationsLM/RegulationsLMInt';
+import UpdateFunctionsLM from './UpdateFunctionsLM/UpdateFunctionsLM';
+import type { UpdateFunctionsLMInt } from './UpdateFunctionsLM/UpdateFunctionsLMInt';
+import VariablesLM from './VariablesLM/VariablesLM';
+import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 
 /**
 	Stores the PBN currently loaded into the editor. This is what you should interact with when
 	you want to modify the model, not the editor or graph directly.
 
-	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `CytoscapeME`
+	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `ModelVisualization`
 	to reflect the current state of the model.
 */
-class LiveModelClass {
+class LiveModelClass implements LiveModelInt {
   // #region --- Properties ---
 
   /** We use this to indicate that there is a batch of changes to the model that are being processed,
@@ -35,28 +44,28 @@ class LiveModelClass {
   // #region --- Submodules ---
 
   /** Functions and properties for managing multiple models. */
-  Models: ModelsLM = new ModelsLM(this);
+  Models: ModelsLMInt = new ModelsLM(this);
 
   /** Functions and properties for managing model information such as name and description. */
-  Info: InfoLM = new InfoLM(this);
+  Info: InfoLMInt = new InfoLM(this);
 
   /** Functions and properties used for operations with variables of the model. (adding, removing, renaming, getting all,...)*/
-  Variables: VariablesLM = new VariablesLM(this);
+  Variables: VariablesLMInt = new VariablesLM(this);
 
   /** Functions and properties used for operations with variables update functions. (setting, validating, updating,...) */
-  UpdateFunctions: UpdateFunctionsLM = new UpdateFunctionsLM(this);
+  UpdateFunctions: UpdateFunctionsLMInt = new UpdateFunctionsLM(this);
 
   /** Functions and properties used for operations with regulations. (adding, removing, setting observability,...) */
-  Regulations: RegulationsLM = new RegulationsLM(this);
+  Regulations: RegulationsLMInt = new RegulationsLM(this);
 
   /** Functions connected with setting control parameters of the models variables. */
-  Control: ControlLM = new ControlLM(this);
+  Control: ControlLMInt = new ControlLM(this);
 
   /** Functions used when importing model from Aeon format. */
-  Import: ImportLM = new ImportLM(this);
+  Import: ImportLMInt = new ImportLM(this);
 
   /** Functions used for export of the model. */
-  Export: ExportLM = new ExportLM(this);
+  Export: ExportLMInt = new ExportLM(this);
 
   // #endregion
 

@@ -1,17 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 import { type ControlResults } from '../../../../types';
-import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
-import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
 import { Loading } from '../../../lit-components/loading-wrapper';
-const PerturbationTable: React.FC<{
-  startFilter: boolean;
-  startSort: boolean;
-  setNextPageExists: (value: boolean) => void;
-}> = ({ startFilter, startSort, setNextPageExists }) => {
+import type { PerturbationTableProps } from './PerturbationTableProps';
+import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
+
+const PerturbationTable: React.FC<PerturbationTableProps> = ({
+  startFilter,
+  startSort,
+  setNextPageExists,
+  controlPerturbationsTableServ,
+  dataFormatersServ,
+  resultsStatusStore,
+}) => {
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
 
-  const perturbations = useResultsStatus((state) =>
+  const perturbations = resultsStatusStore((state) =>
     state.type === 'Control' && state.results
       ? (state.results as ControlResults).perturbations
       : undefined
@@ -23,14 +26,16 @@ const PerturbationTable: React.FC<{
 
   const sortedPerts = useMemo(() => {
     Loading.startLoading();
-    const result = ControlPerturbationsTable.sortPerturbations(perturbations);
+    const result =
+      controlPerturbationsTableServ.sortPerturbations(perturbations);
     Loading.endLoading();
     return result;
   }, [perturbations, startSort]);
 
   const [filteredPerts, nextPageExists] = useMemo(() => {
     Loading.startLoading();
-    const result = ControlPerturbationsTable.filterPerturbations(sortedPerts);
+    const result =
+      controlPerturbationsTableServ.filterPerturbations(sortedPerts);
     Loading.endLoading();
     return result;
   }, [sortedPerts, startFilter]);
@@ -90,6 +95,8 @@ const PerturbationTable: React.FC<{
             perturbation={row.perturbation}
             cellSizes={cellSizes}
             useTextVisualization={perturbationsAsText}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            dataFormatersServ={dataFormatersServ}
           />
         ))}
       </div>

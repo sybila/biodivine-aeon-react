@@ -1,20 +1,16 @@
+import ArrowDownIcon from '../../../../../assets/icons/arrow_down.svg';
+import ArrowUpIcon from '../../../../../assets/icons/arrow_up.svg';
+import type { PerturbationSortFields } from '../../../../../types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import type { SortButtonSectionProps } from './SortButtonSectionProps';
 
-import ArrowUpIcon from '../../../../../assets/icons/arrow_up.svg';
-import ArrowDownIcon from '../../../../../assets/icons/arrow_down.svg';
-import type {
-  PertTableSort,
-  PerturbationSortFields,
-  SortDirection,
-} from '../../../../../types';
-
-const SortButtonSection: React.FC<{
-  sortDirection: SortDirection;
-  sortField: PerturbationSortFields;
-  setFunction: (value: PertTableSort | undefined) => void;
-  disable: boolean;
-}> = ({ sortDirection, sortField, setFunction, disable }) => {
+const SortButtonSection: React.FC<SortButtonSectionProps> = ({
+  sortDirection,
+  sortField,
+  setFunction,
+  disable,
+}) => {
   const toggleSortDirection = () => {
     const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
     setFunction({ field: sortField, direction: newDirection });

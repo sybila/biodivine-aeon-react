@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+import type { VariableNameInputProps } from './VariableNameInputProps';
 
-const VariableNameInput: React.FC<{
-  height: string;
-  width: string;
-  singleFontSize: string;
-  varId: number;
-  varName: string;
-}> = ({ height, width, singleFontSize, varId, varName }) => {
+const VariableNameInput: React.FC<VariableNameInputProps> = ({
+  height,
+  width,
+  singleFontSize,
+  varId,
+  varName,
+  onUpdate,
+}) => {
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
@@ -18,7 +19,7 @@ const VariableNameInput: React.FC<{
       return;
     }
 
-    const success = ModelEditor.changeVariableName(varId, newName);
+    const success = onUpdate(varId, newName);
     setNameError(!success);
   };
 

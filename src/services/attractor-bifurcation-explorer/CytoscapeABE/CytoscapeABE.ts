@@ -1,4 +1,6 @@
 import { type CytoscapeOptions, type EventObject } from 'cytoscape';
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type {
   CytoscapeNodeDataBE,
   DecisionMixedNode,
@@ -7,10 +9,8 @@ import type {
   NodeNecessaryConditions,
   VisualOptionsSwitchableABE,
 } from '../../../types';
-import { Message } from '../../../components/lit-components/message-wrapper';
+import BehaviorClassOperations from '../../utilities/BehaviorClassOperations/BehaviorClassOperations';
 import AttractorBifurcationExplorer from '../AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import BehaviorClassOperations from '../../utilities/BehaviorClassOperations';
 
 const remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -258,14 +258,14 @@ class CytoscapeABE {
             classes: data.treeData?.all_classes ?? undefined,
           }
         : data.type === 'unprocessed' || data.type === 'decision'
-        ? {
-            id: Number(data.id),
-            label: data.label ?? 'Unknown Node',
-            type: data.type,
-            cardinality: data.treeData?.cardinality ?? 0,
-            classes: data.treeData?.classes ?? [],
-          }
-        : null;
+          ? {
+              id: Number(data.id),
+              label: data.label ?? 'Unknown Node',
+              type: data.type,
+              cardinality: data.treeData?.cardinality ?? 0,
+              classes: data.treeData?.classes ?? [],
+            }
+          : null;
 
     // If node has unknown type then return
     if (!newNode) return null;

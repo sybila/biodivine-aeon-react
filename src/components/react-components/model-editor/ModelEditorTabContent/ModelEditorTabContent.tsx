@@ -1,38 +1,56 @@
 import { useState } from 'react';
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import TextInputReact from '../../lit-wrappers/TextInputReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
+import TextInputReact from '../../lit-wrappers/TextInputReact';
+import ModelStatsTable from './ModelStatsTable/ModelStatsTable';
 
 import AddIcon from '../../../../assets/icons/add_box.svg';
-import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
 import ModelDescription from './ModelDescription/ModelDescription';
+import type { ModelEditorTabContentProps } from './ModelEditorTabContentProps';
+import ModelEditorVariableTable from './ModelEditorVariableTable/ModelEditorVariableTable';
 import ModelName from './ModelName/ModelName';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
 
-const ModelEditorTabContent: React.FC = () => {
+const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
+  liveModelServ,
+  modelEditorServ,
+  searchAndFilterHelpersServ,
+  regulationsStore,
+  variablesStore,
+  updateFunctionsStore,
+  tabStore,
+  modelInfoStore,
+  modelEditorStatusStore,
+}) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
-    ModelEditor.getVariableSearch()
+    modelEditorServ.getVariableSearch()
   );
   const [showModelDescription, setShowModelDescription] =
     useState<boolean>(false);
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
-      ModelEditor.setVariableSearch(name);
+      modelEditorServ.setVariableSearch(name);
       setVariableSearchText(name);
     }
   };
 
-  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+  liveModelServ.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
-      <ModelName />
+      <ModelName
+        modelEditorServ={modelEditorServ}
+        tabStore={tabStore}
+        modelInfoStore={modelInfoStore}
+      />
       {showModelDescription ? (
-        <ModelDescription setShowModelDescription={setShowModelDescription} />
+        <ModelDescription
+          setShowModelDescription={setShowModelDescription}
+          modelEditorServ={modelEditorServ}
+          tabStore={tabStore}
+          modelInfoStore={modelInfoStore}
+        />
       ) : (
         <>
           <section className="flex flex-col items-center w-full h-fit gap-3">
@@ -57,7 +75,12 @@ const ModelEditorTabContent: React.FC = () => {
               />
             </section>
 
-            <ModelStatsTable />
+            <ModelStatsTable
+              modelEditorServ={modelEditorServ}
+              regulationsStore={regulationsStore}
+              updateFunctionsStore={updateFunctionsStore}
+              variablesStore={variablesStore}
+            />
           </section>
 
           <section className="flex flex-row justify-between w-full h-[30px] gap-1">
@@ -76,7 +99,7 @@ const ModelEditorTabContent: React.FC = () => {
               iconHeight="19px"
               text="Add Variable"
               handleClick={() => {
-                ModelEditor.addVariable();
+                modelEditorServ.addVariable();
               }}
             />
           </section>
@@ -88,7 +111,15 @@ const ModelEditorTabContent: React.FC = () => {
             value={variableSearchText}
           />
 
-          <ModelEditorVariableTable searchText={variableSearchText} />
+          <ModelEditorVariableTable
+            searchText={variableSearchText}
+            modelEditorServ={modelEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            regulationsStore={regulationsStore}
+            variablesStore={variablesStore}
+            modelEditorStatusStore={modelEditorStatusStore}
+            updateFunctionsStore={updateFunctionsStore}
+          />
         </>
       )}
     </div>

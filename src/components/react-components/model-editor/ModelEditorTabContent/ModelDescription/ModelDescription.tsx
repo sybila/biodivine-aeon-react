@@ -1,25 +1,26 @@
 import { useMemo } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
+import { Message } from '../../../../lit-components/message-wrapper';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
-import { Message } from '../../../../lit-components/message-wrapper';
+import type { ModelDescriptionProps } from './ModelDescriptionProps';
 
-const ModelDescription: React.FC<{
-  setShowModelDescription: (show: boolean) => void;
-}> = ({ setShowModelDescription }) => {
-  const modelDescription = useModelInfoStore((state) =>
+const ModelDescription: React.FC<ModelDescriptionProps> = ({
+  setShowModelDescription,
+  modelEditorServ,
+  tabStore,
+  modelInfoStore,
+}) => {
+  const modelDescription = modelInfoStore((state) =>
     state.getModelDescription()
   );
 
-  const tabStore = useTabsStore((state) => state);
+  const tabState = tabStore((state) => state);
 
   const isActiveWittness = useMemo(() => {
-    const activeTab = tabStore.getActiveTab();
+    const activeTab = tabState.getActiveTab();
     return activeTab?.type === 'Witness';
-  }, [tabStore]);
+  }, [tabState]);
 
   return (
     <section className="h-fit w-full flex flex-col items-center gap-3">
@@ -53,7 +54,7 @@ const ModelDescription: React.FC<{
               'Cannot change model description while on Witness tab. Change to Model Editor tab and try again.'
             );
           } else {
-            ModelEditor.setModelDescription(value);
+            modelEditorServ.setModelDescription(value);
           }
         }}
       />

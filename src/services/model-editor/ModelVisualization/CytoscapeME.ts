@@ -1,6 +1,6 @@
 import { type CytoscapeOptions } from 'cytoscape';
 import { Message } from '../../../components/lit-components/message-wrapper';
-import useControlStore from '../../../stores/LiveModel/useControlStore';
+import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import {
   EdgeMonotonicity,

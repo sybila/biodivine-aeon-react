@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
-import RegulationMenuButtons from './RegulationMenuButtons/RegulationMenuButtons';
 import type { FloatMenuProps } from './FloatMenuProps';
+import RegulationMenuButtons from './RegulationMenuButtons/RegulationMenuButtons';
+import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 
-const FloatMenu: React.FC<FloatMenuProps> = ({ modelEditorStatusStore }) => {
+const FloatMenu: React.FC<FloatMenuProps> = ({
+  liveModelServ,
+  modelEditorServ,
+  modelEditorStatusStore,
+  regulationsStore,
+}) => {
   const [currentHint, setCurrentHint] = useState<string>('');
 
   const modelStatus = modelEditorStatusStore((state) => state);
@@ -34,11 +39,15 @@ const FloatMenu: React.FC<FloatMenuProps> = ({ modelEditorStatusStore }) => {
           <RegulationMenuButtons
             setHint={setCurrentHint}
             selectedRegulationIds={modelStatus.selectedItemInfo.regulationIds}
+            liveModelServ={liveModelServ}
+            regulationsStore={regulationsStore}
           />
         ) : (
           <VariableMenuButtons
             setHint={setCurrentHint}
             selectedVariableId={modelStatus.selectedItemInfo.id}
+            liveModelServ={liveModelServ}
+            modelEditorServ={modelEditorServ}
           />
         )}
       </div>

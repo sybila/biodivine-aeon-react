@@ -1,10 +1,13 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import type { DecisionMixedNode, LeafNode } from '../../../../../types';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
+import type { NodeStatTableProps } from './NodeStatTableProps';
 
-const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
-  const totalCardinality = AttractorBifurcationExplorer.getTotalCardinality();
+const NodeStatTable: React.FC<NodeStatTableProps> = ({
+  nodeData,
+  attractorBifurcationExplorerServ,
+}) => {
+  const totalCardinality =
+    attractorBifurcationExplorerServ.getTotalCardinality();
 
   return (
     <section className="flex flex-col justify-end items-center h-fit w-full gap-1">
@@ -22,8 +25,8 @@ const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
             nodeData.type === 'unprocessed'
               ? 'mixed'
               : nodeData.type === 'leaf'
-              ? 'phenotype'
-              : nodeData.type ?? 'unknown'
+                ? 'phenotype'
+                : (nodeData.type ?? 'unknown')
           }
         />
         {nodeData.classes ? (
@@ -55,13 +58,11 @@ const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
               statValue={
                 !totalCardinality || !nodeData.cardinality
                   ? 'unknown'
-                  : `${AttractorBifurcationExplorer.mathPercent(
-                      nodeData.cardinality,
-                      totalCardinality
-                    ).toString()}% / ${AttractorBifurcationExplorer.mathDimPercent(
-                      nodeData.cardinality,
-                      totalCardinality
-                    ).toString()}%`
+                  : `${attractorBifurcationExplorerServ
+                      .mathPercent(nodeData.cardinality, totalCardinality)
+                      .toString()}% / ${attractorBifurcationExplorerServ
+                      .mathDimPercent(nodeData.cardinality, totalCardinality)
+                      .toString()}%`
               }
             />
           </>

@@ -1,10 +1,13 @@
-import useControlStore from '../../../stores/LiveModel/useControlStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
+import type { ControlEditorInt } from './ControlEditorInt';
 
-class ControlEditorClass {
+// TODO: Rework hover functionality of this class to use stores
+
+class ControlEditorClass implements ControlEditorInt {
   // #region --- Properties ---
 
   /** Function for toggling hover state of variables in ControlEditorTabContent.tsx component */

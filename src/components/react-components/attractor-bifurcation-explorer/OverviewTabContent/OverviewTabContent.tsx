@@ -1,15 +1,19 @@
-import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { DecisionMixedNode, LeafNode } from '../../../../types';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import NoDataText from '../../global/NoDataText/NoDataText';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import BehaviorClassTable from './BehaviorClassTable/BehaviorClassTable';
 import NecessaryConditionsTable from './NecessaryConditionsTable/NecessaryConditionsTable';
 import NodeStatTable from './NodeStatTable/NodeStatTable';
-import WittnessAttractorRow from './WittnesAttractorRow/WittnessAttractorRow';
+import type { OverviewTabContentProps } from './OverviewTabContentProps';
+import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 
-const OverviewTabContent: React.FC = () => {
+const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  bifurcationExplorerStatusStore,
+}) => {
   const selectedNode: LeafNode | DecisionMixedNode | null =
-    useBifurcationExplorerStatus((state) => state.selectedNode);
+    bifurcationExplorerStatusStore((state) => state.selectedNode);
 
   if (!selectedNode) {
     return <NoDataText text="No selected node" />;
@@ -36,10 +40,16 @@ const OverviewTabContent: React.FC = () => {
       </section>
 
       <section className="h-fit w-full flex flex-col justify-center items-center gap-2">
-        <NodeStatTable {...selectedNode} />
+        <NodeStatTable
+          nodeData={selectedNode}
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        />
 
         {selectedNode.type === 'leaf' ? (
-          <WittnessAttractorRow leafNodeId={selectedNode.id} />
+          <WitnessAttractorRow
+            leafNodeId={selectedNode.id}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          />
         ) : null}
 
         {selectedNode.classes ? (
@@ -47,11 +57,16 @@ const OverviewTabContent: React.FC = () => {
             classes={selectedNode.classes ?? []}
             nodeCardinality={selectedNode.cardinality}
             isLeaf={selectedNode.type === 'leaf'}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
           />
         ) : null}
 
         {selectedNode.type === 'leaf' ? (
-          <NecessaryConditionsTable nodeId={selectedNode.id} />
+          <NecessaryConditionsTable
+            nodeId={selectedNode.id}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          />
         ) : null}
       </section>
     </div>

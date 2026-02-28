@@ -1,7 +1,5 @@
 import { memo, useMemo, useState } from 'react';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
-import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import DataFormaters from '../../../../../services/utilities/DataFormaters';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
   ({
@@ -11,6 +9,8 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     perturbation,
     cellSizes,
     useTextVisualization = false,
+    controlPerturbationsTableServ,
+    dataFormatersServ,
   }) => {
     const [textVisualization, setTextVisualization] =
       useState<boolean>(useTextVisualization);
@@ -21,7 +21,9 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
 
     /** Memoized formatted perturbation in the form of JSX elements [coloredFormat, textFormat] */
     const formatedPerturbation = useMemo(() => {
-      return ControlPerturbationsTable.formatPerturbation(perturbationArray);
+      return controlPerturbationsTableServ.formatPerturbation(
+        perturbationArray
+      );
     }, [perturbationArray]);
 
     /** Data for each cell inside the row */
@@ -32,7 +34,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
         : formatedPerturbation[0],
       perturbationArray.length,
       numberOfInterpretations,
-      DataFormaters.convertRobustnessToPercentage(robustness),
+      dataFormatersServ.convertRobustnessToPercentage(robustness),
     ];
 
     /** Handles click events for each cell */

@@ -1,22 +1,30 @@
+import { useState } from 'react';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import { useState } from 'react';
 
-import OverviewIcon from '../../assets/icons/overview.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
-import SortingIcon from '../../assets/icons/sorting.svg';
+import OverviewIcon from '../../assets/icons/overview.svg';
 import PagesIcon from '../../assets/icons/pages.svg';
+import SortingIcon from '../../assets/icons/sorting.svg';
 
-import PerturbationTable from '../../components/react-components/control-perturbations-table/PerturbationTable/PerturbationTable';
-import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
-import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import FilterTabContent from '../../components/react-components/control-perturbations-table/FilterTabContent/FilterTabContent';
+import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import PagesTabContent from '../../components/react-components/control-perturbations-table/PagesTabContent/PagesTabContent';
+import PerturbationTable from '../../components/react-components/control-perturbations-table/PerturbationTable/PerturbationTable';
 import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
+import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
+import type { ControlPerturbationTableProps } from './ControlPerturbationTableProps';
 
 type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
 
-const ControlPerturbationsTable = () => {
+const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
+  liveModelServ,
+  controlPerturbationsTableServ,
+  dataFormatersServ,
+  searchAndFilterHelpersServ,
+  resultsStatusStore,
+  perturbationFilterSortStore,
+}) => {
   const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
 
   /** Trigger which is used to start filtering of perturbations. */
@@ -29,17 +37,31 @@ const ControlPerturbationsTable = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
-        return <OverviewTabContent />;
+        return (
+          <OverviewTabContent
+            liveModelServ={liveModelServ}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            dataFormatersServ={dataFormatersServ}
+            resultsStatusStore={resultsStatusStore}
+          />
+        );
       case 'Filters':
         return (
           <FilterTabContent
             setStartFilter={setStartFilter}
             startFilter={startFilter}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            resultsStatusStore={resultsStatusStore}
+            perturbationFilterSortStore={perturbationFilterSortStore}
           />
         );
       case 'Sorting':
         return (
-          <SortTabContent startSort={startSort} setStartSort={setStartSort} />
+          <SortTabContent
+            startSort={startSort}
+            setStartSort={setStartSort}
+            perturbationFilterSortStore={perturbationFilterSortStore}
+          />
         );
       case 'Pages':
         return (
@@ -47,6 +69,7 @@ const ControlPerturbationsTable = () => {
             setStartFilter={setStartFilter}
             startFilter={startFilter}
             nextPageExists={nextPageExists}
+            perturbationFilterSortStore={perturbationFilterSortStore}
           />
         );
       default:
@@ -123,6 +146,9 @@ const ControlPerturbationsTable = () => {
           startFilter={startFilter}
           startSort={startSort}
           setNextPageExists={setNextPageExists}
+          controlPerturbationsTableServ={controlPerturbationsTableServ}
+          resultsStatusStore={resultsStatusStore}
+          dataFormatersServ={dataFormatersServ}
         />
       </div>
     </>

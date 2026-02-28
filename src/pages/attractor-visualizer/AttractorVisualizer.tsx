@@ -1,23 +1,26 @@
+import { useEffect, useState } from 'react';
 import KeepAlive from 'react-activation';
 import AttractorVisCanvas from '../../components/react-components/attractor-visualizer/AttractorVisCanvas/AttractorVisCanvas';
+import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
+import WitnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WitnessUpdateFunctionsTabContent/WitnessUpdateFunctionsTabContent';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import { useEffect, useState } from 'react';
-import StateOverviewTabContent from '../../components/react-components/attractor-visualizer/StateOverviewTabContent/StateOverviewTabContent';
-import WittnessUpdateFunctionsTabContent from '../../components/react-components/attractor-visualizer/WittnessUpdateFunctionsTabContent/WittnessUpdateFunctionsTabContent';
 
 import StateIcon from '../../assets/icons/state_overview.svg';
 import UpdateFuncitons from '../../assets/icons/update_functions.svg';
-import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
+import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
 
-type TabTypeAV = 'State Overview' | 'Wittness Update Functions' | null;
+type TabTypeAV = 'State Overview' | 'Witness Update Functions' | null;
 
-const AttractorVisualizer = () => {
+const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
+  attractorVisualizerServ,
+  attractorVisualizerStatusStore,
+}) => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
   const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
 
-  const selectedNodeState = useAttractorVisualizerStatus(
+  const selectedNodeState = attractorVisualizerStatusStore(
     (state) => state.selectedNodeState
   );
 
@@ -33,9 +36,18 @@ const AttractorVisualizer = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'State Overview':
-        return <StateOverviewTabContent />;
-      case 'Wittness Update Functions':
-        return <WittnessUpdateFunctionsTabContent />;
+        return (
+          <StateOverviewTabContent
+            attractorVisualizerServ={attractorVisualizerServ}
+            attractorVisualizerStatusStore={attractorVisualizerStatusStore}
+          />
+        );
+      case 'Witness Update Functions':
+        return (
+          <WitnessUpdateFunctionsTabContent
+            attractorVisualizerServ={attractorVisualizerServ}
+          />
+        );
       default:
         return null;
     }
@@ -62,12 +74,12 @@ const AttractorVisualizer = () => {
           tagText="State Overview"
         />
         <IconButtonReact
-          isActive={activeTab === 'Wittness Update Functions'}
-          onClick={() => showHideTab('Wittness Update Functions')}
+          isActive={activeTab === 'Witness Update Functions'}
+          onClick={() => showHideTab('Witness Update Functions')}
           iconSrc={UpdateFuncitons}
           iconAlt="Update Functions"
           showTag={true}
-          tagText="Wittness Update Functions"
+          tagText="Witness Update Functions"
         />
       </SideButtonMenu>
 
@@ -80,7 +92,7 @@ const AttractorVisualizer = () => {
       </ContentTab>
 
       <KeepAlive>
-        <AttractorVisCanvas />
+        <AttractorVisCanvas attractorVisualizerServ={attractorVisualizerServ} />
       </KeepAlive>
     </>
   );

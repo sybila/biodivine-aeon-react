@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
-import AttractorBifurcationExplorer from '../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import type { BifurcationExplorerCanvasProps } from './BifurcationExplorerCanvasProps';
 
-const BifurcationExplorerCanvas: React.FC<{
-  initialized: boolean;
-  setInitialized: (initialized: boolean) => void;
-}> = ({ initialized, setInitialized }) => {
+const BifurcationExplorerCanvas: React.FC<BifurcationExplorerCanvasProps> = ({
+  initialized,
+  setInitialized,
+  attractorBifurcationExplorerServ,
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -13,7 +14,7 @@ const BifurcationExplorerCanvas: React.FC<{
     }
 
     if (containerRef.current) {
-      AttractorBifurcationExplorer.init(containerRef.current);
+      attractorBifurcationExplorerServ.init(containerRef.current);
       setInitialized(true);
     }
   }, [initialized]);

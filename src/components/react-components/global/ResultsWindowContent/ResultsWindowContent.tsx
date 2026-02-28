@@ -1,4 +1,4 @@
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
+import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type {
   AttractorResults,
   ComputationModes,

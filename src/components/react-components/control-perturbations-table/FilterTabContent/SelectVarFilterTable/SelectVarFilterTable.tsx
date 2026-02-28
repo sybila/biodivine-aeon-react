@@ -1,23 +1,24 @@
 import { useMemo, useState } from 'react';
 import { PertVariableFilterStatus } from '../../../../../types';
-import TextInputReact from '../../../lit-wrappers/TextInputReact';
 import { Loading } from '../../../../lit-components/loading-wrapper';
-import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
-import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import type { SelectVarFilterTableProps } from './SelectVarFilterTableProps';
+import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 
-const SelectVarFilterTable: React.FC<{
-  variableNames: Array<string>;
-}> = ({ variableNames }) => {
+const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
+  variableNames,
+  searchAndFilterHelpersServ,
+  perturbationFilterSortStore,
+}) => {
   const [selectedVariables, setSelectedVariables] = useState<
     Record<string, boolean>
   >({});
 
   const [searchText, setSearchText] = useState('');
 
-  const filterVariables = usePerturbationFilterSortStore(
+  const filterVariables = perturbationFilterSortStore(
     (state) => state.perturbationVariables
   );
 
@@ -46,7 +47,7 @@ const SelectVarFilterTable: React.FC<{
       }
     });
 
-    usePerturbationFilterSortStore
+    perturbationFilterSortStore
       .getState()
       .setPerturbationVariables(newFilterVariables);
     Loading.endLoading();
@@ -85,7 +86,7 @@ const SelectVarFilterTable: React.FC<{
   ];
 
   const filteredVariableNames = useMemo(() => {
-    return SearchAndFilterHelpers.filterStringsBySearchTerms(
+    return searchAndFilterHelpersServ.filterStringsBySearchTerms(
       variableNames,
       searchText
     );

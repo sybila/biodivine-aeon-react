@@ -1,6 +1,4 @@
-import AttractorBifurcationExplorer from '../../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
-import type { Decision, DecisionBehaviorClass } from '../../../../../../types';
+import type { DecisionBehaviorClass } from '../../../../../../types';
 import BehaviorClassLegend from '../../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import SeparatorLine from '../../../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
@@ -8,12 +6,15 @@ import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentRe
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../../../lit-wrappers/StatEntryReact';
 import TextButtonReact from '../../../../lit-wrappers/TextButtonReact';
+import type { DecisionTableRowProps } from './DecisionTableRowProps';
 
-const DecisionTableRow: React.FC<{
-  decision: Decision;
-  nodeId: number;
-  nodeCardinality: number;
-}> = ({ decision, nodeId, nodeCardinality }) => {
+const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
+  decision,
+  nodeId,
+  nodeCardinality,
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+}) => {
   const renderTopSection = () => {
     return (
       <section
@@ -50,7 +51,7 @@ const DecisionTableRow: React.FC<{
           compHeight="30px"
           compWidth="97%"
           handleClick={() =>
-            AttractorBifurcationExplorer.makeDecision(nodeId, decision.id)
+            attractorBifurcationExplorerServ.makeDecision(nodeId, decision.id)
           }
         />
       </section>
@@ -65,7 +66,7 @@ const DecisionTableRow: React.FC<{
       classSideCardinality ??
       classSideArray.reduce((a, b) => a + b.cardinality, 0.0);
 
-    return AttractorBifurcationExplorer.mathPercent(
+    return attractorBifurcationExplorerServ.mathPercent(
       classCardinalityFixed,
       nodeCardinality
     );
@@ -85,13 +86,13 @@ const DecisionTableRow: React.FC<{
             className="flex flex-row justify-between items-center h-[20px] w-[98%] px-2 bg-[var(--color-grey-blue-light)] rounded-md select-none"
           >
             <span className="h-fit max-w-1/2 overflow-auto font-[Symbols] text-[16px] mb-[-8px]">
-              {BehaviorClassOperations.normalizeClasses(
+              {behaviorClassOperationsServ.normalizeClasses(
                 undefined,
                 classItem.class
               ) ?? 'unknown'}
             </span>
             <span className="h-fit max-w-1/2 overflow-auto font-(family-name:--font-family-fira-mono) text-[15px]">
-              {`${AttractorBifurcationExplorer.mathPercent(
+              {`${attractorBifurcationExplorerServ.mathPercent(
                 classItem.cardinality,
                 fixedTotal
               )}%`}

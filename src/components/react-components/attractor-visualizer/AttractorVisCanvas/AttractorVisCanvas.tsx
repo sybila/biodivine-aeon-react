@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import AttractorVisualizer from '../../../../services/attractor-visualizer/AttractorVisualizer';
+import type { AttractorVisCanvasProps } from './AttractorVisCanvasProps';
 
-const AttractorVisCanvas: React.FC = () => {
+const AttractorVisCanvas: React.FC<AttractorVisCanvasProps> = ({
+  attractorVisualizerServ,
+}) => {
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -12,7 +14,7 @@ const AttractorVisCanvas: React.FC = () => {
     }
 
     if (containerRef.current) {
-      AttractorVisualizer.init(containerRef.current);
+      attractorVisualizerServ.init(containerRef.current);
       setInitialized(true);
     }
   }, [initialized]);

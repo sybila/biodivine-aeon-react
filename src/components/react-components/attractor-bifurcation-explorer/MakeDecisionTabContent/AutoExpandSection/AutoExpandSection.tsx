@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 import ValueSliderReact from '../../../lit-wrappers/ValueSliderReact';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
 import GraphIcon from '../../../../../assets/icons/graph.svg';
+import type { AutoExpandSectionProps } from './AutoExpandSectionProps';
 
-const AutoExpandSection: React.FC = () => {
+const AutoExpandSection: React.FC<AutoExpandSectionProps> = ({
+  attractorBifurcationExplorerServ,
+}) => {
   const [depth, setDepth] = useState<number>(1);
 
   return (
@@ -17,7 +19,7 @@ const AutoExpandSection: React.FC = () => {
         iconAlt="Graph Icon"
         iconSrc={GraphIcon}
         handleClick={() =>
-          AttractorBifurcationExplorer.autoExpandBifurcationTreeFromSelected(
+          attractorBifurcationExplorerServ.autoExpandBifurcationTreeFromSelected(
             depth
           )
         }

@@ -1,18 +1,7 @@
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
+import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
 
-const ChangeUpdateFunctionInput: React.FC<{
-  compHeight: string;
-  compWidth: string;
-  inputHeight: string;
-  inputWidth: string;
-  inputFontSize: string;
-  validationMinHeight: string;
-  validationMaxHeight: string;
-  varId: number;
-}> = ({
+const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   compHeight,
   compWidth,
   inputHeight,
@@ -21,22 +10,25 @@ const ChangeUpdateFunctionInput: React.FC<{
   validationMinHeight,
   validationMaxHeight,
   varId,
+  modelEditorServ,
+  variablesStore,
+  updateFunctionsStore,
 }) => {
-  const varName = useVariablesStore(
+  const varName = variablesStore(
     (state) => state.variables[varId].name ?? 'Unknown'
   );
 
-  const updateFunction = useUpdateFunctionsStore(
+  const updateFunction = updateFunctionsStore(
     (state) => state.getUpdateFunctionId(varId)?.functionString ?? ''
   );
-  const updateFunctionStatus = useUpdateFunctionsStore(
+  const updateFunctionStatus = updateFunctionsStore(
     (state) => state.updateFunctionStatus[varId] ?? ''
   );
 
   const changeUpdateFunction = (newFunction: string) => {
     const updateFunction: string = newFunction ?? '';
 
-    ModelEditor.setUpdateFunction(varId, updateFunction);
+    modelEditorServ.setUpdateFunction(varId, updateFunction);
   };
 
   return (

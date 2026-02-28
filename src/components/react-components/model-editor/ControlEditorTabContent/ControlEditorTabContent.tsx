@@ -3,13 +3,19 @@ import type { Oscillation } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ControlStatsTable from './ControStatsTable/ControlStatsTable';
 
+import type { ControlEditorTabContentProps } from './ControlEditorTabContentProps';
 import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
 import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOscillationButton';
-import ControlEditor from '../../../../services/model-editor/ControlEditor/ControlEditor';
 
-const ControlEditorTabContent: React.FC = () => {
+const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
+  liveModelServ,
+  controlEditorServ,
+  searchAndFilterHelpersServ,
+  controlStore,
+  variablesStore,
+}) => {
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
-    ControlEditor.getPhenotypeOscillation()
+    controlEditorServ.getPhenotypeOscillation()
   );
 
   return (
@@ -21,7 +27,10 @@ const ControlEditorTabContent: React.FC = () => {
           justifyHeader="start"
         />
 
-        <ControlStatsTable />
+        <ControlStatsTable
+          liveModelServ={liveModelServ}
+          controlStore={controlStore}
+        />
       </section>
 
       <section className="flex flex-col items-center w-full h-fit gap-3">
@@ -32,6 +41,7 @@ const ControlEditorTabContent: React.FC = () => {
         />
 
         <PhenotypeOscillationButton
+          controlEditorServ={controlEditorServ}
           oscillationValue={oscillationValue}
           setOscillationValue={setOscillationValue}
           compWidth="95%"
@@ -46,7 +56,12 @@ const ControlEditorTabContent: React.FC = () => {
         />
       </section>
 
-      <ControlVariablesTable />
+      <ControlVariablesTable
+        controlEditorServ={controlEditorServ}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        variablesStore={variablesStore}
+        controlStore={controlStore}
+      />
     </div>
   );
 };

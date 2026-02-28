@@ -1,3 +1,11 @@
+import { Loading } from '../../../components/lit-components/loading-wrapper';
+import { Message } from '../../../components/lit-components/message-wrapper';
+import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import type {
   AttractorData,
   AttractorResults,
@@ -12,23 +20,16 @@ import type {
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
 } from '../../../types';
+import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import { LiveModel } from '../LiveModel/LiveModel';
-import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
-import { Message } from '../../../components/lit-components/message-wrapper';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
-import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import { Loading } from '../../../components/lit-components/loading-wrapper';
-import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import type { ComputationManagerInt } from './ComputationManagerInt';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
 */
-class ComputationManagerClass {
+class ComputationManagerClass implements ComputationManagerInt {
   // #region --- Properties ---
 
   /** Currently used compute engine comunicator */

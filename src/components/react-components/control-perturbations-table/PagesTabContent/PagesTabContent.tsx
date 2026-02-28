@@ -1,21 +1,22 @@
 import PageSelectorReact from '../../lit-wrappers/PageSelectorReact';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import type { PagesTabContentProps } from './PagesTabContentProps';
 
-const PagesTabContent: React.FC<{
-  setStartFilter: (value: boolean) => void;
-  startFilter: boolean;
-  nextPageExists: boolean;
-}> = ({ setStartFilter, startFilter, nextPageExists }) => {
+const PagesTabContent: React.FC<PagesTabContentProps> = ({
+  setStartFilter,
+  startFilter,
+  nextPageExists,
+  perturbationFilterSortStore,
+}) => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pt-2 pb-2">
       <PageSelectorReact
         compWidth="100%"
         contWidth="100%"
         centerMinWidth="50%"
-        initialPage={usePerturbationFilterSortStore.getState().pageNumber}
+        initialPage={perturbationFilterSortStore.getState().pageNumber}
         nextPageExists={nextPageExists}
         handlePageChange={(newPage: number) => {
-          usePerturbationFilterSortStore.getState().setPageNumber(newPage);
+          perturbationFilterSortStore.getState().setPageNumber(newPage);
           setStartFilter(!startFilter);
         }}
       />

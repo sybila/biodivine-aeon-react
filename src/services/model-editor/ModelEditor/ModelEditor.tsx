@@ -1,8 +1,10 @@
-import { use } from 'react';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type {
   ModelEditorItem,
@@ -11,12 +13,13 @@ import type {
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
+import type { ModelEditorInt } from './ModelEditorInt';
 
 /**
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
     right elements when needed, etc.
 */
-class ModelEditorClass {
+class ModelEditorClass implements ModelEditorInt {
   // #region --- Properties ---
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
@@ -248,7 +251,13 @@ class ModelEditorClass {
 
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
-      content: <ChangeVarNameOverlayContent varId={varId} />,
+      content: (
+        <ChangeVarNameOverlayContent
+          varId={varId}
+          modelEditorServ={this}
+          variablesStore={useVariablesStore}
+        />
+      ),
     });
   }
 
@@ -260,7 +269,15 @@ class ModelEditorClass {
 
     useOverlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
-      content: <ChangeUpFunOverlayContent varId={varId} />,
+      content: (
+        <ChangeUpFunOverlayContent
+          varId={varId}
+          modelEditorServ={this}
+          regulationsStore={useRegulationsStore}
+          variablesStore={useVariablesStore}
+          updateFunctionsStore={useUpdateFunctionsStore}
+        />
+      ),
     });
   }
 }

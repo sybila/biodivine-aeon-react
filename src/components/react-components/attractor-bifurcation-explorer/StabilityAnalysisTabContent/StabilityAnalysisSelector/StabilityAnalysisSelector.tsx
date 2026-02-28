@@ -1,11 +1,10 @@
 import { useState } from 'react';
+import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
 import type { StabilityAnalysisModes } from '../../../../../types';
 import ArrowSelectButton from '../../../global/ArrowsSelectButton/ArrowsSelectButton';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
-
-import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import type { StabilityAnalysisSelectorProps } from './StabilityAnalysisSelectorProps';
 
 type FullStabilityAnalysisMode =
   | 'Total'
@@ -13,8 +12,9 @@ type FullStabilityAnalysisMode =
   | 'Oscillation'
   | 'Disorder';
 
-const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
+const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
   nodeId,
+  attractorBifurcationExplorerServ,
 }) => {
   const [stabilityMode, setStabilityMode] =
     useState<FullStabilityAnalysisMode>('Total');
@@ -71,7 +71,7 @@ const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
         iconAlt="Stability"
         iconSrc={StabilityIcon}
         handleClick={() =>
-          AttractorBifurcationExplorer.getStabilityData(
+          attractorBifurcationExplorerServ.getStabilityData(
             nodeId,
             stabilityMode === 'Total'
               ? 'total'

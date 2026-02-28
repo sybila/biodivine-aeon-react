@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
-import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import KeepAlive from 'react-activation';
-import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
+import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
 import StabilityAnalysisTabContent from '../../components/react-components/attractor-bifurcation-explorer/StabilityAnalysisTabContent/StabilityAnalysisTabContent';
 import VisualOptionsTabContent from '../../components/react-components/attractor-bifurcation-explorer/VisualOptionsTabContent/VisualOptionsTabContent';
-import AttractorBifurcationExplorerServices from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
+import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
+import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
-import StateIcon from '../../assets/icons/state_overview.svg';
-import StabilityIcon from '../../assets/icons/stability_analysis.svg';
-import DecisionIcon from '../../assets/icons/make_decision.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
+import DecisionIcon from '../../assets/icons/make_decision.svg';
+import StabilityIcon from '../../assets/icons/stability_analysis.svg';
+import StateIcon from '../../assets/icons/state_overview.svg';
+import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
 type TabTypeME =
   | 'Overview'
@@ -22,7 +22,13 @@ type TabTypeME =
   | 'Visual Options'
   | null;
 
-const AttractorBifurcationExplorer: React.FC = () => {
+const AttractorBifurcationExplorer: React.FC<
+  AttractorBifurcationExplorerProps
+> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  bifurcationExplorerStatusStore,
+}) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
@@ -30,13 +36,34 @@ const AttractorBifurcationExplorer: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
-        return <OverviewTabContent />;
+        return (
+          <OverviewTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          />
+        );
       case 'Stability Analysis':
-        return <StabilityAnalysisTabContent />;
+        return (
+          <StabilityAnalysisTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          />
+        );
       case 'Make Decision':
-        return <MakeDecisionTabContent />;
+        return (
+          <MakeDecisionTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          />
+        );
       case 'Visual Options':
-        return <VisualOptionsTabContent />;
+        return (
+          <VisualOptionsTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          />
+        );
       default:
         return null;
     }
@@ -52,7 +79,7 @@ const AttractorBifurcationExplorer: React.FC = () => {
   };
 
   if (initialized) {
-    AttractorBifurcationExplorerServices.openBifurcationTree();
+    attractorBifurcationExplorerServ.openBifurcationTree();
   }
 
   return (
@@ -105,6 +132,7 @@ const AttractorBifurcationExplorer: React.FC = () => {
         <BifurcationExplorerCanvas
           initialized={initialized}
           setInitialized={setInitialized}
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
         />
       </KeepAlive>
     </>

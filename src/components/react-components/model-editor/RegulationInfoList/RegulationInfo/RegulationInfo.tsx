@@ -1,5 +1,3 @@
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({
@@ -9,8 +7,10 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   monotonicity,
   hover,
   selected,
+  modelEditorServ,
+  variablesStore,
 }) => {
-  const regulatorVar = useVariablesStore((state) =>
+  const regulatorVar = variablesStore((state) =>
     state.variableFromId(regulator)
   );
 
@@ -32,7 +32,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
       <span
         className={`h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden ${color} text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
         onClick={() => {
-          ModelEditor.toggleRegulationObservability(regulator, target);
+          modelEditorServ.toggleRegulationObservability(regulator, target);
         }}
       >
         {observable ? 'observable' : 'non-observable'}
@@ -59,7 +59,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
       <span
         className={`h-fit w-[30%] max-w-[30%] overflow-x-auto ${color} overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
         onClick={() => {
-          ModelEditor.toggleRegulationMonocity(regulator, target);
+          modelEditorServ.toggleRegulationMonocity(regulator, target);
         }}
       >
         {monotonicity}
@@ -88,10 +88,10 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
         !selected ? 'hover:bg-[var(--color-grey-blue-ultra-light)]' : ''
       } ${getRegulationBgColor()} leading-[100%] text-[98%] select-none`}
       onMouseEnter={() => {
-        ModelEditor.hoverRegulationCytoscape({ regulator, target }, true);
+        modelEditorServ.hoverRegulationCytoscape({ regulator, target }, true);
       }}
       onMouseLeave={() => {
-        ModelEditor.hoverRegulationCytoscape({ regulator, target }, false);
+        modelEditorServ.hoverRegulationCytoscape({ regulator, target }, false);
       }}
     >
       <span

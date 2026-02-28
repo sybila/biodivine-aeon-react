@@ -1,19 +1,22 @@
 import { useMemo } from 'react';
 import type { ModelEditorItem, Variable } from '../../../../../types';
-import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import VariableInfo from './VariableInfo/VariableInfo';
-import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
+  modelEditorServ,
+  searchAndFilterHelpersServ,
+  regulationsStore,
+  variablesStore,
+  modelEditorStatusStore,
+  updateFunctionsStore,
 }) => {
-  const selectedItemInfo: ModelEditorItem | null = useModelEditorStatus(
+  const selectedItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.selectedItemInfo
   );
-  const hoverItemInfo: ModelEditorItem | null = useModelEditorStatus(
+  const hoverItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.hoverItemInfo
   );
 
@@ -29,11 +32,11 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
       ? selectedItemInfo.regulationIds
       : null;
 
-  const variablesObj = useVariablesStore((state) => state.variables);
+  const variablesObj = variablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
 
   const filteredVariables = useMemo(() => {
-    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+    return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
       variables,
       searchText
     );
@@ -63,6 +66,10 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
               ? selectedRegulation
               : undefined
           }
+          modelEditorServ={modelEditorServ}
+          regulationsStore={regulationsStore}
+          variablesStore={variablesStore}
+          updateFunctionsStore={updateFunctionsStore}
         />
       ))}
     </section>

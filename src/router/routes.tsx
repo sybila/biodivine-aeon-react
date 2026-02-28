@@ -1,11 +1,33 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import { rootRoute } from './root';
-import ModelEditor from '../pages/model-editor/ModelEditor';
 import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explorer/AttractorBifurcationExplorer';
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
-import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
+import ModelEditor from '../pages/model-editor/ModelEditor';
+import AttractorBifurcationExplorerServ from '../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import AttractorVisualizerServ from '../services/attractor-visualizer/AttractorVisualizer';
+import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
+import ComputationManager from '../services/global/ComputationManager/ComputationManager';
+import { LiveModel } from '../services/global/LiveModel/LiveModel';
+import Warning from '../services/global/Warning/Warning';
+import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
+import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
 import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
+import BehaviorClassOperations from '../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
+import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
+import FileConvertors from '../services/utilities/FileConvertors/FileConvertors';
+import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
+import useBifurcationExplorerStatus from '../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import useAttractorVisualizerStatus from '../stores/AttractorVisualizer/useAttractorVisualizerStatus';
+import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
+import usePerturbationFilterSortStore from '../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
+import useControlStore from '../stores/LiveModel/ControlStore/useControlStore';
+import useModelInfoStore from '../stores/LiveModel/ModelInfoStore/useModelInfoStore';
+import useRegulationsStore from '../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
+import useVariablesStore from '../stores/LiveModel/VariablesStore/useVariablesStore';
+import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
+import useTabsStore from '../stores/Navigation/useTabsStore';
+import { rootRoute } from './root';
 
 // Redirect root path '/' to '/model-editor'
 export const defaultRedirect = createRoute({
@@ -19,8 +41,22 @@ export const modelEditorRoute = createRoute({
   path: '/model-editor',
   component: () => (
     <ModelEditor
+      liveModelServ={LiveModel}
       modelVisualization={CytoscapeME}
+      modelEditorServ={ModelEditorServ}
+      controlEditorServ={ControlEditor}
+      computationManagerServ={ComputationManager}
+      searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      warningServ={Warning}
+      fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
+      tabStore={useTabsStore}
+      resultsStatusStore={useResultsStatus}
+      controlStore={useControlStore}
+      regulationsStore={useRegulationsStore}
+      variablesStore={useVariablesStore}
+      updateFunctionsStore={useUpdateFunctionsStore}
+      modelInfoStore={useModelInfoStore}
     />
   ),
 });
@@ -28,13 +64,24 @@ export const modelEditorRoute = createRoute({
 export const AttractorBifurcationExplorerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/attractor-bifurcation-explorer',
-  component: AttractorBifurcationExplorer,
+  component: () => (
+    <AttractorBifurcationExplorer
+      attractorBifurcationExplorerServ={AttractorBifurcationExplorerServ}
+      behaviorClassOperationsServ={BehaviorClassOperations}
+      bifurcationExplorerStatusStore={useBifurcationExplorerStatus}
+    />
+  ),
 });
 
 export const AttractorVisualizerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/attractor-visualizer',
-  component: AttractorVisualizer,
+  component: () => (
+    <AttractorVisualizer
+      attractorVisualizerServ={AttractorVisualizerServ}
+      attractorVisualizerStatusStore={useAttractorVisualizerStatus}
+    />
+  ),
 });
 
 export const WitnessRoute = createRoute({
@@ -42,8 +89,22 @@ export const WitnessRoute = createRoute({
   path: '/witness',
   component: () => (
     <ModelEditor
+      liveModelServ={LiveModel}
       modelVisualization={CytoscapeME}
+      modelEditorServ={ModelEditorServ}
+      controlEditorServ={ControlEditor}
+      computationManagerServ={ComputationManager}
+      searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      warningServ={Warning}
+      fileConvertorsServ={FileConvertors}
       modelEditorStatusStore={useModelEditorStatus}
+      tabStore={useTabsStore}
+      resultsStatusStore={useResultsStatus}
+      controlStore={useControlStore}
+      regulationsStore={useRegulationsStore}
+      variablesStore={useVariablesStore}
+      updateFunctionsStore={useUpdateFunctionsStore}
+      modelInfoStore={useModelInfoStore}
     />
   ),
 });
@@ -51,7 +112,16 @@ export const WitnessRoute = createRoute({
 export const ControlPerturbationsTableRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/control-perturbations-table',
-  component: ControlPerturbationsTable,
+  component: () => (
+    <ControlPerturbationsTable
+      liveModelServ={LiveModel}
+      controlPerturbationsTableServ={ControlPerturbationsTableServ}
+      dataFormatersServ={DataFormaters}
+      searchAndFilterHelpersServ={SearchAndFilterHelpers}
+      resultsStatusStore={useResultsStatus}
+      perturbationFilterSortStore={usePerturbationFilterSortStore}
+    />
+  ),
 });
 
 export const routeTree = rootRoute.addChildren([
