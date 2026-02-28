@@ -120,7 +120,7 @@ class ControlLM implements ControlLMInt {
       callbacks.forEach((callback) => callback(inputNodes));
     } catch (error) {
       console.error(
-        'Error running phenotype/control-enabled change callbacks:'
+        'Error running phenotype/control-enabled change callbacks: ' + error
       );
     }
   }
