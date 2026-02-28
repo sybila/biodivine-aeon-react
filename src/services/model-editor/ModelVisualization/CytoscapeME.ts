@@ -83,6 +83,9 @@ class CytoscapeMEClass implements ModelVisualizationInt {
 
     this.controlEnabledShown = false;
     this.phenotypeShown = false;
+
+    LiveModel.Control.addOnControlChangeCallback(this.highlightControlEnabled);
+    LiveModel.Control.addOnPhenotypeChangeCallback(this.highlightPhenotype);
   }
 
   private initOptions(): CytoscapeOptions {

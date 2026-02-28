@@ -21,6 +21,16 @@ export interface ControlLMInt {
 
   // #endregion
 
+  // #region --- Phenotype and Control-Enabled callbacks ---
+
+  /** Add a callback to be executed when phenotype changes */
+  addOnPhenotypeChangeCallback(callback: () => void): void;
+
+  /** Add a callback to be executed when control enabled changes */
+  addOnControlChangeCallback(callback: () => void): void;
+
+  // #endregion
+
   // #region --- Oscillation ---
 
   /** Sets the currently set phenotype oscillation state */

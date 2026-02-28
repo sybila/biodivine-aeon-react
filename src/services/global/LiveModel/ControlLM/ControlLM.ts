@@ -9,7 +9,6 @@ import type {
   PhenotypeControlEnabledVars,
   PhenotypeVars,
 } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
 import ComputationManager from '../../ComputationManager/ComputationManager';
 import type { LiveModelClass } from '../LiveModel';
 import type { ControlLMInt } from './ControlLMInt';
@@ -23,8 +22,17 @@ class ControlLM implements ControlLMInt {
 
   private oscillation: Oscillation = 'allowed';
 
+  private onPhenotypeChange: Array<
+    (inputNodes?: [number, ControlInfo][] | null) => void
+  >;
+
+  private onControlChange: Array<() => void>;
+
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
+
+    this.onControlChange = [];
+    this.onPhenotypeChange = [];
   }
 
   // #endregion
@@ -73,6 +81,20 @@ class ControlLM implements ControlLMInt {
 
   // #endregion
 
+  // #region --- Phenotype and Control-Enabled callbacks ---
+
+  /** Add a callback to be executed when phenotype changes */
+  public addOnPhenotypeChangeCallback(callback: () => void): void {
+    this.onPhenotypeChange.push(callback);
+  }
+
+  /** Add a callback to be executed when control enabled changes */
+  public addOnControlChangeCallback(callback: () => void): void {
+    this.onControlChange.push(callback);
+  }
+
+  // #endregion
+
   // #region --- Oscillation ---
 
   /** Sets the currently set phenotype oscillation state */
@@ -89,6 +111,20 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Change Control Info ---
 
+  /** Runs callbacks for selected operation (change phenotype/control-enabled) and inputNodes */
+  private runCallbacks(
+    callbacks: Array<(inputNodes?: [number, ControlInfo][] | null) => void>,
+    inputNodes?: [number, ControlInfo][] | null
+  ): void {
+    try {
+      callbacks.forEach((callback) => callback(inputNodes));
+    } catch (error) {
+      console.error(
+        'Error running phenotype/control-enabled change callbacks:'
+      );
+    }
+  }
+
   /** Change control information for a variable by its ID */
   public changePhenotypeById(
     id: number,
@@ -103,7 +139,9 @@ class ControlLM implements ControlLMInt {
 
     const controlInfo = useControlStore.getState().getVariableControlInfo(id);
 
-    if (controlInfo) CytoscapeME.highlightPhenotype([[id, controlInfo]]);
+    if (controlInfo) {
+      this.runCallbacks(this.onPhenotypeChange, [[id, controlInfo]]);
+    }
   }
 
   /** Change variable control enabled state by its ID */
@@ -123,7 +161,9 @@ class ControlLM implements ControlLMInt {
 
     const controlInfo = useControlStore.getState().getVariableControlInfo(id);
 
-    if (controlInfo) CytoscapeME.highlightControlEnabled([[id, controlInfo]]);
+    if (controlInfo) {
+      this.runCallbacks(this.onControlChange, [[id, controlInfo]]);
+    }
 
     ComputationManager.resetMaxSize();
   }
