@@ -136,6 +136,22 @@ class CytoscapeMEClass implements ModelVisualizationInt {
         this.ensureRegulation(regulation);
       }
     );
+
+    this.liveModel.Variables.setAddNodeFromVisualizationFunction(
+      (id: number, name: string, position?: Position) => {
+        this.addNode(id, name, position);
+      }
+    );
+    this.liveModel.Variables.setRemoveNodeFromVisualizationFunction(
+      (id: number) => {
+        this.removeNode(id);
+      }
+    );
+    this.liveModel.Variables.setRenameNodeFromVisualizationFunction(
+      (id: number, newName: string) => {
+        this.renameNode(id, newName);
+      }
+    );
   }
 
   private initOptions(): CytoscapeOptions {

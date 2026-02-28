@@ -4,6 +4,25 @@ import type { Position } from '../../../../types';
  * Interface for managing variables in the LiveModel.
  */
 export interface VariablesLMInt {
+  // #region --- Setters for Model Visualization functions ---
+
+  /** Setter for the function that adds new node to the model visualization */
+  setAddNodeFromVisualizationFunction(
+    func: (id: number, variableName: string, position?: Position) => void
+  ): void;
+
+  /** Setter for the function that removes a node from the model visualization */
+  setRemoveNodeFromVisualizationFunction(
+    func: (variableId: number) => void
+  ): void;
+
+  /** Setter for the function that renames a node in the model visualization */
+  setRenameNodeFromVisualizationFunction(
+    func: (variableId: number, newName: string) => void
+  ): void;
+
+  // #endregion
+
   // #region --- Variable Actions ---
 
   /** Add a variable to the model */

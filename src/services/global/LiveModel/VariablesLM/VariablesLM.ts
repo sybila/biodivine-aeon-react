@@ -3,7 +3,6 @@ import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/u
 import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { ControlInfo, Position, Variable } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
 import ComputationManager from '../../ComputationManager/ComputationManager';
 import Warning from '../../Warning/Warning';
 import type { LiveModelClass } from '../LiveModel';
@@ -18,8 +17,66 @@ class VariablesLM implements VariablesLMInt {
 
   private liveModel: LiveModelClass;
 
+  /** Function which adds node to the model visualization */
+  private addNodeFromVisualizationFunction: (
+    id: number,
+    variableName: string,
+    position?: Position
+  ) => void = (_: number, __: string, ___?: Position) => {
+    console.warn(
+      'VariablesLM: No function set to add node from model visualization'
+    );
+  };
+
+  /** Function which removes node from the model visualization */
+  private removeNodeFromVisualizationFunction: (variableId: number) => void = (
+    _
+  ) => {
+    console.warn(
+      'VariablesLM: No function set to remove node from model visualization'
+    );
+  };
+
+  /** Function which renames node in the model visualization */
+  private renameNodeFromVisualizationFunction: (
+    variableId: number,
+    newName: string
+  ) => void = (_, __) => {
+    console.warn(
+      'VariablesLM: No function set to rename node from model visualization'
+    );
+  };
+
   constructor(liveModel: LiveModelClass) {
     this.liveModel = liveModel;
+  }
+
+  // #endregion
+
+  // #region --- Setters for Model Visualization functions ---
+
+  public setAddNodeFromVisualizationFunction(
+    func: (id: number, variableName: string, position?: Position) => void
+  ): void {
+    if (func != undefined) {
+      this.addNodeFromVisualizationFunction = func;
+    }
+  }
+
+  public setRemoveNodeFromVisualizationFunction(
+    func: (variableId: number) => void
+  ): void {
+    if (func != undefined) {
+      this.removeNodeFromVisualizationFunction = func;
+    }
+  }
+
+  public setRenameNodeFromVisualizationFunction(
+    func: (variableId: number, newName: string) => void
+  ): void {
+    if (func != undefined) {
+      this.renameNodeFromVisualizationFunction = func;
+    }
   }
 
   // #endregion
@@ -54,7 +111,9 @@ class VariablesLM implements VariablesLMInt {
     useVariablesStore.getState().addVariable(variable);
     useControlStore.getState().addInfo(id, controlInfo);
 
-    CytoscapeME.addNode(id, variableName, position);
+    this.addNodeFromVisualizationFunction(id, variableName, position);
+    // TODO - remove
+    //CytoscapeME.addNode(id, variableName, position);
 
     ComputationManager.resetMaxSize();
 
@@ -109,7 +168,9 @@ class VariablesLM implements VariablesLMInt {
     this.liveModel.Control.removeControlInfo(id, force);
     this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
-    CytoscapeME.removeNode(id);
+    this.removeNodeFromVisualizationFunction(id);
+    // TODO - remove
+    //CytoscapeME.removeNode(id);
 
     if (this.liveModel.isEmpty()) {
       //Todo - add QuickHelp ON;
@@ -152,7 +213,9 @@ class VariablesLM implements VariablesLMInt {
 
     useVariablesStore.getState().renameVariable(id, newName);
 
-    CytoscapeME.renameNode(id, newName);
+    this.renameNodeFromVisualizationFunction(id, newName);
+    // TODO - remove
+    //CytoscapeME.renameNode(id, newName);
 
     for (const reg of useRegulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
