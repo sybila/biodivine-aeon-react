@@ -1,6 +1,6 @@
 import type { ControlResult } from '../../../types';
 import DataFormaters from '../../utilities/DataFormaters/DataFormaters';
-import FileHelpers from '../../utilities/FileHelpers';
+import FileHelpers from '../../utilities/FileHelpers/FileHelpers';
 import type { ResultsOperationsInt } from './ResultsOperationsInt';
 
 /** Class for performing operations on results. (eg. exporting to CSV) */

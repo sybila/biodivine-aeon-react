@@ -13,7 +13,7 @@ import type {
   Position,
   Variable,
 } from '../../../../types';
-import FileHelpers from '../../../utilities/FileHelpers';
+import FileHelpers from '../../../utilities/FileHelpers/FileHelpers';
 import type { LiveModelClass } from '../LiveModel';
 import type { ExportLMInt } from './ExportLMInt';
 
