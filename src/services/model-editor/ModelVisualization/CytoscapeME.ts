@@ -397,13 +397,13 @@ class CytoscapeMEClass implements ModelVisualizationInt {
 
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setHoverItemInfo({ type: 'variable', id: id });
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
-      useModelEditorStatus.getState().setHoverItemInfo(null);
+      this.modelEditorStatusStore.getState().setHoverItemInfo(null);
     });
     node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
