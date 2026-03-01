@@ -1,10 +1,27 @@
 import type { ControlResult } from '../../../types';
 import DataFormaters from '../../utilities/DataFormaters/DataFormaters';
+import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 import FileHelpers from '../../utilities/FileHelpers/FileHelpers';
+import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ResultsOperationsInt } from './ResultsOperationsInt';
 
 /** Class for performing operations on results. (eg. exporting to CSV) */
 class ResultsOperationsClass implements ResultsOperationsInt {
+  // #region --- Properties + Constructor ---
+
+  private dataFormatersServ: DataFormatersInt;
+  private fileHelpersServ: FileHelpersInt;
+
+  constructor(
+    dataFormatersServ: DataFormatersInt,
+    fileHelpersServ: FileHelpersInt
+  ) {
+    this.dataFormatersServ = dataFormatersServ;
+    this.fileHelpersServ = fileHelpersServ;
+  }
+
+  // #endregion
+
   /** Export control perturbations as a CSV file and trigger a download.
    *  @param controlPerturbations - Array of control perturbations to be exported.
    *  @param fileName - The name of the file to be downloaded (without .csv extension).
@@ -15,11 +32,16 @@ class ResultsOperationsClass implements ResultsOperationsInt {
     fileName: string
   ): Promise<void> {
     const fileContent =
-      DataFormaters.convertPerturbationsToCsvString(controlPerturbations);
-    FileHelpers.downloadFile(fileName + '.csv', fileContent);
+      this.dataFormatersServ.convertPerturbationsToCsvString(
+        controlPerturbations
+      );
+    this.fileHelpersServ.downloadFile(fileName + '.csv', fileContent);
   }
 }
 
-const ResultsOperations = new ResultsOperationsClass();
+const ResultsOperations = new ResultsOperationsClass(
+  DataFormaters,
+  FileHelpers
+);
 
 export default ResultsOperations;
