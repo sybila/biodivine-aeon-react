@@ -33,13 +33,21 @@ import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 	to reflect the current state of the model.
 */
 class LiveModelClass implements LiveModelInt {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   /** We use this to indicate that there is a batch of changes to the model that are being processed,
 	and we therefore shouldn't run intensive tasks (like function consistency checks on server).
 	It is the responsibility of the user of this flag to re-run these tasks AFTER the changes are done.
 	Currently we use this only in import. */
   public disable_dynamic_validation: boolean = false;
+
+  constructor() {
+    useTabsStore.getState().firstTabOnClick = () => {
+      this.Models.loadModel(0);
+    };
+
+    ComputationManager.setLiveModel(this);
+  }
 
   // #endregion
 

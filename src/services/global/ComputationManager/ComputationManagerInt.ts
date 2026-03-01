@@ -5,12 +5,20 @@ import type {
   ControlResults,
   StabilityAnalysisModes,
 } from '../../../types';
+import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 
 /**
  * Interface for ComputationManagerClass. All public functions are included with their documentation and types.
  * Types are kept as in the class, even if there are syntax errors due to dependencies.
  */
 export interface ComputationManagerInt {
+  // #region --- LiveModel Reference ---
+
+  /** Setter for the LiveModel reference */
+  setLiveModel(liveModel: LiveModelInt): void;
+
+  // #endregion
+
   // #region --- External Compute Engine Adress Setters/Getters ---
 
   /** Sets the URL of the compute engine */

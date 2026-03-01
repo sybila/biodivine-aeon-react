@@ -23,7 +23,7 @@ import type {
 import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
-import { LiveModel } from '../LiveModel/LiveModel';
+import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import type { ComputationManagerInt } from './ComputationManagerInt';
 
 /**
@@ -50,6 +50,29 @@ class ComputationManagerClass implements ComputationManagerInt {
 
   /** If not empty, blocks all computations with the given reason. */
   private computationBlockingOperations: Record<string, string> = {};
+
+  /** Reference to the LiveModel service. Needs to be set after creation of the ComputationManager because of circular dependencies. */
+  private liveModelServ: LiveModelInt | undefined = undefined;
+
+  // #endregion
+
+  // #region --- LiveModel Reference ---
+
+  private getLiveModel(): LiveModelInt | undefined {
+    if (!this.liveModelServ) {
+      console.error(
+        'ComputationManager: LiveModel reference is not set. This should not happen, make sure to set it after creating the ComputationManager.'
+      );
+      return undefined;
+    } else {
+      return this.liveModelServ;
+    }
+  }
+
+  /** Setter for the LiveModel reference */
+  public setLiveModel(liveModel: LiveModelInt): void {
+    this.liveModelServ = liveModel;
+  }
 
   // #endregion
 
@@ -92,7 +115,8 @@ class ComputationManagerClass implements ComputationManagerInt {
 
   /** Sets maximum size of a perturbation */
   public setMaxSize(max: number | undefined) {
-    const numberOfEnabled = LiveModel.Control.getNumberOfSetControl()[0];
+    const numberOfEnabled =
+      this.getLiveModel()!.Control.getNumberOfSetControl()[0];
 
     if (!max || max > numberOfEnabled) {
       this.controlComputationParams.maxSize = numberOfEnabled;
@@ -107,7 +131,7 @@ class ComputationManagerClass implements ComputationManagerInt {
   public getMaxSize() {
     if (this.controlComputationParams.maxSize === undefined) {
       this.controlComputationParams.maxSize =
-        LiveModel.Control.getNumberOfSetControl()[0];
+        this.getLiveModel()!.Control.getNumberOfSetControl()[0];
     }
 
     return this.controlComputationParams.maxSize;
@@ -188,7 +212,7 @@ class ComputationManagerClass implements ComputationManagerInt {
 
     if (this.computationMode === 'Control') {
       const [controlEnabled, inPhenotype] =
-        LiveModel.Control.getNumberOfSetControl();
+        this.getLiveModel()!.Control.getNumberOfSetControl();
 
       if (controlEnabled === 0) {
         throw new Error(
@@ -293,11 +317,14 @@ class ComputationManagerClass implements ComputationManagerInt {
     if (error || !response || !response.model) {
       Message.showError(`Error opening witness: "${error ?? 'Unknown error'}"`);
     } else {
-      const modelId = LiveModel.Models.addModel(response.model, 'witness');
-      LiveModel.Models.loadModel(modelId);
+      const modelId = this.getLiveModel()!.Models.addModel(
+        response.model,
+        'witness'
+      );
+      this.getLiveModel()!.Models.loadModel(modelId);
       useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
-        LiveModel.Models.loadModel(modelId);
-        () => LiveModel.Models.removeModel(modelId);
+        this.getLiveModel()!.Models.loadModel(modelId);
+        () => this.getLiveModel()!.Models.removeModel(modelId);
       });
     }
 
@@ -351,7 +378,7 @@ class ComputationManagerClass implements ComputationManagerInt {
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis(): void {
-    const model = LiveModel.Export.exportAeon();
+    const model = this.getLiveModel()!.Export.exportAeon();
 
     try {
       this.computationCanStart(model);
@@ -621,11 +648,12 @@ class ComputationManagerClass implements ComputationManagerInt {
   // #region --- Control Computation ---
 
   public startControlComputation(): void {
-    const model = LiveModel.Export.exportAeon();
+    const model = this.getLiveModel()!.Export.exportAeon();
 
-    const oscillation = LiveModel.Control.getOscillation() ?? 'allowed';
+    const oscillation =
+      this.getLiveModel()!.Control.getOscillation() ?? 'allowed';
     const phenotypeControlEnabled =
-      LiveModel.Control.getPhenotypeControlEnabledVars();
+      this.getLiveModel()!.Control.getPhenotypeControlEnabledVars();
 
     try {
       this.computationCanStart(model);
