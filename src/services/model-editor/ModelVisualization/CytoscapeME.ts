@@ -15,7 +15,6 @@ import {
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import ControlEditor from '../ControlEditor/ControlEditor';
-import ModelEditor from '../ModelEditor/ModelEditor';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';
 
 const DOUBLE_CLICK_DELAY = 400;
@@ -399,13 +398,15 @@ class CytoscapeMEClass implements ModelVisualizationInt {
 
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
-      ModelEditor.hoverVariable(id, true);
-      ControlEditor.hoverVariable(id, true);
+      useModelEditorStatus
+        .getState()
+        .setHoverItemInfo({ type: 'variable', id: id });
+      ControlEditor.hoverVariable(id, true); // Todo - move variable hover to this.modelEditorStatusStore
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
-      ModelEditor.hoverVariable(id, false);
-      ControlEditor.hoverVariable(id, false);
+      useModelEditorStatus.getState().setHoverItemInfo(null);
+      ControlEditor.hoverVariable(id, false); // Todo - move variable hover to this.modelEditorStatusStore
     });
     node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
@@ -512,21 +513,21 @@ class CytoscapeMEClass implements ModelVisualizationInt {
       this.modelEditorStatusStore
         .getState()
         .setSelectedItemInfo({ type: 'regulation', regulationIds: edgeVars });
-      ModelEditor.selectRegulation(edgeVars, true); // Todo - move regulation select to this.modelEditorStatusStore
       this.renderMenuForSelectedEdge(edge);
     });
     edge.on('unselect', (e: any) => {
-      ModelEditor.selectRegulation(edgeVars, false); // Todo - move regulation select to this.modelEditorStatusStore
       this.modelEditorStatusStore.getState().setSelectedItemInfo(null);
       this.modelEditorStatusStore.getState().setFloatingMenuInfo(null);
     });
     edge.on('mouseover', (e: any) => {
       edge.addClass('hover');
-      ModelEditor.hoverRegulation(edgeVars, true);
+      this.modelEditorStatusStore
+        .getState()
+        .setHoverItemInfo({ type: 'regulation', regulationIds: edgeVars });
     });
     edge.on('mouseout', (e: any) => {
       edge.removeClass('hover');
-      ModelEditor.hoverRegulation(edgeVars, false);
+      this.modelEditorStatusStore.getState().setHoverItemInfo(null);
     });
   }
 
