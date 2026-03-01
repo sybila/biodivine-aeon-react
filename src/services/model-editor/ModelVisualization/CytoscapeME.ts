@@ -14,7 +14,6 @@ import {
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
-import ControlEditor from '../ControlEditor/ControlEditor';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';
 
 const DOUBLE_CLICK_DELAY = 400;
@@ -401,12 +400,10 @@ class CytoscapeMEClass implements ModelVisualizationInt {
       useModelEditorStatus
         .getState()
         .setHoverItemInfo({ type: 'variable', id: id });
-      ControlEditor.hoverVariable(id, true); // Todo - move variable hover to this.modelEditorStatusStore
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
       useModelEditorStatus.getState().setHoverItemInfo(null);
-      ControlEditor.hoverVariable(id, false); // Todo - move variable hover to this.modelEditorStatusStore
     });
     node.on('select', (e: any) => {
       // deselect any previous selection - we don't support multiselection yet
