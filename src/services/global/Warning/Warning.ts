@@ -6,11 +6,14 @@ import useWarningStore from '../../../stores/Warning/useWarningStore';
 import type { WarningState } from '../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import WaiterFunction from '../../utilities/WaiterFunction/WaiterFunction';
+import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
 import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
 class WarningClass implements WarningInt {
   // #region --- Attributes + Constructor ---
+
+  private waiterFunction: WaiterFunctionInt;
 
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private tabsStore: ZustandStore<TabsState>;
@@ -19,11 +22,13 @@ class WarningClass implements WarningInt {
   constructor(
     resultsStatusStore: ZustandStore<ResultsStatus>,
     tabsStore: ZustandStore<TabsState>,
-    warningStore: ZustandStore<WarningState>
+    warningStore: ZustandStore<WarningState>,
+    waiterFunction: WaiterFunctionInt
   ) {
     this.resultsStatusStore = resultsStatusStore;
     this.tabsStore = tabsStore;
     this.warningStore = warningStore;
+    this.waiterFunction = waiterFunction;
   }
 
   // #region --- Starting Computation Warning ---
@@ -160,7 +165,7 @@ class WarningClass implements WarningInt {
     message: string,
     action: () => void
   ): Promise<boolean> {
-    const waiter = WaiterFunction.createWaiterFunction<boolean>();
+    const waiter = this.waiterFunction.createWaiterFunction<boolean>();
 
     this.warningStore.getState().addWarning(message, [
       {
@@ -187,7 +192,8 @@ class WarningClass implements WarningInt {
 const Warning = new WarningClass(
   useResultsStatus,
   useTabsStore,
-  useWarningStore
+  useWarningStore,
+  WaiterFunction
 );
 
 export default Warning;
