@@ -113,6 +113,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
+            modelEditorStatusStore={modelEditorStatusStore}
           />
         );
       case 'Visual Options':

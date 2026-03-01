@@ -13,6 +13,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   searchAndFilterHelpersServ,
   controlStore,
   variablesStore,
+  modelEditorStatusStore,
 }) => {
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
     controlEditorServ.getPhenotypeOscillation()
@@ -61,6 +62,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         variablesStore={variablesStore}
         controlStore={controlStore}
+        modelEditorStatusStore={modelEditorStatusStore}
       />
     </div>
   );

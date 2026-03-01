@@ -1,19 +1,13 @@
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
 import type { ControlEditorInt } from './ControlEditorInt';
 
-// TODO: Rework hover functionality of this class to use stores
-
 class ControlEditorClass implements ControlEditorInt {
   // #region --- Properties ---
-
-  /** Function for toggling hover state of variables in ControlEditorTabContent.tsx component */
-  private hoverVariableInfo:
-    | ((id: number, turnOnHover: boolean) => void)
-    | null = null;
 
   /** Record containing all selected variables in the ControlEditorTabContent.tsx component.
    *  Key: variable name
@@ -28,13 +22,6 @@ class ControlEditorClass implements ControlEditorInt {
   // #endregion
 
   // #region --- Hover/Select Variable Functions ---
-
-  /** Sets hover function for variables inside the ControlEditorTabContent.tsx (needs to be called before hoverVariable function) */
-  public setHoverVariableFunction(
-    hoverFunction: (id: number, turnOnHover: boolean) => void
-  ) {
-    this.hoverVariableInfo = hoverFunction;
-  }
 
   /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
    *  Key: variable name
@@ -59,9 +46,9 @@ class ControlEditorClass implements ControlEditorInt {
    * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
    */
   public hoverVariable(id: number, turnOnHover: boolean) {
-    if (this.hoverVariableInfo) {
-      this.hoverVariableInfo(id, turnOnHover);
-    }
+    useModelEditorStatus
+      .getState()
+      .setHoverItemInfo(turnOnHover ? { type: 'variable', id } : null);
   }
 
   // #endregion
