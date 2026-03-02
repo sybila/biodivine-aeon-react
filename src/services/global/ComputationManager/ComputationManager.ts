@@ -21,7 +21,7 @@ import type {
   UpdateFunctionStatus,
 } from '../../../types';
 import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
+import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import type { ComputationManagerInt } from './ComputationManagerInt';
@@ -596,34 +596,43 @@ class ComputationManagerClass implements ComputationManagerInt {
    * Handles errors and inserts attractor data into AttractorVisualizer */
   private getAttractorCallback(
     error: string | undefined,
-    attractorData: AttractorData | undefined
+    attractorData: AttractorData | undefined,
+    attractorVisualizerRef: AttractorVisualizerInt
   ) {
     if (error || !attractorData) {
       Message.showError(
         `Error fetching attractor: ${error ?? 'Internal error'}`
       );
     } else {
-      AttractorVisualizer.insertAttractorData(attractorData, true);
+      attractorVisualizerRef.insertAttractorData(attractorData, true);
     }
 
     Loading.endLoading();
   }
 
   /** Fetches an attractor by its behavior string. Used by the results window.*/
-  public getAttractorByBehavior(behavior: string) {
+  public getAttractorByBehavior(
+    behavior: string,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ) {
     Loading.startLoading();
     this.computeEngine.getAttractorByBehavior(
       behavior,
-      this.getAttractorCallback.bind(this)
+      (error, attractorData) =>
+        this.getAttractorCallback(error, attractorData, attractorVisualizerRef)
     );
   }
 
   /** Fetches an attractor for node in the AttractorBifurcationExplorer */
-  public getBifurcationExplorerAttractor(nodeId: number) {
+  public getBifurcationExplorerAttractor(
+    nodeId: number,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ) {
     Loading.startLoading();
     this.computeEngine.getBifurcationExplorerAttractor(
       nodeId,
-      this.getAttractorCallback.bind(this)
+      (error, attractorData) =>
+        this.getAttractorCallback(error, attractorData, attractorVisualizerRef)
     );
   }
 
@@ -631,7 +640,8 @@ class ComputationManagerClass implements ComputationManagerInt {
     nodeId: number,
     variableName: string,
     behavior: string,
-    vector: string[]
+    vector: string[],
+    attractorVisualizerRef: AttractorVisualizerInt
   ) {
     Loading.startLoading();
     this.computeEngine.getStabilityAnalysisAttractor(
@@ -639,7 +649,8 @@ class ComputationManagerClass implements ComputationManagerInt {
       variableName,
       behavior,
       vector,
-      this.getAttractorCallback.bind(this)
+      (error, attractorData) =>
+        this.getAttractorCallback(error, attractorData, attractorVisualizerRef)
     );
   }
 

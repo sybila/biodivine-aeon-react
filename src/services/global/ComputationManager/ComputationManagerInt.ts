@@ -5,6 +5,7 @@ import type {
   ControlResults,
   StabilityAnalysisModes,
 } from '../../../types';
+import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 
 /**
@@ -156,16 +157,23 @@ export interface ComputationManagerInt {
   // #region --- Attractor Visualizer ---
 
   /** Fetches an attractor by its behavior string. Used by the results window.*/
-  getAttractorByBehavior(behavior: string): void;
+  getAttractorByBehavior(
+    behavior: string,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ): void;
 
   /** Fetches an attractor for node in the AttractorBifurcationExplorer */
-  getBifurcationExplorerAttractor(nodeId: number): void;
+  getBifurcationExplorerAttractor(
+    nodeId: number,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ): void;
 
   getStabilityAnalysisAttractor(
     nodeId: number,
     variableName: string,
     behavior: string,
-    vector: string[]
+    vector: string[],
+    attractorVisualizerRef: AttractorVisualizerInt
   ): void;
 
   // #endregion
