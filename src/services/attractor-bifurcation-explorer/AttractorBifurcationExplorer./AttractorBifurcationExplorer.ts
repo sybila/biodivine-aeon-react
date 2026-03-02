@@ -233,7 +233,7 @@ class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerI
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
   public loadBifurcationTree(fit: boolean = true): void {
-    ComputationManager.getBifurcationTree(fit);
+    ComputationManager.getBifurcationTree(fit, this);
   }
 
   /** Automatically expands the bifurcation tree from the selected node.
@@ -252,9 +252,13 @@ class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerI
         return;
       }
 
-      ComputationManager.autoExpandBifurcationTree(newNodeID.id, depth ?? 1);
+      ComputationManager.autoExpandBifurcationTree(
+        newNodeID.id,
+        depth ?? 1,
+        this
+      );
     } else {
-      ComputationManager.autoExpandBifurcationTree(nodeId, depth ?? 1);
+      ComputationManager.autoExpandBifurcationTree(nodeId, depth ?? 1, this);
     }
   }
 
@@ -287,7 +291,7 @@ class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerI
 
   /** Removes a node and its child nodes from the AttractorBifurcationExplorer. */
   public removeNode(nodeId: number): void {
-    ComputationManager.deleteBifurcationDecision(nodeId);
+    ComputationManager.deleteBifurcationDecision(nodeId, this);
   }
 
   /** Gets the necessary conditions for a specific node. */
@@ -353,12 +357,12 @@ class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerI
 
   /** Gets the decisions for the selected node. */
   public getDecisions(nodeId: number): void {
-    ComputationManager.getDecisions(nodeId);
+    ComputationManager.getDecisions(nodeId, this);
   }
 
   /** Make decision for a specific node. */
   public makeDecision(nodeId: number, decisionId: number): void {
-    ComputationManager.makeDecision(nodeId, decisionId);
+    ComputationManager.makeDecision(nodeId, decisionId, this);
   }
 
   // #endregion
@@ -378,7 +382,7 @@ class AttractorBifurcationExplorerClass implements AttractorBifurcationExplorerI
   /** Set precision for the bifurcation tree. */
   public setPrecision(precision: number): void {
     this.precision = precision;
-    ComputationManager.setBifurcationTreePrecision(precision);
+    ComputationManager.setBifurcationTreePrecision(precision, this);
   }
 
   /** Fits the bifurcation tree to the viewport. */

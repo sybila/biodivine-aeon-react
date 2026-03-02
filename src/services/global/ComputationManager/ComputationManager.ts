@@ -20,7 +20,7 @@ import type {
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
 } from '../../../types';
-import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
@@ -400,14 +400,15 @@ class ComputationManagerClass implements ComputationManagerInt {
   private getBifurcationTreeCallback(
     error: string | undefined,
     nodes: NodeDataBE[] | undefined,
-    fit: boolean
+    fit: boolean,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !nodes) {
       Message.showError(
         `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(nodes, fit);
+      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, fit);
     }
 
     Loading.endLoading();
@@ -416,58 +417,84 @@ class ComputationManagerClass implements ComputationManagerInt {
   /** Fetches the bifurcation tree from the compute engine.
    * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
    */
-  public getBifurcationTree(fit: boolean): void {
+  public getBifurcationTree(
+    fit: boolean,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     Loading.startLoading();
     this.computeEngine.getBifurcationTree((error, nodes) =>
-      this.getBifurcationTreeCallback(error, nodes, fit)
+      this.getBifurcationTreeCallback(
+        error,
+        nodes,
+        fit,
+        attractorBifurcationExplorerRef
+      )
     );
   }
 
   /** Callback for setting the bifurcation tree precision. Checks for errors and updates the UI accordingly. */
-  private setBifurcationTreePrecisionCallback(error: string | undefined): void {
+  private setBifurcationTreePrecisionCallback(
+    error: string | undefined,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     if (error) {
       Message.showError(`Error setting bifurcation tree precision: ${error}`);
       return;
     }
 
-    this.getBifurcationTree(false);
+    this.getBifurcationTree(false, attractorBifurcationExplorerRef);
   }
 
   /** Sets the precision of the bifurcation tree.
    *  Precision is % with up to two decimal places
    */
-  public setBifurcationTreePrecision(precision: number): void {
-    this.computeEngine.setBifurcationTreePrecision(
-      precision,
-      this.setBifurcationTreePrecisionCallback.bind(this)
+  public setBifurcationTreePrecision(
+    precision: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
+    this.computeEngine.setBifurcationTreePrecision(precision, (error) =>
+      this.setBifurcationTreePrecisionCallback(
+        error,
+        attractorBifurcationExplorerRef
+      )
     );
   }
 
   /** Callback for auto-expanding the bifurcation tree. Sets the expanded nodes in the AttractorBifurcationExplorer and unselects selected node. */
   private autoExpandBifurcationTreeCallback(
     error: string | undefined,
-    nodes: NodeDataBE[] | undefined
+    nodes: NodeDataBE[] | undefined,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !nodes) {
       Message.showError(
         `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(nodes, true);
+      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, true);
     }
 
-    AttractorBifurcationExplorer.refreshSelection();
+    attractorBifurcationExplorerRef.refreshSelection();
 
     Loading.endLoading();
   }
 
   /** Automatically expands the bifurcation tree at the given node and depth. */
-  public autoExpandBifurcationTree(nodeId: number, depth: number): void {
+  public autoExpandBifurcationTree(
+    nodeId: number,
+    depth: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     Loading.startLoading();
     this.computeEngine.autoExpandBifurcationTree(
       nodeId,
       depth,
-      this.autoExpandBifurcationTreeCallback.bind(this)
+      (error, nodes) =>
+        this.autoExpandBifurcationTreeCallback(
+          error,
+          nodes,
+          attractorBifurcationExplorerRef
+        )
     );
   }
 
@@ -475,7 +502,8 @@ class ComputationManagerClass implements ComputationManagerInt {
   private deleteBifurcationDecisionCallback(
     error: string | undefined,
     node: NodeDataBE | undefined,
-    removed: number[] | undefined
+    removed: number[] | undefined,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !node) {
       Message.showError(
@@ -487,18 +515,27 @@ class ComputationManagerClass implements ComputationManagerInt {
           `Bifurcation decision for node ${node.id} was deleted, but no nodes were removed.`
         );
       }
-      AttractorBifurcationExplorer.removeFromCytoscape(node, removed ?? []);
+      attractorBifurcationExplorerRef.removeFromCytoscape(node, removed ?? []);
     }
 
     Loading.endLoading();
   }
 
   /** Deletes a bifurcation decision by node ID. */
-  public deleteBifurcationDecision(nodeId: number): void {
+  public deleteBifurcationDecision(
+    nodeId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     Loading.startLoading();
     this.computeEngine.deleteBifurcationDecision(
       nodeId,
-      this.deleteBifurcationDecisionCallback.bind(this)
+      (error, node, removed) =>
+        this.deleteBifurcationDecisionCallback(
+          error,
+          node,
+          removed,
+          attractorBifurcationExplorerRef
+        )
     );
   }
 
@@ -541,7 +578,8 @@ class ComputationManagerClass implements ComputationManagerInt {
   /** Callback for fetching decisions. */
   public getDecisionsCallback(
     error: string | undefined,
-    decisions: Decisions | undefined
+    decisions: Decisions | undefined,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ) {
     if (error || !decisions) {
       Message.showError(
@@ -549,7 +587,7 @@ class ComputationManagerClass implements ComputationManagerInt {
       );
     } else {
       const formatedDecisions =
-        AttractorBifurcationExplorer.formatClassesDecisions(decisions);
+        attractorBifurcationExplorerRef.formatClassesDecisions(decisions);
       useBifurcationExplorerStatus.getState().loadDecisions(formatedDecisions);
     }
 
@@ -557,34 +595,43 @@ class ComputationManagerClass implements ComputationManagerInt {
   }
 
   /** Fetches the decisions for a specific node. */
-  public getDecisions(nodeId: number): void {
+  public getDecisions(
+    nodeId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     Loading.startLoading();
-    this.computeEngine.getDecisions(
-      nodeId,
-      this.getDecisionsCallback.bind(this)
+    this.computeEngine.getDecisions(nodeId, (error, decisions) =>
+      this.getDecisionsCallback(
+        error,
+        decisions,
+        attractorBifurcationExplorerRef
+      )
     );
   }
 
   public makeDecisionCallback(
     error: string | undefined,
-    node: NodeDataBE[] | undefined
+    node: NodeDataBE[] | undefined,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !node) {
       Message.showError(`Error making decision: ${error ?? 'Internal error'}`);
     } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(node, true, false);
-      AttractorBifurcationExplorer.refreshSelection();
+      attractorBifurcationExplorerRef.insertBifurcationTree(node, true, false);
+      attractorBifurcationExplorerRef.refreshSelection();
     }
 
     Loading.endLoading();
   }
 
-  public makeDecision(nodeId: number, decisionId: number): void {
+  public makeDecision(
+    nodeId: number,
+    decisionId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void {
     Loading.startLoading();
-    this.computeEngine.makeDecision(
-      nodeId,
-      decisionId,
-      this.makeDecisionCallback.bind(this)
+    this.computeEngine.makeDecision(nodeId, decisionId, (error, node) =>
+      this.makeDecisionCallback(error, node, attractorBifurcationExplorerRef)
     );
   }
 
