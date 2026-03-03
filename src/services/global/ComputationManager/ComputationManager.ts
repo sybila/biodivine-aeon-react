@@ -1,11 +1,18 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
+import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import type { ComputeEngineStatusState } from '../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
+import useComputeEngineStatus from '../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
+import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
+import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { TabsState } from '../../../stores/Navigation/TabState';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   AttractorData,
   AttractorResults,
@@ -30,10 +37,10 @@ import type { ComputationManagerInt } from './ComputationManagerInt';
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
 */
 class ComputationManagerClass implements ComputationManagerInt {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   /** Currently used compute engine comunicator */
-  private computeEngine = new ComputeEngine(this.setResults);
+  private computeEngine = new ComputeEngine(this.setResults.bind(this));
 
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
@@ -53,6 +60,29 @@ class ComputationManagerClass implements ComputationManagerInt {
 
   /** Reference to the LiveModel service. Needs to be set after creation of the ComputationManager because of circular dependencies. */
   private liveModelServ: LiveModelInt | undefined = undefined;
+
+  private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
+  private resultsStatusStore: ZustandStore<ResultsStatus>;
+  private computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+  private tabsStore: ZustandStore<TabsState>;
+
+  constructor(
+    bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>,
+    resultsStatusStore: ZustandStore<ResultsStatus>,
+    computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    variablesStore: ZustandStore<VariablesStatus>,
+    tabsStore: ZustandStore<TabsState>
+  ) {
+    this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
+    this.resultsStatusStore = resultsStatusStore;
+    this.computeEngineStatusStore = computeEngineStatusStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.variablesStore = variablesStore;
+    this.tabsStore = tabsStore;
+  }
 
   // #endregion
 
@@ -198,13 +228,13 @@ class ComputationManagerClass implements ComputationManagerInt {
       );
     }
 
-    const updateFunctionErrorVarID = useUpdateFunctionsStore
+    const updateFunctionErrorVarID = this.updateFunctionsStore
       .getState()
       .errorInUpdateFunctions();
 
     if (updateFunctionErrorVarID !== undefined) {
       throw new Error(
-        `Cannot start computation: Update function for variable '${useVariablesStore
+        `Cannot start computation: Update function for variable '${this.variablesStore
           .getState()
           .getVariableName(updateFunctionErrorVarID)}' has errors.`
       );
@@ -227,8 +257,8 @@ class ComputationManagerClass implements ComputationManagerInt {
       }
     }
 
-    useResultsStatus.getState().clear();
-    useTabsStore.getState().clear();
+    this.resultsStatusStore.getState().clear();
+    this.tabsStore.getState().clear();
 
     return;
   }
@@ -241,14 +271,16 @@ class ComputationManagerClass implements ComputationManagerInt {
     color: string | undefined = undefined
   ): void => {
     if (computeEngineStatus)
-      useComputeEngineStatus
+      this.computeEngineStatusStore
         .getState()
         .setComputeEngineStatus(computeEngineStatus);
 
     if (computationStatus)
-      useComputeEngineStatus.getState().setComputationStatus(computationStatus);
+      this.computeEngineStatusStore
+        .getState()
+        .setComputationStatus(computationStatus);
 
-    if (color) useComputeEngineStatus.getState().setStatusColor(color);
+    if (color) this.computeEngineStatusStore.getState().setStatusColor(color);
 
     if (error) {
       Message.showError(error);
@@ -269,16 +301,16 @@ class ComputationManagerClass implements ComputationManagerInt {
   ): void {
     if (!response) {
       Message.showError(
-        `Error validating update function for variable ${useVariablesStore
+        `Error validating update function for variable ${this.variablesStore
           .getState()
           .getVariableName(variableId)}`
       );
-      useUpdateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+      this.updateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
         status: 'Error validating update function',
         isError: true,
       });
     } else {
-      useUpdateFunctionsStore
+      this.updateFunctionsStore
         .getState()
         .setUpdateFunctionStatus(variableId, response);
     }
@@ -322,7 +354,7 @@ class ComputationManagerClass implements ComputationManagerInt {
         'witness'
       );
       this.getLiveModel()!.Models.loadModel(modelId);
-      useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
+      this.tabsStore.getState().addTab(`/witness`, 'Witness', () => {
         this.getLiveModel()!.Models.loadModel(modelId);
         () => this.getLiveModel()!.Models.removeModel(modelId);
       });
@@ -550,7 +582,7 @@ class ComputationManagerClass implements ComputationManagerInt {
         `Error fetching stability data: ${error ?? 'Internal error'}`
       );
     } else {
-      useBifurcationExplorerStatus.getState().loadStabilityData({
+      this.bifurcationExplorerStatusStore.getState().loadStabilityData({
         computedBehavior: behavior,
         stabilityAnalysis: data,
       });
@@ -588,7 +620,9 @@ class ComputationManagerClass implements ComputationManagerInt {
     } else {
       const formatedDecisions =
         attractorBifurcationExplorerRef.formatClassesDecisions(decisions);
-      useBifurcationExplorerStatus.getState().loadDecisions(formatedDecisions);
+      this.bifurcationExplorerStatusStore
+        .getState()
+        .loadDecisions(formatedDecisions);
     }
 
     Loading.endLoading();
@@ -742,11 +776,11 @@ class ComputationManagerClass implements ComputationManagerInt {
     results: AttractorResults | ControlResults | undefined
   ): void {
     if (type) {
-      useResultsStatus.getState().setType(type);
+      this.resultsStatusStore.getState().setType(type);
     }
 
     if (results) {
-      useResultsStatus.getState().setResults(results);
+      this.resultsStatusStore.getState().setResults(results);
     }
 
     if (error) {
@@ -761,7 +795,13 @@ class ComputationManagerClass implements ComputationManagerInt {
   // #endregion
 }
 
-const ComputationManager: ComputationManagerClass =
-  new ComputationManagerClass();
+const ComputationManager: ComputationManagerClass = new ComputationManagerClass(
+  useBifurcationExplorerStatus,
+  useResultsStatus,
+  useComputeEngineStatus,
+  useUpdateFunctionsStore,
+  useVariablesStore,
+  useTabsStore
+);
 
 export default ComputationManager;

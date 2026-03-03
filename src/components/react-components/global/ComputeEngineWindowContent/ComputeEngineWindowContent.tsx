@@ -1,17 +1,16 @@
 import config from '../../../../config';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
+import useComputeEngineStatus from '../../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 
 import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
+import Time from '../../../../services/utilities/Time';
 import type { ComputationStatus } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import Time from '../../../../services/utilities/Time';
-import SeparatorLine from '../SeparatorLine/SeparatorLine';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import useOverlayWindowStore from '../../../../stores/ContentOverlayWindow/useOverlayWindowStore';
+import SeparatorLine from '../SeparatorLine/SeparatorLine';
 
 const ComputeEngineWindowContent = () => {
   const computeEngineStatus: string = useComputeEngineStatus(
@@ -116,7 +115,11 @@ const ComputeEngineWindowContent = () => {
   };
 
   const openComputeEngineOverlay = () => {
-    window.open(config.computeEngine.downloadLink, '_blank', 'noopener,noreferrer');
+    window.open(
+      config.computeEngine.downloadLink,
+      '_blank',
+      'noopener,noreferrer'
+    );
   };
 
   return (

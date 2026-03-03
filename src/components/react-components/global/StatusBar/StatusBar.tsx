@@ -1,5 +1,5 @@
 import Time from '../../../../services/utilities/Time';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
+import useComputeEngineStatus from '../../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
 
 const StatusBar: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const computeEngineStatus: string = useComputeEngineStatus(
