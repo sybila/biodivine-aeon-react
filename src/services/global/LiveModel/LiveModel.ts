@@ -81,7 +81,13 @@ class LiveModelClass implements LiveModelInt {
   );
 
   /** Functions used when importing model from Aeon format. */
-  Import: ImportLMInt = new ImportLM(this);
+  Import: ImportLMInt = new ImportLM(
+    this,
+    Warning,
+    useResultsStatus,
+    useVariablesStore,
+    useTabsStore
+  );
 
   /** Functions used for export of the model. */
   Export: ExportLMInt = new ExportLM(
