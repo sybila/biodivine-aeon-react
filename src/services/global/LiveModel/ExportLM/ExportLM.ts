@@ -15,7 +15,6 @@ import type {
   Variable,
 } from '../../../../types';
 import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
-import type { LiveModelClass } from '../LiveModel';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ExportLMInt } from './ExportLMInt';
 
@@ -31,7 +30,7 @@ class ExportLM implements ExportLMInt {
   private hasLocalStorage: boolean;
 
   /** Reference to the parent LiveModel class. */
-  private liveModel: LiveModelClass;
+  private liveModel: LiveModelInt;
   private fileHelpersServ: FileHelpersInt;
 
   private controlStore: ZustandStore<ControlStatus>;

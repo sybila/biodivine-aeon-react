@@ -11,7 +11,7 @@ import type {
   PhenotypeVars,
 } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
-import type { LiveModelClass } from '../LiveModel';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ControlLMInt } from './ControlLMInt';
 
 /** Class to manage control information for live model variables */
@@ -19,7 +19,7 @@ class ControlLM implements ControlLMInt {
   // #region --- Properties + Constructor ---
 
   /** Reference to the live model instance */
-  private liveModel: LiveModelClass;
+  private liveModel: LiveModelInt;
 
   private computationManager: ComputationManagerInt;
 
@@ -36,7 +36,7 @@ class ControlLM implements ControlLMInt {
   private onControlChange: Array<() => void>;
 
   constructor(
-    liveModel: LiveModelClass,
+    liveModel: LiveModelInt,
     computationManager: ComputationManagerInt,
     controlStore: ZustandStore<ControlStatus>,
     variablesStore: ZustandStore<VariablesStatus>
