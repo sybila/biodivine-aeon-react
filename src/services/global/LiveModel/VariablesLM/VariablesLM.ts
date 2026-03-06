@@ -1,11 +1,12 @@
-import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
-import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { ControlInfo, Position, Variable } from '../../../../types';
-import ComputationManager from '../../ComputationManager/ComputationManager';
-import Warning from '../../Warning/Warning';
-import type { LiveModelClass } from '../LiveModel';
+import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
+import type { WarningInt } from '../../Warning/WarningInt';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { VariablesLMInt } from './VariablesLMInt';
 
 /** Manage variables in the live model */
@@ -14,8 +15,6 @@ class VariablesLM implements VariablesLMInt {
 
   /** Counter for generating unique variable IDs */
   private idCounter = 0;
-
-  private liveModel: LiveModelClass;
 
   /** Function which adds node to the model visualization */
   private addNodeFromVisualizationFunction: (
@@ -47,8 +46,32 @@ class VariablesLM implements VariablesLMInt {
     );
   };
 
-  constructor(liveModel: LiveModelClass) {
+  private liveModel: LiveModelInt;
+  private computationManagerServ: ComputationManagerInt;
+  private warningServ: WarningInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private regulationsStore: ZustandStore<RegulationsStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    computationManagerServ: ComputationManagerInt,
+    warningServ: WarningInt,
+    controlStore: ZustandStore<ControlStatus>,
+    regulationsStore: ZustandStore<RegulationsStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
     this.liveModel = liveModel;
+    this.computationManagerServ = computationManagerServ;
+    this.warningServ = warningServ;
+
+    this.controlStore = controlStore;
+    this.regulationsStore = regulationsStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.variablesStore = variablesStore;
   }
 
   // #endregion
@@ -108,14 +131,12 @@ class VariablesLM implements VariablesLMInt {
       phenotype: phenotype,
     };
 
-    useVariablesStore.getState().addVariable(variable);
-    useControlStore.getState().addInfo(id, controlInfo);
+    this.variablesStore.getState().addVariable(variable);
+    this.controlStore.getState().addInfo(id, controlInfo);
 
     this.addNodeFromVisualizationFunction(id, variableName, position);
-    // TODO - remove
-    //CytoscapeME.addNode(id, variableName, position);
 
-    ComputationManager.resetMaxSize();
+    this.computationManagerServ.resetMaxSize();
 
     // Todo - QuickHelp OFF;
 
@@ -129,10 +150,10 @@ class VariablesLM implements VariablesLMInt {
    *  Shows warnings if there are existing results or if the user needs to confirm variable removal.
    */
   public async removeVariableWithWarnings(id: number): Promise<boolean> {
-    const variable = useVariablesStore.getState().variableFromId(id);
+    const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable || !this.liveModel.modelCanBeModified()) return false;
 
-    if (!(await Warning.addRemoveVariableWarning(variable.name))) {
+    if (!(await this.warningServ.addRemoveVariableWarning(variable.name))) {
       return false;
     }
 
@@ -144,11 +165,11 @@ class VariablesLM implements VariablesLMInt {
   public removeVariable(id: number, force: boolean = false): void {
     if (!force && !this.liveModel.modelCanBeModified()) return;
 
-    const variable = useVariablesStore.getState().variableFromId(id);
+    const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable) return;
 
     const updateTargets: number[] = [];
-    const toRemove = useRegulationsStore
+    const toRemove = this.regulationsStore
       .getState()
       .getAllRegulations()
       .filter((reg) => reg.regulator === id || reg.target === id);
@@ -162,9 +183,9 @@ class VariablesLM implements VariablesLMInt {
       updateTargets.push(reg.target);
     }
 
-    ComputationManager.resetMaxSize();
+    this.computationManagerServ.resetMaxSize();
 
-    useVariablesStore.getState().removeVariable(id);
+    this.variablesStore.getState().removeVariable(id);
     this.liveModel.Control.removeControlInfo(id, force);
     this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
 
@@ -179,7 +200,7 @@ class VariablesLM implements VariablesLMInt {
     this.liveModel.Export.saveModel();
 
     for (const affectedId of updateTargets) {
-      const fn = useUpdateFunctionsStore
+      const fn = this.updateFunctionsStore
         .getState()
         .getUpdateFunctionId(affectedId);
       if (fn !== undefined) {
@@ -203,7 +224,7 @@ class VariablesLM implements VariablesLMInt {
       return;
     }
 
-    const variable = useVariablesStore.getState().variableFromId(id);
+    const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable) return;
 
     const error = this.checkVariableName(id, newName);
@@ -211,13 +232,13 @@ class VariablesLM implements VariablesLMInt {
       return error;
     }
 
-    useVariablesStore.getState().renameVariable(id, newName);
+    this.variablesStore.getState().renameVariable(id, newName);
 
     this.renameNodeFromVisualizationFunction(id, newName);
     // TODO - remove
     //CytoscapeME.renameNode(id, newName);
 
-    for (const reg of useRegulationsStore.getState().getAllRegulations()) {
+    for (const reg of this.regulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
         this.liveModel.Regulations.regulationChanged(reg);
       }
@@ -236,14 +257,14 @@ class VariablesLM implements VariablesLMInt {
    */
   public pruneConstants(force = false): number {
     const toRemove: number[] = [];
-    const variables = useVariablesStore.getState().getAllVariables();
+    const variables = this.variablesStore.getState().getAllVariables();
 
     for (const variable of variables) {
       const id = variable.id;
       const isConstant =
-        useRegulationsStore.getState().regulationsOf(id).length === 0 &&
+        this.regulationsStore.getState().regulationsOf(id).length === 0 &&
         (force ||
-          useUpdateFunctionsStore.getState().getUpdateFunctionId(id) ===
+          this.updateFunctionsStore.getState().getUpdateFunctionId(id) ===
             undefined);
 
       if (isConstant) {
@@ -263,11 +284,11 @@ class VariablesLM implements VariablesLMInt {
    */
   public pruneOutputs(): number {
     const toRemove: number[] = [];
-    const variables = useVariablesStore.getState().getAllVariables();
+    const variables = this.variablesStore.getState().getAllVariables();
 
     for (const variable of variables) {
       const id = variable.id;
-      if (useRegulationsStore.getState().regulationsFrom(id).length === 0) {
+      if (this.regulationsStore.getState().regulationsFrom(id).length === 0) {
         toRemove.push(id);
       }
     }
@@ -291,7 +312,7 @@ class VariablesLM implements VariablesLMInt {
     if (!/^[a-z0-9{}_]+$/i.test(name)) {
       return 'Name can only contain letters, numbers and `_`, `{`, `}`.';
     }
-    const existing = useVariablesStore.getState().variableFromName(name);
+    const existing = this.variablesStore.getState().variableFromName(name);
     if (existing && existing.id !== id) {
       return 'Variable with this name already exists';
     }
@@ -304,12 +325,12 @@ class VariablesLM implements VariablesLMInt {
 
   /** True if the model has no variables. */
   public isEmpty(): boolean {
-    return useVariablesStore.getState().isEmpty();
+    return this.variablesStore.getState().isEmpty();
   }
 
   /** Removes all variables from the model. */
   public clear() {
-    for (const variable of useVariablesStore.getState().getAllVariables()) {
+    for (const variable of this.variablesStore.getState().getAllVariables()) {
       this.removeVariable(variable.id, true);
     }
   }
