@@ -31,6 +31,8 @@ class WarningClass implements WarningInt {
     this.waiterFunction = waiterFunction;
   }
 
+  // #endregion
+
   // #region --- Starting Computation Warning ---
 
   /** Adds a warning about starting a new computation that will clear results and close tabs. */
