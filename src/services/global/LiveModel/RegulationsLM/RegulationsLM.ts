@@ -1,13 +1,12 @@
-import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Regulation } from '../../../../types';
-import type { LiveModelClass } from '../LiveModel';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { RegulationsLMInt } from './RegulationsLMInt';
 
 class RegulationsLM implements RegulationsLMInt {
   // #region --- Properties + Constructor ---
-
-  private liveModel: LiveModelClass;
 
   /** Function which removes regulation from ModelVisualization */
   private removeFromModelVisualizationFunction: (
@@ -27,8 +26,19 @@ class RegulationsLM implements RegulationsLMInt {
       );
     };
 
-  constructor(liveModel: LiveModelClass) {
+  private liveModel: LiveModelInt;
+
+  private regulationsStore: ZustandStore<RegulationsStatus>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    regulationsStore: ZustandStore<RegulationsStatus>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
     this.liveModel = liveModel;
+    this.regulationsStore = regulationsStore;
+    this.variablesStore = variablesStore;
   }
 
   // #endregion
@@ -64,7 +74,7 @@ class RegulationsLM implements RegulationsLMInt {
   ): boolean | void {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) return;
 
-    if (useRegulationsStore.getState().getRegulationId(regulatorId, targetId))
+    if (this.regulationsStore.getState().getRegulationId(regulatorId, targetId))
       return false;
 
     const regulation: Regulation = {
@@ -74,7 +84,7 @@ class RegulationsLM implements RegulationsLMInt {
       monotonicity: monotonicity,
     };
 
-    useRegulationsStore.getState().addRegulation(regulation);
+    this.regulationsStore.getState().addRegulation(regulation);
     this.regulationChanged(regulation);
     return true;
   }
@@ -88,14 +98,14 @@ class RegulationsLM implements RegulationsLMInt {
       return false;
     }
 
-    const exists = useRegulationsStore
+    const exists = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (!exists) return false;
 
     this.removeFromModelVisualizationFunction(regulatorId, targetId);
 
-    useRegulationsStore.getState().removeRegulation(regulatorId, targetId);
+    this.regulationsStore.getState().removeRegulation(regulatorId, targetId);
     this.liveModel.Export.saveModel();
     return true;
   }
@@ -116,11 +126,11 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     isObservable: boolean
   ): void {
-    const regulation = useRegulationsStore
+    const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation && regulation.observable !== isObservable) {
-      useRegulationsStore
+      this.regulationsStore
         .getState()
         .setObservability(regulatorId, targetId, isObservable);
       this.regulationChanged({ ...regulation, observable: isObservable });
@@ -134,11 +144,11 @@ class RegulationsLM implements RegulationsLMInt {
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) return;
 
-    const regulation = useRegulationsStore
+    const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation) {
-      useRegulationsStore
+      this.regulationsStore
         .getState()
         .setObservability(regulatorId, targetId, !regulation.observable);
       this.regulationChanged({
@@ -157,11 +167,11 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     monotonicity: EdgeMonotonicity
   ): void {
-    const regulation = useRegulationsStore
+    const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation && regulation.monotonicity !== monotonicity) {
-      useRegulationsStore
+      this.regulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, monotonicity);
       this.regulationChanged({ ...regulation, monotonicity: monotonicity });
@@ -175,7 +185,7 @@ class RegulationsLM implements RegulationsLMInt {
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) return;
 
-    const regulation = useRegulationsStore
+    const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
     if (regulation) {
@@ -184,7 +194,7 @@ class RegulationsLM implements RegulationsLMInt {
         next = EdgeMonotonicity.activation;
       else if (regulation.monotonicity === EdgeMonotonicity.activation)
         next = EdgeMonotonicity.inhibition;
-      useRegulationsStore
+      this.regulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, next);
       this.regulationChanged({ ...regulation, monotonicity: next });
@@ -196,10 +206,10 @@ class RegulationsLM implements RegulationsLMInt {
   // #region --- Regulation formating ---
 
   public regulationToString(regulation: Regulation): string {
-    const regulatorName = useVariablesStore
+    const regulatorName = this.variablesStore
       .getState()
       .getVariableName(regulation.regulator);
-    const targetName = useVariablesStore
+    const targetName = this.variablesStore
       .getState()
       .getVariableName(regulation.target);
     let arrow = '-';
