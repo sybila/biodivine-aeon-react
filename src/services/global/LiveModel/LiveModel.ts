@@ -1,7 +1,7 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useLoadedModelStore from '../../../stores/LiveModel/useLoadedModelStore';
+import useLoadedModelStore from '../../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';

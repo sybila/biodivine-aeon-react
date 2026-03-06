@@ -18,7 +18,7 @@ import ImportExportTabContent from '../../components/react-components/model-edit
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import useLoadedModelStore from '../../stores/LiveModel/useLoadedModelStore';
+import useLoadedModelStore from '../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
 import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
 

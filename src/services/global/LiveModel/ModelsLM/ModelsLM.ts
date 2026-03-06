@@ -1,4 +1,4 @@
-import useLoadedModelStore from '../../../../stores/LiveModel/useLoadedModelStore';
+import useLoadedModelStore from '../../../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
 import type { ModelSave, ModelType } from '../../../../types';
 import type { LiveModelClass } from '../LiveModel';
 import type { ModelsLMInt } from './ModelsLMInt';
