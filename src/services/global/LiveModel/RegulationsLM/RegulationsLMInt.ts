@@ -4,6 +4,20 @@ import type { EdgeMonotonicity, Regulation } from '../../../../types';
  * Interface for managing regulations in the LiveModel.
  */
 export interface RegulationsLMInt {
+  // #region --- Setters for Model Visualization functions ---
+
+  /** Setter for function which removes regulation from ModelVisualization */
+  setRemoveFromModelVisualizationFunction(
+    func: (regulatorId: number, targetId: number) => void
+  ): void;
+
+  /** Setter for function which ensures regulation in ModelVisualization */
+  setEnsureInModelVisualizationFunction(
+    func: (regulation: Regulation) => void
+  ): void;
+
+  // #endregion
+
   // #region --- Regulation Actions ---
 
   addRegulation(

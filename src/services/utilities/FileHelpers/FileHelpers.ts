@@ -1,7 +1,9 @@
+import type { FileHelpersInt } from './FileHelpersInt';
+
 /** Utility functions for file operations (eg. downloading files) */
-class FileHelpers {
+class FileHelpersClass implements FileHelpersInt {
   /** Download a file with the given file name and content */
-  public static downloadFile(fileName: string, content: string): void {
+  public downloadFile(fileName: string, content: string): void {
     var el = document.createElement('a');
     el.setAttribute(
       'href',
@@ -14,4 +16,7 @@ class FileHelpers {
     document.body.removeChild(el);
   }
 }
+
+const FileHelpers = new FileHelpersClass();
+
 export default FileHelpers;

@@ -18,6 +18,7 @@ import type {
   TimestampResponse,
   UpdateFunctionStatus,
 } from '../../../../types';
+import type { ComputeEngineInt } from '../ComputeEngineInt';
 import type {
   AttractorResponse,
   ComputationInfo,
@@ -26,17 +27,16 @@ import type {
   ValidateUpdateFunctionResponse,
 } from './ComputeEngineTypes';
 
-
 // Check if we already have a Tab ID for this specific tab
 let TAB_ID = sessionStorage.getItem('X-Tab-ID');
 
 if (!TAB_ID) {
-    // If not, create a new unique ID
-    TAB_ID = crypto.randomUUID(); 
-    sessionStorage.setItem('X-Tab-ID', TAB_ID);
+  // If not, create a new unique ID
+  TAB_ID = crypto.randomUUID();
+  sessionStorage.setItem('X-Tab-ID', TAB_ID);
 }
 
-class ComputeEngine {
+class ComputeEngine implements ComputeEngineInt {
   // #region --- Properties ---
 
   private address: string =
@@ -1056,9 +1056,9 @@ class ComputeEngine {
 
     req.open(method, this.address + url);
     if (TAB_ID !== null) {
-      req.setRequestHeader("x-session-key", TAB_ID);
+      req.setRequestHeader('x-session-key', TAB_ID);
     }
-    
+
     if (method == 'POST' && postData !== undefined) {
       req.send(postData);
     } else {

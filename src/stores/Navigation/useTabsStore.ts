@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { Loading } from '../../components/lit-components/loading-wrapper';
 import router from '../../router';
-import { LiveModel } from '../../services/global/LiveModel/LiveModel';
 import TabOperations from '../../services/global/Navigation/TabOperations';
 import type { TabInfo, TabType } from '../../types';
 import type { TabsState } from './TabState';
 
 const useTabsStore = create<TabsState>((set, get) => ({
+  firstTabOnClick: () => {
+    console.warn('First tab onClick not set');
+  },
   openedTabs: {
     0: {
       id: 0,
@@ -14,7 +16,7 @@ const useTabsStore = create<TabsState>((set, get) => ({
       type: 'Model Editor',
       active: true,
       onClick: () => {
-        LiveModel.Models.loadModel(0);
+        get().firstTabOnClick();
       },
     },
   },
@@ -124,7 +126,7 @@ const useTabsStore = create<TabsState>((set, get) => ({
           type: 'Model Editor',
           active: true,
           onClick: () => {
-            LiveModel.Models.loadModel(0);
+            get().firstTabOnClick();
           },
         },
       },

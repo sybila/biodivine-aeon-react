@@ -1,9 +1,12 @@
-class WaiterFunction {
+import type { WaiterFunctionInt } from './WaiterFunctionInt';
+
+class WaiterFunctionClass implements WaiterFunctionInt {
   /**
    * Creates an object with a function that returns a promise and a resolver function.
    * The promise resolves when the resolver is invoked.
+   * Promise returns the value which was passed to the resolver.
    */
-  public static createWaiterFunction<T>(): {
+  public createWaiterFunction<T>(): {
     promise: () => Promise<T>;
     resolver: (value: T) => void;
   } {
@@ -18,5 +21,7 @@ class WaiterFunction {
     };
   }
 }
+
+const WaiterFunction = new WaiterFunctionClass();
 
 export default WaiterFunction;

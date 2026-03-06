@@ -1,18 +1,26 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
+import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
 import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
+import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   ModelEditorItem,
   ModelStats,
   RegulationVariables,
 } from '../../../types';
 import { LiveModel } from '../../global/LiveModel/LiveModel';
+import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import CytoscapeME from '../ModelVisualization/CytoscapeME';
+import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorInt } from './ModelEditorInt';
 
 /**
@@ -20,10 +28,37 @@ import type { ModelEditorInt } from './ModelEditorInt';
     right elements when needed, etc.
 */
 class ModelEditorClass implements ModelEditorInt {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
+
+  private modelVisualizationServ: ModelVisualizationInt;
+  private liveModelServ: LiveModelInt;
+
+  private overlayWindowStore: ZustandStore<OverlayWindowState>;
+  private regulationStore: ZustandStore<RegulationsStatus>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+
+  constructor(
+    modelVisualization: ModelVisualizationInt,
+    liveModelServ: LiveModelInt,
+    overlayWindowStore: ZustandStore<OverlayWindowState>,
+    regulationStore: ZustandStore<RegulationsStatus>,
+    variablesStore: ZustandStore<VariablesStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+  ) {
+    this.modelVisualizationServ = modelVisualization;
+    this.liveModelServ = liveModelServ;
+    this.overlayWindowStore = overlayWindowStore;
+    this.regulationStore = regulationStore;
+    this.variablesStore = variablesStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.modelEditorStatusStore = modelEditorStatusStore;
+  }
 
   // #endregion
 
@@ -45,7 +80,7 @@ class ModelEditorClass implements ModelEditorInt {
 
   /** Adds a new variable and zooms on it */
   public addVariable() {
-    const newVariableId = LiveModel.Variables.addVariable(true);
+    const newVariableId = this.liveModelServ.Variables.addVariable(true);
     if (newVariableId !== undefined) {
       this.zoomOnVariable(newVariableId);
     }
@@ -54,7 +89,7 @@ class ModelEditorClass implements ModelEditorInt {
   /** Changes the name of a variable */
   public changeVariableName(id: number, newName: string): boolean {
     if (newName != '') {
-      const error = LiveModel.Variables.renameVariable(id, newName);
+      const error = this.liveModelServ.Variables.renameVariable(id, newName);
 
       if (error) {
         Message.showError('Variable name not changed: ' + error);
@@ -68,18 +103,18 @@ class ModelEditorClass implements ModelEditorInt {
 
   /** Removes a variable */
   public async removeVariable(id: number) {
-    await LiveModel.Variables.removeVariable(id);
+    await this.liveModelServ.Variables.removeVariable(id);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    */
   public hoverVariable(id: number, turnOnHover: boolean) {
-    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
 
     if (hoverInfo?.type === 'variable') {
       if (!turnOnHover) {
-        useModelEditorStatus.getState().setHoverItemInfo(null);
+        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
         return;
       }
 
@@ -89,7 +124,7 @@ class ModelEditorClass implements ModelEditorInt {
     }
 
     if (turnOnHover) {
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setHoverItemInfo({ type: 'variable', id });
     }
@@ -102,7 +137,7 @@ class ModelEditorClass implements ModelEditorInt {
   /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
   public getSelectedRegulation(): RegulationVariables | null {
     const selectedItemInfo: ModelEditorItem | null =
-      useModelEditorStatus.getState().selectedItemInfo;
+      this.modelEditorStatusStore.getState().selectedItemInfo;
 
     return selectedItemInfo?.type === 'regulation'
       ? selectedItemInfo.regulationIds
@@ -111,7 +146,7 @@ class ModelEditorClass implements ModelEditorInt {
 
   /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
   public setSelectedRegulation(regulation: RegulationVariables | null) {
-    useModelEditorStatus
+    this.modelEditorStatusStore
       .getState()
       .setSelectedItemInfo(
         regulation ? { type: 'regulation', regulationIds: regulation } : null
@@ -125,17 +160,17 @@ class ModelEditorClass implements ModelEditorInt {
     regulation: RegulationVariables,
     turnOnHover: boolean
   ) {
-    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
 
     if (hoverInfo?.type === 'regulation') {
       if (!turnOnHover) {
-        useModelEditorStatus.getState().setHoverItemInfo(null);
+        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
         return;
       }
     }
 
     if (turnOnHover) {
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
     }
@@ -145,17 +180,17 @@ class ModelEditorClass implements ModelEditorInt {
    * If `select` is true, it sets regulation as selected; if false, it unselects it.
    */
   public selectRegulation(regulation: RegulationVariables, select: boolean) {
-    const hoverInfo = useModelEditorStatus.getState().hoverItemInfo;
+    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
 
     if (hoverInfo?.type === 'regulation') {
       if (!select) {
-        useModelEditorStatus.getState().setHoverItemInfo(null);
+        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
         return;
       }
     }
 
     if (select) {
-      useModelEditorStatus
+      this.modelEditorStatusStore
         .getState()
         .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
     }
@@ -166,11 +201,11 @@ class ModelEditorClass implements ModelEditorInt {
   // #region --- Regulation Actions ---
 
   public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
-    LiveModel.Regulations.toggleMonotonicity(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleMonotonicity(regulatorId, targetId);
   }
 
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
-    LiveModel.Regulations.toggleObservability(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleObservability(regulatorId, targetId);
   }
 
   // #endregion
@@ -182,7 +217,7 @@ class ModelEditorClass implements ModelEditorInt {
     id: number,
     updateFunction: string
   ): string | undefined {
-    const error = LiveModel.UpdateFunctions.setUpdateFunction(
+    const error = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
       updateFunction
     );
@@ -200,43 +235,47 @@ class ModelEditorClass implements ModelEditorInt {
   // #region --- Model Info ---
 
   public getModelStats(): ModelStats {
-    return LiveModel.Export.stats();
+    return this.liveModelServ.Export.stats();
   }
 
   /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
-    LiveModel.Info.setModelDescription(description);
+    this.liveModelServ.Info.setModelDescription(description);
   }
 
   /** Sets the model name in the LiveModel */
   public setModelName(name: string) {
-    LiveModel.Info.setModelName(name);
+    this.liveModelServ.Info.setModelName(name);
   }
 
   // #endregion
 
   // #region --- Cytoscape Actions ---
 
-  /** Toggles hover state on a variable node in the CytoscapeMe canvas.
+  /** Toggles hover state on a variable node in the ModelVisualization canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    */
   public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
-    CytoscapeME.hoverNode(id, turnOnHover);
+    this.modelVisualizationServ.hoverNode(id, turnOnHover);
   }
 
-  /** Toggles hover state on a edge node in the CytoscapeMe canvas.
+  /** Toggles hover state on a edge node in the ModelVisualization canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    */
   public hoverRegulationCytoscape(
     regulation: RegulationVariables,
     turnOnHover: boolean
   ) {
-    CytoscapeME.hoverEdge(regulation.regulator, regulation.target, turnOnHover);
+    this.modelVisualizationServ.hoverEdge(
+      regulation.regulator,
+      regulation.target,
+      turnOnHover
+    );
   }
 
-  /** Finds variable in the CytoscapeMe canvas nad zooms on it */
+  /** Finds variable in the ModelVisualization canvas nad zooms on it */
   public zoomOnVariable(id: number) {
-    CytoscapeME.showNode(id);
+    this.modelVisualizationServ.showNode(id);
   }
 
   // #endregion
@@ -249,13 +288,13 @@ class ModelEditorClass implements ModelEditorInt {
   public openChangeVarNameWindow(varId: number) {
     if (varId === undefined) return;
 
-    useOverlayWindowStore.getState().setCurrentContent({
+    this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
       content: (
         <ChangeVarNameOverlayContent
           varId={varId}
           modelEditorServ={this}
-          variablesStore={useVariablesStore}
+          variablesStore={this.variablesStore}
         />
       ),
     });
@@ -267,21 +306,29 @@ class ModelEditorClass implements ModelEditorInt {
   public openChangeUpdateFunctionWindow(varId: number) {
     if (varId === undefined) return;
 
-    useOverlayWindowStore.getState().setCurrentContent({
+    this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
       content: (
         <ChangeUpFunOverlayContent
           varId={varId}
           modelEditorServ={this}
-          regulationsStore={useRegulationsStore}
-          variablesStore={useVariablesStore}
-          updateFunctionsStore={useUpdateFunctionsStore}
+          regulationsStore={this.regulationStore}
+          variablesStore={this.variablesStore}
+          updateFunctionsStore={this.updateFunctionsStore}
         />
       ),
     });
   }
 }
 
-const ModelEditor: ModelEditorClass = new ModelEditorClass();
+const ModelEditor: ModelEditorClass = new ModelEditorClass(
+  CytoscapeME,
+  LiveModel,
+  useOverlayWindowStore,
+  useRegulationsStore,
+  useVariablesStore,
+  useUpdateFunctionsStore,
+  useModelEditorStatus
+);
 
 export default ModelEditor;

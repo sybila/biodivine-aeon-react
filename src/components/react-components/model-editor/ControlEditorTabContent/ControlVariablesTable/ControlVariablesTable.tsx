@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Variable } from '../../../../../types';
 import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
@@ -13,8 +13,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   searchAndFilterHelpersServ,
   variablesStore,
   controlStore,
+  modelEditorStatusStore,
 }) => {
-  const [hoverId, setHoverId] = useState<number | null>(null);
   const [variableSearchText, setVariableSearchText] = useState<string>(
     controlEditorServ.getVariableSearch()
   );
@@ -30,13 +30,9 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     return variables.map((variable) => variable.name ?? 'Unknown Variable');
   }, [variables]);
 
-  const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
-    setHoverId(turnOnHover ? id : null);
-  }, []);
-
-  useEffect(() => {
-    controlEditorServ.setHoverVariableFunction(hoverVariableInfo);
-  }, [hoverVariableInfo]);
+  const hoverVariableId = modelEditorStatusStore((state) =>
+    state.hoverItemInfo?.type === 'variable' ? state.hoverItemInfo.id : null
+  );
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
@@ -165,7 +161,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               key={variable.id}
               id={variable.id}
               name={variable.name ?? 'Unknown Variable'}
-              hover={hoverId === variable.id}
+              hover={hoverVariableId === variable.id}
               selected={selectedVariables[variable.name] ?? false}
               toggleSelect={toggleVariableSelect}
               controlEditorServ={controlEditorServ}

@@ -1,16 +1,43 @@
+import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
+import type { TabsState } from '../../../stores/Navigation/TabState';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import useWarningStore from '../../../stores/Warning/useWarningStore';
-import WaiterFunction from '../../utilities/WaiterFunction';
+import type { WarningState } from '../../../stores/Warning/WarningState';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import WaiterFunction from '../../utilities/WaiterFunction/WaiterFunction';
+import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
 import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
 class WarningClass implements WarningInt {
+  // #region --- Attributes + Constructor ---
+
+  private waiterFunction: WaiterFunctionInt;
+
+  private resultsStatusStore: ZustandStore<ResultsStatus>;
+  private tabsStore: ZustandStore<TabsState>;
+  private warningStore: ZustandStore<WarningState>;
+
+  constructor(
+    resultsStatusStore: ZustandStore<ResultsStatus>,
+    tabsStore: ZustandStore<TabsState>,
+    warningStore: ZustandStore<WarningState>,
+    waiterFunction: WaiterFunctionInt
+  ) {
+    this.resultsStatusStore = resultsStatusStore;
+    this.tabsStore = tabsStore;
+    this.warningStore = warningStore;
+    this.waiterFunction = waiterFunction;
+  }
+
+  // #endregion
+
   // #region --- Starting Computation Warning ---
 
   /** Adds a warning about starting a new computation that will clear results and close tabs. */
   public addStartComputationResultsWarning(computationFunction: () => void) {
-    useWarningStore
+    this.warningStore
       .getState()
       .addWarning(
         'Starting a new computation will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
@@ -67,7 +94,7 @@ class WarningClass implements WarningInt {
     targetName: string,
     createFunction: () => void
   ): void {
-    useWarningStore
+    this.warningStore
       .getState()
       .addWarning(
         `Variable '${regulatorName}' does not regulate '${targetName}'. Do you want to create this regulation?`,
@@ -89,7 +116,7 @@ class WarningClass implements WarningInt {
 
   /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
   public addModelModificationRemoveResultsWarning(): void {
-    useWarningStore
+    this.warningStore
       .getState()
       .addWarning(
         'Modifying the model will delete all results and close every tab except the Model Editor.',
@@ -103,8 +130,8 @@ class WarningClass implements WarningInt {
             text: 'Delete Results',
             buttonWidth: '150px',
             action: () => {
-              useResultsStatus.getState().clear();
-              useTabsStore.getState().clear();
+              this.resultsStatusStore.getState().clear();
+              this.tabsStore.getState().clear();
             },
           },
         ]
@@ -123,8 +150,8 @@ class WarningClass implements WarningInt {
       operation +
         ' will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
       () => {
-        useResultsStatus.getState().clear();
-        useTabsStore.getState().clear();
+        this.resultsStatusStore.getState().clear();
+        this.tabsStore.getState().clear();
       }
     );
   }
@@ -140,9 +167,9 @@ class WarningClass implements WarningInt {
     message: string,
     action: () => void
   ): Promise<boolean> {
-    const waiter = WaiterFunction.createWaiterFunction<boolean>();
+    const waiter = this.waiterFunction.createWaiterFunction<boolean>();
 
-    useWarningStore.getState().addWarning(message, [
+    this.warningStore.getState().addWarning(message, [
       {
         text: 'Cancel',
         action: () => {
@@ -164,6 +191,11 @@ class WarningClass implements WarningInt {
   // #endregion
 }
 
-const Warning = new WarningClass();
+const Warning = new WarningClass(
+  useResultsStatus,
+  useTabsStore,
+  useWarningStore,
+  WaiterFunction
+);
 
 export default Warning;

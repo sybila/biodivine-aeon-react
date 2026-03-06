@@ -1,33 +1,64 @@
 import { Message } from '../../../../components/lit-components/message-wrapper';
 import config from '../../../../config';
-import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
-import useModelInfoStore from '../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useLoadedModelStore from '../../../../stores/LiveModel/useLoadedModelStore';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { ModelState } from '../../../../stores/LiveModel/LoadedModelStore/ModelState';
+import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
+import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   ControlInfo,
   fileType,
   ModelStats,
+  Position,
   Variable,
 } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
-import FileHelpers from '../../../utilities/FileHelpers';
-import type { LiveModelClass } from '../LiveModel';
+import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ExportLMInt } from './ExportLMInt';
 
 class ExportLM implements ExportLMInt {
   // #region --- Properties + Constructor ---
 
-  /** Reference to the parent LiveModel class. */
-  private liveModel: LiveModelClass;
+  /** Function which returns Position of a node in ModelVisualization */
+  private getNodePositionFunction: (
+    variableId: number
+  ) => Position | undefined = (_) => undefined;
 
   /** Indicates whether local storage is available. */
   private hasLocalStorage: boolean;
 
-  constructor(liveModel: LiveModelClass) {
+  /** Reference to the parent LiveModel class. */
+  private liveModel: LiveModelInt;
+  private fileHelpersServ: FileHelpersInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private modelInfoStore: ZustandStore<ModelInfoState>;
+  private regulationsStore: ZustandStore<RegulationsStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private loadedModelStore: ZustandStore<ModelState>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    fileHelpersServ: FileHelpersInt,
+    controlStore: ZustandStore<ControlStatus>,
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    regulationsStore: ZustandStore<RegulationsStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    loadedModelStore: ZustandStore<ModelState>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
     this.liveModel = liveModel;
+    this.fileHelpersServ = fileHelpersServ;
+
+    this.controlStore = controlStore;
+    this.modelInfoStore = modelInfoStore;
+    this.regulationsStore = regulationsStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.loadedModelStore = loadedModelStore;
+    this.variablesStore = variablesStore;
 
     try {
       const testKey = '__storage_test__';
@@ -41,13 +72,27 @@ class ExportLM implements ExportLMInt {
 
   // #endregion
 
+  // #region --- Setters ---
+
+  public setGetNodePositionFunction(
+    func: (variableId: number) => Position | undefined
+  ): void {
+    if (func != undefined) {
+      this.getNodePositionFunction = func;
+    }
+  }
+
+  // #endregion
+
   // #region --- Model Stats ---
 
   /** Export stats object */
   public stats(): ModelStats {
     let maxInDegree = 0;
     let maxOutDegree = 0;
-    let variables: Variable[] = useVariablesStore.getState().getAllVariables();
+    let variables: Variable[] = this.variablesStore
+      .getState()
+      .getAllVariables();
     let explicitParameterNames = new Set<string>();
     let parameterVars = 0;
 
@@ -55,7 +100,7 @@ class ExportLM implements ExportLMInt {
       let regulators = 0;
       let targets = 0;
 
-      for (let r of useRegulationsStore.getState().getAllRegulations()) {
+      for (let r of this.regulationsStore.getState().getAllRegulations()) {
         if (r.target == variable.id) regulators += 1;
         if (r.regulator == variable.id) targets += 1;
       }
@@ -63,7 +108,7 @@ class ExportLM implements ExportLMInt {
       if (regulators > maxInDegree) maxInDegree = regulators;
       if (targets > maxOutDegree) maxOutDegree = targets;
 
-      const updateFunction = useUpdateFunctionsStore
+      const updateFunction = this.updateFunctionsStore
         .getState()
         .getUpdateFunctionId(variable.id);
       if (updateFunction === undefined) {
@@ -87,7 +132,7 @@ class ExportLM implements ExportLMInt {
       maxOutDegree,
       variableCount: variables.length,
       parameterVariables: parameterVars,
-      regulationCount: useRegulationsStore.getState().getAllRegulations()
+      regulationCount: this.regulationsStore.getState().getAllRegulations()
         .length,
       explicitParameters,
     };
@@ -103,30 +148,30 @@ class ExportLM implements ExportLMInt {
    */
   public exportAeon(emptyPossible = false): string | undefined {
     let result = '';
-    const variables: Variable[] = useVariablesStore
+    const variables: Variable[] = this.variablesStore
       .getState()
       .getAllVariables();
     if (!emptyPossible && variables.length === 0) {
       return undefined;
     }
 
-    const name = useModelInfoStore.getState().getModelName();
+    const name = this.modelInfoStore.getState().getModelName();
     if (name !== undefined) result += `#name:${name}\n`;
 
-    const description = useModelInfoStore.getState().getModelDescription();
+    const description = this.modelInfoStore.getState().getModelDescription();
     if (description !== undefined)
       result += `#description:${description.replace(/\n/g, '\\n')}\n`;
 
     for (const variable of variables) {
       const varName = variable?.name;
 
-      const position = CytoscapeME.getNodePosition(variable.id);
+      const position = this.getNodePositionFunction(variable.id);
       if (position !== undefined) {
         result += `#position:${varName}:${position}\n`;
       }
 
       if (variable !== undefined) {
-        const controlInfo: ControlInfo | undefined = useControlStore
+        const controlInfo: ControlInfo | undefined = this.controlStore
           .getState()
           .getVariableControlInfo(variable.id);
 
@@ -135,14 +180,14 @@ class ExportLM implements ExportLMInt {
         },${controlInfo?.phenotype ?? null}\n`;
       }
 
-      const fun = useUpdateFunctionsStore
+      const fun = this.updateFunctionsStore
         .getState()
         .getUpdateFunctionId(variable.id);
       if (fun !== undefined) {
         result += `$${varName}:${fun.functionString}\n`;
       }
 
-      const regulations = useRegulationsStore
+      const regulations = this.regulationsStore
         .getState()
         .regulationsOf(variable.id);
       for (let reg of regulations) {
@@ -159,7 +204,7 @@ class ExportLM implements ExportLMInt {
    */
   public saveModel(): void {
     const modelString = this.exportAeon();
-    const modelId = useLoadedModelStore.getState().loadedModelId;
+    const modelId = this.loadedModelStore.getState().loadedModelId;
 
     if (modelString === undefined || modelId === null) {
       return;
@@ -189,8 +234,8 @@ class ExportLM implements ExportLMInt {
     conversionFunction?: (aeonString: string) => Promise<string>
   ): Promise<void> {
     let modelString = this.exportAeon(true);
-    const modelName = useModelInfoStore.getState().getModelName();
-    const fileName = !useModelInfoStore.getState().getModelName()
+    const modelName = this.modelInfoStore.getState().getModelName();
+    const fileName = !this.modelInfoStore.getState().getModelName()
       ? 'model'
       : modelName;
 
@@ -214,7 +259,7 @@ class ExportLM implements ExportLMInt {
       }
     }
 
-    FileHelpers.downloadFile(`${fileName}${fileEnding}`, modelString);
+    this.fileHelpersServ.downloadFile(`${fileName}${fileEnding}`, modelString);
   }
 
   // #endregion

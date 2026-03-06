@@ -29,6 +29,27 @@ import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../stores/Navigation/useTabsStore';
 import { rootRoute } from './root';
 
+const ModelEditorComponent = () => (
+  <ModelEditor
+    liveModelServ={LiveModel}
+    modelVisualization={CytoscapeME}
+    modelEditorServ={ModelEditorServ}
+    controlEditorServ={ControlEditor}
+    computationManagerServ={ComputationManager}
+    searchAndFilterHelpersServ={SearchAndFilterHelpers}
+    warningServ={Warning}
+    fileConvertorsServ={FileConvertors}
+    modelEditorStatusStore={useModelEditorStatus}
+    tabStore={useTabsStore}
+    resultsStatusStore={useResultsStatus}
+    controlStore={useControlStore}
+    regulationsStore={useRegulationsStore}
+    variablesStore={useVariablesStore}
+    updateFunctionsStore={useUpdateFunctionsStore}
+    modelInfoStore={useModelInfoStore}
+  />
+);
+
 // Redirect root path '/' to '/model-editor'
 export const defaultRedirect = createRoute({
   getParentRoute: () => rootRoute,
@@ -39,26 +60,7 @@ export const defaultRedirect = createRoute({
 export const modelEditorRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/model-editor',
-  component: () => (
-    <ModelEditor
-      liveModelServ={LiveModel}
-      modelVisualization={CytoscapeME}
-      modelEditorServ={ModelEditorServ}
-      controlEditorServ={ControlEditor}
-      computationManagerServ={ComputationManager}
-      searchAndFilterHelpersServ={SearchAndFilterHelpers}
-      warningServ={Warning}
-      fileConvertorsServ={FileConvertors}
-      modelEditorStatusStore={useModelEditorStatus}
-      tabStore={useTabsStore}
-      resultsStatusStore={useResultsStatus}
-      controlStore={useControlStore}
-      regulationsStore={useRegulationsStore}
-      variablesStore={useVariablesStore}
-      updateFunctionsStore={useUpdateFunctionsStore}
-      modelInfoStore={useModelInfoStore}
-    />
-  ),
+  component: ModelEditorComponent,
 });
 
 export const AttractorBifurcationExplorerRoute = createRoute({
@@ -87,26 +89,7 @@ export const AttractorVisualizerRoute = createRoute({
 export const WitnessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/witness',
-  component: () => (
-    <ModelEditor
-      liveModelServ={LiveModel}
-      modelVisualization={CytoscapeME}
-      modelEditorServ={ModelEditorServ}
-      controlEditorServ={ControlEditor}
-      computationManagerServ={ComputationManager}
-      searchAndFilterHelpersServ={SearchAndFilterHelpers}
-      warningServ={Warning}
-      fileConvertorsServ={FileConvertors}
-      modelEditorStatusStore={useModelEditorStatus}
-      tabStore={useTabsStore}
-      resultsStatusStore={useResultsStatus}
-      controlStore={useControlStore}
-      regulationsStore={useRegulationsStore}
-      variablesStore={useVariablesStore}
-      updateFunctionsStore={useUpdateFunctionsStore}
-      modelInfoStore={useModelInfoStore}
-    />
-  ),
+  component: ModelEditorComponent,
 });
 
 export const ControlPerturbationsTableRoute = createRoute({

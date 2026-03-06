@@ -1,16 +1,10 @@
 import { create } from 'zustand';
-import type { ModelType } from '../../types';
+import type { ModelType } from '../../../types';
+import type { ModelState } from './ModelState';
 
 /** Zustand store for loaded model information.
  *  Manages the ID and type of the currently loaded model in LiveModel.
  */
-type ModelState = {
-  loadedModelId: number;
-  loadedModelType: ModelType;
-  setLoadedModel: (id: number, type: ModelType) => void;
-  clear: () => void;
-};
-
 const useLoadedModelStore = create<ModelState>((set) => ({
   loadedModelId: 0,
   loadedModelType: 'main',

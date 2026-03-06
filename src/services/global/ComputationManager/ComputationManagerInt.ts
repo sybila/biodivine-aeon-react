@@ -5,12 +5,22 @@ import type {
   ControlResults,
   StabilityAnalysisModes,
 } from '../../../types';
+import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
+import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 
 /**
  * Interface for ComputationManagerClass. All public functions are included with their documentation and types.
  * Types are kept as in the class, even if there are syntax errors due to dependencies.
  */
 export interface ComputationManagerInt {
+  // #region --- LiveModel Reference ---
+
+  /** Setter for the LiveModel reference */
+  setLiveModel(liveModel: LiveModelInt): void;
+
+  // #endregion
+
   // #region --- External Compute Engine Adress Setters/Getters ---
 
   /** Sets the URL of the compute engine */
@@ -118,19 +128,33 @@ export interface ComputationManagerInt {
 
   /** Fetches the bifurcation tree from the compute engine.
    * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
+   * @param attractorBifurcationExplorerRef - (AttractorBifurcationExplorerInt) Reference to the AttractorBifurcationExplorer, used to insert the tree data after fetching.
    */
-  getBifurcationTree(fit: boolean): void;
+  getBifurcationTree(
+    fit: boolean,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
   /** Sets the precision of the bifurcation tree.
    *  Precision is % with up to two decimal places
    */
-  setBifurcationTreePrecision(precision: number): void;
+  setBifurcationTreePrecision(
+    precision: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
   /** Automatically expands the bifurcation tree at the given node and depth. */
-  autoExpandBifurcationTree(nodeId: number, depth: number): void;
+  autoExpandBifurcationTree(
+    nodeId: number,
+    depth: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
   /** Deletes a bifurcation decision by node ID. */
-  deleteBifurcationDecision(nodeId: number): void;
+  deleteBifurcationDecision(
+    nodeId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
   /** Fetches the stability data for a specific node and behaviour.
    * @param nodeId - (number) The ID of the node to fetch stability data for.
@@ -139,25 +163,39 @@ export interface ComputationManagerInt {
   getStabilityData(nodeId: number, behaviour: StabilityAnalysisModes): void;
 
   /** Fetches the decisions for a specific node. */
-  getDecisions(nodeId: number): void;
+  getDecisions(
+    nodeId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
-  makeDecision(nodeId: number, decisionId: number): void;
+  makeDecision(
+    nodeId: number,
+    decisionId: number,
+    attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
+  ): void;
 
   // #endregion
 
   // #region --- Attractor Visualizer ---
 
   /** Fetches an attractor by its behavior string. Used by the results window.*/
-  getAttractorByBehavior(behavior: string): void;
+  getAttractorByBehavior(
+    behavior: string,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ): void;
 
   /** Fetches an attractor for node in the AttractorBifurcationExplorer */
-  getBifurcationExplorerAttractor(nodeId: number): void;
+  getBifurcationExplorerAttractor(
+    nodeId: number,
+    attractorVisualizerRef: AttractorVisualizerInt
+  ): void;
 
   getStabilityAnalysisAttractor(
     nodeId: number,
     variableName: string,
     behavior: string,
-    vector: string[]
+    vector: string[],
+    attractorVisualizerRef: AttractorVisualizerInt
   ): void;
 
   // #endregion

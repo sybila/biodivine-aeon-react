@@ -1,5 +1,6 @@
-import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   ControlEnabledVars,
   ControlInfo,
@@ -9,9 +10,8 @@ import type {
   PhenotypeControlEnabledVars,
   PhenotypeVars,
 } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
-import ComputationManager from '../../ComputationManager/ComputationManager';
-import type { LiveModelClass } from '../LiveModel';
+import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ControlLMInt } from './ControlLMInt';
 
 /** Class to manage control information for live model variables */
@@ -19,12 +19,35 @@ class ControlLM implements ControlLMInt {
   // #region --- Properties + Constructor ---
 
   /** Reference to the live model instance */
-  private liveModel: LiveModelClass;
+  private liveModel: LiveModelInt;
+
+  private computationManager: ComputationManagerInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+
+  private variablesStore: ZustandStore<VariablesStatus>;
 
   private oscillation: Oscillation = 'allowed';
 
-  constructor(liveModel: LiveModelClass) {
+  private onPhenotypeChange: Array<
+    (inputNodes?: [number, ControlInfo][] | null) => void
+  >;
+
+  private onControlChange: Array<() => void>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    computationManager: ComputationManagerInt,
+    controlStore: ZustandStore<ControlStatus>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
     this.liveModel = liveModel;
+    this.computationManager = computationManager;
+    this.controlStore = controlStore;
+    this.variablesStore = variablesStore;
+
+    this.onControlChange = [];
+    this.onPhenotypeChange = [];
   }
 
   // #endregion
@@ -36,7 +59,9 @@ class ControlLM implements ControlLMInt {
    * and the second element being the count of variables in Phenotype.
    */
   public getNumberOfSetControl(): [number, number] {
-    const controlInfo: ControlInfo[] = useControlStore.getState().getAllInfo();
+    const controlInfo: ControlInfo[] = this.controlStore
+      .getState()
+      .getAllInfo();
     const [controlEnabled, inPhenotype] = controlInfo.reduce(
       (acc: [number, number], info: ControlInfo) => {
         if (info.controlEnabled) acc[0]++;
@@ -50,7 +75,9 @@ class ControlLM implements ControlLMInt {
 
   /** Returns control statistics for the live model */
   public getControlStats(): ControlStats {
-    const controlInfo: ControlInfo[] = useControlStore.getState().getAllInfo();
+    const controlInfo: ControlInfo[] = this.controlStore
+      .getState()
+      .getAllInfo();
     const stats: ControlStats = {
       controlEnabled: 0,
       notControlEnabled: 0,
@@ -73,6 +100,20 @@ class ControlLM implements ControlLMInt {
 
   // #endregion
 
+  // #region --- Phenotype and Control-Enabled callbacks ---
+
+  /** Add a callback to be executed when phenotype changes */
+  public addOnPhenotypeChangeCallback(callback: () => void): void {
+    this.onPhenotypeChange.push(callback);
+  }
+
+  /** Add a callback to be executed when control enabled changes */
+  public addOnControlChangeCallback(callback: () => void): void {
+    this.onControlChange.push(callback);
+  }
+
+  // #endregion
+
   // #region --- Oscillation ---
 
   /** Sets the currently set phenotype oscillation state */
@@ -89,6 +130,20 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Change Control Info ---
 
+  /** Runs callbacks for selected operation (change phenotype/control-enabled) and inputNodes */
+  private runCallbacks(
+    callbacks: Array<(inputNodes?: [number, ControlInfo][] | null) => void>,
+    inputNodes?: [number, ControlInfo][] | null
+  ): void {
+    try {
+      callbacks.forEach((callback) => callback(inputNodes));
+    } catch (error) {
+      console.error(
+        'Error running phenotype/control-enabled change callbacks: ' + error
+      );
+    }
+  }
+
   /** Change control information for a variable by its ID */
   public changePhenotypeById(
     id: number,
@@ -99,11 +154,13 @@ class ControlLM implements ControlLMInt {
       return;
     }
 
-    useControlStore.getState().setPhenotype(id, phenotype);
+    this.controlStore.getState().setPhenotype(id, phenotype);
 
-    const controlInfo = useControlStore.getState().getVariableControlInfo(id);
+    const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
 
-    if (controlInfo) CytoscapeME.highlightPhenotype([[id, controlInfo]]);
+    if (controlInfo) {
+      this.runCallbacks(this.onPhenotypeChange, [[id, controlInfo]]);
+    }
   }
 
   /** Change variable control enabled state by its ID */
@@ -119,13 +176,15 @@ class ControlLM implements ControlLMInt {
       return;
     }
 
-    useControlStore.getState().setControlEnabled(id, controlEnabled);
+    this.controlStore.getState().setControlEnabled(id, controlEnabled);
 
-    const controlInfo = useControlStore.getState().getVariableControlInfo(id);
+    const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
 
-    if (controlInfo) CytoscapeME.highlightControlEnabled([[id, controlInfo]]);
+    if (controlInfo) {
+      this.runCallbacks(this.onControlChange, [[id, controlInfo]]);
+    }
 
-    ComputationManager.resetMaxSize();
+    this.computationManager.resetMaxSize();
   }
 
   /** Remove control information for a variable by its ID */
@@ -134,7 +193,7 @@ class ControlLM implements ControlLMInt {
       return;
     }
 
-    useControlStore.getState().removeInfo(id);
+    this.controlStore.getState().removeInfo(id);
   }
 
   // #endregion
@@ -143,14 +202,14 @@ class ControlLM implements ControlLMInt {
 
   /** Get Phenotype and Control-Enabled variables formated into object { phenotypeVars: Record<VarName, Phenotype>, controlEnabledVars: Record<VarName, boolean> } */
   public getPhenotypeControlEnabledVars(): PhenotypeControlEnabledVars {
-    const controlInfo = useControlStore.getState().getAllInfoIds();
+    const controlInfo = this.controlStore.getState().getAllInfoIds();
 
     const phenotypeVarsObj: PhenotypeVars = {};
     const controlEnabledVarsList: ControlEnabledVars = [];
 
     controlInfo.forEach(([id, info]) => {
       const varName =
-        useVariablesStore.getState().variableFromId(id)?.name ?? 'Unknown';
+        this.variablesStore.getState().variableFromId(id)?.name ?? 'Unknown';
 
       if (varName) {
         if (info.phenotype !== null) phenotypeVarsObj[varName] = info.phenotype;

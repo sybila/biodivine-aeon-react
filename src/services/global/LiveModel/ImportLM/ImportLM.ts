@@ -1,22 +1,62 @@
 import { Loading } from '../../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../../components/lit-components/message-wrapper';
 import config from '../../../../config';
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
-import useTabsStore from '../../../../stores/Navigation/useTabsStore';
+import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { TabsState } from '../../../../stores/Navigation/TabState';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Variable } from '../../../../types';
-import CytoscapeME from '../../../model-editor/ModelVisualization/CytoscapeME';
-import Warning from '../../Warning/Warning';
-import { LiveModel, type LiveModelClass } from '../LiveModel';
+import type { WarningInt } from '../../Warning/WarningInt';
+import { LiveModel } from '../LiveModel';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ImportLMInt } from './ImportLMInt';
 
 class ImportLM implements ImportLMInt {
   // #region --- Properties and Constructor ---
 
-  private liveModel: LiveModelClass;
+  private onImport: Array<() => void>;
 
-  constructor(liveModel: LiveModelClass) {
+  private liveModel: LiveModelInt;
+  private warningServ: WarningInt;
+
+  private resultsStatusStore: ZustandStore<ResultsStatus>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+  private tabsStore: ZustandStore<TabsState>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    warningServ: WarningInt,
+    resultsStatusStore: ZustandStore<ResultsStatus>,
+    variablesStore: ZustandStore<VariablesStatus>,
+    tabsStore: ZustandStore<TabsState>
+  ) {
     this.liveModel = liveModel;
+    this.warningServ = warningServ;
+
+    this.resultsStatusStore = resultsStatusStore;
+    this.variablesStore = variablesStore;
+    this.tabsStore = tabsStore;
+
+    this.onImport = [];
+  }
+
+  // #endregion
+
+  // #region --- Import Callbacks ---
+
+  private runOnImportCallbacks(): void {
+    try {
+      this.onImport.forEach((callback) => callback());
+    } catch (e) {
+      console.error('Error running onImport callback: ' + e);
+    }
+  }
+
+  /** Adds callback which runs after import is complete */
+  public addOnImportCallback(callback: () => void): void {
+    if (callback !== undefined) {
+      this.onImport.push(callback);
+    }
   }
 
   // #endregion
@@ -54,7 +94,7 @@ class ImportLM implements ImportLMInt {
   ): void {
     const vars = Object.keys(positions);
     for (let variable of vars) {
-      const variableId = useVariablesStore
+      const variableId = this.variablesStore
         .getState()
         .variableFromName(variable)?.id;
       if (variableId !== undefined) {
@@ -62,7 +102,7 @@ class ImportLM implements ImportLMInt {
       }
 
       this.addVariableImport(
-        useVariablesStore.getState().variableFromName(variable),
+        this.variablesStore.getState().variableFromName(variable),
         variable,
         positions[variable],
         control[variable]
@@ -78,13 +118,13 @@ class ImportLM implements ImportLMInt {
   ): void {
     for (const template of regulations) {
       const regulator = this.addVariableImport(
-        useVariablesStore.getState().variableFromName(template.regulatorName),
+        this.variablesStore.getState().variableFromName(template.regulatorName),
         template.regulatorName,
         positions[template.regulatorName],
         control[template.regulatorName]
       );
       const target = this.addVariableImport(
-        useVariablesStore.getState().variableFromName(template.targetName),
+        this.variablesStore.getState().variableFromName(template.targetName),
         template.targetName,
         positions[template.targetName],
         control[template.targetName]
@@ -116,7 +156,7 @@ class ImportLM implements ImportLMInt {
   ): void {
     for (const key of Object.keys(updateFunctions)) {
       const variable = this.addVariableImport(
-        useVariablesStore.getState().variableFromName(key),
+        this.variablesStore.getState().variableFromName(key),
         key,
         positions[key],
         control[key]
@@ -257,10 +297,10 @@ class ImportLM implements ImportLMInt {
    */
   public async importAeonWithWarnings(modelString: string): Promise<boolean> {
     if (
-      useResultsStatus.getState().results != undefined ||
-      !useTabsStore.getState().isEmpty()
+      this.resultsStatusStore.getState().results != undefined ||
+      !this.tabsStore.getState().isEmpty()
     ) {
-      const proceed = await Warning.addRemoveResultsWarning(
+      const proceed = await this.warningServ.addRemoveResultsWarning(
         'Importing a new model'
       );
       if (!proceed) {
@@ -269,7 +309,7 @@ class ImportLM implements ImportLMInt {
     }
 
     if (!this.liveModel.isEmpty()) {
-      const proceed = await Warning.addImportModelEraseModelWarning();
+      const proceed = await this.warningServ.addImportModelEraseModelWarning();
       if (!proceed) {
         return false;
       }
@@ -314,11 +354,11 @@ class ImportLM implements ImportLMInt {
     this.setUpdateFunctions(updateFunctions, positions, control);
     this.insertNotConnected(positions, control);
 
-    CytoscapeME.fit();
-
     // Re-enable server checks and run them.
     this.liveModel.disable_dynamic_validation = false;
     this.liveModel.UpdateFunctions.validateAllUpdateFunctions();
+
+    this.runOnImportCallbacks();
 
     Loading.endLoading();
     return true; // no error

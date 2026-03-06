@@ -6,11 +6,6 @@ import type { Oscillation, Phenotype } from '../../../types';
 export interface ControlEditorInt {
   // #region --- Hover/Select Variable Functions ---
 
-  /** Sets hover function for variables inside the ControlEditorTabContent.tsx (needs to be called before hoverVariable function) */
-  setHoverVariableFunction(
-    hoverFunction: (id: number, turnOnHover: boolean) => void
-  ): void;
-
   /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
    *  Key: variable name
    *  Value: whether the variable is selected or not (true = selected, false = not selected)

@@ -1,5 +1,6 @@
-import useModelInfoStore from '../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import type { LiveModelClass } from '../LiveModel';
+import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { InfoLMInt } from './InfoLMInt';
 
 /**
@@ -8,10 +9,16 @@ import type { InfoLMInt } from './InfoLMInt';
 class InfoLM implements InfoLMInt {
   // #region --- Properties + Constructor ---
 
-  private liveModel: LiveModelClass;
+  private liveModel: LiveModelInt;
 
-  constructor(liveModel: LiveModelClass) {
+  private modelInfoStore: ZustandStore<ModelInfoState>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    modelInfoStore: ZustandStore<ModelInfoState>
+  ) {
     this.liveModel = liveModel;
+    this.modelInfoStore = modelInfoStore;
   }
 
   // #endregion
@@ -24,9 +31,9 @@ class InfoLM implements InfoLMInt {
       return;
     }
 
-    const modelName = useModelInfoStore.getState().getModelName();
+    const modelName = this.modelInfoStore.getState().getModelName();
     if (modelName !== name) {
-      useModelInfoStore.getState().setModelName(name);
+      this.modelInfoStore.getState().setModelName(name);
       window.document.title = `Biodivine/Aeon - ${name}`;
       this.infoChanged();
     }
@@ -41,9 +48,11 @@ class InfoLM implements InfoLMInt {
       return;
     }
 
-    const modelDescription = useModelInfoStore.getState().getModelDescription();
+    const modelDescription = this.modelInfoStore
+      .getState()
+      .getModelDescription();
     if (modelDescription !== description) {
-      useModelInfoStore.getState().setModelDescription(description);
+      this.modelInfoStore.getState().setModelDescription(description);
       this.infoChanged();
     }
   }
