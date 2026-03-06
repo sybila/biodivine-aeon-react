@@ -61,7 +61,7 @@ class LiveModelClass implements LiveModelInt {
   Models: ModelsLMInt = new ModelsLM(this);
 
   /** Functions and properties for managing model information such as name and description. */
-  Info: InfoLMInt = new InfoLM(this);
+  Info: InfoLMInt = new InfoLM(this, useModelInfoStore);
 
   /** Functions and properties used for operations with variables of the model. (adding, removing, renaming, getting all,...)*/
   Variables: VariablesLMInt = new VariablesLM(this);
