@@ -1,27 +1,32 @@
 import { Message } from '../../../../components/lit-components/message-wrapper';
 import config from '../../../../config';
+import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import useControlStore from '../../../../stores/LiveModel/ControlStore/useControlStore';
+import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import useModelInfoStore from '../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
+import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import useRegulationsStore from '../../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import useUpdateFunctionsStore from '../../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useLoadedModelStore from '../../../../stores/LiveModel/useLoadedModelStore';
 import useVariablesStore from '../../../../stores/LiveModel/VariablesStore/useVariablesStore';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   ControlInfo,
   fileType,
   ModelStats,
   Position,
+  UpdateFunctionStatus,
   Variable,
 } from '../../../../types';
 import FileHelpers from '../../../utilities/FileHelpers/FileHelpers';
+import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
 import type { LiveModelClass } from '../LiveModel';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ExportLMInt } from './ExportLMInt';
 
 class ExportLM implements ExportLMInt {
   // #region --- Properties + Constructor ---
-
-  /** Reference to the parent LiveModel class. */
-  private liveModel: LiveModelClass;
 
   /** Function which returns Position of a node in ModelVisualization */
   private getNodePositionFunction: (
@@ -31,8 +36,35 @@ class ExportLM implements ExportLMInt {
   /** Indicates whether local storage is available. */
   private hasLocalStorage: boolean;
 
-  constructor(liveModel: LiveModelClass) {
+  /** Reference to the parent LiveModel class. */
+  private liveModel: LiveModelClass;
+  private fileHelpersServ: FileHelpersInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private modelInfoStore: ZustandStore<ModelInfoState>;
+  private regulationsStore: ZustandStore<RegulationsStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionStatus>;
+
+  private variablesStore: ZustandStore<VariablesStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    fileHelpersServ: FileHelpersInt,
+    controlStore: ZustandStore<ControlStatus>,
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    regulationsStore: ZustandStore<RegulationsStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionStatus>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
     this.liveModel = liveModel;
+    this.fileHelpersServ = fileHelpersServ;
+
+    this.controlStore = controlStore;
+    this.modelInfoStore = modelInfoStore;
+    this.regulationsStore = regulationsStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+
+    this.variablesStore = variablesStore;
 
     try {
       const testKey = '__storage_test__';
