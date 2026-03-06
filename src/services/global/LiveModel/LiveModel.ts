@@ -67,7 +67,14 @@ class LiveModelClass implements LiveModelInt {
   Variables: VariablesLMInt = new VariablesLM(this);
 
   /** Functions and properties used for operations with variables update functions. (setting, validating, updating,...) */
-  UpdateFunctions: UpdateFunctionsLMInt = new UpdateFunctionsLM(this);
+  UpdateFunctions: UpdateFunctionsLMInt = new UpdateFunctionsLM(
+    this,
+    ComputationManager,
+    Warning,
+    useRegulationsStore,
+    useUpdateFunctionsStore,
+    useVariablesStore
+  );
 
   /** Functions and properties used for operations with regulations. (adding, removing, setting observability,...) */
   Regulations: RegulationsLMInt = new RegulationsLM(
