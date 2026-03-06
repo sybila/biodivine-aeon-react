@@ -2,9 +2,13 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import useLoadedModelStore from '../../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
+import useModelInfoStore from '../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
+import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
+import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
 import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import useTabsStore from '../../../stores/Navigation/useTabsStore';
+import FileHelpers from '../../utilities/FileHelpers/FileHelpers';
 import ComputationManager from '../ComputationManager/ComputationManager';
 import Warning from '../Warning/Warning';
 import ControlLM from './ControlLM/ControlLM';
@@ -80,7 +84,16 @@ class LiveModelClass implements LiveModelInt {
   Import: ImportLMInt = new ImportLM(this);
 
   /** Functions used for export of the model. */
-  Export: ExportLMInt = new ExportLM(this);
+  Export: ExportLMInt = new ExportLM(
+    this,
+    FileHelpers,
+    useControlStore,
+    useModelInfoStore,
+    useRegulationsStore,
+    useUpdateFunctionsStore,
+    useLoadedModelStore,
+    useVariablesStore
+  );
 
   // #endregion
 
