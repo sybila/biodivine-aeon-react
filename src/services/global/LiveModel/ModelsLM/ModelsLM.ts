@@ -1,6 +1,7 @@
-import useLoadedModelStore from '../../../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
+import type { ModelState } from '../../../../stores/LiveModel/LoadedModelStore/ModelState';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { ModelSave, ModelType } from '../../../../types';
-import type { LiveModelClass } from '../LiveModel';
+import type { LiveModelInt } from '../LiveModelInt';
 import type { ModelsLMInt } from './ModelsLMInt';
 
 /** Class for managing multiple models in the LiveModel. */
@@ -15,10 +16,16 @@ class ModelsLM implements ModelsLMInt {
   /** Id of the next added model. */
   private nextId: number = 1;
 
-  private livemodel: LiveModelClass;
+  private livemodel: LiveModelInt;
 
-  constructor(livemodel: LiveModelClass) {
+  private loadedModelStore: ZustandStore<ModelState>;
+
+  constructor(
+    livemodel: LiveModelInt,
+    loadedModelStore: ZustandStore<ModelState>
+  ) {
     this.livemodel = livemodel;
+    this.loadedModelStore = loadedModelStore;
   }
 
   // #endregion
@@ -61,7 +68,7 @@ class ModelsLM implements ModelsLMInt {
   public removeModel(id: number): void {
     if (id === 0) return; // cannot remove main model
 
-    if (useLoadedModelStore.getState().loadedModelId === id) {
+    if (this.loadedModelStore.getState().loadedModelId === id) {
       this.loadModel(0);
     }
 
@@ -70,7 +77,7 @@ class ModelsLM implements ModelsLMInt {
 
   /** Function for switching between added models. */
   public loadModel(id: number): boolean {
-    const loadedModelId = useLoadedModelStore.getState().loadedModelId;
+    const loadedModelId = this.loadedModelStore.getState().loadedModelId;
     if (loadedModelId === id) return true;
 
     if (loadedModelId === 0) {
@@ -80,7 +87,7 @@ class ModelsLM implements ModelsLMInt {
     const model = this.models[id];
     if (!model) return false;
 
-    useLoadedModelStore.getState().setLoadedModel(id, model.type);
+    this.loadedModelStore.getState().setLoadedModel(id, model.type);
     this.livemodel.Import.importAeon(model.modelAeonString);
     return true;
   }

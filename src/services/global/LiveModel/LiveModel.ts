@@ -58,7 +58,7 @@ class LiveModelClass implements LiveModelInt {
   // #region --- Submodules ---
 
   /** Functions and properties for managing multiple models. */
-  Models: ModelsLMInt = new ModelsLM(this);
+  Models: ModelsLMInt = new ModelsLM(this, useLoadedModelStore);
 
   /** Functions and properties for managing model information such as name and description. */
   Info: InfoLMInt = new InfoLM(this, useModelInfoStore);
