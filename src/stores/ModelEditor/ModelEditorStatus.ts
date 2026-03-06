@@ -1,5 +1,6 @@
 import type { ModelEditorItem, Position } from '../../types';
 
+/* Zustand store for managing the model editor state */
 export type ModelEditorStatus = {
   /** Info about the currently selected item (variable or regulation).
    *  If null, no item is selected. */

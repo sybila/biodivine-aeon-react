@@ -1,5 +1,7 @@
 import type { Variable } from '../../../types';
 
+/**  Zustand store for managing variables in the LiveModel
+ Provides actions for adding, removing, renaming, and querying variables */
 export type VariablesStatus = {
   variables: Record<number, Variable>;
   nameToId: Record<string, number>;

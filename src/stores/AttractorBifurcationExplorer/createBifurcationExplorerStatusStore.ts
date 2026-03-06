@@ -1,11 +1,9 @@
 import { create } from 'zustand';
+import type { ZustandStore } from '../ZustandStoreType';
 import type { BifurcationExplorerStatusState } from './BifurcationExplorerStatusState';
 
-/** Zustand store for managing Bifurcation Explorer status.
- * Provides actions to set and clear the selected node, load stability analysis results...
- */
-const useBifurcationExplorerStatus = create<BifurcationExplorerStatusState>()(
-  (set) => ({
+function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplorerStatusState> {
+  return create<BifurcationExplorerStatusState>()((set) => ({
     selectedNode: null,
     stabilityData: null,
     availableDecisions: null,
@@ -26,7 +24,7 @@ const useBifurcationExplorerStatus = create<BifurcationExplorerStatusState>()(
         stabilityData: null,
         availableDecisions: null,
       }),
-  })
-);
+  }));
+}
 
-export default useBifurcationExplorerStatus;
+export default createBifurcationExplorerStatusStore;

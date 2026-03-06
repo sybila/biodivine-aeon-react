@@ -1,3 +1,4 @@
+/** Zustand store for managing the content of global content overlay window in the model editor. */
 export type OverlayWindowState = {
   /** The current content to be displayed in the overlay window.
    * If null, the overlay window is hidden.

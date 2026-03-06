@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import type { PertTableSort, PertVariableFilterStatus } from '../../../types';
+import type { ZustandStore } from '../../ZustandStoreType';
 import type { PerturbationFiltersSortState } from './PerturbationsFilterSortState';
 
-const usePerturbationFilterSortStore = create<PerturbationFiltersSortState>(
-  (set) => ({
+function createPerturbationFilterSortStore(): ZustandStore<PerturbationFiltersSortState> {
+  return create<PerturbationFiltersSortState>((set) => ({
     pageNumber: 1,
     perturbationVariables: {},
     minRobustness: undefined,
@@ -37,7 +38,7 @@ const usePerturbationFilterSortStore = create<PerturbationFiltersSortState>(
         secondarySort: undefined,
       });
     },
-  })
-);
+  }));
+}
 
-export default usePerturbationFilterSortStore;
+export default createPerturbationFilterSortStore;

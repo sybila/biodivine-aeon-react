@@ -5,6 +5,9 @@ import type {
   NodeStabilityData,
 } from '../../types';
 
+/** Zustand store for managing Bifurcation Explorer status.
+ * Provides actions to set and clear the selected node, load stability analysis results...
+ */
 export type BifurcationExplorerStatusState = {
   /** Currently selected node in the Bifurcation Explorer */
   selectedNode: LeafNode | DecisionMixedNode | null;

@@ -1,5 +1,9 @@
 import type { UpdateFunction, UpdateFunctionStatus } from '../../../types';
 
+/**
+ * Zustand store for update functions.
+ * Provides actions for setting, deleting, validating, and checking update functions.
+ */
 export type UpdateFunctionsState = {
   updateFunctions: Record<number, UpdateFunction>;
 

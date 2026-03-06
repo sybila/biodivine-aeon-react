@@ -1,5 +1,7 @@
 import type { ControlInfo, Phenotype } from '../../../types';
 
+/** Zustand store for managing control information of variables in LiveModel
+ Provides actions for adding, removing, updating, and querying control info and phenotypes */
 export type ControlStatus = {
   /** Property containing control information for each variable. */
   controlInfo: Record<number, ControlInfo>;

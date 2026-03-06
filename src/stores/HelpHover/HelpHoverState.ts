@@ -1,3 +1,4 @@
+/** Zustand store for managing the help hover in the application. */
 export type HelpHoverState = {
   /**
    * Coordinates for the help hover, or null if the hover is hidden.
