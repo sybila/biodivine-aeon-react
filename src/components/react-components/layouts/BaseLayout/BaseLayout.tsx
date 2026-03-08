@@ -115,6 +115,7 @@ const BaseLayout = () => {
         iconAlt="Dock"
       >
         <NavigationDockContent
+          helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
           handleComputeEngineClick={() =>
             setActiveOverlayWindow('Compute Engine')
           }
