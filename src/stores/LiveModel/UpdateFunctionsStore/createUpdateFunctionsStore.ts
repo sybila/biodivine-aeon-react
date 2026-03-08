@@ -1,15 +1,17 @@
 import { create } from 'zustand';
 import type { UpdateFunction } from '../../../types';
 import type { ZustandStore } from '../../ZustandStoreType';
-import useVariablesStore from '../VariablesStore/useVariablesStore';
+import type { VariablesStatus } from '../VariablesStore/VariablesStatus';
 import type { UpdateFunctionsState } from './UpdateFunctionsState';
 
-function createUpdateFunctionsStore(): ZustandStore<UpdateFunctionsState> {
+function createUpdateFunctionsStore(
+  variablesStore: ZustandStore<VariablesStatus>
+): ZustandStore<UpdateFunctionsState> {
   return create<UpdateFunctionsState>((set, get) => ({
     updateFunctions: {},
     updateFunctionStatus: {},
     setUpdateFunction: (id, updateFunction: UpdateFunction) => {
-      const variable = useVariablesStore.getState().variableFromId(id);
+      const variable = variablesStore.getState().variableFromId(id);
       if (!variable) {
         return `Unknown variable '${id}'.`;
       }
