@@ -1,14 +1,19 @@
 import ModelEditorObjectProvider from './ModelEditorObjectProvider';
 import StoresProvider from './StoresProvider/StoresProvider';
 import type { StoresProviderInt } from './StoresProvider/StoresProviderInt';
+import UtilitiesServiceProvider from './UtilitiesServiceProvider/UtilitiesServiceProvider';
+import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 
 class ObjectProviderClass {
-  public modelEditorObjects: ModelEditorObjectProvider;
+  public ModelEditorObjects: ModelEditorObjectProvider;
+
+  public UtilitiesServiceProvider: UtilitiesServiceProviderInt;
 
   public StoresProvider: StoresProviderInt;
 
   constructor() {
-    this.modelEditorObjects = new ModelEditorObjectProvider();
+    this.ModelEditorObjects = new ModelEditorObjectProvider();
+    this.UtilitiesServiceProvider = new UtilitiesServiceProvider();
     this.StoresProvider = new StoresProvider();
   }
 }
