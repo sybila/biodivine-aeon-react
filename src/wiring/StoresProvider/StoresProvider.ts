@@ -90,7 +90,7 @@ class StoresProvider implements StoresProviderInt {
     this.modelInfoStore = createModelInfoStore();
     this.variablesStore = createVariablesStore();
     this.regulationsStore = createRegulationsStore();
-    this.updateFunctionsStore = createUpdateFunctionsStore();
+    this.updateFunctionsStore = createUpdateFunctionsStore(this.variablesStore);
     this.controlStore = createControlStore();
   }
 }
