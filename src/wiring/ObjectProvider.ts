@@ -1,5 +1,7 @@
 import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
+import AttractorVisualizerServicesProvider from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProvider';
+import type { AttractorVisualizerServicesProviderInt } from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProviderInt';
 import GlobalServicesProvider from './GlobalServicesProvider/GlobalServicesProvider';
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
 import ModelEditorServicesProvider from './ModelEditorServicesProvider/ModelEditorServicesProvider';
@@ -11,6 +13,7 @@ import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/Uti
 
 class ObjectProviderClass {
   public ModelEditorServicesProvider: ModelEditorServicesProviderInt;
+  public AttractorVisualizerServicesProvider: AttractorVisualizerServicesProviderInt;
   public AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
 
   public GlobalServicesProvider: GlobalServicesProviderInt;
@@ -29,8 +32,18 @@ class ObjectProviderClass {
       this.GlobalServicesProvider.liveModelServ,
       this.StoresProvider
     );
+    this.AttractorVisualizerServicesProvider =
+      new AttractorVisualizerServicesProvider(
+        this.GlobalServicesProvider.computationManagerServ,
+        this.StoresProvider
+      );
     this.AttractorBifurcationExplorerServicesProvider =
-      new AttractorBifurcationExplorerServicesProvider(this.GlobalServicesProvider.computationManagerServ, , this.UtilitiesServiceProvider.behaviorClassOperationsServ, this.StoresProvider);
+      new AttractorBifurcationExplorerServicesProvider(
+        this.GlobalServicesProvider.computationManagerServ,
+        this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
+        this.UtilitiesServiceProvider.behaviorClassOperationsServ,
+        this.StoresProvider
+      );
   }
 }
 
