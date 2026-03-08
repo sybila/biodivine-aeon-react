@@ -1,19 +1,20 @@
 import { Message } from '../../components/lit-components/message-wrapper';
-import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
-import useTabsStore from '../../stores/Navigation/useTabsStore';
+import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
+import type { TabsState } from '../../stores/Navigation/TabState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
 import type {
   AttractorData,
   AttractorVisualizerInput,
   VisEdge,
   VisNode,
 } from '../../types';
-import ComputationManager from '../global/ComputationManager/ComputationManager';
+import type { ComputationManagerInt } from '../global/ComputationManager/ComputationManagerInt';
 import type { AttractorVisualizerInt } from './AttractorVisualizerInt';
 
 declare const vis: any;
 
-class AttractorVisualizerClass implements AttractorVisualizerInt {
-  // #region --- Properties ---
+class AttractorVisualizer implements AttractorVisualizerInt {
+  // #region --- Properties + Constructor ---
 
   /** Currently loaded attractor data. */
   private attractorData: AttractorData | undefined = undefined;
@@ -50,6 +51,21 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
     },
   };
 
+  private computationManagerServ: ComputationManagerInt;
+
+  private attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
+  private tabsStore: ZustandStore<TabsState>;
+
+  constructor(
+    computationManagerServ: ComputationManagerInt,
+    attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>,
+    tabsStore: ZustandStore<TabsState>
+  ) {
+    this.computationManagerServ = computationManagerServ;
+    this.attractorVisualizerStatusStore = attractorVisualizerStatusStore;
+    this.tabsStore = tabsStore;
+  }
+
   // #endregion
 
   // #region --- Initialization ---
@@ -78,15 +94,18 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
 
     if (inputData.nodeId === undefined || inputData.nodeId === null) {
       if (inputData.behavior) {
-        ComputationManager.getAttractorByBehavior(inputData.behavior, this);
+        this.computationManagerServ.getAttractorByBehavior(
+          inputData.behavior,
+          this
+        );
       }
     } else if (!inputData.variableName || !inputData.vector) {
-      ComputationManager.getBifurcationExplorerAttractor(
+      this.computationManagerServ.getBifurcationExplorerAttractor(
         inputData.nodeId,
         this
       );
     } else if (inputData.variableName && inputData.vector) {
-      ComputationManager.getStabilityAnalysisAttractor(
+      this.computationManagerServ.getStabilityAnalysisAttractor(
         inputData.nodeId,
         inputData.variableName,
         inputData.behavior ?? '',
@@ -99,7 +118,7 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
   public insertAttractorData(result: any, newTab: boolean): void {
     if (newTab) {
       result = this.processAttractorData(result);
-      useTabsStore
+      this.tabsStore
         .getState()
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
@@ -194,10 +213,10 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
   // #region --- Node Click ---
 
   /** Function for handling node clicks.
-   * Changes selected node state in the useAttractorVisualizerStatus store. */
+   * Changes selected node state in the this.attractorVisualizerStatusStore. */
   private nodeClick(e: any): void {
     if (e) {
-      useAttractorVisualizerStatus
+      this.attractorVisualizerStatusStore
         .getState()
         .changeSelectedState(
           e.nodes.length !== 1 || e.nodes[0][0] === 'l'
@@ -259,7 +278,7 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
     };
   }
 
-  /** Process the raw attractor data from the ComputationManager into form used in the visualizer */
+  /** Process the raw attractor data from the this.computationManagerServ into form used in the visualizer */
   private processAttractorData(results: any): AttractorData {
     for (let i = 0; i < results.attractors.length; i++) {
       results.attractors[i].vis = this.edgesToVisFormat(
@@ -298,7 +317,7 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
   // #region --- Clear ---
 
   public clear(): void {
-    useAttractorVisualizerStatus.getState().clear();
+    this.attractorVisualizerStatusStore.getState().clear();
   }
 
   // #endregion
@@ -328,7 +347,5 @@ class AttractorVisualizerClass implements AttractorVisualizerInt {
     }
   }
 }
-
-const AttractorVisualizer = new AttractorVisualizerClass();
 
 export default AttractorVisualizer;

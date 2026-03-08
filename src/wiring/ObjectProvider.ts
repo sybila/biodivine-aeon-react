@@ -1,3 +1,5 @@
+import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
+import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
 import GlobalServicesProvider from './GlobalServicesProvider/GlobalServicesProvider';
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
 import ModelEditorServicesProvider from './ModelEditorServicesProvider/ModelEditorServicesProvider';
@@ -9,9 +11,9 @@ import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/Uti
 
 class ObjectProviderClass {
   public ModelEditorServicesProvider: ModelEditorServicesProviderInt;
+  public AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
 
   public GlobalServicesProvider: GlobalServicesProviderInt;
-
   public UtilitiesServiceProvider: UtilitiesServiceProviderInt;
 
   public StoresProvider: StoresProviderInt;
@@ -27,6 +29,8 @@ class ObjectProviderClass {
       this.GlobalServicesProvider.liveModelServ,
       this.StoresProvider
     );
+    this.AttractorBifurcationExplorerServicesProvider =
+      new AttractorBifurcationExplorerServicesProvider(this.GlobalServicesProvider.computationManagerServ, , this.UtilitiesServiceProvider.behaviorClassOperationsServ, this.StoresProvider);
   }
 }
 
