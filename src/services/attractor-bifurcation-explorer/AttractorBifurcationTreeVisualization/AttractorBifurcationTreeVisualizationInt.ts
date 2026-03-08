@@ -19,6 +19,18 @@ export interface AttractorBifurcationTreeVisualizationInt {
 
   // #endregion
 
+  // #region --- External Function Setters ---
+
+  /** Setter for function which calculates the dimension percentage. */
+  setMathDimPercentFunction(
+    func: (subsetSize: number, totalSize: number) => number
+  ): void;
+
+  /** Setter for function which removes node from the tree visualization. */
+  setRemoveNodeFunction(func: (nodeId: number) => void): void;
+
+  // #endregion
+
   // #region --- Cardinality ---
 
   /** Returns total cardinality of the graph or -1 if not available */

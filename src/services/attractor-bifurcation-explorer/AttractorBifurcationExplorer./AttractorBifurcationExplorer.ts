@@ -59,6 +59,15 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     this.computationManagerServ = computationManagerServ;
     this.attractorVisualizerServ = attractorVisualizerServ;
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
+
+    this.cytoscape.setMathDimPercentFunction(
+      (subsetSize: number, totalSize: number) => {
+        return this.mathDimPercent(subsetSize, totalSize);
+      }
+    );
+    this.cytoscape.setRemoveNodeFunction((nodeId: number) => {
+      return this.removeNode(nodeId);
+    });
   }
 
   // #endregion

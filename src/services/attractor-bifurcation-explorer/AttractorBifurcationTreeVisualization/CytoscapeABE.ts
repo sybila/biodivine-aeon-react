@@ -44,7 +44,10 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
-  private mathDimPercentFunction: (value: number, totalValue: number) => number;
+  private mathDimPercentFunction: (
+    subsetSize: number,
+    totalSize: number
+  ) => number;
   private removeNodeFunction: (nodeId: number) => void;
 
   constructor(
@@ -212,6 +215,25 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   // #endregion
 
+  // #region --- External Function Setters ---
+
+  /** Setter for function which calculates the dimension percentage. */
+  setMathDimPercentFunction(
+    func: (subsetSize: number, totalValue: number) => number
+  ): void {
+    if (func != undefined) {
+      this.mathDimPercentFunction = func;
+    }
+  }
+
+  /** Setter for function which removes node from the tree visualization. */
+  setRemoveNodeFunction(func: (nodeId: number) => void) {
+    if (func != undefined) {
+      this.removeNodeFunction = func;
+    }
+  }
+
+  // #endregion
   // #region --- Cardinality ---
 
   /** Returns total cardinality of the graph or -1 if not available */
