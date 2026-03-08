@@ -1,14 +1,17 @@
 import Time from '../../../../services/utilities/Time';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
+import type { StatusBarProps } from './StatusBarProps';
 
-const StatusBar: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const computeEngineStatus: string = useComputeEngineStatus(
+const StatusBar: React.FC<StatusBarProps> = ({
+  onClick,
+  computeEngineStatusStore,
+}) => {
+  const computeEngineStatus: string = computeEngineStatusStore(
     (state) => state.computeEngineStatus
   );
-  const computationStatus = useComputeEngineStatus(
+  const computationStatus = computeEngineStatusStore(
     (state) => state.computationStatus
   );
-  const color: string = useComputeEngineStatus((state) => state.statusColor);
+  const color: string = computeEngineStatusStore((state) => state.statusColor);
 
   const getStatusText = () => {
     if (computationStatus.status != 'No computation') {
