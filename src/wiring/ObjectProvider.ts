@@ -2,6 +2,8 @@ import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcation
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
 import AttractorVisualizerServicesProvider from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProvider';
 import type { AttractorVisualizerServicesProviderInt } from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProviderInt';
+import ControlPerturbationsTableServicesProvider from './ControlPerturbationsTableServicesProvider/ControlPerturbationsTableServicesProvider';
+import type { ControlPerturbationsTableServicesProviderInt } from './ControlPerturbationsTableServicesProvider/ControlPerturbationsTableServicesProviderInt';
 import GlobalServicesProvider from './GlobalServicesProvider/GlobalServicesProvider';
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
 import ModelEditorServicesProvider from './ModelEditorServicesProvider/ModelEditorServicesProvider';
@@ -15,6 +17,7 @@ class ObjectProviderClass {
   public ModelEditorServicesProvider: ModelEditorServicesProviderInt;
   public AttractorVisualizerServicesProvider: AttractorVisualizerServicesProviderInt;
   public AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
+  public ControlPerturbationsTableServicesProvider: ControlPerturbationsTableServicesProviderInt;
 
   public GlobalServicesProvider: GlobalServicesProviderInt;
   public UtilitiesServiceProvider: UtilitiesServiceProviderInt;
@@ -28,6 +31,7 @@ class ObjectProviderClass {
       this.UtilitiesServiceProvider,
       this.StoresProvider
     );
+
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
       this.GlobalServicesProvider.liveModelServ,
       this.StoresProvider
@@ -43,6 +47,10 @@ class ObjectProviderClass {
         this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
         this.UtilitiesServiceProvider.behaviorClassOperationsServ,
         this.StoresProvider
+      );
+    this.ControlPerturbationsTableServicesProvider =
+      new ControlPerturbationsTableServicesProvider(
+        this.StoresProvider.perturbationFiltersSortStore
       );
   }
 }
