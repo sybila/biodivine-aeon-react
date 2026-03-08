@@ -1,7 +1,12 @@
 import type { EdgeMonotonicity, Regulation } from '../../../types';
 
+/**
+ * Zustand store for regulations.
+ * Provides actions for adding, removing, updating, and querying regulations.
+ */
 export type RegulationsStatus = {
   regulations: Record<string, Regulation>;
+  /** Getter which returns all regulations in the form of array */
   getAllRegulations: () => Regulation[];
   addRegulation: (regulation: Regulation) => void;
   removeRegulation: (regulatorId: number, targetId: number) => void;

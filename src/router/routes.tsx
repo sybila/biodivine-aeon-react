@@ -3,50 +3,40 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
-import AttractorBifurcationExplorerServ from '../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import AttractorVisualizerServ from '../services/attractor-visualizer/AttractorVisualizer';
-import ControlPerturbationsTableServ from '../services/control-perturbations-table/ControlPerturbationsTable';
-import ComputationManager from '../services/global/ComputationManager/ComputationManager';
-import { LiveModel } from '../services/global/LiveModel/LiveModel';
-import Warning from '../services/global/Warning/Warning';
-import ControlEditor from '../services/model-editor/ControlEditor/ControlEditor';
-import ModelEditorServ from '../services/model-editor/ModelEditor/ModelEditor';
-import CytoscapeME from '../services/model-editor/ModelVisualization/CytoscapeME';
-import BehaviorClassOperations from '../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
-import DataFormaters from '../services/utilities/DataFormaters/DataFormaters';
-import FileConvertors from '../services/utilities/FileConvertors/FileConvertors';
-import SearchAndFilterHelpers from '../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpers';
-import useBifurcationExplorerStatus from '../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import useAttractorVisualizerStatus from '../stores/AttractorVisualizer/useAttractorVisualizerStatus';
-import useResultsStatus from '../stores/ComputationManager/ResultStatus/useResultsStatus';
-import usePerturbationFilterSortStore from '../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
-import useControlStore from '../stores/LiveModel/ControlStore/useControlStore';
-import useModelInfoStore from '../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useRegulationsStore from '../stores/LiveModel/RegulationsStore/useRegulationsStore';
-import useUpdateFunctionsStore from '../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../stores/LiveModel/VariablesStore/useVariablesStore';
-import useModelEditorStatus from '../stores/ModelEditor/useModelEditorStatus';
-import useTabsStore from '../stores/Navigation/useTabsStore';
+import ObjectProvider from '../wiring/ObjectProvider';
 import { rootRoute } from './root';
 
 const ModelEditorComponent = () => (
   <ModelEditor
-    liveModelServ={LiveModel}
-    modelVisualization={CytoscapeME}
-    modelEditorServ={ModelEditorServ}
-    controlEditorServ={ControlEditor}
-    computationManagerServ={ComputationManager}
-    searchAndFilterHelpersServ={SearchAndFilterHelpers}
-    warningServ={Warning}
-    fileConvertorsServ={FileConvertors}
-    modelEditorStatusStore={useModelEditorStatus}
-    tabStore={useTabsStore}
-    resultsStatusStore={useResultsStatus}
-    controlStore={useControlStore}
-    regulationsStore={useRegulationsStore}
-    variablesStore={useVariablesStore}
-    updateFunctionsStore={useUpdateFunctionsStore}
-    modelInfoStore={useModelInfoStore}
+    liveModelServ={ObjectProvider.GlobalServicesProvider.liveModelServ}
+    modelVisualization={
+      ObjectProvider.ModelEditorServicesProvider.modelVisualizationServ
+    }
+    modelEditorServ={ObjectProvider.ModelEditorServicesProvider.modelEditorServ}
+    controlEditorServ={
+      ObjectProvider.ModelEditorServicesProvider.controlEditorServ
+    }
+    computationManagerServ={
+      ObjectProvider.GlobalServicesProvider.computationManagerServ
+    }
+    searchAndFilterHelpersServ={
+      ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
+    }
+    warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
+    fileConvertorsServ={
+      ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
+    }
+    modelEditorStatusStore={
+      ObjectProvider.StoresProvider.modelEditorStatusStore
+    }
+    tabStore={ObjectProvider.StoresProvider.tabsStore}
+    resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
+    controlStore={ObjectProvider.StoresProvider.controlStore}
+    regulationsStore={ObjectProvider.StoresProvider.regulationsStore}
+    variablesStore={ObjectProvider.StoresProvider.variablesStore}
+    updateFunctionsStore={ObjectProvider.StoresProvider.updateFunctionsStore}
+    modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
+    loadedModelStore={ObjectProvider.StoresProvider.loadedModelStore}
   />
 );
 
@@ -68,9 +58,16 @@ export const AttractorBifurcationExplorerRoute = createRoute({
   path: '/attractor-bifurcation-explorer',
   component: () => (
     <AttractorBifurcationExplorer
-      attractorBifurcationExplorerServ={AttractorBifurcationExplorerServ}
-      behaviorClassOperationsServ={BehaviorClassOperations}
-      bifurcationExplorerStatusStore={useBifurcationExplorerStatus}
+      attractorBifurcationExplorerServ={
+        ObjectProvider.AttractorBifurcationExplorerServicesProvider
+          .attractorBifurcationExplorerServ
+      }
+      behaviorClassOperationsServ={
+        ObjectProvider.UtilitiesServiceProvider.behaviorClassOperationsServ
+      }
+      bifurcationExplorerStatusStore={
+        ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
+      }
     />
   ),
 });
@@ -80,8 +77,13 @@ export const AttractorVisualizerRoute = createRoute({
   path: '/attractor-visualizer',
   component: () => (
     <AttractorVisualizer
-      attractorVisualizerServ={AttractorVisualizerServ}
-      attractorVisualizerStatusStore={useAttractorVisualizerStatus}
+      attractorVisualizerServ={
+        ObjectProvider.AttractorVisualizerServicesProvider
+          .attractorVisualizerServ
+      }
+      attractorVisualizerStatusStore={
+        ObjectProvider.StoresProvider.attractorVisualizerStatusStore
+      }
     />
   ),
 });
@@ -97,12 +99,21 @@ export const ControlPerturbationsTableRoute = createRoute({
   path: '/control-perturbations-table',
   component: () => (
     <ControlPerturbationsTable
-      liveModelServ={LiveModel}
-      controlPerturbationsTableServ={ControlPerturbationsTableServ}
-      dataFormatersServ={DataFormaters}
-      searchAndFilterHelpersServ={SearchAndFilterHelpers}
-      resultsStatusStore={useResultsStatus}
-      perturbationFilterSortStore={usePerturbationFilterSortStore}
+      liveModelServ={ObjectProvider.GlobalServicesProvider.liveModelServ}
+      controlPerturbationsTableServ={
+        ObjectProvider.ControlPerturbationsTableServicesProvider
+          .controlPerturbationsTableServ
+      }
+      dataFormatersServ={
+        ObjectProvider.UtilitiesServiceProvider.dataFormatersServ
+      }
+      searchAndFilterHelpersServ={
+        ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
+      }
+      resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
+      perturbationFilterSortStore={
+        ObjectProvider.StoresProvider.perturbationFiltersSortStore
+      }
     />
   ),
 });

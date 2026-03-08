@@ -1,3 +1,8 @@
+/**
+ * Zustand store for model meta-information (name and description).
+ * Provides actions for getting and setting model name and description,
+ * and triggers UI/model updates on change.
+ */
 export type ModelInfoState = {
   modelName: string;
   modelDescription: string;

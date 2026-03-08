@@ -1,15 +1,18 @@
-import useOverlayWindowStore from '../../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
+import type { ContentOverlayWindowProps } from './ContentOverlayWindowProps';
 
-const ContentOverlayWindow: React.FC<{ zIndex: string }> = ({ zIndex }) => {
-  const currentContent = useOverlayWindowStore((state) => state.currentContent);
+const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
+  zIndex,
+  overlayWindowStore,
+}) => {
+  const currentContent = overlayWindowStore((state) => state.currentContent);
 
   if (!currentContent) {
     return null;
   }
 
   const closeOverlay = () => {
-    useOverlayWindowStore.getState().setCurrentContent(null);
+    overlayWindowStore.getState().setCurrentContent(null);
   };
 
   return (

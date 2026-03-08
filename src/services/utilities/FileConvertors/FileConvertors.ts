@@ -13,7 +13,7 @@ import type { FileConvertorsInt } from './FileConvertorsInt.js';
  * All methods return a Promise and resolve to the result string, or reject with an error.
  * WASM is initialized automatically on first use.
  */
-class FileConvertorsClass implements FileConvertorsInt {
+class FileConvertors implements FileConvertorsInt {
   private wasmInitialized: Promise<InitInput> | null = null;
 
   private async ensureWasmInitialized() {
@@ -68,7 +68,5 @@ class FileConvertorsClass implements FileConvertorsInt {
     }
   }
 }
-
-const FileConvertors = new FileConvertorsClass();
 
 export default FileConvertors;

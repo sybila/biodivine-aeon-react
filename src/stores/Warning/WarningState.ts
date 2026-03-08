@@ -1,5 +1,6 @@
 import type { TextButton, Warning } from '../../types';
 
+/** Store for managing warnings in the application */
 export type WarningState = {
   /** Head of the linked list of warnings. If null, there are no warnings. */
   warningLinkedList: Warning | null;

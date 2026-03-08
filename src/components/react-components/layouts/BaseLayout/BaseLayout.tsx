@@ -7,8 +7,7 @@ import PopUpBarReact from '../../lit-wrappers/PopUpBarReact';
 
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import DockIcon from '../../../../assets/icons/dock-arrow.svg';
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import ObjectProvider from '../../../../wiring/ObjectProvider';
 import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
 import HelpHover from '../../global/HelpHover/HelpHover';
 import StatusBar from '../../global/StatusBar/StatusBar';
@@ -22,7 +21,9 @@ const BaseLayout = () => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
 
-  const loadedResults = useResultsStatus((state) => state.results);
+  const loadedResults = ObjectProvider.StoresProvider.resultsStatusStore(
+    (state) => state.results
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,22 +50,67 @@ const BaseLayout = () => {
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
       case 'Compute Engine':
-        return <ComputeEngineWindowContent />;
+        return (
+          <ComputeEngineWindowContent
+            computationManagerServ={
+              ObjectProvider.GlobalServicesProvider.computationManagerServ
+            }
+            computeEngineStatusStore={
+              ObjectProvider.StoresProvider.computeEngineStatusStore
+            }
+          />
+        );
       case 'Results':
-        return <ResultsWindowContent />;
+        return (
+          <ResultsWindowContent
+            computationManagerServ={
+              ObjectProvider.GlobalServicesProvider.computationManagerServ
+            }
+            attractorVisualizerServ={
+              ObjectProvider.AttractorVisualizerServicesProvider
+                .attractorVisualizerServ
+            }
+            attractorBifurcationExplorerServ={
+              ObjectProvider.AttractorBifurcationExplorerServicesProvider
+                .attractorBifurcationExplorerServ
+            }
+            controlPerturbationsTableServ={
+              ObjectProvider.ControlPerturbationsTableServicesProvider
+                .controlPerturbationsTableServ
+            }
+            resultsOperationsServ={
+              ObjectProvider.GlobalServicesProvider.resultsOperationsServ
+            }
+            dataFormatersServ={
+              ObjectProvider.UtilitiesServiceProvider.dataFormatersServ
+            }
+            modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
+            tabsStore={ObjectProvider.StoresProvider.tabsStore}
+            resultsStatusStore={
+              ObjectProvider.StoresProvider.resultsStatusStore
+            }
+          />
+        );
       default:
         return null;
     }
   };
 
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
-    useHelpHoverStore.getState().setHelpHover(event, text, -85);
+    ObjectProvider.StoresProvider.helpHoverStore
+      .getState()
+      .setHelpHover(event, text, -85);
   };
 
   return (
     <div className="h-full w-full">
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
-        <StatusBar onClick={() => setActiveOverlayWindow('Compute Engine')} />
+        <StatusBar
+          onClick={() => setActiveOverlayWindow('Compute Engine')}
+          computeEngineStatusStore={
+            ObjectProvider.StoresProvider.computeEngineStatusStore
+          }
+        />
         <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
       </section>
 
@@ -85,11 +131,20 @@ const BaseLayout = () => {
         </OverlayWindowReact>
       ) : null}
 
-      <WarningOverlay zIndex="999999993" />
+      <WarningOverlay
+        zIndex="999999993"
+        warningStore={ObjectProvider.StoresProvider.warningStore}
+      />
 
-      <ContentOverlayWindow zIndex="999999991" />
+      <ContentOverlayWindow
+        zIndex="999999991"
+        overlayWindowStore={ObjectProvider.StoresProvider.overlayWindowStore}
+      />
 
-      <HelpHover zIndex={999999992} />
+      <HelpHover
+        zIndex={999999992}
+        helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
+      />
 
       <PopUpBarReact
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
@@ -97,13 +152,21 @@ const BaseLayout = () => {
         iconAlt="Dock"
       >
         <NavigationDockContent
+          helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
           handleComputeEngineClick={() =>
             setActiveOverlayWindow('Compute Engine')
           }
           handleResultsClick={() => setActiveOverlayWindow('Results')}
           setNavBarHelpHover={setNavBarHelpHover}
         >
-          <TabBar setTabBarHelpHover={setNavBarHelpHover} />
+          <TabBar
+            setTabBarHelpHover={setNavBarHelpHover}
+            tabOperationsServ={
+              ObjectProvider.GlobalServicesProvider.tabOperationsServ
+            }
+            helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
+            tabsStore={ObjectProvider.StoresProvider.tabsStore}
+          />
         </NavigationDockContent>
       </PopUpBarReact>
 

@@ -2,7 +2,7 @@ import type { ControlResult } from '../../../types';
 import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */
-class DataFormatersClass implements DataFormatersInt {
+class DataFormaters implements DataFormatersInt {
   /** Converts a robustness value from decimal fraction to a percentage string. */
   public convertRobustnessToPercentage(robustness: number): string {
     if (robustness === undefined) {
@@ -44,7 +44,5 @@ class DataFormatersClass implements DataFormatersInt {
     return text.split(',').map((item) => item.trim());
   }
 }
-
-const DataFormaters = new DataFormatersClass();
 
 export default DataFormaters;

@@ -1,9 +1,4 @@
-import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import ResultsOperations from '../../../../../services/global/ResultsOperations/ResultsOperations';
-import DataFormaters from '../../../../../services/utilities/DataFormaters/DataFormaters';
 import Time from '../../../../../services/utilities/Time';
-import useModelInfoStore from '../../../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
@@ -13,6 +8,11 @@ import type { ControlResultsStatsProps } from './ControlResultsStatsProps';
 
 const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
   results,
+  controlPerturbationsTableServ,
+  resultsOperationsServ,
+  dataFormatersServ,
+  modelInfoStore,
+  tabsStore,
 }) => {
   const renderStats = () => {
     return (
@@ -48,7 +48,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
           <StatEntryReact
             compWidth="100%"
             statName="Highest Robustness"
-            statValue={`${DataFormaters.convertRobustnessToPercentage(
+            statValue={`${dataFormatersServ.convertRobustnessToPercentage(
               results.stats.maximalPerturbationRobustness
             )}%`}
           />
@@ -92,13 +92,13 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             compWidth="90%"
             text="Table"
             handleClick={() =>
-              useTabsStore
+              tabsStore
                 .getState()
                 .addTab(
                   '/control-perturbations-table',
                   'Control Perturbations Table',
                   undefined,
-                  () => ControlPerturbationsTable.clear()
+                  () => controlPerturbationsTableServ.clear()
                 )
             }
           />
@@ -118,9 +118,9 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             compWidth="90%"
             text="CSV"
             handleClick={() =>
-              ResultsOperations.exportControlPerturbationsAsCsv(
+              resultsOperationsServ.exportControlPerturbationsAsCsv(
                 results.perturbations,
-                `${useModelInfoStore
+                `${modelInfoStore
                   .getState()
                   .getModelName()}_control_perturbations_${Time.getCurrentTime()}`
               )

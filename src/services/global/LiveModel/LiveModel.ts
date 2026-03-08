@@ -1,28 +1,16 @@
 import { Message } from '../../../components/lit-components/message-wrapper';
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
-import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
-import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
 import type { ModelState } from '../../../stores/LiveModel/LoadedModelStore/ModelState';
-import useLoadedModelStore from '../../../stores/LiveModel/LoadedModelStore/useLoadedModelStore';
 import type { ModelInfoState } from '../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
-import useModelInfoStore from '../../../stores/LiveModel/ModelInfoStore/useModelInfoStore';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
-import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import FileHelpers from '../../utilities/FileHelpers/FileHelpers';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
-import ComputationManager from '../ComputationManager/ComputationManager';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
-import Warning from '../Warning/Warning';
 import type { WarningInt } from '../Warning/WarningInt';
 import ControlLM from './ControlLM/ControlLM';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
@@ -49,7 +37,7 @@ import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 	It is the responsibility of the `LiveModel`` to always update `ModelEditor` and `ModelVisualization`
 	to reflect the current state of the model.
 */
-class LiveModelClass implements LiveModelInt {
+class LiveModel implements LiveModelInt {
   // #region --- Properties + Constructor ---
 
   /** We use this to indicate that there is a batch of changes to the model that are being processed,
@@ -236,19 +224,4 @@ class LiveModelClass implements LiveModelInt {
   // #endregion
 }
 
-const LiveModel = new LiveModelClass(
-  ComputationManager,
-  Warning,
-  FileHelpers,
-  useLoadedModelStore,
-  useTabsStore,
-  useResultsStatus,
-  useModelEditorStatus,
-  useVariablesStore,
-  useRegulationsStore,
-  useUpdateFunctionsStore,
-  useControlStore,
-  useModelInfoStore
-);
-
-export { LiveModel, LiveModelClass };
+export default LiveModel;

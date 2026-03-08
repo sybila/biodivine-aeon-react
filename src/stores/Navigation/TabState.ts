@@ -5,8 +5,12 @@ export type TabsState = {
   openedTabs: Record<number, TabInfo>;
   /** Property containing the ID of the next created tab. */
   idNow: number;
+
   /** OnClick function for the first tab. Needs to be set externally because od circular dependencies. (Possibly set to something like LiveModel.Models.loadModel(0))  */
   firstTabOnClick: () => void;
+
+  /** Function which determines if more than one tab with inserted TabType can be opened. (true  if yes, else false) */
+  canOpenMoreThanOneFunction: (type: TabType) => boolean;
 
   /** Adds a new tab. */
   addTab: (

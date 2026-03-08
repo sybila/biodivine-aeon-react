@@ -1,16 +1,12 @@
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
-import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import useWarningStore from '../../../stores/Warning/useWarningStore';
 import type { WarningState } from '../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import WaiterFunction from '../../utilities/WaiterFunction/WaiterFunction';
 import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
 import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
-class WarningClass implements WarningInt {
+class Warning implements WarningInt {
   // #region --- Attributes + Constructor ---
 
   private waiterFunction: WaiterFunctionInt;
@@ -190,12 +186,5 @@ class WarningClass implements WarningInt {
 
   // #endregion
 }
-
-const Warning = new WarningClass(
-  useResultsStatus,
-  useTabsStore,
-  useWarningStore,
-  WaiterFunction
-);
 
 export default Warning;

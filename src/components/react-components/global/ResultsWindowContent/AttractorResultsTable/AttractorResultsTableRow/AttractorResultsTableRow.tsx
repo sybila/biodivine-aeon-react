@@ -1,11 +1,11 @@
-import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
-import ComputationManager from '../../../../../../services/global/ComputationManager/ComputationManager';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { AttractorResultsTableRowProps } from './AttractorResultsTableRowProps';
 
 const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   interpretationCount,
   behaviorClassList,
+  computationManagerServ,
+  attractorVisualizerServ,
 }) => {
   const behaviourString: string | undefined = !behaviorClassList
     ? undefined
@@ -16,12 +16,12 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
 
   const openAttractor = () => {
     if (behaviourString && behaviourString.length > 0) {
-      AttractorVisualizer.openVisualizer({ behavior: behaviourString });
+      attractorVisualizerServ.openVisualizer({ behavior: behaviourString });
     }
   };
 
   const openWitness = () => {
-    ComputationManager.openWitnessAttractorAnalysis(
+    computationManagerServ.openWitnessAttractorAnalysis(
       behaviourString ? behaviourString : ''
     );
   };

@@ -1,6 +1,6 @@
 import type { WaiterFunctionInt } from './WaiterFunctionInt';
 
-class WaiterFunctionClass implements WaiterFunctionInt {
+class WaiterFunction implements WaiterFunctionInt {
   /**
    * Creates an object with a function that returns a promise and a resolver function.
    * The promise resolves when the resolver is invoked.
@@ -21,7 +21,5 @@ class WaiterFunctionClass implements WaiterFunctionInt {
     };
   }
 }
-
-const WaiterFunction = new WaiterFunctionClass();
 
 export default WaiterFunction;

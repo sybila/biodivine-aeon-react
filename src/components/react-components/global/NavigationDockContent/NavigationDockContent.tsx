@@ -3,9 +3,9 @@ import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 import ResultsIcon from '../../../../assets/icons/call_split-48px.svg';
 import EngineIcon from '../../../../assets/icons/engine-48px.svg';
 import type { NavigationDockContentProps } from './NavigationDockContentProps';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
 
 const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
+  helpHoverStore,
   children,
   handleResultsClick,
   handleComputeEngineClick,
@@ -20,7 +20,7 @@ const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
           iconAlt="Results"
           handleClick={handleResultsClick}
           onMouseOver={(e) => setNavBarHelpHover?.(e.nativeEvent, 'Results')}
-          onMouseLeave={(e) => useHelpHoverStore.getState().clear()}
+          onMouseLeave={(e) => helpHoverStore.getState().clear()}
         />
 
         <IconButtonReact
@@ -31,7 +31,7 @@ const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
           onMouseOver={(e) =>
             setNavBarHelpHover?.(e.nativeEvent, 'Compute Engine')
           }
-          onMouseLeave={(e) => useHelpHoverStore.getState().clear()}
+          onMouseLeave={(e) => helpHoverStore.getState().clear()}
         />
       </section>
 

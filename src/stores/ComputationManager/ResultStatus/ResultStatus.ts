@@ -4,6 +4,9 @@ import type {
   ControlResults,
 } from '../../../types';
 
+/** Zustand store for managing computation results.
+ * Provides actions to set and clear the results.
+ */
 export type ResultsStatus = {
   /** Type of currently active results */
   type: ComputationModes | undefined;

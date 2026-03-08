@@ -1,17 +1,11 @@
 import { Loading } from '../../../components/lit-components/loading-wrapper';
 import { Message } from '../../../components/lit-components/message-wrapper';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
-import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import type { ComputeEngineStatusState } from '../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
-import useComputeEngineStatus from '../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
-import useResultsStatus from '../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   AttractorData,
@@ -36,7 +30,7 @@ import type { ComputationManagerInt } from './ComputationManagerInt';
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
 */
-class ComputationManagerClass implements ComputationManagerInt {
+class ComputationManager implements ComputationManagerInt {
   // #region --- Properties + Constructor ---
 
   /** Currently used compute engine comunicator */
@@ -794,14 +788,5 @@ class ComputationManagerClass implements ComputationManagerInt {
 
   // #endregion
 }
-
-const ComputationManager: ComputationManagerClass = new ComputationManagerClass(
-  useBifurcationExplorerStatus,
-  useResultsStatus,
-  useComputeEngineStatus,
-  useUpdateFunctionsStore,
-  useVariablesStore,
-  useTabsStore
-);
 
 export default ComputationManager;

@@ -1,8 +1,14 @@
 import type { Variable } from '../../../types';
-import DataFormaters from '../DataFormaters/DataFormaters';
+import type { DataFormatersInt } from '../DataFormaters/DataFormatersInt';
 import type { SearchAndFilterHelpersInt } from './SearchAndFilterHelpersInt';
 
-class SearchAndFilterHelpersClass implements SearchAndFilterHelpersInt {
+class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
+  private dataFormatersServ: DataFormatersInt;
+
+  constructor(dataFormatersServ: DataFormatersInt) {
+    this.dataFormatersServ = dataFormatersServ;
+  }
+
   /** Tests if the evaluated string starts with any of the search terms in the array */
   private startsWithInArray(
     evaluatedString: string,
@@ -26,7 +32,7 @@ class SearchAndFilterHelpersClass implements SearchAndFilterHelpersInt {
     if (searchText === undefined || searchText === '') return variables;
 
     const searchTerms =
-      DataFormaters.convertCommaSeparatedStringToArray(searchText);
+      this.dataFormatersServ.convertCommaSeparatedStringToArray(searchText);
 
     if (searchTerms[searchTerms.length - 1] === '') {
       return variables;
@@ -47,7 +53,7 @@ class SearchAndFilterHelpersClass implements SearchAndFilterHelpersInt {
     if (searchText === undefined || searchText === '') return strings;
 
     const searchTerms =
-      DataFormaters.convertCommaSeparatedStringToArray(searchText);
+      this.dataFormatersServ.convertCommaSeparatedStringToArray(searchText);
 
     if (searchTerms[searchTerms.length - 1] === '') {
       return strings;
@@ -56,7 +62,5 @@ class SearchAndFilterHelpersClass implements SearchAndFilterHelpersInt {
     return strings.filter((str) => this.startsWithInArray(str, searchTerms));
   }
 }
-
-const SearchAndFilterHelpers = new SearchAndFilterHelpersClass();
 
 export default SearchAndFilterHelpers;

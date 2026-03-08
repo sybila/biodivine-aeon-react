@@ -1,18 +1,13 @@
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
-import useControlStore from '../../../stores/LiveModel/ControlStore/useControlStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
-import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
-import { LiveModel } from '../../global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
-import CytoscapeME from '../ModelVisualization/CytoscapeME';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ControlEditorInt } from './ControlEditorInt';
 
-class ControlEditorClass implements ControlEditorInt {
+class ControlEditor implements ControlEditorInt {
   // #region --- Properties + Constructor ---
 
   /** Record containing all selected variables in the ControlEditorTabContent.tsx component.
@@ -223,14 +218,5 @@ class ControlEditorClass implements ControlEditorInt {
 
   // #endregion
 }
-
-/** Singleton for controlling the behavior of the Control Editor */
-const ControlEditor: ControlEditorClass = new ControlEditorClass(
-  CytoscapeME,
-  LiveModel,
-  useControlStore,
-  useVariablesStore,
-  useModelEditorStatus
-);
 
 export default ControlEditor;

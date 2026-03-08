@@ -1,27 +1,29 @@
+import Time from '../../../../../services/utilities/Time';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
+import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
 import type { AttractorResultsTableProps } from './AttractorResultsTableProps';
 import AttractorResultsTableRow from './AttractorResultsTableRow/AttractorResultsTableRow';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
-import BehaviorClassLegend from '../../BehaviorClassLegend/BehaviorClassLegend';
-import Time from '../../../../../services/utilities/Time';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
 import SplitIcon from '../../../../../assets/icons/split_icon.svg';
 
 const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   results,
+  computationManagerServ,
+  attractorVisualizerServ,
+  attractorBifurcationExplorerServ,
+  tabsStore,
 }) => {
   const openAttractorBifurcationExplorer = () => {
-    useTabsStore
+    tabsStore
       .getState()
       .addTab(
         '/attractor-bifurcation-explorer',
         'Attractor Bifurcation Explorer',
         undefined,
-        () => AttractorBifurcationExplorer.clear()
+        () => attractorBifurcationExplorerServ.clear()
       );
   };
 
@@ -74,6 +76,8 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
                 key={index}
                 interpretationCount={result.sat_count}
                 behaviorClassList={result.phenotype}
+                computationManagerServ={computationManagerServ}
+                attractorVisualizerServ={attractorVisualizerServ}
               />
             ))}
         </section>

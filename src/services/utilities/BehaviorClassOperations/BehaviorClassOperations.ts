@@ -1,7 +1,7 @@
 import type { BehaviorClassOperationsInt } from './BehaviorClassOperationsInt';
 
 /** Utility class for operations on behavior classes */
-class BehaviorClassOperationsClass implements BehaviorClassOperationsInt {
+class BehaviorClassOperations implements BehaviorClassOperationsInt {
   /** Normalize behavior classes.
    *  Converts full class names to their short forms and joins them into one string.
    *   @param classes - An array of class names.
@@ -28,7 +28,5 @@ class BehaviorClassOperationsClass implements BehaviorClassOperationsInt {
       .join('');
   }
 }
-
-const BehaviorClassOperations = new BehaviorClassOperationsClass();
 
 export default BehaviorClassOperations;

@@ -1,8 +1,8 @@
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import type { HelpHoverProps } from './HelpHoverProps';
 
-const HelpHover: React.FC<{ zIndex: number }> = ({ zIndex }) => {
-  const helpHoverPosition = useHelpHoverStore((state) => state.position);
-  const helpHoverText = useHelpHoverStore((state) => state.helpText);
+const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
+  const helpHoverPosition = helpHoverStore((state) => state.position);
+  const helpHoverText = helpHoverStore((state) => state.helpText);
 
   if (!helpHoverPosition || !helpHoverText) {
     return null;
