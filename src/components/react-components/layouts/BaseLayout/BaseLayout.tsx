@@ -156,7 +156,14 @@ const BaseLayout = () => {
           handleResultsClick={() => setActiveOverlayWindow('Results')}
           setNavBarHelpHover={setNavBarHelpHover}
         >
-          <TabBar setTabBarHelpHover={setNavBarHelpHover} />
+          <TabBar
+            setTabBarHelpHover={setNavBarHelpHover}
+            tabOperationsServ={
+              ObjectProvider.GlobalServicesProvider.tabOperationsServ
+            }
+            helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
+            tabsStore={ObjectProvider.StoresProvider.tabsStore}
+          />
         </NavigationDockContent>
       </PopUpBarReact>
 

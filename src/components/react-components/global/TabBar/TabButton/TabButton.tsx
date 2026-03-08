@@ -1,19 +1,20 @@
-import type { TabInfo } from '../../../../../types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
-import TabOperations from '../../../../../services/global/Navigation/TabOperations';
-import useHelpHoverStore from '../../../../../stores/HelpHover/useHelpHoverStore';
+import type { TabButtonProps } from './TabButtonProps';
 
-const TabButton: React.FC<
-  TabInfo & {
-    deleteMode: boolean;
-    setHelpHover: (event: MouseEvent, text: string) => void;
-  }
-> = ({ id, type, active, deleteMode, setHelpHover }) => {
+const TabButton: React.FC<TabButtonProps> = ({
+  id,
+  type,
+  active,
+  deleteMode,
+  setHelpHover,
+  tabOperationsServ,
+  helpHoverStore,
+  tabsStore,
+}) => {
   const handleClick = () => {
     if (deleteMode) {
       if (id != 0) {
-        useTabsStore.getState().removeTab(id);
+        tabsStore.getState().removeTab(id);
       }
       return;
     }
@@ -22,7 +23,7 @@ const TabButton: React.FC<
       return;
     }
 
-    useTabsStore.getState().setActiveTab(id);
+    tabsStore.getState().setActiveTab(id);
   };
 
   return (
@@ -35,11 +36,11 @@ const TabButton: React.FC<
       buttonActiveColor={
         deleteMode && id != 0 ? 'var(--color-darker-red)' : undefined
       }
-      iconSrc={TabOperations.getTabTypeIcon(type)}
+      iconSrc={tabOperationsServ.getTabTypeIcon(type)}
       iconAlt={type}
       iconSize="67%"
       onMouseOver={(e) => setHelpHover(e.nativeEvent, type)}
-      onMouseLeave={(e) => useHelpHoverStore.getState().clear()}
+      onMouseLeave={(e) => helpHoverStore.getState().clear()}
     />
   );
 };
