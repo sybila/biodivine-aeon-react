@@ -1,5 +1,6 @@
 import type { JSX } from 'react';
-import usePerturbationFilterSortStore from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/usePerturbationsFilterSortStore';
+import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
 import {
   PertVariableFilterStatus,
   type ControlResult,
@@ -8,11 +9,19 @@ import {
 } from '../../types';
 import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
-class ControlPerturbationsTableClass implements ControlPerturbationsTableInt {
-  // #region --- Properties ---
+class ControlPerturbationsTable implements ControlPerturbationsTableInt {
+  // #region --- Properties + Constructor ---
 
   /** Current max number of perturbations on a page in the Perturbations Table */
   private pageSize: number = 100;
+
+  private perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;
+
+  constructor(
+    perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>
+  ) {
+    this.perturbationFilterSortStore = perturbationFilterSortStore;
+  }
 
   // #endregion
 
@@ -129,14 +138,14 @@ class ControlPerturbationsTableClass implements ControlPerturbationsTableInt {
     );
   };
 
-  /** Filters perturbations by filter criteria form usePerturbationFilterSortStore.
+  /** Filters perturbations by filter criteria form this.perturbationFilterSortStore.
    *  Returns tuple where on index 0 is the array of filtered perturbations
    *  and on index 1 is boolean indicating if there is next page === there are more perturbations that pass the filter
    */
   public filterPerturbations(
     perturbations: Array<ControlResult>
   ): [Array<ControlResult>, boolean] {
-    const filterState = usePerturbationFilterSortStore.getState();
+    const filterState = this.perturbationFilterSortStore.getState();
     const startingIndex = (filterState.pageNumber - 1) * this.pageSize;
     const minNumberOfInterpretations = filterState.minNumberOfInterpretations;
     const minRobustness = filterState.minRobustness;
@@ -213,13 +222,13 @@ class ControlPerturbationsTableClass implements ControlPerturbationsTableInt {
     }
   };
 
-  /** Sorts perturbations by primary and secondary sort criteria from usePerturbationFilterSortStore.
+  /** Sorts perturbations by primary and secondary sort criteria from this.perturbationFilterSortStore.
    *  Returns new array of sorted perturbations.
    */
   public sortPerturbations(
     perturbations: Array<ControlResult>
   ): Array<ControlResult> {
-    const sortState = usePerturbationFilterSortStore.getState();
+    const sortState = this.perturbationFilterSortStore.getState();
     const primarySort = sortState.primarySort ?? {
       field: 'id',
       direction: 'asc',
@@ -249,12 +258,10 @@ class ControlPerturbationsTableClass implements ControlPerturbationsTableInt {
   // #region --- Clear ---
 
   public clear(): void {
-    usePerturbationFilterSortStore.getState().clear();
+    this.perturbationFilterSortStore.getState().clear();
   }
 
   // #endregion
 }
-
-const ControlPerturbationsTable = new ControlPerturbationsTableClass();
 
 export default ControlPerturbationsTable;
