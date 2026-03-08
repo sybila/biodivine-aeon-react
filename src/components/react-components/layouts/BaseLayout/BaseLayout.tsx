@@ -131,7 +131,10 @@ const BaseLayout = () => {
         </OverlayWindowReact>
       ) : null}
 
-      <WarningOverlay zIndex="999999993" />
+      <WarningOverlay
+        zIndex="999999993"
+        warningStore={ObjectProvider.StoresProvider.warningStore}
+      />
 
       <ContentOverlayWindow
         zIndex="999999991"
