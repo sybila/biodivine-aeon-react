@@ -1,4 +1,3 @@
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
 import type {
   AttractorResults,
   ComputationModes,
@@ -7,12 +6,23 @@ import type {
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import AttractorResultsTable from './AttractorResultsTable/AttractorResultsTable';
 import ControlResultsStats from './ControlResultsStats/ControlResultsStats';
+import type { ResultsWindowContentProps } from './ResultsWindowContentProps';
 
-const ResultsWindowContent: React.FC = () => {
-  const resultsType: ComputationModes | undefined = useResultsStatus(
+const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
+  computationManagerServ,
+  attractorVisualizerServ,
+  attractorBifurcationExplorerServ,
+  controlPerturbationsTableServ,
+  resultsOperationsServ,
+  dataFormatersServ,
+  modelInfoStore,
+  tabsStore,
+  resultsStatusStore,
+}) => {
+  const resultsType: ComputationModes | undefined = resultsStatusStore(
     (state) => state.type
   );
-  const results = useResultsStatus((state) => state.results);
+  const results = resultsStatusStore((state) => state.results);
 
   const renderEmptyResults = () => {
     return (
@@ -34,9 +44,26 @@ const ResultsWindowContent: React.FC = () => {
   const getResultsComponent = () => {
     switch (resultsType) {
       case 'Attractor Analysis':
-        return <AttractorResultsTable results={results as AttractorResults} />;
+        return (
+          <AttractorResultsTable
+            results={results as AttractorResults}
+            computationManagerServ={computationManagerServ}
+            attractorVisualizerServ={attractorVisualizerServ}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            tabsStore={tabsStore}
+          />
+        );
       case 'Control':
-        return <ControlResultsStats results={results as ControlResults} />;
+        return (
+          <ControlResultsStats
+            results={results as ControlResults}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            resultsOperationsServ={resultsOperationsServ}
+            dataFormatersServ={dataFormatersServ}
+            modelInfoStore={modelInfoStore}
+            tabsStore={tabsStore}
+          />
+        );
       default:
         return renderEmptyResults();
     }

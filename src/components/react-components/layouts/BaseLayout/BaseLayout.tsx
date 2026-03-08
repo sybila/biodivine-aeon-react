@@ -61,7 +61,36 @@ const BaseLayout = () => {
           />
         );
       case 'Results':
-        return <ResultsWindowContent />;
+        return (
+          <ResultsWindowContent
+            computationManagerServ={
+              ObjectProvider.GlobalServicesProvider.computationManagerServ
+            }
+            attractorVisualizerServ={
+              ObjectProvider.AttractorVisualizerServicesProvider
+                .attractorVisualizerServ
+            }
+            attractorBifurcationExplorerServ={
+              ObjectProvider.AttractorBifurcationExplorerServicesProvider
+                .attractorBifurcationExplorerServ
+            }
+            controlPerturbationsTableServ={
+              ObjectProvider.ControlPerturbationsTableServicesProvider
+                .controlPerturbationsTableServ
+            }
+            resultsOperationsServ={
+              ObjectProvider.GlobalServicesProvider.resultsOperationsServ
+            }
+            dataFormatersServ={
+              ObjectProvider.UtilitiesServiceProvider.dataFormatersServ
+            }
+            modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
+            tabsStore={ObjectProvider.StoresProvider.tabsStore}
+            resultsStatusStore={
+              ObjectProvider.StoresProvider.resultsStatusStore
+            }
+          />
+        );
       default:
         return null;
     }
