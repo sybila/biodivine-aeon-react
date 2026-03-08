@@ -2,24 +2,17 @@ import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
-import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
-import useRegulationsStore from '../../../stores/LiveModel/RegulationsStore/useRegulationsStore';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/UpdateFunctionsStore/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/VariablesStore/useVariablesStore';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
-import useModelEditorStatus from '../../../stores/ModelEditor/useModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   ModelEditorItem,
   ModelStats,
   RegulationVariables,
 } from '../../../types';
-import { LiveModel } from '../../global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
-import CytoscapeME from '../ModelVisualization/CytoscapeME';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorInt } from './ModelEditorInt';
 
@@ -27,7 +20,7 @@ import type { ModelEditorInt } from './ModelEditorInt';
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
     right elements when needed, etc.
 */
-class ModelEditorClass implements ModelEditorInt {
+class ModelEditor implements ModelEditorInt {
   // #region --- Properties + Constructor ---
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
@@ -320,15 +313,5 @@ class ModelEditorClass implements ModelEditorInt {
     });
   }
 }
-
-const ModelEditor: ModelEditorClass = new ModelEditorClass(
-  CytoscapeME,
-  LiveModel,
-  useOverlayWindowStore,
-  useRegulationsStore,
-  useVariablesStore,
-  useUpdateFunctionsStore,
-  useModelEditorStatus
-);
 
 export default ModelEditor;

@@ -1,13 +1,14 @@
 import GlobalServicesProvider from './GlobalServicesProvider/GlobalServicesProvider';
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
-import ModelEditorObjectProvider from './ModelEditorObjectProvider';
+import ModelEditorServicesProvider from './ModelEditorServicesProvider/ModelEditorServicesProvider';
+import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProvider/ModelEditorServicesProviderInt';
 import StoresProvider from './StoresProvider/StoresProvider';
 import type { StoresProviderInt } from './StoresProvider/StoresProviderInt';
 import UtilitiesServiceProvider from './UtilitiesServiceProvider/UtilitiesServiceProvider';
 import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 
 class ObjectProviderClass {
-  public ModelEditorObjects: ModelEditorObjectProvider;
+  public ModelEditorServicesProvider: ModelEditorServicesProviderInt;
 
   public GlobalServicesProvider: GlobalServicesProviderInt;
 
@@ -16,11 +17,14 @@ class ObjectProviderClass {
   public StoresProvider: StoresProviderInt;
 
   constructor() {
-    this.ModelEditorObjects = new ModelEditorObjectProvider();
     this.UtilitiesServiceProvider = new UtilitiesServiceProvider();
     this.StoresProvider = new StoresProvider();
     this.GlobalServicesProvider = new GlobalServicesProvider(
       this.UtilitiesServiceProvider,
+      this.StoresProvider
+    );
+    this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
+      this.GlobalServicesProvider.liveModelServ,
       this.StoresProvider
     );
   }

@@ -36,13 +36,11 @@ class GlobalServicesProvider {
       storesProvider.warningStore,
       utilitiesServiceProvider.waiterFunctionServ
     );
-
     this.tabOperationsServ = new TabOperations();
     this.resultsOperationsServ = new ResultsOperations(
       utilitiesServiceProvider.dataFormatersServ,
       utilitiesServiceProvider.fileHelpersServ
     );
-
     this.liveModelServ = new LiveModel(
       this.computationManagerServ,
       this.warningServ,
