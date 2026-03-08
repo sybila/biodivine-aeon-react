@@ -7,7 +7,6 @@ import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Variable } from '../../../../types';
 import type { WarningInt } from '../../Warning/WarningInt';
-import { LiveModel } from '../LiveModel';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ImportLMInt } from './ImportLMInt';
 
@@ -347,8 +346,8 @@ class ImportLM implements ImportLMInt {
     this.liveModel.clear();
 
     // Set model metadata
-    LiveModel.Info.setModelName(modelName, true);
-    LiveModel.Info.setModelDescription(modelDescription, true);
+    this.liveModel.Info.setModelName(modelName, true);
+    this.liveModel.Info.setModelDescription(modelDescription, true);
 
     this.setRegulations(regulations, positions, control);
     this.setUpdateFunctions(updateFunctions, positions, control);
