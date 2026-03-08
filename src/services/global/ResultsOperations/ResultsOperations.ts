@@ -1,12 +1,10 @@
 import type { ControlResult } from '../../../types';
-import DataFormaters from '../../utilities/DataFormaters/DataFormaters';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
-import FileHelpers from '../../utilities/FileHelpers/FileHelpers';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ResultsOperationsInt } from './ResultsOperationsInt';
 
 /** Class for performing operations on results. (eg. exporting to CSV) */
-class ResultsOperationsClass implements ResultsOperationsInt {
+class ResultsOperations implements ResultsOperationsInt {
   // #region --- Properties + Constructor ---
 
   private dataFormatersServ: DataFormatersInt;
@@ -38,10 +36,5 @@ class ResultsOperationsClass implements ResultsOperationsInt {
     this.fileHelpersServ.downloadFile(fileName + '.csv', fileContent);
   }
 }
-
-const ResultsOperations = new ResultsOperationsClass(
-  DataFormaters,
-  FileHelpers
-);
 
 export default ResultsOperations;

@@ -8,7 +8,7 @@ import WitnessIcon from '../../../assets/icons/witness.svg';
 import type { TabOperationsInt } from './TabOperationsInt';
 
 /** Class containing methods for operations on navigation tabs */
-class TabOperationsClass implements TabOperationsInt {
+class TabOperations implements TabOperationsInt {
   // #region --- Properties ---
 
   /** A set of tab types that can only be opened as a single instance. */
@@ -37,7 +37,5 @@ class TabOperationsClass implements TabOperationsInt {
     return this.tabTypeToIcon[tabType] ?? '';
   }
 }
-
-const TabOperations = new TabOperationsClass();
 
 export default TabOperations;
