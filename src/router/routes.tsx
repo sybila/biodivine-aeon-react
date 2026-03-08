@@ -36,6 +36,7 @@ const ModelEditorComponent = () => (
     variablesStore={ObjectProvider.StoresProvider.variablesStore}
     updateFunctionsStore={ObjectProvider.StoresProvider.updateFunctionsStore}
     modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
+    loadedModelStore={ObjectProvider.StoresProvider.loadedModelStore}
   />
 );
 

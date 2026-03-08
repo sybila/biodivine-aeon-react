@@ -8,6 +8,7 @@ import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
+import type { ModelState } from '../../stores/LiveModel/LoadedModelStore/ModelState';
 import type { ModelInfoState } from '../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
@@ -40,6 +41,7 @@ export type ModelEditorProps = {
   variablesStore: ZustandStore<VariablesStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   modelInfoStore: ZustandStore<ModelInfoState>;
+  loadedModelStore: ZustandStore<ModelState>;
 
   // # endregion
 };
