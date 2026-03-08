@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { Loading } from '../../components/lit-components/loading-wrapper';
 import router from '../../router';
-import TabOperations from '../../services/global/Navigation/TabOperations';
 import type { TabInfo, TabType } from '../../types';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { TabsState } from './TabState';
@@ -10,6 +9,10 @@ function createTabsStore(): ZustandStore<TabsState> {
   return create<TabsState>((set, get) => ({
     firstTabOnClick: () => {
       console.warn('First tab onClick not set');
+    },
+    canOpenMoreThanOneFunction: (_: TabType) => {
+      console.warn('Can OpenMoreThanOneFunction not set');
+      return false;
     },
     openedTabs: {
       0: {
@@ -34,7 +37,7 @@ function createTabsStore(): ZustandStore<TabsState> {
         return 0;
       }
 
-      if (!TabOperations.canOpenMoreThanOne(type)) {
+      if (!get().canOpenMoreThanOneFunction(type)) {
         const existingTab = get().getFirstTabWithType(type);
         if (existingTab) {
           get().setActiveTab(existingTab.id);
