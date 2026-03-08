@@ -1,7 +1,7 @@
 import AttractorBifurcationExplorer from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import type { AttractorBifurcationExplorerInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
-import type { AttractorBifurcationTreeVisualizationInt } from '../../services/attractor-bifurcation-explorer/CytoscapeABE/AttractorBifurcationTreeVisualizationInt';
-import CytoscapeABE from '../../services/attractor-bifurcation-explorer/CytoscapeABE/CytoscapeABE';
+import type { AttractorBifurcationTreeVisualizationInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationTreeVisualization/AttractorBifurcationTreeVisualizationInt';
+import CytoscapeABE from '../../services/attractor-bifurcation-explorer/AttractorBifurcationTreeVisualization/CytoscapeABE';
 import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import type { BehaviorClassOperationsInt } from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';

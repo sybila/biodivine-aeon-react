@@ -10,7 +10,7 @@ import type {
 } from '../../../types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
-import type { AttractorBifurcationTreeVisualizationInt } from '../CytoscapeABE/AttractorBifurcationTreeVisualizationInt';
+import type { AttractorBifurcationTreeVisualizationInt } from '../AttractorBifurcationTreeVisualization/AttractorBifurcationTreeVisualizationInt';
 import type { AttractorBifurcationExplorerInt } from './AttractorBifurcationExplorerInt';
 
 // Sorting constants
