@@ -99,7 +99,7 @@ const BaseLayout = () => {
 
       <WarningOverlay zIndex="999999993" />
 
-      <ContentOverlayWindow zIndex="999999991" />
+      <ContentOverlayWindow zIndex="999999991" overlayWindowStore={ObjectProvider.StoresProvider.overlayWindowStore} />
 
       <HelpHover zIndex={999999992} />
 
