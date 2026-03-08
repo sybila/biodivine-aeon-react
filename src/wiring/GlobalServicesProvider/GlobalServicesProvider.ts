@@ -36,7 +36,7 @@ class GlobalServicesProvider {
       storesProvider.warningStore,
       utilitiesServiceProvider.waiterFunctionServ
     );
-    this.tabOperationsServ = new TabOperations();
+    this.tabOperationsServ = new TabOperations(storesProvider.tabsStore);
     this.resultsOperationsServ = new ResultsOperations(
       utilitiesServiceProvider.dataFormatersServ,
       utilitiesServiceProvider.fileHelpersServ
