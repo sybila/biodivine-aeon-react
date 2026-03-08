@@ -1,6 +1,7 @@
 import { type CytoscapeOptions, type EventObject } from 'cytoscape';
 import { Message } from '../../../components/lit-components/message-wrapper';
-import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
+import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   CytoscapeNodeDataBE,
   DecisionMixedNode,
@@ -9,8 +10,7 @@ import type {
   NodeNecessaryConditions,
   VisualOptionsSwitchableABE,
 } from '../../../types';
-import BehaviorClassOperations from '../../utilities/BehaviorClassOperations/BehaviorClassOperations';
-import AttractorBifurcationExplorer from '../AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import type { BehaviorClassOperationsInt } from '../../utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 
 const remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -18,7 +18,7 @@ const remove_svg =
 declare const cytoscape: any;
 
 class CytoscapeABE {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   private cytoscape: any = undefined;
   private totalCardinality = 0.0;
@@ -38,6 +38,29 @@ class CytoscapeABE {
   };
 
   private container: HTMLElement | null = null;
+
+  private behaviorClassOperationsServ: BehaviorClassOperationsInt;
+
+  private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
+
+  private mathDimPercentFunction: (value: number, totalValue: number) => number;
+  private removeNodeFunction: (nodeId: number) => void;
+
+  constructor(
+    behaviorClassOperationsServ: BehaviorClassOperationsInt,
+    bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
+  ) {
+    this.behaviorClassOperationsServ = behaviorClassOperationsServ;
+    this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
+
+    this.mathDimPercentFunction = (_: number, __: number) => {
+      console.warn('CytoscapeABE: MathDimPercentFunction not set');
+      return -1;
+    };
+    this.removeNodeFunction = (_: number) => {
+      console.warn('CytoscapeABE: RemoveNodeFunction not set');
+    };
+  }
 
   // #endregion
 
@@ -243,7 +266,7 @@ class CytoscapeABE {
     if (data.action == 'remove') {
       if (!data.targetId) return;
       // This is a remove button for a specifc tree node.
-      AttractorBifurcationExplorer.removeNode(Number(data.targetId));
+      this.removeNodeFunction(Number(data.targetId));
       return;
     }
 
@@ -270,13 +293,13 @@ class CytoscapeABE {
     // If node has unknown type then return
     if (!newNode) return null;
 
-    useBifurcationExplorerStatus.getState().changeSelectedNode(newNode);
+    this.bifurcationExplorerStatusStore.getState().changeSelectedNode(newNode);
     if (data.type === 'decision') this.selectedDecisionNode(e);
   }
 
   /** Function to handle node unselection */
   private _onUnselect(e: any) {
-    useBifurcationExplorerStatus.getState().clear();
+    this.bifurcationExplorerStatusStore.getState().clear();
     // Clear remove button
     this.cytoscape.$('.remove-button').remove();
 
@@ -301,12 +324,12 @@ class CytoscapeABE {
       selected.unselect();
     }
 
-    // If there was an error and useBifurcationExplorerStatus has selected node, unselect it
+    // If there was an error and this.bifurcationExplorerStatusStore has selected node, unselect it
     if (
       selected <= 0 &&
-      useBifurcationExplorerStatus.getState().selectedNode != null
+      this.bifurcationExplorerStatusStore.getState().selectedNode != null
     ) {
-      useBifurcationExplorerStatus.getState().changeSelectedNode(null);
+      this.bifurcationExplorerStatusStore.getState().changeSelectedNode(null);
     }
 
     if (targetId === undefined) {
@@ -422,7 +445,7 @@ class CytoscapeABE {
     data.type = treeData.type;
     if (treeData.type == 'leaf') {
       let normalizedClass =
-        BehaviorClassOperations.normalizeClasses(
+        this.behaviorClassOperationsServ.normalizeClasses(
           undefined,
           treeData.class ?? '[]'
         ) ?? 'unknown';
@@ -545,7 +568,7 @@ class CytoscapeABE {
     if (cardinality === undefined) {
       return 1.0;
     }
-    let percent = AttractorBifurcationExplorer.mathDimPercent(
+    let percent = this.mathDimPercentFunction(
       cardinality,
       this.totalCardinality
     );
