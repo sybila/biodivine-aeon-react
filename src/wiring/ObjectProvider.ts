@@ -8,12 +8,13 @@ import GlobalServicesProvider from './GlobalServicesProvider/GlobalServicesProvi
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
 import ModelEditorServicesProvider from './ModelEditorServicesProvider/ModelEditorServicesProvider';
 import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProvider/ModelEditorServicesProviderInt';
+import type { ObjectProviderInt } from './ObjectProviderInt';
 import StoresProvider from './StoresProvider/StoresProvider';
 import type { StoresProviderInt } from './StoresProvider/StoresProviderInt';
 import UtilitiesServiceProvider from './UtilitiesServiceProvider/UtilitiesServiceProvider';
 import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 
-class ObjectProviderClass {
+class ObjectProviderClass implements ObjectProviderInt {
   public ModelEditorServicesProvider: ModelEditorServicesProviderInt;
   public AttractorVisualizerServicesProvider: AttractorVisualizerServicesProviderInt;
   public AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
