@@ -99,9 +99,15 @@ const BaseLayout = () => {
 
       <WarningOverlay zIndex="999999993" />
 
-      <ContentOverlayWindow zIndex="999999991" overlayWindowStore={ObjectProvider.StoresProvider.overlayWindowStore} />
+      <ContentOverlayWindow
+        zIndex="999999991"
+        overlayWindowStore={ObjectProvider.StoresProvider.overlayWindowStore}
+      />
 
-      <HelpHover zIndex={999999992} />
+      <HelpHover
+        zIndex={999999992}
+        helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
+      />
 
       <PopUpBarReact
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
