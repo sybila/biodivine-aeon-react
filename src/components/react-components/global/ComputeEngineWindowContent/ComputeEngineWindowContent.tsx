@@ -1,6 +1,5 @@
 import config from '../../../../config';
 import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/ComputeEngineStatusStore/useComputeEngineStatus';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
@@ -11,13 +10,17 @@ import type { ComputationStatus } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import SeparatorLine from '../SeparatorLine/SeparatorLine';
+import type { ComputeEngineWindowContentProps } from './ComputeEngineWindowContentProps';
 
-const ComputeEngineWindowContent = () => {
-  const computeEngineStatus: string = useComputeEngineStatus(
+const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
+  computationManagerServ,
+  computeEngineStatusStore,
+}) => {
+  const computeEngineStatus: string = computeEngineStatusStore(
     (state) => state.computeEngineStatus
   );
-  const color: string = useComputeEngineStatus((state) => state.statusColor);
-  const computationStatus: ComputationStatus = useComputeEngineStatus(
+  const color: string = computeEngineStatusStore((state) => state.statusColor);
+  const computationStatus: ComputationStatus = computeEngineStatusStore(
     (state) => state.computationStatus
   );
 
@@ -65,7 +68,7 @@ const ComputeEngineWindowContent = () => {
             compHeight="100%"
             compWidth="150px"
             iconSrc={CloudIcon}
-            handleClick={() => ComputationManager.toggleConnection()}
+            handleClick={() => computationManagerServ.toggleConnection()}
           />
         </section>
 
@@ -129,8 +132,8 @@ const ComputeEngineWindowContent = () => {
         compWidth="100%"
         placeholder="Compute Engine URL"
         singleTextAlign="center"
-        handleChange={ComputationManager.setComputeEngineAddress}
-        value={ComputationManager.getComputeEngineAddress()}
+        handleChange={computationManagerServ.setComputeEngineAddress}
+        value={computationManagerServ.getComputeEngineAddress()}
       />
 
       {renderStatus()}

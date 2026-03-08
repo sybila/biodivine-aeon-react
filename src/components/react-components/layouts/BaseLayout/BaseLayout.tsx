@@ -7,8 +7,7 @@ import PopUpBarReact from '../../lit-wrappers/PopUpBarReact';
 
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import DockIcon from '../../../../assets/icons/dock-arrow.svg';
-import useResultsStatus from '../../../../stores/ComputationManager/ResultStatus/useResultsStatus';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import ObjectProvider from '../../../../wiring/ObjectProvider';
 import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
 import HelpHover from '../../global/HelpHover/HelpHover';
 import StatusBar from '../../global/StatusBar/StatusBar';
@@ -22,7 +21,9 @@ const BaseLayout = () => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
 
-  const loadedResults = useResultsStatus((state) => state.results);
+  const loadedResults = ObjectProvider.StoresProvider.resultsStatusStore(
+    (state) => state.results
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +50,16 @@ const BaseLayout = () => {
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
       case 'Compute Engine':
-        return <ComputeEngineWindowContent />;
+        return (
+          <ComputeEngineWindowContent
+            computationManagerServ={
+              ObjectProvider.GlobalServicesProvider.computationManagerServ
+            }
+            computeEngineStatusStore={
+              ObjectProvider.StoresProvider.computeEngineStatusStore
+            }
+          />
+        );
       case 'Results':
         return <ResultsWindowContent />;
       default:
@@ -58,7 +68,9 @@ const BaseLayout = () => {
   };
 
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
-    useHelpHoverStore.getState().setHelpHover(event, text, -85);
+    ObjectProvider.StoresProvider.helpHoverStore
+      .getState()
+      .setHelpHover(event, text, -85);
   };
 
   return (
