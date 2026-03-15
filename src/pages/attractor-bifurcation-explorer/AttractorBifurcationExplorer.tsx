@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import KeepAlive from 'react-activation';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
@@ -32,6 +32,12 @@ const AttractorBifurcationExplorer: React.FC<
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+
+  useEffect(() => {
+    if (initialized) {
+      attractorBifurcationExplorerServ.openBifurcationTree();
+    }
+  }, [initialized]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -77,10 +83,6 @@ const AttractorBifurcationExplorer: React.FC<
 
     setActiveTab(tabType);
   };
-
-  if (initialized) {
-    attractorBifurcationExplorerServ.openBifurcationTree();
-  }
 
   return (
     <>
