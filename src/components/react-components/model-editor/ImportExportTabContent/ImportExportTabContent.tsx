@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ExampleModels } from '../../../../ExampleModels';
 import type { fileType } from '../../../../types';
-import { Message } from '../../../lit-components/message-wrapper';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import type { ImportExportTabContentProps } from './ImportExportTabContentProps';
@@ -10,6 +9,7 @@ import type { ImportExportTabContentProps } from './ImportExportTabContentProps'
 const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
   liveModelServ,
   fileConvertorsServ,
+  messageServ,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -185,7 +185,7 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
               fileInputRef.current as HTMLInputElement & { files: FileList }
             );
           } else {
-            Message.showError(
+            messageServ.showError(
               'Import Error: Internal Error - No file handler set.'
             );
           }
