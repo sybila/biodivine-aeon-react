@@ -427,8 +427,8 @@ class ComputationManager implements ComputationManagerInt {
   private getBifurcationTreeCallback(
     error: string | undefined,
     nodes: NodeDataBE[] | undefined,
-    animate: boolean,
     fit: boolean,
+    animate: boolean,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !nodes) {
