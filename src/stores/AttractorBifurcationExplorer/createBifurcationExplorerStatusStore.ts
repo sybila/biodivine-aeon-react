@@ -5,11 +5,15 @@ import type { BifurcationExplorerStatusState } from './BifurcationExplorerStatus
 function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplorerStatusState> {
   return create<BifurcationExplorerStatusState>()((set) => ({
     visualizationStatus: null,
+    activeMenuTab: null,
     selectedNode: null,
     stabilityData: null,
     availableDecisions: null,
     setVisualizationStatus: (status) => {
       set({ visualizationStatus: status });
+    },
+    setActiveMenuTab: (tab) => {
+      set({ activeMenuTab: tab });
     },
     changeSelectedNode: (node) => {
       set({
@@ -32,6 +36,7 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
     clear: () =>
       set({
         visualizationStatus: null,
+        activeMenuTab: null,
         selectedNode: null,
         stabilityData: null,
         availableDecisions: null,

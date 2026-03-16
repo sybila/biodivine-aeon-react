@@ -24,7 +24,10 @@ const AttractorBifurcationExplorer: React.FC<
 }) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<MenuTabTypeABE>(null);
+
+  const activeTab: MenuTabTypeABE = bifurcationExplorerStatusStore(
+    (state) => state.activeMenuTab
+  );
 
   useEffect(() => {
     if (initialized) {
@@ -70,11 +73,11 @@ const AttractorBifurcationExplorer: React.FC<
 
   const showHideTab = (tabType: MenuTabTypeABE) => {
     if (activeTab === tabType) {
-      setActiveTab(null);
+      bifurcationExplorerStatusStore.getState().setActiveMenuTab(null);
       return;
     }
 
-    setActiveTab(tabType);
+    bifurcationExplorerStatusStore.getState().setActiveMenuTab(tabType);
   };
 
   return (
