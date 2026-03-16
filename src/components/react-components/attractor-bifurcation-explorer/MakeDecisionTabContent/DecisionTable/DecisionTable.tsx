@@ -12,6 +12,7 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
   behaviorClassOperationsServ,
   bifurcationExplorerStatusStore,
 }) => {
+  // TODO - remove when paging for decisions implemented (now causes lag on reenter)
   const [decisionsOpened, setDecisionsOpened] = useState(false);
   const decisions = bifurcationExplorerStatusStore(
     (state) => state.availableDecisions
