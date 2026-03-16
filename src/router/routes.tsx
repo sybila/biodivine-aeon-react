@@ -112,6 +112,7 @@ export const ControlPerturbationsTableRoute = createRoute({
       searchAndFilterHelpersServ={
         ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
       }
+      loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
