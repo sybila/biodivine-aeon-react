@@ -42,6 +42,7 @@ class ObjectProviderClass implements ObjectProviderInt {
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
       this.GlobalServicesProvider.liveModelServ,
+      this.GlobalServicesProvider.messageServ,
       this.StoresProvider
     );
     this.AttractorVisualizerServicesProvider =
