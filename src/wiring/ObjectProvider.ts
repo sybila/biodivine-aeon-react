@@ -1,3 +1,4 @@
+import { Loading } from '../components/lit-components/loading-wrapper';
 import { Message } from '../components/lit-components/message-wrapper';
 import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
@@ -37,7 +38,9 @@ class ObjectProviderClass implements ObjectProviderInt {
       (message: string, duration?: number) =>
         Message.showInfo(message, duration),
       (message: string, duration?: number) =>
-        Message.showError(message, duration)
+        Message.showError(message, duration),
+      () => Loading.startLoading(),
+      () => Loading.endLoading()
     );
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(

@@ -13,4 +13,5 @@ export interface GlobalServicesProviderInt {
   resultsOperationsServ: ResultsOperationsInt;
   warningServ: WarningInt;
   messageServ: MessageInt;
+  loadingServ: LoadingInt;
 }

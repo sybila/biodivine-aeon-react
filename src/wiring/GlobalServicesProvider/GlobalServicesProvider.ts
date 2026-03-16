@@ -2,6 +2,8 @@ import ComputationManager from '../../services/global/ComputationManager/Computa
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import LiveModel from '../../services/global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import Loading from '../../services/global/Loading/Loading';
+import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import Message from '../../services/global/Message/Message';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import TabOperations from '../../services/global/Navigation/TabOperations';
@@ -20,19 +22,23 @@ class GlobalServicesProvider {
   public resultsOperationsServ: ResultsOperationsInt;
   public warningServ: WarningInt;
   public messageServ: MessageInt;
+  public loadingServ: LoadingInt;
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
     storesProvider: StoresProviderInt,
     successMessageFunction: (message: string, duration?: number) => void,
     infoMessageFunction: (message: string, duration?: number) => void,
-    errorMessageFunction: (message: string, duration?: number) => void
+    errorMessageFunction: (message: string, duration?: number) => void,
+    startLoadingFunction: () => void,
+    endLoadingFunction: () => void
   ) {
     this.messageServ = new Message(
       successMessageFunction,
       infoMessageFunction,
       errorMessageFunction
     );
+    this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction);
     this.computationManagerServ = new ComputationManager(
       this.messageServ,
       storesProvider.bifurcationExplorerStatusStore,
