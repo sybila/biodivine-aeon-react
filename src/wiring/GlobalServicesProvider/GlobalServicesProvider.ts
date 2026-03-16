@@ -38,7 +38,7 @@ class GlobalServicesProvider {
       infoMessageFunction,
       errorMessageFunction
     );
-    this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction);
+    this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction, storesProvider.tabsStore);
     this.computationManagerServ = new ComputationManager(
       this.messageServ,
       this.loadingServ,

@@ -1,3 +1,5 @@
+import type { TabsState } from '../../../stores/Navigation/TabState';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { LoadingInt } from './LoadingInt';
 
 /** Class for managing loading states.
@@ -8,10 +10,19 @@ class Loading implements LoadingInt {
 
   constructor(
     startLoadingFunction: () => void,
-    endLoadingFunction: () => void
+    endLoadingFunction: () => void,
+    tabsStore: ZustandStore<TabsState>
   ) {
     this.startLoadingFunction = startLoadingFunction;
     this.endLoadingFunction = endLoadingFunction;
+
+    tabsStore.getState().startLoading = () => {
+      this.startLoading();
+    };
+
+    tabsStore.getState().endLoading = () => {
+      this.endLoading();
+    };
   }
 
   public startLoading(): void {

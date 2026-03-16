@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { Loading } from '../../components/lit-components/loading-wrapper';
 import router from '../../router';
 import type { TabInfo, TabType } from '../../types';
 import type { ZustandStore } from '../ZustandStoreType';
@@ -13,6 +12,12 @@ function createTabsStore(): ZustandStore<TabsState> {
     canOpenMoreThanOneFunction: (_: TabType) => {
       console.warn('Can OpenMoreThanOneFunction not set');
       return false;
+    },
+    startLoading: () => {
+      console.warn('Start loading function not set');
+    },
+    endLoading: () => {
+      console.warn('End loading function not set');
     },
     openedTabs: {
       0: {
@@ -87,7 +92,7 @@ function createTabsStore(): ZustandStore<TabsState> {
     },
 
     setActiveTab: (id: number, navigate: boolean = true) => {
-      Loading.startLoading();
+      get().startLoading();
       set((state) => {
         const newTabs = { ...state.openedTabs };
         Object.values(newTabs).forEach((tab) => {
@@ -107,7 +112,7 @@ function createTabsStore(): ZustandStore<TabsState> {
       if (navigate && tab && tab.path) {
         router.navigate({ to: tab.path });
       }
-      Loading.endLoading();
+      get().endLoading();
     },
 
     getAllTabs: () => Object.values(get().openedTabs),
