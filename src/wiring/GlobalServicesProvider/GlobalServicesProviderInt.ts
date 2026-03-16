@@ -1,5 +1,6 @@
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { TabOperationsInt } from '../../services/global/Navigation/TabOperationsInt';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
