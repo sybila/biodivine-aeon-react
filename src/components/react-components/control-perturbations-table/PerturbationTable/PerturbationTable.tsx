@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type ControlResults } from '../../../../types';
-import { Loading } from '../../../lit-components/loading-wrapper';
 import type { PerturbationTableProps } from './PerturbationTableProps';
 import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
 
@@ -8,8 +7,11 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   startFilter,
   startSort,
   setNextPageExists,
+
   controlPerturbationsTableServ,
   dataFormatersServ,
+  loadingServ,
+
   resultsStatusStore,
 }) => {
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
@@ -25,18 +27,18 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   }
 
   const sortedPerts = useMemo(() => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     const result =
       controlPerturbationsTableServ.sortPerturbations(perturbations);
-    Loading.endLoading();
+    loadingServ.endLoading();
     return result;
   }, [perturbations, startSort]);
 
   const [filteredPerts, nextPageExists] = useMemo(() => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     const result =
       controlPerturbationsTableServ.filterPerturbations(sortedPerts);
-    Loading.endLoading();
+    loadingServ.endLoading();
     return result;
   }, [sortedPerts, startFilter]);
 

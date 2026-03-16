@@ -150,6 +150,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           startSort={startSort}
           setNextPageExists={setNextPageExists}
           controlPerturbationsTableServ={controlPerturbationsTableServ}
+          loadingServ={loadingServ}
           resultsStatusStore={resultsStatusStore}
           dataFormatersServ={dataFormatersServ}
         />
