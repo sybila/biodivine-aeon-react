@@ -2,6 +2,7 @@
 import type {
   NodeDataBE,
   NodeNecessaryConditions,
+  VisualizationStatus,
   VisualOptionsSwitchableABE,
 } from '../../../types';
 
@@ -128,5 +129,14 @@ export interface AttractorBifurcationTreeVisualizationInt {
   moveNode(nodeId: string, steps: number): void;
 
   // #endregion
+
+  // #region --- Visualization Status ---
+
+  /** Gets the current visualization status. */
+  getVisualizationStatus(): VisualizationStatus;
+
+  /** Loads the visualization status into the visualization. */
+  loadVisualizationStatus(status: VisualizationStatus): void;
+
+  // #endregion
 }
-// #endregion

@@ -185,6 +185,8 @@ export type TabInfo = {
   path: string;
   /** Callback function to be executed when the tab is clicked */
   onClick?: () => void;
+  /** Callback function to be executed when the tab is left */
+  onLeave?: () => void;
   /** Callback function to be executed when the tab is removed/closed */
   onClose?: () => void;
   /** Indicates if the tab is currently active */
@@ -405,6 +407,15 @@ export type Warning = {
   message: string;
   buttons: Array<TextButton>;
   nextWarning: Warning | null;
+};
+
+// #endregion
+
+// #region --- Visualization Status ---
+
+export type VisualizationStatus = {
+  pan: { x: number; y: number };
+  zoom: number;
 };
 
 // #endregion

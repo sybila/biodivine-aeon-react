@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import KeepAlive from 'react-activation';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
@@ -130,13 +129,11 @@ const AttractorBifurcationExplorer: React.FC<
         {renderTabContent()}
       </ContentTab>
 
-      <KeepAlive>
-        <BifurcationExplorerCanvas
-          initialized={initialized}
-          setInitialized={setInitialized}
-          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
-        />
-      </KeepAlive>
+      <BifurcationExplorerCanvas
+        initialized={initialized}
+        setInitialized={setInitialized}
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+      />
     </>
   );
 };

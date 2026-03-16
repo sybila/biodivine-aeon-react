@@ -6,6 +6,7 @@ import type {
   NodeDataBE,
   NodeNecessaryConditions,
   StabilityAnalysisModes,
+  VisualizationStatus,
   VisualOptionsSwitchableABE,
 } from '../../../types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
@@ -76,6 +77,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   public init(container: HTMLElement) {
     this.cytoscape.init(container);
+    this.isEmpty = true;
   }
 
   // #endregion
@@ -251,6 +253,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       this.cytoscape.applyTreeLayout(fit);
       this.isEmpty = false;
     }
+    this.loadVisualizationStatus();
   }
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
@@ -390,6 +393,27 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   /** Make decision for a specific node. */
   public makeDecision(nodeId: number, decisionId: number): void {
     this.computationManagerServ.makeDecision(nodeId, decisionId, this);
+  }
+
+  // #endregion
+
+  // #region --- Visualization Status ---
+
+  /** Saves the current status of the bifurcation tree visualization */
+  public saveVisualizationStatus(): void {
+    const status: VisualizationStatus = this.cytoscape.getVisualizationStatus();
+    this.bifurcationExplorerStatusStore
+      .getState()
+      .setVisualizationStatus(status);
+  }
+
+  /** Loads currently saved status of the bifurcation tree visualization */
+  public loadVisualizationStatus(): void {
+    const status =
+      this.bifurcationExplorerStatusStore.getState().visualizationStatus;
+    if (status) {
+      this.cytoscape.loadVisualizationStatus(status);
+    }
   }
 
   // #endregion

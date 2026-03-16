@@ -94,6 +94,16 @@ export interface AttractorBifurcationExplorerInt {
 
   // #endregion
 
+  // #region --- Visualization Status ---
+
+  /** Saves the current status of the bifurcation tree visualization */
+  saveVisualizationStatus(): void;
+
+  /** Loads currently saved status of the bifurcation tree visualization */
+  loadVisualizationStatus(): void;
+
+  // #endregion
+
   // #region --- Visual Options ---
 
   /** Gets last precision set in the VisualOptions of AttractorExplorer */

@@ -8,6 +8,7 @@ import type {
   LeafNode,
   NodeDataBE,
   NodeNecessaryConditions,
+  VisualizationStatus,
   VisualOptionsSwitchableABE,
 } from '../../../types';
 import type { BehaviorClassOperationsInt } from '../../utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
@@ -800,6 +801,28 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
       node.scratch('_aeon', {});
     }
     return node.scratch('_aeon');
+  }
+
+  // #endregion
+
+  // #region --- Visualization Status ---
+
+  /** Gets the current visualization status. */
+  public getVisualizationStatus(): VisualizationStatus {
+    return {
+      zoom: this.cytoscape.zoom(),
+      pan: this.cytoscape.pan(),
+    };
+  }
+
+  /** Loads the visualization status into the visualization. */
+  public loadVisualizationStatus(status: VisualizationStatus): void {
+    if (status.zoom !== undefined) {
+      this.cytoscape.zoom(status.zoom);
+    }
+    if (status.pan !== undefined) {
+      this.cytoscape.pan(status.pan);
+    }
   }
 
   // #endregion
