@@ -228,7 +228,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       const hasSavedVisualizationStatus =
         this.bifurcationExplorerStatusStore.getState().visualizationStatus !==
         null;
-      this.loadBifurcationTree(!hasSavedVisualizationStatus);
+      this.loadBifurcationTree(
+        !hasSavedVisualizationStatus,
+        !hasSavedVisualizationStatus
+      );
     }
   }
 
@@ -262,7 +265,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
-  public loadBifurcationTree(fit: boolean = true, animate: boolean = true): void {
+  public loadBifurcationTree(
+    fit: boolean = true,
+    animate: boolean = true
+  ): void {
     this.computationManagerServ.getBifurcationTree(fit, animate, this);
   }
 
