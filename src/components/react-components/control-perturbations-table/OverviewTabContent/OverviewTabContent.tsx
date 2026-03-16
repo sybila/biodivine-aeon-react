@@ -28,10 +28,6 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
       : undefined
   );
 
-  if (!controlStats || !controlPrecomputation) {
-    return <NoDataText text="No control computation results available." />;
-  }
-
   const controlEnabledPhenotypeVars = useMemo(() => {
     return liveModelServ.Control.getPhenotypeControlEnabledVars();
   }, [controlStats]);
@@ -43,6 +39,10 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
       ),
     [controlEnabledPhenotypeVars]
   );
+
+  if (!controlStats || !controlPrecomputation) {
+    return <NoDataText text="No control computation results available." />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pt-2 pb-2">
