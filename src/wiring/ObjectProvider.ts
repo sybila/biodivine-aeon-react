@@ -32,9 +32,12 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.GlobalServicesProvider = new GlobalServicesProvider(
       this.UtilitiesServiceProvider,
       this.StoresProvider,
-      Message.showSuccess,
-      Message.showInfo,
-      Message.showError
+      (message: string, duration?: number) =>
+        Message.showSuccess(message, duration),
+      (message: string, duration?: number) =>
+        Message.showInfo(message, duration),
+      (message: string, duration?: number) =>
+        Message.showError(message, duration)
     );
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
