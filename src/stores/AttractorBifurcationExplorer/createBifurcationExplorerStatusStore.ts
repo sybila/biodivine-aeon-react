@@ -22,6 +22,13 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
     loadDecisions: (decisions) => {
       set({ availableDecisions: decisions });
     },
+    clearSelectedNodeInfo: () => {
+      set({
+        selectedNode: null,
+        stabilityData: null,
+        availableDecisions: null,
+      });
+    },
     clear: () =>
       set({
         visualizationStatus: null,

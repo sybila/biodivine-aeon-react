@@ -99,8 +99,8 @@ export interface AttractorBifurcationExplorerInt {
   /** Saves the current status of the bifurcation tree visualization */
   saveVisualizationStatus(): void;
 
-  /** Loads currently saved status of the bifurcation tree visualization */
-  loadVisualizationStatus(): void;
+  /** Restores state of the bifurcation tree visualization (pan, zoom, selected node ...) */
+  restoreVisualizationState(): void;
 
   // #endregion
 

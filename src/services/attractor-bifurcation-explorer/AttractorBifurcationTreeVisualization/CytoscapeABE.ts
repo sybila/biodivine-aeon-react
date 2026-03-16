@@ -323,7 +323,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   /** Function to handle node unselection */
   private _onUnselect(e: any) {
-    this.bifurcationExplorerStatusStore.getState().clear();
+    this.bifurcationExplorerStatusStore.getState().clearSelectedNodeInfo();
     // Clear remove button
     this.cytoscape.$('.remove-button').remove();
 

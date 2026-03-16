@@ -225,8 +225,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   /** Opens the bifurcation tree, loading it if necessary. */
   public openBifurcationTree(): void {
     if (this.isEmpty) {
-      this.loadBifurcationTree();
-      this.fitTree();
+      const hasSavedVisualizationStatus =
+        this.bifurcationExplorerStatusStore.getState().visualizationStatus !==
+        null;
+      this.loadBifurcationTree(!hasSavedVisualizationStatus);
     }
   }
 
@@ -250,10 +252,12 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
           this.cytoscape.ensureEdge(n.id, n.right, true);
         }
       }
+      // Do not auto-fit when restoring a previously saved pan/zoom state.
       this.cytoscape.applyTreeLayout(fit);
       this.isEmpty = false;
     }
-    this.loadVisualizationStatus();
+
+    this.restoreVisualizationState();
   }
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
@@ -402,17 +406,25 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   /** Saves the current status of the bifurcation tree visualization */
   public saveVisualizationStatus(): void {
     const status: VisualizationStatus = this.cytoscape.getVisualizationStatus();
+
     this.bifurcationExplorerStatusStore
       .getState()
       .setVisualizationStatus(status);
   }
 
-  /** Loads currently saved status of the bifurcation tree visualization */
-  public loadVisualizationStatus(): void {
+  /** Restores state of the bifurcation tree visualization (pan, zoom, selected node ...) */
+  public restoreVisualizationState(): void {
     const status =
       this.bifurcationExplorerStatusStore.getState().visualizationStatus;
+    const selectedNode =
+      this.bifurcationExplorerStatusStore.getState().selectedNode;
+
     if (status) {
       this.cytoscape.loadVisualizationStatus(status);
+    }
+
+    if (selectedNode) {
+      this.cytoscape.refreshSelection(selectedNode.id.toString());
     }
   }
 

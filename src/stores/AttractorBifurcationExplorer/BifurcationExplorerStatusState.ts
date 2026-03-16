@@ -18,6 +18,8 @@ export type BifurcationExplorerStatusState = {
   stabilityData: NodeStabilityData | null;
   /** Decisions available for the selected node */
   availableDecisions: Decisions | null;
+  /** Removes information about selected node. */
+  clearSelectedNodeInfo: () => void;
   setVisualizationStatus: (status: VisualizationStatus) => void;
   changeSelectedNode: (node: LeafNode | DecisionMixedNode | null) => void;
   loadStabilityData: (stabilityData: NodeStabilityData | null) => void;
