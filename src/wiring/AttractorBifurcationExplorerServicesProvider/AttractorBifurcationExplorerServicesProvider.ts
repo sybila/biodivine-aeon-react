@@ -22,6 +22,7 @@ class AttractorBifurcationExplorerServicesProvider implements AttractorBifurcati
     const bifurcationTreeVisualization: AttractorBifurcationTreeVisualizationInt =
       new CytoscapeABE(
         behaviorClassOperationsServ,
+        messageServ,
         storesProvider.bifurcationExplorerStatusStore
       );
     this.attractorBifurcationExplorerServ = new AttractorBifurcationExplorer(
