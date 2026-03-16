@@ -11,6 +11,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   searchAndFilterHelpersServ,
+  loadingServ,
   variablesStore,
   controlStore,
   modelEditorStatusStore,

@@ -40,6 +40,8 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   fileConvertorsServ,
   warningServ,
   messageServ,
+  loadingServ,
+
   modelEditorStatusStore,
   tabStore,
   resultsStatusStore,
@@ -114,6 +116,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            loadingServ={loadingServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}

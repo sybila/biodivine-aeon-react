@@ -24,6 +24,7 @@ const ModelEditorComponent = () => (
     }
     warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
     messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
+    loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
     fileConvertorsServ={
       ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
     }

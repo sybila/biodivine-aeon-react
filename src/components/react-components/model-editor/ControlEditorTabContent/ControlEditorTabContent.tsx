@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { Oscillation } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ControlStatsTable from './ControStatsTable/ControlStatsTable';
-
 import type { ControlEditorTabContentProps } from './ControlEditorTabContentProps';
 import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
 import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOscillationButton';
@@ -11,6 +10,8 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   liveModelServ,
   controlEditorServ,
   searchAndFilterHelpersServ,
+  loadingServ,
+
   controlStore,
   variablesStore,
   modelEditorStatusStore,
@@ -60,6 +61,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
       <ControlVariablesTable
         controlEditorServ={controlEditorServ}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        loadingServ={loadingServ}
         variablesStore={variablesStore}
         controlStore={controlStore}
         modelEditorStatusStore={modelEditorStatusStore}
