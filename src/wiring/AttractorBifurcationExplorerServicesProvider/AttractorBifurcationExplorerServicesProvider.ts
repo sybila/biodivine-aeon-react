@@ -4,6 +4,7 @@ import type { AttractorBifurcationTreeVisualizationInt } from '../../services/at
 import CytoscapeABE from '../../services/attractor-bifurcation-explorer/AttractorBifurcationTreeVisualization/CytoscapeABE';
 import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { BehaviorClassOperationsInt } from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProviderInt';
@@ -13,6 +14,7 @@ class AttractorBifurcationExplorerServicesProvider implements AttractorBifurcati
 
   constructor(
     computationManagerServ: ComputationManagerInt,
+    messageServ: MessageInt,
     attractorVisualizerServ: AttractorVisualizerInt,
     behaviorClassOperationsServ: BehaviorClassOperationsInt,
     storesProvider: StoresProviderInt
@@ -26,6 +28,7 @@ class AttractorBifurcationExplorerServicesProvider implements AttractorBifurcati
       computationManagerServ,
       attractorVisualizerServ,
       bifurcationTreeVisualization,
+      messageServ,
       storesProvider.bifurcationExplorerStatusStore
     );
   }

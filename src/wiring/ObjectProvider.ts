@@ -52,6 +52,7 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.AttractorBifurcationExplorerServicesProvider =
       new AttractorBifurcationExplorerServicesProvider(
         this.GlobalServicesProvider.computationManagerServ,
+        this.GlobalServicesProvider.messageServ,
         this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
         this.UtilitiesServiceProvider.behaviorClassOperationsServ,
         this.StoresProvider

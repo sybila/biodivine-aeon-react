@@ -1,4 +1,3 @@
-import { Message } from '../../../components/lit-components/message-wrapper';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
@@ -11,6 +10,7 @@ import type {
 } from '../../../types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../../global/Message/MessageInt';
 import type { AttractorBifurcationTreeVisualizationInt } from '../AttractorBifurcationTreeVisualization/AttractorBifurcationTreeVisualizationInt';
 import type { AttractorBifurcationExplorerInt } from './AttractorBifurcationExplorerInt';
 
@@ -47,6 +47,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   private computationManagerServ: ComputationManagerInt;
   private cytoscape: AttractorBifurcationTreeVisualizationInt;
   private attractorVisualizerServ: AttractorVisualizerInt;
+  private messageServ: MessageInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
@@ -54,11 +55,14 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     computationManagerServ: ComputationManagerInt,
     attractorVisualizerServ: AttractorVisualizerInt,
     attractorBifurcationTreeVisualization: AttractorBifurcationTreeVisualizationInt,
+    messageServ: MessageInt,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
   ) {
     this.cytoscape = attractorBifurcationTreeVisualization;
     this.computationManagerServ = computationManagerServ;
     this.attractorVisualizerServ = attractorVisualizerServ;
+    this.messageServ = messageServ;
+
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
 
     this.cytoscape.setMathDimPercentFunction(
@@ -283,7 +287,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
         this.bifurcationExplorerStatusStore.getState().selectedNode;
 
       if (!newNodeID) {
-        Message.showError(
+        this.messageServ.showError(
           'Error Auto-Expanding Bifurcation Tree: No node selected'
         );
         return;
@@ -487,7 +491,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   /** Opens the witness tab for a specific leaf node. */
   public openLeafNodeWitness(nodeId: number): void {
     if (nodeId === undefined || nodeId === null) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open witness: Internal error (Missing node ID).'
       );
       return;
@@ -510,7 +514,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       !behaviour ||
       !vector
     ) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open witness: Internal error (Missing parameters).'
       );
       return;
@@ -527,7 +531,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   /** Opens the attractor visualizer for a specific leaf node. */
   public openLeafNodeAttractor(nodeId: number): void {
     if (!nodeId) {
-      Message.showError(
+      this.messageServ.showError(
         "Can't open attractor visualizer: no leaf node selected"
       );
     } else {
@@ -543,25 +547,25 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     vector: string[]
   ): void {
     if (nodeId === null) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open attractor explorer: Internal error (Missing node ID).'
       );
       return;
     }
     if (!variableName) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open attractor explorer: Internal error (Missing variable name).'
       );
       return;
     }
     if (!behavior) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open attractor explorer: Internal error (Missing behavior).'
       );
       return;
     }
     if (!vector) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open attractor explorer: Internal error (Missing vector).'
       );
       return;
