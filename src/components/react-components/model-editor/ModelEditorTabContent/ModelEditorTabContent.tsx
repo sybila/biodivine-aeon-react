@@ -43,6 +43,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
     <div className="flex flex-col items-center w-full h-fit gap-3">
       <ModelName
         modelEditorServ={modelEditorServ}
+        messageServ={messageServ}
         tabStore={tabStore}
         modelInfoStore={modelInfoStore}
       />
