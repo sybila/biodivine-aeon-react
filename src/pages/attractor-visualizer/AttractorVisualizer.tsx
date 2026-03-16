@@ -16,6 +16,7 @@ type TabTypeAV = 'State Overview' | 'Witness Update Functions' | null;
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
   attractorVisualizerStatusStore,
+  messageServ,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
   const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
@@ -40,6 +41,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
           <StateOverviewTabContent
             attractorVisualizerServ={attractorVisualizerServ}
             attractorVisualizerStatusStore={attractorVisualizerStatusStore}
+            messageServ={messageServ}
           />
         );
       case 'Witness Update Functions':

@@ -84,6 +84,7 @@ export const AttractorVisualizerRoute = createRoute({
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
       }
+      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     />
   ),
 });
