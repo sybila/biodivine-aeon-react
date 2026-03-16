@@ -1,4 +1,5 @@
 import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../../../services/global/Message/MessageInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
@@ -13,6 +14,8 @@ export type ModelEditorTabContentProps = {
   liveModelServ: LiveModelInt;
   modelEditorServ: ModelEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
+  messageServ: MessageInt;
+
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
