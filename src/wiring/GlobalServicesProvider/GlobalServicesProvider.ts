@@ -2,6 +2,8 @@ import ComputationManager from '../../services/global/ComputationManager/Computa
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import LiveModel from '../../services/global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import Message from '../../services/global/Message/Message';
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import TabOperations from '../../services/global/Navigation/TabOperations';
 import type { TabOperationsInt } from '../../services/global/Navigation/TabOperationsInt';
 import ResultsOperations from '../../services/global/ResultsOperations/ResultsOperations';
@@ -17,10 +19,14 @@ class GlobalServicesProvider {
   public tabOperationsServ: TabOperationsInt;
   public resultsOperationsServ: ResultsOperationsInt;
   public warningServ: WarningInt;
+  public messageServ: MessageInt;
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
-    storesProvider: StoresProviderInt
+    storesProvider: StoresProviderInt,
+    successMessageFunction: (message: string, duration?: number) => void,
+    infoMessageFunction: (message: string, duration?: number) => void,
+    errorMessageFunction: (message: string, duration?: number) => void
   ) {
     this.computationManagerServ = new ComputationManager(
       storesProvider.bifurcationExplorerStatusStore,
@@ -54,6 +60,11 @@ class GlobalServicesProvider {
       storesProvider.updateFunctionsStore,
       storesProvider.controlStore,
       storesProvider.modelInfoStore
+    );
+    this.messageServ = new Message(
+      successMessageFunction,
+      infoMessageFunction,
+      errorMessageFunction
     );
   }
 }

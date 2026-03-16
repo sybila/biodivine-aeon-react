@@ -1,3 +1,4 @@
+import { Message } from '../components/lit-components/message-wrapper';
 import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
 import AttractorVisualizerServicesProvider from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProvider';
@@ -30,7 +31,10 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.StoresProvider = new StoresProvider();
     this.GlobalServicesProvider = new GlobalServicesProvider(
       this.UtilitiesServiceProvider,
-      this.StoresProvider
+      this.StoresProvider,
+      Message.showSuccess,
+      Message.showInfo,
+      Message.showError
     );
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
