@@ -57,6 +57,7 @@ class GlobalServicesProvider {
       this.computationManagerServ,
       this.warningServ,
       utilitiesServiceProvider.fileHelpersServ,
+      this.messageServ,
       storesProvider.loadedModelStore,
       storesProvider.tabsStore,
       storesProvider.resultsStatusStore,

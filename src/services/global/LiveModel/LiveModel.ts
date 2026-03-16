@@ -1,4 +1,3 @@
-import { Message } from '../../../components/lit-components/message-wrapper';
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ModelState } from '../../../stores/LiveModel/LoadedModelStore/ModelState';
@@ -11,6 +10,7 @@ import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../Message/MessageInt';
 import type { WarningInt } from '../Warning/WarningInt';
 import ControlLM from './ControlLM/ControlLM';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
@@ -48,6 +48,7 @@ class LiveModel implements LiveModelInt {
 
   private computationManagerServ: ComputationManagerInt;
   private warningServ: WarningInt;
+  private messageServ: MessageInt;
 
   private loadedModelStore: ZustandStore<ModelState>;
   private tabStore: ZustandStore<TabsState>;
@@ -58,6 +59,8 @@ class LiveModel implements LiveModelInt {
     computationManagerServ: ComputationManagerInt,
     warningServ: WarningInt,
     fileHelpersServ: FileHelpersInt,
+    messageServ: MessageInt,
+
     loadedModelStore: ZustandStore<ModelState>,
     tabStore: ZustandStore<TabsState>,
     resultsStatusStore: ZustandStore<ResultsStatus>,
@@ -70,6 +73,7 @@ class LiveModel implements LiveModelInt {
   ) {
     this.computationManagerServ = computationManagerServ;
     this.warningServ = warningServ;
+    this.messageServ = messageServ;
 
     this.loadedModelStore = loadedModelStore;
     this.tabStore = tabStore;
@@ -169,6 +173,7 @@ class LiveModel implements LiveModelInt {
     this.Export = new ExportLM(
       this,
       fileHelpersServ,
+      this.messageServ,
       controlStore,
       modelInfoStore,
       regulationsStore,
@@ -198,7 +203,7 @@ class LiveModel implements LiveModelInt {
    */
   public modelCanBeModified(): boolean {
     if (this.loadedModelStore.getState().loadedModelType !== 'main') {
-      Message.showError(
+      this.messageServ.showError(
         'You can only modify the model in the Model Editor. Please switch to the Model Editor to proceed.'
       );
       return false;
@@ -212,7 +217,7 @@ class LiveModel implements LiveModelInt {
     }
 
     if (this.computationManagerServ.computationIsRunning()) {
-      Message.showError(
+      this.messageServ.showError(
         'The model cannot be modified while a computation is running.'
       );
       return false;
