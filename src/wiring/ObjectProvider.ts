@@ -47,6 +47,7 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.AttractorVisualizerServicesProvider =
       new AttractorVisualizerServicesProvider(
         this.GlobalServicesProvider.computationManagerServ,
+        this.GlobalServicesProvider.messageServ,
         this.StoresProvider
       );
     this.AttractorBifurcationExplorerServicesProvider =
