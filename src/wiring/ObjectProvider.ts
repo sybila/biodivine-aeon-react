@@ -1,3 +1,5 @@
+import { Loading } from '../components/lit-components/loading-wrapper';
+import { Message } from '../components/lit-components/message-wrapper';
 import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
 import AttractorVisualizerServicesProvider from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProvider';
@@ -30,21 +32,32 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.StoresProvider = new StoresProvider();
     this.GlobalServicesProvider = new GlobalServicesProvider(
       this.UtilitiesServiceProvider,
-      this.StoresProvider
+      this.StoresProvider,
+      (message: string, duration?: number) =>
+        Message.showSuccess(message, duration),
+      (message: string, duration?: number) =>
+        Message.showInfo(message, duration),
+      (message: string, duration?: number) =>
+        Message.showError(message, duration),
+      () => Loading.startLoading(),
+      () => Loading.endLoading()
     );
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
       this.GlobalServicesProvider.liveModelServ,
+      this.GlobalServicesProvider.messageServ,
       this.StoresProvider
     );
     this.AttractorVisualizerServicesProvider =
       new AttractorVisualizerServicesProvider(
         this.GlobalServicesProvider.computationManagerServ,
+        this.GlobalServicesProvider.messageServ,
         this.StoresProvider
       );
     this.AttractorBifurcationExplorerServicesProvider =
       new AttractorBifurcationExplorerServicesProvider(
         this.GlobalServicesProvider.computationManagerServ,
+        this.GlobalServicesProvider.messageServ,
         this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
         this.UtilitiesServiceProvider.behaviorClassOperationsServ,
         this.StoresProvider

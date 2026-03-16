@@ -1,3 +1,4 @@
+import type { MessageInt } from '../../../../../services/global/Message/MessageInt';
 import type { ModelEditorInt } from '../../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelInfoState } from '../../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { TabsState } from '../../../../../stores/Navigation/TabState';
@@ -5,6 +6,8 @@ import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type ModelNameProps = {
   modelEditorServ: ModelEditorInt;
+  messageServ: MessageInt;
+
   tabStore: ZustandStore<TabsState>;
   modelInfoStore: ZustandStore<ModelInfoState>;
 };

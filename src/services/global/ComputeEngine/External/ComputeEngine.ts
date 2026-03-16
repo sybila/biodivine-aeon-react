@@ -1,4 +1,3 @@
-import { Loading } from '../../../../components/lit-components/loading-wrapper';
 import config from '../../../../config';
 import type {
   AttractorData,
@@ -18,6 +17,7 @@ import type {
   TimestampResponse,
   UpdateFunctionStatus,
 } from '../../../../types';
+import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { ComputeEngineInt } from '../ComputeEngineInt';
 import type {
   AttractorResponse,
@@ -37,7 +37,7 @@ if (!TAB_ID) {
 }
 
 class ComputeEngine implements ComputeEngineInt {
-  // #region --- Properties ---
+  // #region --- Properties + Constructor ---
 
   private address: string =
     config.computeEngine.defaultURL ?? 'http://localhost:8000';
@@ -60,15 +60,21 @@ class ComputeEngine implements ComputeEngineInt {
     results: any | undefined
   ) => void;
 
+  private loadingServ: LoadingInt;
+
   constructor(
     setResults: (
       warning: string | undefined,
       error: string | undefined,
       type: ComputationModes | undefined,
       results: AttractorResults | ControlResults | undefined
-    ) => void
+    ) => void,
+
+    loadingServ: LoadingInt
   ) {
     this.setResults = setResults;
+
+    this.loadingServ = loadingServ;
   }
 
   // #endregion
@@ -927,12 +933,12 @@ class ComputeEngine implements ComputeEngineInt {
   }
 
   private getAttractorResults() {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.backendRequest(
       '/get_results',
       (error: string | undefined, response: AttractorResults) => {
         this.getResultsCallback(error, response, 'Attractor Analysis');
-        Loading.endLoading();
+        this.loadingServ.endLoading();
       },
       'GET'
     );
@@ -962,7 +968,7 @@ class ComputeEngine implements ComputeEngineInt {
               },
           'Control'
         );
-        Loading.endLoading();
+        this.loadingServ.endLoading();
       },
       'GET'
     );
@@ -979,7 +985,7 @@ class ComputeEngine implements ComputeEngineInt {
 
   /** Get control computation results and statistics. */
   private getControlResults() {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.backendRequest(
       '/get_control_results',
       (
@@ -992,7 +998,7 @@ class ComputeEngine implements ComputeEngineInt {
           }
 
           this.getResultsCallback(error, undefined, 'Control');
-          Loading.endLoading();
+          this.loadingServ.endLoading();
           return;
         }
 

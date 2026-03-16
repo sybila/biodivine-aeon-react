@@ -1,5 +1,3 @@
-import { Loading } from '../../../components/lit-components/loading-wrapper';
-import { Message } from '../../../components/lit-components/message-wrapper';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ComputeEngineStatusState } from '../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
@@ -23,8 +21,11 @@ import type {
 } from '../../../types';
 import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
+import type { ComputeEngineInt } from '../ComputeEngine/ComputeEngineInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
+import type { LoadingInt } from '../Loading/LoadingInt';
+import type { MessageInt } from '../Message/MessageInt';
 import type { ComputationManagerInt } from './ComputationManagerInt';
 
 /**
@@ -34,7 +35,7 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Properties + Constructor ---
 
   /** Currently used compute engine comunicator */
-  private computeEngine = new ComputeEngine(this.setResults.bind(this));
+  private computeEngine: ComputeEngineInt;
 
   /** Saves currently set computation mode */
   private computationMode: ComputationModes = 'Attractor Analysis';
@@ -54,6 +55,8 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Reference to the LiveModel service. Needs to be set after creation of the ComputationManager because of circular dependencies. */
   private liveModelServ: LiveModelInt | undefined = undefined;
+  private messageServ: MessageInt;
+  private loadingServ: LoadingInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
   private resultsStatusStore: ZustandStore<ResultsStatus>;
@@ -63,6 +66,9 @@ class ComputationManager implements ComputationManagerInt {
   private tabsStore: ZustandStore<TabsState>;
 
   constructor(
+    messageServ: MessageInt,
+    loadingServ: LoadingInt,
+
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>,
     resultsStatusStore: ZustandStore<ResultsStatus>,
     computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>,
@@ -70,12 +76,20 @@ class ComputationManager implements ComputationManagerInt {
     variablesStore: ZustandStore<VariablesStatus>,
     tabsStore: ZustandStore<TabsState>
   ) {
+    this.messageServ = messageServ;
+    this.loadingServ = loadingServ;
+
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
     this.resultsStatusStore = resultsStatusStore;
     this.computeEngineStatusStore = computeEngineStatusStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.variablesStore = variablesStore;
     this.tabsStore = tabsStore;
+
+    this.computeEngine = new ComputeEngine(
+      this.setResults.bind(this),
+      this.loadingServ
+    );
   }
 
   // #endregion
@@ -277,11 +291,11 @@ class ComputationManager implements ComputationManagerInt {
     if (color) this.computeEngineStatusStore.getState().setStatusColor(color);
 
     if (error) {
-      Message.showError(error);
+      this.messageServ.showError(error);
     }
 
     if (warning) {
-      Message.showInfo(warning);
+      this.messageServ.showInfo(warning);
     }
   };
 
@@ -294,7 +308,7 @@ class ComputationManager implements ComputationManagerInt {
     response: UpdateFunctionStatus | undefined
   ): void {
     if (!response) {
-      Message.showError(
+      this.messageServ.showError(
         `Error validating update function for variable ${this.variablesStore
           .getState()
           .getVariableName(variableId)}`
@@ -341,7 +355,9 @@ class ComputationManager implements ComputationManagerInt {
     response: ModelObject | undefined
   ): void {
     if (error || !response || !response.model) {
-      Message.showError(`Error opening witness: "${error ?? 'Unknown error'}"`);
+      this.messageServ.showError(
+        `Error opening witness: "${error ?? 'Unknown error'}"`
+      );
     } else {
       const modelId = this.getLiveModel()!.Models.addModel(
         response.model,
@@ -354,19 +370,19 @@ class ComputationManager implements ComputationManagerInt {
       });
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Gets the witness for one result from the attractor analysis and opens new witness tab */
   public openWitnessAttractorAnalysis(behaviorString: string): void {
     if (!behaviorString || behaviorString.length === 0) {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot open witness: No behavior string provided for the attractor.'
       );
       return;
     }
 
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getWitnessAttractorAnalysis(
       behaviorString,
       this.openWitnessCallback.bind(this)
@@ -375,7 +391,7 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
   public openWitnessBifurcationExplorer(nodeId: number): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getWitnessBifurcationExplorer(
       nodeId,
       this.openWitnessCallback.bind(this)
@@ -389,7 +405,7 @@ class ComputationManager implements ComputationManagerInt {
     behavior: string,
     vector: string[]
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getWitnessStabilityAnalysis(
       nodeId,
       variableName,
@@ -409,7 +425,7 @@ class ComputationManager implements ComputationManagerInt {
     try {
       this.computationCanStart(model);
     } catch (error: any) {
-      Message.showError(error.message);
+      this.messageServ.showError(error.message);
       return;
     }
 
@@ -432,7 +448,7 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !nodes) {
-      Message.showError(
+      this.messageServ.showError(
         `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
@@ -443,7 +459,7 @@ class ComputationManager implements ComputationManagerInt {
       );
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Fetches the bifurcation tree from the compute engine.
@@ -455,7 +471,7 @@ class ComputationManager implements ComputationManagerInt {
     animate: boolean,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getBifurcationTree((error, nodes) =>
       this.getBifurcationTreeCallback(
         error,
@@ -473,7 +489,9 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error) {
-      Message.showError(`Error setting bifurcation tree precision: ${error}`);
+      this.messageServ.showError(
+        `Error setting bifurcation tree precision: ${error}`
+      );
       return;
     }
 
@@ -502,7 +520,7 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !nodes) {
-      Message.showError(
+      this.messageServ.showError(
         `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
@@ -511,7 +529,7 @@ class ComputationManager implements ComputationManagerInt {
 
     attractorBifurcationExplorerRef.refreshSelection();
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Automatically expands the bifurcation tree at the given node and depth. */
@@ -520,7 +538,7 @@ class ComputationManager implements ComputationManagerInt {
     depth: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.autoExpandBifurcationTree(
       nodeId,
       depth,
@@ -541,19 +559,19 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !node) {
-      Message.showError(
+      this.messageServ.showError(
         `Error deleting bifurcation decision: ${error ?? 'Internal error'}`
       );
     } else {
       if (!removed || removed.length === 0) {
-        Message.showInfo(
+        this.messageServ.showInfo(
           `Bifurcation decision for node ${node.id} was deleted, but no nodes were removed.`
         );
       }
       attractorBifurcationExplorerRef.removeFromCytoscape(node, removed ?? []);
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Deletes a bifurcation decision by node ID. */
@@ -561,7 +579,7 @@ class ComputationManager implements ComputationManagerInt {
     nodeId: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.deleteBifurcationDecision(
       nodeId,
       (error, node, removed) =>
@@ -581,7 +599,7 @@ class ComputationManager implements ComputationManagerInt {
     data: Array<StabilityAnalysisVariable> | undefined
   ): void {
     if (error || !data) {
-      Message.showError(
+      this.messageServ.showError(
         `Error fetching stability data: ${error ?? 'Internal error'}`
       );
     } else {
@@ -591,7 +609,7 @@ class ComputationManager implements ComputationManagerInt {
       });
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Fetches the stability data for a specific node and behaviour.
@@ -602,7 +620,7 @@ class ComputationManager implements ComputationManagerInt {
     nodeId: number,
     behaviour: StabilityAnalysisModes
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getStabilityData(
       nodeId,
       behaviour,
@@ -617,7 +635,7 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ) {
     if (error || !decisions) {
-      Message.showError(
+      this.messageServ.showError(
         `Error fetching decisions: ${error ?? 'Internal error'}`
       );
     } else {
@@ -628,7 +646,7 @@ class ComputationManager implements ComputationManagerInt {
         .loadDecisions(formatedDecisions);
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Fetches the decisions for a specific node. */
@@ -636,7 +654,7 @@ class ComputationManager implements ComputationManagerInt {
     nodeId: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getDecisions(nodeId, (error, decisions) =>
       this.getDecisionsCallback(
         error,
@@ -652,13 +670,15 @@ class ComputationManager implements ComputationManagerInt {
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     if (error || !node) {
-      Message.showError(`Error making decision: ${error ?? 'Internal error'}`);
+      this.messageServ.showError(
+        `Error making decision: ${error ?? 'Internal error'}`
+      );
     } else {
       attractorBifurcationExplorerRef.insertBifurcationTree(node, true, false);
       attractorBifurcationExplorerRef.refreshSelection();
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   public makeDecision(
@@ -666,7 +686,7 @@ class ComputationManager implements ComputationManagerInt {
     decisionId: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.makeDecision(nodeId, decisionId, (error, node) =>
       this.makeDecisionCallback(error, node, attractorBifurcationExplorerRef)
     );
@@ -684,14 +704,14 @@ class ComputationManager implements ComputationManagerInt {
     attractorVisualizerRef: AttractorVisualizerInt
   ) {
     if (error || !attractorData) {
-      Message.showError(
+      this.messageServ.showError(
         `Error fetching attractor: ${error ?? 'Internal error'}`
       );
     } else {
       attractorVisualizerRef.insertAttractorData(attractorData, true);
     }
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
   }
 
   /** Fetches an attractor by its behavior string. Used by the results window.*/
@@ -699,7 +719,7 @@ class ComputationManager implements ComputationManagerInt {
     behavior: string,
     attractorVisualizerRef: AttractorVisualizerInt
   ) {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getAttractorByBehavior(
       behavior,
       (error, attractorData) =>
@@ -712,7 +732,7 @@ class ComputationManager implements ComputationManagerInt {
     nodeId: number,
     attractorVisualizerRef: AttractorVisualizerInt
   ) {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getBifurcationExplorerAttractor(
       nodeId,
       (error, attractorData) =>
@@ -727,7 +747,7 @@ class ComputationManager implements ComputationManagerInt {
     vector: string[],
     attractorVisualizerRef: AttractorVisualizerInt
   ) {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     this.computeEngine.getStabilityAnalysisAttractor(
       nodeId,
       variableName,
@@ -753,7 +773,7 @@ class ComputationManager implements ComputationManagerInt {
     try {
       this.computationCanStart(model);
     } catch (error: any) {
-      Message.showError(error.message);
+      this.messageServ.showError(error.message);
       return;
     }
 
@@ -787,11 +807,11 @@ class ComputationManager implements ComputationManagerInt {
     }
 
     if (error) {
-      Message.showError(error);
+      this.messageServ.showError(error);
     }
 
     if (warning) {
-      Message.showInfo(warning);
+      this.messageServ.showInfo(warning);
     }
   }
 

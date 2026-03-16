@@ -1,4 +1,3 @@
-import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
@@ -13,6 +12,7 @@ import type {
   RegulationVariables,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../global/Message/MessageInt';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorInt } from './ModelEditorInt';
 
@@ -28,6 +28,7 @@ class ModelEditor implements ModelEditorInt {
 
   private modelVisualizationServ: ModelVisualizationInt;
   private liveModelServ: LiveModelInt;
+  private messageServ: MessageInt;
 
   private overlayWindowStore: ZustandStore<OverlayWindowState>;
   private regulationStore: ZustandStore<RegulationsStatus>;
@@ -38,6 +39,8 @@ class ModelEditor implements ModelEditorInt {
   constructor(
     modelVisualization: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
+    messageServ: MessageInt,
+
     overlayWindowStore: ZustandStore<OverlayWindowState>,
     regulationStore: ZustandStore<RegulationsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
@@ -46,6 +49,8 @@ class ModelEditor implements ModelEditorInt {
   ) {
     this.modelVisualizationServ = modelVisualization;
     this.liveModelServ = liveModelServ;
+    this.messageServ = messageServ;
+
     this.overlayWindowStore = overlayWindowStore;
     this.regulationStore = regulationStore;
     this.variablesStore = variablesStore;
@@ -85,7 +90,7 @@ class ModelEditor implements ModelEditorInt {
       const error = this.liveModelServ.Variables.renameVariable(id, newName);
 
       if (error) {
-        Message.showError('Variable name not changed: ' + error);
+        this.messageServ.showError('Variable name not changed: ' + error);
         return false;
       }
 
@@ -216,7 +221,7 @@ class ModelEditor implements ModelEditorInt {
     );
 
     if (error) {
-      Message.showError('Update function not changed: ' + error);
+      this.messageServ.showError('Update function not changed: ' + error);
       return error;
     }
 

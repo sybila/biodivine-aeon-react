@@ -1,5 +1,4 @@
 import { type CytoscapeOptions, type EventObject } from 'cytoscape';
-import { Message } from '../../../components/lit-components/message-wrapper';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
@@ -11,6 +10,7 @@ import type {
   VisualizationStatus,
   VisualOptionsSwitchableABE,
 } from '../../../types';
+import type { MessageInt } from '../../global/Message/MessageInt';
 import type { BehaviorClassOperationsInt } from '../../utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { AttractorBifurcationTreeVisualizationInt } from './AttractorBifurcationTreeVisualizationInt';
 
@@ -42,6 +42,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   private container: HTMLElement | null = null;
 
   private behaviorClassOperationsServ: BehaviorClassOperationsInt;
+  private messageServ: MessageInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
@@ -53,9 +54,11 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   constructor(
     behaviorClassOperationsServ: BehaviorClassOperationsInt,
+    messageServ: MessageInt,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
   ) {
     this.behaviorClassOperationsServ = behaviorClassOperationsServ;
+    this.messageServ = messageServ;
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
 
     this.mathDimPercentFunction = (_: number, __: number) => {
@@ -447,7 +450,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   private applyTreeData(data: any, treeData: NodeDataBE): CytoscapeNodeDataBE {
     if (data.id != treeData.id) {
-      Message.showError(
+      this.messageServ.showError(
         'Bifurcation Error: Internal Error - Updating wrong node.'
       );
     }
@@ -525,7 +528,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     positive: boolean
   ) {
     if (sourceId === undefined || targetId === undefined) {
-      Message.showError(
+      this.messageServ.showError(
         'Error inserting edge: Source or target ID is undefined.'
       );
       return;

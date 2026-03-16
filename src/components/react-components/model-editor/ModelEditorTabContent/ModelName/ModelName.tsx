@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-
-import { Message } from '../../../../lit-components/message-wrapper';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import type { ModelNameProps } from './ModelNameProps';
 
 const ModelName: React.FC<ModelNameProps> = ({
   modelEditorServ,
+  messageServ,
+
   tabStore,
   modelInfoStore,
 }) => {
@@ -27,7 +27,7 @@ const ModelName: React.FC<ModelNameProps> = ({
       value={modelName ?? undefined}
       handleChange={(value) => {
         if (isActiveWitness) {
-          Message.showError(
+          messageServ.showError(
             'Cannot change model name while on Witness tab. Change to Model Editor tab and try again.'
           );
         } else {

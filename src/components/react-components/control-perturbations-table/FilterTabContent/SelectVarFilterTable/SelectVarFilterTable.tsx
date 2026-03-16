@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { PertVariableFilterStatus } from '../../../../../types';
-import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
@@ -9,7 +8,10 @@ import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTa
 
 const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
   variableNames,
+
   searchAndFilterHelpersServ,
+  loadingServ,
+
   perturbationFilterSortStore,
 }) => {
   const [selectedVariables, setSelectedVariables] = useState<
@@ -23,18 +25,18 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
   );
 
   const toggleVariableSelect = (variableName: string) => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     setSelectedVariables((prev) => ({
       ...prev,
       [variableName]: !prev[variableName],
     }));
-    Loading.endLoading();
+    loadingServ.endLoading();
   };
 
   const changeSelectedFilterStat = (
     newStatus: PertVariableFilterStatus | null
   ) => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     const newFilterVariables = { ...filterVariables };
 
     variableNames.forEach((name) => {
@@ -50,7 +52,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     perturbationFilterSortStore
       .getState()
       .setPerturbationVariables(newFilterVariables);
-    Loading.endLoading();
+    loadingServ.endLoading();
   };
 
   /** Array of buttons for changing the filter status of selected variables.

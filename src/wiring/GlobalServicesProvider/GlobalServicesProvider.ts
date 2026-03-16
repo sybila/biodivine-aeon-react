@@ -2,6 +2,10 @@ import ComputationManager from '../../services/global/ComputationManager/Computa
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import LiveModel from '../../services/global/LiveModel/LiveModel';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import Loading from '../../services/global/Loading/Loading';
+import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
+import Message from '../../services/global/Message/Message';
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import TabOperations from '../../services/global/Navigation/TabOperations';
 import type { TabOperationsInt } from '../../services/global/Navigation/TabOperationsInt';
 import ResultsOperations from '../../services/global/ResultsOperations/ResultsOperations';
@@ -17,12 +21,27 @@ class GlobalServicesProvider {
   public tabOperationsServ: TabOperationsInt;
   public resultsOperationsServ: ResultsOperationsInt;
   public warningServ: WarningInt;
+  public messageServ: MessageInt;
+  public loadingServ: LoadingInt;
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
-    storesProvider: StoresProviderInt
+    storesProvider: StoresProviderInt,
+    successMessageFunction: (message: string, duration?: number) => void,
+    infoMessageFunction: (message: string, duration?: number) => void,
+    errorMessageFunction: (message: string, duration?: number) => void,
+    startLoadingFunction: () => void,
+    endLoadingFunction: () => void
   ) {
+    this.messageServ = new Message(
+      successMessageFunction,
+      infoMessageFunction,
+      errorMessageFunction
+    );
+    this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction, storesProvider.tabsStore);
     this.computationManagerServ = new ComputationManager(
+      this.messageServ,
+      this.loadingServ,
       storesProvider.bifurcationExplorerStatusStore,
       storesProvider.resultsStatusStore,
       storesProvider.computeEngineStatusStore,
@@ -45,6 +64,8 @@ class GlobalServicesProvider {
       this.computationManagerServ,
       this.warningServ,
       utilitiesServiceProvider.fileHelpersServ,
+      this.messageServ,
+      this.loadingServ,
       storesProvider.loadedModelStore,
       storesProvider.tabsStore,
       storesProvider.resultsStatusStore,

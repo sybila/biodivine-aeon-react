@@ -1,11 +1,11 @@
-import { Loading } from '../../../../components/lit-components/loading-wrapper';
-import { Message } from '../../../../components/lit-components/message-wrapper';
 import config from '../../../../config';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Variable } from '../../../../types';
+import type { LoadingInt } from '../../Loading/LoadingInt';
+import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ImportLMInt } from './ImportLMInt';
@@ -17,6 +17,8 @@ class ImportLM implements ImportLMInt {
 
   private liveModel: LiveModelInt;
   private warningServ: WarningInt;
+  private messageServ: MessageInt;
+  private loadingServ: LoadingInt;
 
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
@@ -25,12 +27,17 @@ class ImportLM implements ImportLMInt {
   constructor(
     liveModel: LiveModelInt,
     warningServ: WarningInt,
+    messageServ: MessageInt,
+    loadingServ: LoadingInt,
+
     resultsStatusStore: ZustandStore<ResultsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
     tabsStore: ZustandStore<TabsState>
   ) {
     this.liveModel = liveModel;
     this.warningServ = warningServ;
+    this.messageServ = messageServ;
+    this.loadingServ = loadingServ;
 
     this.resultsStatusStore = resultsStatusStore;
     this.variablesStore = variablesStore;
@@ -130,7 +137,7 @@ class ImportLM implements ImportLMInt {
       );
 
       if (target === undefined || regulator === undefined) {
-        Message.showError(
+        this.messageServ.showError(
           'Error: Regulation cannot be created. One of the variables is not defined.'
         );
         continue;
@@ -162,7 +169,7 @@ class ImportLM implements ImportLMInt {
       );
 
       if (variable === undefined) {
-        Message.showError(
+        this.messageServ.showError(
           `Error: Update function for variable "${key}" cannot be set. Variable is not defined.`
         );
         continue;
@@ -174,7 +181,9 @@ class ImportLM implements ImportLMInt {
         true
       );
       if (error !== undefined) {
-        Message.showError('Error while setting update function: ' + error);
+        this.messageServ.showError(
+          'Error while setting update function: ' + error
+        );
       }
     }
   }
@@ -322,7 +331,7 @@ class ImportLM implements ImportLMInt {
    * If the import is successful, return true.
    */
   public importAeon(modelString: string): boolean {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
 
@@ -359,7 +368,7 @@ class ImportLM implements ImportLMInt {
 
     this.runOnImportCallbacks();
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
     return true; // no error
   }
 
@@ -372,7 +381,7 @@ class ImportLM implements ImportLMInt {
     formatToAeonFunction?: (file: string) => Promise<string> | null
   ): void {
     if (!element.files || element.files.length === 0 || !element.files[0]) {
-      Message.showError('Import Error: No file was selected.');
+      this.messageServ.showError('Import Error: No file was selected.');
       return;
     }
 
@@ -381,7 +390,7 @@ class ImportLM implements ImportLMInt {
 
     fr.onload = async (e: ProgressEvent<FileReader>) => {
       if (!e.target || e.target.result === null) {
-        Message.showError('Import Error: File reading failed.');
+        this.messageServ.showError('Import Error: File reading failed.');
         return;
       }
 
@@ -399,7 +408,7 @@ class ImportLM implements ImportLMInt {
         await this.importAeonWithWarnings(aeonModel);
         this.liveModel.Models.addModel(aeonModel, 'main');
       } catch (error: any) {
-        Message.showError(
+        this.messageServ.showError(
           `Import Error: ${error?.message ?? 'Parsing file failed'}`
         );
       } finally {
@@ -427,12 +436,12 @@ class ImportLM implements ImportLMInt {
       ) {
         await this.importAeonWithWarnings(modelString);
       } else {
-        Message.showInfo(
+        this.messageServ.showInfo(
           "No recent model available. Make sure 'Block third-party cookies and site data' is disabled in your browser."
         );
       }
     } catch (e) {
-      Message.showError(
+      this.messageServ.showError(
         'Import Error: Failed to load model from local storage. '
       );
 

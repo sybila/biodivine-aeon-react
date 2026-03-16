@@ -15,6 +15,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   liveModelServ,
   modelEditorServ,
   searchAndFilterHelpersServ,
+  messageServ,
+
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
@@ -41,6 +43,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
     <div className="flex flex-col items-center w-full h-fit gap-3">
       <ModelName
         modelEditorServ={modelEditorServ}
+        messageServ={messageServ}
         tabStore={tabStore}
         modelInfoStore={modelInfoStore}
       />
@@ -48,6 +51,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
         <ModelDescription
           setShowModelDescription={setShowModelDescription}
           modelEditorServ={modelEditorServ}
+          messageServ={messageServ}
           tabStore={tabStore}
           modelInfoStore={modelInfoStore}
         />

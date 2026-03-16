@@ -37,9 +37,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   controlEditorServ,
   computationManagerServ,
   searchAndFilterHelpersServ,
-  warningServ,
-  modelEditorStatusStore,
   fileConvertorsServ,
+  warningServ,
+  messageServ,
+  loadingServ,
+
+  modelEditorStatusStore,
   tabStore,
   resultsStatusStore,
   controlStore,
@@ -82,6 +85,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <ImportExportTabContent
             liveModelServ={liveModelServ}
             fileConvertorsServ={fileConvertorsServ}
+            messageServ={messageServ}
           />
         );
       case 'Export Witness':
@@ -97,6 +101,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            messageServ={messageServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             updateFunctionsStore={updateFunctionsStore}
@@ -111,6 +116,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            loadingServ={loadingServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}

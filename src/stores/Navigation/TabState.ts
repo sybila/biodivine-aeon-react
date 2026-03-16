@@ -12,6 +12,11 @@ export type TabsState = {
   /** Function which determines if more than one tab with inserted TabType can be opened. (true  if yes, else false) */
   canOpenMoreThanOneFunction: (type: TabType) => boolean;
 
+  /** Function which starts the loading indicator. */
+  startLoading: () => void;
+  /** Function which ends the loading indicator. */
+  endLoading: () => void;
+
   /** Adds a new tab. */
   addTab: (
     path: string,

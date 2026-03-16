@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import type { Variable } from '../../../../../types';
-import { Loading } from '../../../../lit-components/loading-wrapper';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
@@ -11,6 +10,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   searchAndFilterHelpersServ,
+  loadingServ,
   variablesStore,
   controlStore,
   modelEditorStatusStore,
@@ -47,12 +47,12 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   };
 
   const toggleVariableSelect = (variableName: string) => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     updateSelectedVariables({
       ...selectedVariables,
       [variableName]: !selectedVariables[variableName],
     });
-    Loading.endLoading();
+    loadingServ.endLoading();
   };
 
   const filteredVariables = useMemo(() => {

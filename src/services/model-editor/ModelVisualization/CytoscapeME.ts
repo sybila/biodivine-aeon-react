@@ -1,5 +1,4 @@
 import { type CytoscapeOptions } from 'cytoscape';
-import { Message } from '../../../components/lit-components/message-wrapper';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
@@ -11,6 +10,7 @@ import {
   type RegulationVariables,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../global/Message/MessageInt';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';
 
 const DOUBLE_CLICK_DELAY = 400;
@@ -43,16 +43,20 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Reference to LiveModel object which is responsible for managing currently loaded model */
   private liveModel: LiveModelInt;
+  private messageServ: MessageInt;
 
   private controlStore: ZustandStore<ControlStatus>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
 
   constructor(
     liveModel: LiveModelInt,
+    messageServ: MessageInt,
     controlStore: ZustandStore<ControlStatus>,
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>
   ) {
     this.liveModel = liveModel;
+    this.messageServ = messageServ;
+
     this.controlStore = controlStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
   }
@@ -434,7 +438,7 @@ class CytoscapeME implements ModelVisualizationInt {
       if (node.selected()) node.unselect(); // ensure menu is hidden, etc.
       this.cytoscape.remove(node);
     } else {
-      Message.showError(
+      this.messageServ.showError(
         'Cannot remove node from editor canvas: Internal Error (' +
           id +
           ' - node not found)'

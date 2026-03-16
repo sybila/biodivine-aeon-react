@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Message } from '../../../../lit-components/message-wrapper';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
@@ -8,6 +7,7 @@ import type { ModelDescriptionProps } from './ModelDescriptionProps';
 const ModelDescription: React.FC<ModelDescriptionProps> = ({
   setShowModelDescription,
   modelEditorServ,
+  messageServ,
   tabStore,
   modelInfoStore,
 }) => {
@@ -50,7 +50,7 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
         value={modelDescription}
         handleChange={(value) => {
           if (isActiveWittness) {
-            Message.showError(
+            messageServ.showError(
               'Cannot change model description while on Witness tab. Change to Model Editor tab and try again.'
             );
           } else {

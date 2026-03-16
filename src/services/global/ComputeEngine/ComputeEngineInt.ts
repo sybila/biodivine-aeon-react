@@ -7,6 +7,7 @@ import type {
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
+  UpdateFunctionStatus,
 } from '../../../types';
 
 /**
@@ -76,6 +77,17 @@ export interface ComputeEngineInt {
     callback: (
       error: string | undefined,
       response: ModelObject | undefined
+    ) => void
+  ): void;
+
+  /** Checks if update function is valid.
+   */
+  validateUpdateFunction(
+    variableId: number,
+    updateFunctionFragment: string,
+    callback?: (
+      variableId: number,
+      response: UpdateFunctionStatus | undefined
     ) => void
   ): void;
 

@@ -1,4 +1,3 @@
-import { Message } from '../../../../components/lit-components/message-wrapper';
 import config from '../../../../config';
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ModelState } from '../../../../stores/LiveModel/LoadedModelStore/ModelState';
@@ -15,6 +14,7 @@ import type {
   Variable,
 } from '../../../../types';
 import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
+import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ExportLMInt } from './ExportLMInt';
 
@@ -32,6 +32,7 @@ class ExportLM implements ExportLMInt {
   /** Reference to the parent LiveModel class. */
   private liveModel: LiveModelInt;
   private fileHelpersServ: FileHelpersInt;
+  private messageServ: MessageInt;
 
   private controlStore: ZustandStore<ControlStatus>;
   private modelInfoStore: ZustandStore<ModelInfoState>;
@@ -43,6 +44,8 @@ class ExportLM implements ExportLMInt {
   constructor(
     liveModel: LiveModelInt,
     fileHelpersServ: FileHelpersInt,
+    messageServ: MessageInt,
+
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
     regulationsStore: ZustandStore<RegulationsStatus>,
@@ -52,6 +55,7 @@ class ExportLM implements ExportLMInt {
   ) {
     this.liveModel = liveModel;
     this.fileHelpersServ = fileHelpersServ;
+    this.messageServ = messageServ;
 
     this.controlStore = controlStore;
     this.modelInfoStore = modelInfoStore;
@@ -240,7 +244,7 @@ class ExportLM implements ExportLMInt {
       : modelName;
 
     if (!modelString) {
-      Message.showError('Export Error: No variables in the model.');
+      this.messageServ.showError('Export Error: No variables in the model.');
       return;
     }
 
@@ -254,7 +258,7 @@ class ExportLM implements ExportLMInt {
           );
         }
       } catch (error: any) {
-        Message.showError(`Export Error: ${error.message}`);
+        this.messageServ.showError(`Export Error: ${error.message}`);
         return;
       }
     }

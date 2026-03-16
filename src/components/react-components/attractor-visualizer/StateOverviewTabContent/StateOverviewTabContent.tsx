@@ -1,4 +1,3 @@
-import { Message } from '../../../lit-components/message-wrapper';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import type { StateOverviewTabContentProps } from './StateOverviewTabContentProps';
@@ -6,6 +5,7 @@ import type { StateOverviewTabContentProps } from './StateOverviewTabContentProp
 const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
   attractorVisualizerServ,
   attractorVisualizerStatusStore,
+  messageServ,
 }) => {
   const selectedState = attractorVisualizerStatusStore(
     (state) => state.selectedNodeState
@@ -41,7 +41,7 @@ const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
 
   const insertState = () => {
     if (!selectedState) {
-      Message.showError(
+      messageServ.showError(
         'Cannot show state overview: Internal Error (No selected state)'
       );
       return;
@@ -51,7 +51,7 @@ const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
       attractorVisualizerServ.getStateVariables();
 
     if (!variableNames) {
-      Message.showError(
+      messageServ.showError(
         'Cannot show state overview: Internal Error (No available variable names)'
       );
       return;

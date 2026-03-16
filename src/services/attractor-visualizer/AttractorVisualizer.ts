@@ -1,4 +1,3 @@
-import { Message } from '../../components/lit-components/message-wrapper';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -9,6 +8,7 @@ import type {
   VisNode,
 } from '../../types';
 import type { ComputationManagerInt } from '../global/ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../global/Message/MessageInt';
 import type { AttractorVisualizerInt } from './AttractorVisualizerInt';
 
 declare const vis: any;
@@ -52,16 +52,19 @@ class AttractorVisualizer implements AttractorVisualizerInt {
   };
 
   private computationManagerServ: ComputationManagerInt;
+  private messageServ: MessageInt;
 
   private attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
   private tabsStore: ZustandStore<TabsState>;
 
   constructor(
     computationManagerServ: ComputationManagerInt,
+    messageServ: MessageInt,
     attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>,
     tabsStore: ZustandStore<TabsState>
   ) {
     this.computationManagerServ = computationManagerServ;
+    this.messageServ = messageServ;
     this.attractorVisualizerStatusStore = attractorVisualizerStatusStore;
     this.tabsStore = tabsStore;
   }
@@ -135,14 +138,14 @@ class AttractorVisualizer implements AttractorVisualizerInt {
    *  Creates new network visualizer with the currently loaded attractor. */
   private displayAll(): boolean {
     if (!this.attractorData) {
-      Message.showError(
+      this.messageServ.showError(
         'Unable to render Attractor Visualization: No loaded result available for display.'
       );
       return false;
     }
 
     if (this.attractorData['has_large_attractors']) {
-      Message.showInfo(
+      this.messageServ.showInfo(
         'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
       );
     }
@@ -156,7 +159,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
     }
 
     if (!this.container) {
-      Message.showError(
+      this.messageServ.showError(
         'Unable to render Attractor Visualization: Missing container element - Internal Error'
       );
       return false;
@@ -173,19 +176,21 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   public displayGraph(index: number): void {
     if (!this.container) {
-      Message.showError('Cannot show Attractor Visualization: Internal Error');
+      this.messageServ.showError(
+        'Cannot show Attractor Visualization: Internal Error'
+      );
       return;
     }
 
     if (!this.attractorData) {
-      Message.showError(
+      this.messageServ.showError(
         'Unable to render Attractor Visualization: No loaded result available for display.'
       );
       return;
     }
 
     if (this.attractorData?.has_large_attractors) {
-      Message.showInfo(
+      this.messageServ.showInfo(
         'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
       );
     }

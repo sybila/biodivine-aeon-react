@@ -22,6 +22,8 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   controlPerturbationsTableServ,
   dataFormatersServ,
   searchAndFilterHelpersServ,
+  loadingServ,
+  
   resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
@@ -50,6 +52,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           <FilterTabContent
             setStartFilter={setStartFilter}
             startFilter={startFilter}
+            loadingServ={loadingServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             resultsStatusStore={resultsStatusStore}
             perturbationFilterSortStore={perturbationFilterSortStore}
@@ -147,6 +150,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           startSort={startSort}
           setNextPageExists={setNextPageExists}
           controlPerturbationsTableServ={controlPerturbationsTableServ}
+          loadingServ={loadingServ}
           resultsStatusStore={resultsStatusStore}
           dataFormatersServ={dataFormatersServ}
         />

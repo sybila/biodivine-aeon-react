@@ -1,4 +1,5 @@
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import ControlEditor from '../../services/model-editor/ControlEditor/ControlEditor';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import ModelEditor from '../../services/model-editor/ModelEditor/ModelEditor';
@@ -13,15 +14,21 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
   public modelEditorServ: ModelEditorInt;
   public modelVisualizationServ: ModelVisualizationInt;
 
-  constructor(liveModelServ: LiveModelInt, storesProvider: StoresProviderInt) {
+  constructor(
+    liveModelServ: LiveModelInt,
+    messageServ: MessageInt,
+    storesProvider: StoresProviderInt
+  ) {
     this.modelVisualizationServ = new CytoscapeME(
       liveModelServ,
+      messageServ,
       storesProvider.controlStore,
       storesProvider.modelEditorStatusStore
     );
     this.modelEditorServ = new ModelEditor(
       this.modelVisualizationServ,
       liveModelServ,
+      messageServ,
       storesProvider.overlayWindowStore,
       storesProvider.regulationsStore,
       storesProvider.variablesStore,

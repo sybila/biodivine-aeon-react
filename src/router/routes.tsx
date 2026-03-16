@@ -23,6 +23,8 @@ const ModelEditorComponent = () => (
       ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
     }
     warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
+    messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
+    loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
     fileConvertorsServ={
       ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
     }
@@ -84,6 +86,7 @@ export const AttractorVisualizerRoute = createRoute({
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
       }
+      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     />
   ),
 });
@@ -110,6 +113,7 @@ export const ControlPerturbationsTableRoute = createRoute({
       searchAndFilterHelpersServ={
         ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
       }
+      loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
