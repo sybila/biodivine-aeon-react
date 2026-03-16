@@ -166,6 +166,7 @@ class LiveModel implements LiveModelInt {
     this.Import = new ImportLM(
       this,
       this.warningServ,
+      this.messageServ,
       this.resultsStatusStore,
       variablesStore,
       this.tabStore
