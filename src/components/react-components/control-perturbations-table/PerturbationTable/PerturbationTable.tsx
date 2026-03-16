@@ -22,11 +22,11 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
       : undefined
   );
 
-  if (!perturbations) {
-    return null;
-  }
-
   const sortedPerts = useMemo(() => {
+    if (!perturbations) {
+      return null;
+    }
+
     loadingServ.startLoading();
     const result =
       controlPerturbationsTableServ.sortPerturbations(perturbations);
@@ -35,6 +35,10 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   }, [perturbations, startSort]);
 
   const [filteredPerts, nextPageExists] = useMemo(() => {
+    if (!sortedPerts) {
+      return [null, null];
+    }
+
     loadingServ.startLoading();
     const result =
       controlPerturbationsTableServ.filterPerturbations(sortedPerts);
@@ -43,8 +47,16 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   }, [sortedPerts, startFilter]);
 
   useEffect(() => {
+    if (!nextPageExists) {
+      return;
+    }
+
     setNextPageExists(nextPageExists);
   }, [nextPageExists, setNextPageExists]);
+
+  if (!perturbations) {
+    return null;
+  }
 
   /** Table headers for the perturbation table.
    *  [header name, onClick function]
@@ -88,19 +100,21 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
         ))}
       </section>
       <div className="flex flex-col w-full h-[calc(100vh-120px)] overflow-y-auto pb-[55px] font-semibold">
-        {filteredPerts.map((row) => (
-          <PerturbationTableRow
-            key={row.id}
-            perturbationId={row.id}
-            numberOfInterpretations={row.color_count}
-            robustness={row.robustness}
-            perturbation={row.perturbation}
-            cellSizes={cellSizes}
-            useTextVisualization={perturbationsAsText}
-            controlPerturbationsTableServ={controlPerturbationsTableServ}
-            dataFormatersServ={dataFormatersServ}
-          />
-        ))}
+        {filteredPerts != null
+          ? filteredPerts.map((row) => (
+              <PerturbationTableRow
+                key={row.id}
+                perturbationId={row.id}
+                numberOfInterpretations={row.color_count}
+                robustness={row.robustness}
+                perturbation={row.perturbation}
+                cellSizes={cellSizes}
+                useTextVisualization={perturbationsAsText}
+                controlPerturbationsTableServ={controlPerturbationsTableServ}
+                dataFormatersServ={dataFormatersServ}
+              />
+            ))
+          : null}
       </div>
     </section>
   );
