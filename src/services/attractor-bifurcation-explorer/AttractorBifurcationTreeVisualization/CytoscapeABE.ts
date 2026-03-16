@@ -610,7 +610,10 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   }
 
   /**  Applies the tree layout to the Cytoscape instance */
-  public applyTreeLayout(fit: boolean = false, animate: boolean = true) {
+  public applyTreeLayout(
+    fit: boolean = false,
+    animate: boolean = this.layoutSettings.animate
+  ) {
     const settings = this.layoutSettings;
     const options = settings.useTidytree
       ? {
