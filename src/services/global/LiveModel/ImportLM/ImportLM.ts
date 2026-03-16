@@ -1,10 +1,10 @@
-import { Loading } from '../../../../components/lit-components/loading-wrapper';
 import config from '../../../../config';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Variable } from '../../../../types';
+import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -18,6 +18,7 @@ class ImportLM implements ImportLMInt {
   private liveModel: LiveModelInt;
   private warningServ: WarningInt;
   private messageServ: MessageInt;
+  private loadingServ: LoadingInt;
 
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
@@ -27,6 +28,7 @@ class ImportLM implements ImportLMInt {
     liveModel: LiveModelInt,
     warningServ: WarningInt,
     messageServ: MessageInt,
+    loadingServ: LoadingInt,
 
     resultsStatusStore: ZustandStore<ResultsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
@@ -35,6 +37,7 @@ class ImportLM implements ImportLMInt {
     this.liveModel = liveModel;
     this.warningServ = warningServ;
     this.messageServ = messageServ;
+    this.loadingServ = loadingServ;
 
     this.resultsStatusStore = resultsStatusStore;
     this.variablesStore = variablesStore;
@@ -328,7 +331,7 @@ class ImportLM implements ImportLMInt {
    * If the import is successful, return true.
    */
   public importAeon(modelString: string): boolean {
-    Loading.startLoading();
+    this.loadingServ.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
 
@@ -365,7 +368,7 @@ class ImportLM implements ImportLMInt {
 
     this.runOnImportCallbacks();
 
-    Loading.endLoading();
+    this.loadingServ.endLoading();
     return true; // no error
   }
 

@@ -10,6 +10,7 @@ import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
+import type { LoadingInt } from '../Loading/LoadingInt';
 import type { MessageInt } from '../Message/MessageInt';
 import type { WarningInt } from '../Warning/WarningInt';
 import ControlLM from './ControlLM/ControlLM';
@@ -60,6 +61,7 @@ class LiveModel implements LiveModelInt {
     warningServ: WarningInt,
     fileHelpersServ: FileHelpersInt,
     messageServ: MessageInt,
+    loadingServ: LoadingInt,
 
     loadedModelStore: ZustandStore<ModelState>,
     tabStore: ZustandStore<TabsState>,
@@ -82,6 +84,8 @@ class LiveModel implements LiveModelInt {
 
     this.intializeSubmodules(
       fileHelpersServ,
+      loadingServ,
+
       variablesStore,
       regulationsStore,
       updateFunctionsStore,
@@ -127,6 +131,8 @@ class LiveModel implements LiveModelInt {
   /** Function which initializes all submodules of the LiveModel. */
   private intializeSubmodules(
     fileHelpersServ: FileHelpersInt,
+    loadingServ: LoadingInt,
+
     variablesStore: ZustandStore<VariablesStatus>,
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
@@ -167,6 +173,7 @@ class LiveModel implements LiveModelInt {
       this,
       this.warningServ,
       this.messageServ,
+      loadingServ,
       this.resultsStatusStore,
       variablesStore,
       this.tabStore
