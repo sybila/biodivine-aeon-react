@@ -41,6 +41,7 @@ class GlobalServicesProvider {
     this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction);
     this.computationManagerServ = new ComputationManager(
       this.messageServ,
+      this.loadingServ,
       storesProvider.bifurcationExplorerStatusStore,
       storesProvider.resultsStatusStore,
       storesProvider.computeEngineStatusStore,
