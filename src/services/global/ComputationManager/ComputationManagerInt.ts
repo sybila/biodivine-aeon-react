@@ -128,10 +128,12 @@ export interface ComputationManagerInt {
 
   /** Fetches the bifurcation tree from the compute engine.
    * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
+   * @param animate - (boolean) Determines whether the bifurcation tree should be loaded with animation (true) or without (false).
    * @param attractorBifurcationExplorerRef - (AttractorBifurcationExplorerInt) Reference to the AttractorBifurcationExplorer, used to insert the tree data after fetching.
    */
   getBifurcationTree(
     fit: boolean,
+    animate: boolean,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void;
 

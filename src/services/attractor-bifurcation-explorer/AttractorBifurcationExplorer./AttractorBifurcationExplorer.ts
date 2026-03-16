@@ -239,6 +239,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   public insertBifurcationTree(
     nodeList: NodeDataBE[],
     fit: boolean = true,
+    animate: boolean = true,
     clearCytoscape: boolean = true
   ): void {
     if (nodeList !== undefined && nodeList.length > 0) {
@@ -253,7 +254,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
         }
       }
       // Do not auto-fit when restoring a previously saved pan/zoom state.
-      this.cytoscape.applyTreeLayout(fit);
+      this.cytoscape.applyTreeLayout(fit, animate);
       this.isEmpty = false;
     }
 
@@ -261,8 +262,8 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
-  public loadBifurcationTree(fit: boolean = true): void {
-    this.computationManagerServ.getBifurcationTree(fit, this);
+  public loadBifurcationTree(fit: boolean = true, animate: boolean = true): void {
+    this.computationManagerServ.getBifurcationTree(fit, animate, this);
   }
 
   /** Automatically expands the bifurcation tree from the selected node.

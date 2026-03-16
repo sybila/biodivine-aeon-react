@@ -101,7 +101,7 @@ export interface AttractorBifurcationTreeVisualizationInt {
   fit(): void;
 
   /**  Applies the tree layout to the Cytoscape instance */
-  applyTreeLayout(fit?: boolean): void;
+  applyTreeLayout(fit?: boolean, animate?: boolean): void;
 
   /** Resets the tree layout to the initial state */
   resetTreeLayout(): void;

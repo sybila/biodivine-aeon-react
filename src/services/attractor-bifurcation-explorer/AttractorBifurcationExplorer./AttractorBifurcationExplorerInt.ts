@@ -38,15 +38,24 @@ export interface AttractorBifurcationExplorerInt {
   /** Opens the bifurcation tree, loading it if necessary. */
   openBifurcationTree(): void;
 
-  /** Inserts a bifurcation tree into this.cytoscape. */
+  /** Inserts a bifurcation tree into this.cytoscape.
+   *  @param nodeList - (NodeDataBE[]) List of nodes to insert into the tree.
+   *  @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer after inserting.
+   *  @param animate - (boolean) Determines whether to apply the tree layout with animation (true) or without (false) after inserting.
+   *  @param clearCytoscape - (boolean, optional) If true, clears the existing Cytoscape instance before inserting the new tree. Defaults to false.
+   */
   insertBifurcationTree(
     nodeList: NodeDataBE[],
-    fit?: boolean,
+    fit: boolean,
+    animate: boolean,
     clearCytoscape?: boolean
   ): void;
 
-  /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
-  loadBifurcationTree(fit?: boolean): void;
+  /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape.
+   *  If fit is true, applies the tree layout after loading.
+   *  If animate is true, applies the tree layout with animation. Otherwise, applies it instantly.
+   */
+  loadBifurcationTree(fit: boolean, animate: boolean): void;
 
   /** Automatically expands the bifurcation tree from the selected node. */
   autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number): void;

@@ -610,12 +610,12 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   }
 
   /**  Applies the tree layout to the Cytoscape instance */
-  public applyTreeLayout(fit = false) {
+  public applyTreeLayout(fit: boolean = false, animate: boolean = true) {
     const settings = this.layoutSettings;
     const options = settings.useTidytree
       ? {
           name: 'tidytree',
-          animate: settings.animate,
+          animate: animate,
           horizontalSpacing: settings.horizontalSpacing,
           verticalSpacing: settings.verticalSpacing,
           extraVerticalSpacings: settings.extraVerticalSpacings,
@@ -681,6 +681,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
    */
   public toggleAnimateLayoutChanges(): void {
     this.layoutSettings.animate = !this.layoutSettings.animate;
+    this.applyTreeLayout();
   }
 
   /** Toggles the positive class on the left side of the bifurcation tree. */
@@ -817,11 +818,12 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   /** Loads the visualization status into the visualization. */
   public loadVisualizationStatus(status: VisualizationStatus): void {
-    if (status.zoom !== undefined) {
-      this.cytoscape.zoom(status.zoom);
-    }
-    if (status.pan !== undefined) {
-      this.cytoscape.pan(status.pan);
+    // Apply viewport directly to avoid triggering additional animated relayouts.
+    if (status.zoom !== undefined || status.pan !== undefined) {
+      this.cytoscape.viewport({
+        zoom: status.zoom ?? this.cytoscape.zoom(),
+        pan: status.pan ?? this.cytoscape.pan(),
+      });
     }
   }
 

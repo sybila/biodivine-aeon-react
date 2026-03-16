@@ -422,10 +422,12 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Callback for fetching the bifurcation tree.
    * Sets the bifurcation tree in the AttractorBifurcationExplorer.
-   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer */
+   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer
+   * @param animate - (boolean) Determines whether the bifurcation tree should be loaded with animation (true) or without (false). */
   private getBifurcationTreeCallback(
     error: string | undefined,
     nodes: NodeDataBE[] | undefined,
+    animate: boolean,
     fit: boolean,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
@@ -434,17 +436,23 @@ class ComputationManager implements ComputationManagerInt {
         `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
-      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, fit);
+      attractorBifurcationExplorerRef.insertBifurcationTree(
+        nodes,
+        fit,
+        animate
+      );
     }
 
     Loading.endLoading();
   }
 
   /** Fetches the bifurcation tree from the compute engine.
+   * @param animate - (boolean) Determines whether the bifurcation tree should be loaded with animation (true) or without (false).
    * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
    */
   public getBifurcationTree(
     fit: boolean,
+    animate: boolean,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
   ): void {
     Loading.startLoading();
@@ -453,6 +461,7 @@ class ComputationManager implements ComputationManagerInt {
         error,
         nodes,
         fit,
+        animate,
         attractorBifurcationExplorerRef
       )
     );
@@ -468,7 +477,7 @@ class ComputationManager implements ComputationManagerInt {
       return;
     }
 
-    this.getBifurcationTree(false, attractorBifurcationExplorerRef);
+    this.getBifurcationTree(false, true, attractorBifurcationExplorerRef);
   }
 
   /** Sets the precision of the bifurcation tree.
@@ -497,7 +506,7 @@ class ComputationManager implements ComputationManagerInt {
         `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
-      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, true);
+      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, true, true);
     }
 
     attractorBifurcationExplorerRef.refreshSelection();
