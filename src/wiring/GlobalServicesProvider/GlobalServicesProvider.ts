@@ -28,7 +28,13 @@ class GlobalServicesProvider {
     infoMessageFunction: (message: string, duration?: number) => void,
     errorMessageFunction: (message: string, duration?: number) => void
   ) {
+    this.messageServ = new Message(
+      successMessageFunction,
+      infoMessageFunction,
+      errorMessageFunction
+    );
     this.computationManagerServ = new ComputationManager(
+      this.messageServ,
       storesProvider.bifurcationExplorerStatusStore,
       storesProvider.resultsStatusStore,
       storesProvider.computeEngineStatusStore,
@@ -60,11 +66,6 @@ class GlobalServicesProvider {
       storesProvider.updateFunctionsStore,
       storesProvider.controlStore,
       storesProvider.modelInfoStore
-    );
-    this.messageServ = new Message(
-      successMessageFunction,
-      infoMessageFunction,
-      errorMessageFunction
     );
   }
 }
