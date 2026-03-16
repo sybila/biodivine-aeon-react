@@ -98,6 +98,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
                   '/control-perturbations-table',
                   'Control Perturbations Table',
                   undefined,
+                  undefined,
                   () => controlPerturbationsTableServ.clear()
                 )
             }

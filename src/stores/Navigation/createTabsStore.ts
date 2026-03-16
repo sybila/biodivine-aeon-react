@@ -31,6 +31,7 @@ function createTabsStore(): ZustandStore<TabsState> {
       path: string,
       type: TabType,
       onClick?: () => void,
+      onLeave?: () => void,
       onClose?: () => void
     ) => {
       if (type === 'Model Editor') {
@@ -50,6 +51,7 @@ function createTabsStore(): ZustandStore<TabsState> {
         id,
         path,
         onClick,
+        onLeave,
         onClose,
         type,
         active: false,
@@ -89,6 +91,10 @@ function createTabsStore(): ZustandStore<TabsState> {
       set((state) => {
         const newTabs = { ...state.openedTabs };
         Object.values(newTabs).forEach((tab) => {
+          if (tab.active == true && tab.id !== id && tab.onLeave) {
+            tab.onLeave();
+          }
+
           tab.active = tab.id === id;
         });
         return { openedTabs: newTabs };

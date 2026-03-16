@@ -17,14 +17,13 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   tabsStore,
 }) => {
   const openAttractorBifurcationExplorer = () => {
-    tabsStore
-      .getState()
-      .addTab(
-        '/attractor-bifurcation-explorer',
-        'Attractor Bifurcation Explorer',
-        undefined,
-        () => attractorBifurcationExplorerServ.clear()
-      );
+    tabsStore.getState().addTab(
+      '/attractor-bifurcation-explorer',
+      'Attractor Bifurcation Explorer',
+      undefined,
+      () => attractorBifurcationExplorerServ.saveVisualizationStatus(),
+      () => attractorBifurcationExplorerServ.clear()
+    );
   };
 
   const renderStats = () => {

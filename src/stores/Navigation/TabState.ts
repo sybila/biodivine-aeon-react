@@ -17,6 +17,7 @@ export type TabsState = {
     path: string,
     type: TabType,
     onClick?: () => void,
+    onLeave?: () => void,
     onClose?: () => void
   ) => number;
   /** Removes a tab by ID. */
