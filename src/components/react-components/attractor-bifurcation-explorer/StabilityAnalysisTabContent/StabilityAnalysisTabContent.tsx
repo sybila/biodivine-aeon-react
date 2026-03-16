@@ -19,6 +19,7 @@ const StabilityAnalysisTabContent: React.FC<
       <StabilityAnalysisSelector
         nodeId={selectedNode.id}
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
       />
       <StabilityAnalysisTable
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}

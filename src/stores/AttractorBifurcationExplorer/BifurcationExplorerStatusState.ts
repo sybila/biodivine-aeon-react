@@ -1,6 +1,7 @@
 import type {
   DecisionMixedNode,
   Decisions,
+  FullStabilityAnalysisMode,
   LeafNode,
   MenuTabTypeABE,
   NodeStabilityData,
@@ -15,6 +16,9 @@ export type BifurcationExplorerStatusState = {
   visualizationStatus: VisualizationStatus | null;
   /** Active menu tab inside the Bifurcation Explorer page. */
   activeMenuTab: MenuTabTypeABE;
+
+  /** Currently set stability analysis mode */
+  stabilityAnalysisMode: FullStabilityAnalysisMode;
   /** Currently selected node in the Bifurcation Explorer */
   selectedNode: LeafNode | DecisionMixedNode | null;
   /** Last computed stability analysis results */
@@ -24,6 +28,7 @@ export type BifurcationExplorerStatusState = {
 
   setVisualizationStatus: (status: VisualizationStatus) => void;
   setActiveMenuTab: (tab: MenuTabTypeABE) => void;
+  setStabilityAnalysisMode: (mode: FullStabilityAnalysisMode) => void;
   changeSelectedNode: (node: LeafNode | DecisionMixedNode | null) => void;
   loadStabilityData: (stabilityData: NodeStabilityData | null) => void;
   loadDecisions: (decisions: Decisions | null) => void;

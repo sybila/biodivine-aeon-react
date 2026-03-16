@@ -205,6 +205,13 @@ export type MenuTabTypeABE =
   | 'Visual Options'
   | null;
 
+/** Possible Node Stability Analysis Modes */
+export type FullStabilityAnalysisMode =
+  | 'Total'
+  | 'Stability'
+  | 'Oscillation'
+  | 'Disorder';
+
 export type AttractorClassBE = {
   cardinality: number;
   class: string;

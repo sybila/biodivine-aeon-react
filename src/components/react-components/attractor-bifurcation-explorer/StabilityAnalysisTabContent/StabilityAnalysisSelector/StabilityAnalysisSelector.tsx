@@ -1,23 +1,20 @@
-import { useState } from 'react';
 import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
-import type { StabilityAnalysisModes } from '../../../../../types';
+import type {
+  FullStabilityAnalysisMode,
+  StabilityAnalysisModes,
+} from '../../../../../types';
 import ArrowSelectButton from '../../../global/ArrowsSelectButton/ArrowsSelectButton';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 import type { StabilityAnalysisSelectorProps } from './StabilityAnalysisSelectorProps';
 
-type FullStabilityAnalysisMode =
-  | 'Total'
-  | 'Stability'
-  | 'Oscillation'
-  | 'Disorder';
-
 const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
   nodeId,
   attractorBifurcationExplorerServ,
+  bifurcationExplorerStatusStore,
 }) => {
-  const [stabilityMode, setStabilityMode] =
-    useState<FullStabilityAnalysisMode>('Total');
+  const stabilityMode: FullStabilityAnalysisMode =
+    bifurcationExplorerStatusStore((state) => state.stabilityAnalysisMode);
 
   const renderButtons = () => {
     const firstCol: Array<FullStabilityAnalysisMode> = ['Total', 'Stability'];
@@ -31,7 +28,11 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
         key={mode}
         active={stabilityMode === mode}
         text={mode}
-        onClick={() => setStabilityMode(mode)}
+        onClick={() =>
+          bifurcationExplorerStatusStore
+            .getState()
+            .setStabilityAnalysisMode(mode)
+        }
       />
     );
     return (

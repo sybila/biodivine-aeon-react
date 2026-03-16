@@ -6,14 +6,20 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
   return create<BifurcationExplorerStatusState>()((set) => ({
     visualizationStatus: null,
     activeMenuTab: null,
+
+    stabilityAnalysisMode: 'Total',
     selectedNode: null,
     stabilityData: null,
     availableDecisions: null,
+
     setVisualizationStatus: (status) => {
       set({ visualizationStatus: status });
     },
     setActiveMenuTab: (tab) => {
       set({ activeMenuTab: tab });
+    },
+    setStabilityAnalysisMode: (mode) => {
+      set({ stabilityAnalysisMode: mode });
     },
     changeSelectedNode: (node) => {
       set({
@@ -31,6 +37,7 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
         selectedNode: null,
         stabilityData: null,
         availableDecisions: null,
+        stabilityAnalysisMode: 'Total',
       });
     },
     clear: () =>
@@ -40,6 +47,7 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
         selectedNode: null,
         stabilityData: null,
         availableDecisions: null,
+        stabilityAnalysisMode: 'Total',
       }),
   }));
 }
