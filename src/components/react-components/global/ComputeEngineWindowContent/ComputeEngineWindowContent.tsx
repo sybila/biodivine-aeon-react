@@ -1,5 +1,4 @@
 import config from '../../../../config';
-import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
