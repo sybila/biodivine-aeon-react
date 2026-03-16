@@ -197,6 +197,14 @@ export type TabInfo = {
 
 // #region --- Bifurcation Explorer ---
 
+/** Tab type for the Attractor Bifurcation Explorer */
+export type MenuTabTypeABE =
+  | 'Overview'
+  | 'Stability Analysis'
+  | 'Make Decision'
+  | 'Visual Options'
+  | null;
+
 export type AttractorClassBE = {
   cardinality: number;
   class: string;

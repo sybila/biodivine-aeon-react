@@ -12,14 +12,8 @@ import EyeIcon from '../../assets/icons/eye.svg';
 import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StabilityIcon from '../../assets/icons/stability_analysis.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
+import type { MenuTabTypeABE } from '../../types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
-
-type TabTypeME =
-  | 'Overview'
-  | 'Stability Analysis'
-  | 'Make Decision'
-  | 'Visual Options'
-  | null;
 
 const AttractorBifurcationExplorer: React.FC<
   AttractorBifurcationExplorerProps
@@ -30,7 +24,7 @@ const AttractorBifurcationExplorer: React.FC<
 }) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+  const [activeTab, setActiveTab] = useState<MenuTabTypeABE>(null);
 
   useEffect(() => {
     if (initialized) {
@@ -74,7 +68,7 @@ const AttractorBifurcationExplorer: React.FC<
     }
   };
 
-  const showHideTab = (tabType: TabTypeME) => {
+  const showHideTab = (tabType: MenuTabTypeABE) => {
     if (activeTab === tabType) {
       setActiveTab(null);
       return;
