@@ -19,6 +19,7 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
+import ObjectProvider from '../../wiring/ObjectProvider';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
@@ -195,6 +196,27 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           iconAlt="Visual"
           showTag={true}
           tagText="Visual Options"
+        ></IconButtonReact>
+        {/*TODO - Remove when proper undo/redo buttons created*/}
+        <IconButtonReact
+          isActive={false}
+          onClick={() =>
+            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().undo()
+          }
+          iconSrc={''}
+          iconAlt="U"
+          showTag={true}
+          tagText="Undo"
+        ></IconButtonReact>
+        <IconButtonReact
+          isActive={false}
+          onClick={() =>
+            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().redo()
+          }
+          iconSrc={''}
+          iconAlt="R"
+          showTag={true}
+          tagText="Redo"
         ></IconButtonReact>
       </SideButtonMenu>
 
