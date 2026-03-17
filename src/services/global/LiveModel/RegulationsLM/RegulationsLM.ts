@@ -96,7 +96,7 @@ class RegulationsLM implements RegulationsLMInt {
 
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
-        undo: () => this.removeRegulation(regulatorId, targetId, true),
+        undo: () => this.removeRegulation(false, regulatorId, targetId, true),
         redo: () =>
           this.addRegulation(
             false,
@@ -113,6 +113,7 @@ class RegulationsLM implements RegulationsLMInt {
   }
 
   public removeRegulation(
+    addIntoUndoRedo: boolean,
     regulatorId: number,
     targetId: number,
     force: boolean = false
@@ -130,6 +131,22 @@ class RegulationsLM implements RegulationsLMInt {
 
     this.regulationsStore.getState().removeRegulation(regulatorId, targetId);
     this.liveModel.Export.saveModel();
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () =>
+          this.addRegulation(
+            false,
+            false,
+            regulatorId,
+            targetId,
+            exists.observable,
+            exists.monotonicity
+          ),
+        redo: () => this.removeRegulation(false, regulatorId, targetId, false),
+      });
+    }
+
     return true;
   }
 

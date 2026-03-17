@@ -30,6 +30,7 @@ export interface RegulationsLMInt {
   ): boolean | void;
 
   removeRegulation(
+    addIntoUndoRedo: boolean,
     regulatorId: number,
     targetId: number,
     force?: boolean

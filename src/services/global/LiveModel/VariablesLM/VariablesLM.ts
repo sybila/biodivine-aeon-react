@@ -200,6 +200,7 @@ class VariablesLM implements VariablesLMInt {
 
     for (const reg of toRemove) {
       this.liveModel.Regulations.removeRegulation(
+        true,
         reg.regulator,
         reg.target,
         force

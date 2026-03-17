@@ -118,6 +118,7 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconAlt="⌫"
         onClick={() =>
           liveModelServ.Regulations.removeRegulation(
+            true,
             regulationInfo.regulator,
             regulationInfo.target
           )
