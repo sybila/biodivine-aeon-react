@@ -13,6 +13,7 @@ import type { UpdateFunctionsState } from '../../stores/LiveModel/UpdateFunction
 import type { VariablesStatus } from '../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
+import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
 import type { WarningState } from '../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
 
@@ -51,6 +52,12 @@ export interface StoresProviderInt {
   regulationsStore: ZustandStore<RegulationsStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   controlStore: ZustandStore<ControlStatus>;
+
+  // #endregion
+
+  // #region --- Undo/Redo stores ---
+
+  modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   // #endregion
 }

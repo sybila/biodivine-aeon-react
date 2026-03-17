@@ -2,6 +2,7 @@ import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/Co
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { ControlInfo, Position, Variable } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
@@ -54,15 +55,18 @@ class VariablesLM implements VariablesLMInt {
   private regulationsStore: ZustandStore<RegulationsStatus>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private variablesStore: ZustandStore<VariablesStatus>;
+  private undoRedoStore: ZustandStore<UndoRedoState>;
 
   constructor(
     liveModel: LiveModelInt,
     computationManagerServ: ComputationManagerInt,
     warningServ: WarningInt,
+
     controlStore: ZustandStore<ControlStatus>,
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
-    variablesStore: ZustandStore<VariablesStatus>
+    variablesStore: ZustandStore<VariablesStatus>,
+    undoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
     this.computationManagerServ = computationManagerServ;
@@ -72,6 +76,7 @@ class VariablesLM implements VariablesLMInt {
     this.regulationsStore = regulationsStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.variablesStore = variablesStore;
+    this.undoRedoStore = undoRedoStore;
   }
 
   // #endregion
@@ -109,6 +114,7 @@ class VariablesLM implements VariablesLMInt {
   /** Add a variable to the model */
   public addVariable(
     modAllowed: boolean,
+    addIntoUndoRedo: boolean,
     position: Position = [0.0, 0.0],
     name?: string,
     controllable: boolean = true,
@@ -142,6 +148,22 @@ class VariablesLM implements VariablesLMInt {
 
     this.liveModel.UpdateFunctions.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
+
+    if (addIntoUndoRedo) {
+      this.undoRedoStore.getState().addOperation({
+        undo: () => this.removeVariable(id, true),
+        redo: () =>
+          this.addVariable(
+            false,
+            false,
+            position,
+            name,
+            controllable,
+            phenotype
+          ),
+      });
+    }
+
     return id;
   }
 

@@ -28,6 +28,7 @@ export interface VariablesLMInt {
   /** Add a variable to the model */
   addVariable(
     modAllowed: boolean,
+    addIntoUndoRedo: boolean,
     position?: Position,
     name?: string,
     controllable?: boolean,

@@ -94,7 +94,7 @@ class CytoscapeME implements ModelVisualizationInt {
         this.lastClickTimestamp &&
         now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
-        this.liveModel.Variables.addVariable(false, [
+        this.liveModel.Variables.addVariable(false, true, [
           e.position['x'],
           e.position['y'],
         ]);

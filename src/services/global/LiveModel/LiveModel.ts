@@ -7,6 +7,7 @@ import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunct
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
+import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
@@ -71,7 +72,8 @@ class LiveModel implements LiveModelInt {
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
-    modelInfoStore: ZustandStore<ModelInfoState>
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    undoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.computationManagerServ = computationManagerServ;
     this.warningServ = warningServ;
@@ -90,7 +92,8 @@ class LiveModel implements LiveModelInt {
       regulationsStore,
       updateFunctionsStore,
       controlStore,
-      modelInfoStore
+      modelInfoStore,
+      undoRedoStore
     );
 
     this.tabStore.getState().firstTabOnClick = () => {
@@ -137,7 +140,8 @@ class LiveModel implements LiveModelInt {
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
-    modelInfoStore: ZustandStore<ModelInfoState>
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    undoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.Models = new ModelsLM(this, this.loadedModelStore);
     this.Info = new InfoLM(this, modelInfoStore);
@@ -148,7 +152,8 @@ class LiveModel implements LiveModelInt {
       controlStore,
       regulationsStore,
       updateFunctionsStore,
-      variablesStore
+      variablesStore,
+      undoRedoStore
     );
     this.UpdateFunctions = new UpdateFunctionsLM(
       this,

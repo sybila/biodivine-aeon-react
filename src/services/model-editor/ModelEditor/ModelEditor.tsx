@@ -78,7 +78,7 @@ class ModelEditor implements ModelEditorInt {
 
   /** Adds a new variable and zooms on it */
   public addVariable() {
-    const newVariableId = this.liveModelServ.Variables.addVariable(true);
+    const newVariableId = this.liveModelServ.Variables.addVariable(true, true);
     if (newVariableId !== undefined) {
       this.zoomOnVariable(newVariableId);
     }

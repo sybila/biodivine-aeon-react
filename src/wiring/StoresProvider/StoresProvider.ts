@@ -28,6 +28,8 @@ import createModelEditorStatusStore from '../../stores/ModelEditor/createModelEd
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import createTabsStore from '../../stores/Navigation/createTabsStore';
 import type { TabsState } from '../../stores/Navigation/TabState';
+import createUndoRedoStore from '../../stores/UndoRedo/createUndoRedoStore';
+import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
 import createWarningStore from '../../stores/Warning/createWarningStore';
 import type { WarningState } from '../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -70,6 +72,12 @@ class StoresProvider implements StoresProviderInt {
 
   // #endregion
 
+  // #region --- Undo/Redo stores ---
+
+  public modelUndoRedoStore: ZustandStore<UndoRedoState>;
+
+  // #endregion
+
   constructor() {
     this.bifurcationExplorerStatusStore =
       createBifurcationExplorerStatusStore();
@@ -92,6 +100,8 @@ class StoresProvider implements StoresProviderInt {
     this.regulationsStore = createRegulationsStore();
     this.updateFunctionsStore = createUpdateFunctionsStore(this.variablesStore);
     this.controlStore = createControlStore();
+
+    this.modelUndoRedoStore = createUndoRedoStore();
   }
 }
 
