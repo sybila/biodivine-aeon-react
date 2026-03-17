@@ -116,6 +116,7 @@ class VariablesLM implements VariablesLMInt {
     modAllowed: boolean,
     addIntoUndoRedo: boolean,
     position: Position = [0.0, 0.0],
+    id?: number,
     name?: string,
     controllable: boolean = true,
     phenotype: any = null
@@ -124,11 +125,11 @@ class VariablesLM implements VariablesLMInt {
       return;
     }
 
-    const id = this.idCounter++;
-    const variableName = name ?? `v_${id + 1}`;
+    const variableId: number = id ?? this.idCounter++;
+    const variableName = name ?? `v_${variableId + 1}`;
 
     const variable: Variable = {
-      id,
+      id: variableId,
       name: variableName,
     };
 
@@ -138,33 +139,34 @@ class VariablesLM implements VariablesLMInt {
     };
 
     this.variablesStore.getState().addVariable(variable);
-    this.controlStore.getState().addInfo(id, controlInfo);
+    this.controlStore.getState().addInfo(variableId, controlInfo);
 
-    this.addNodeFromVisualizationFunction(id, variableName, position);
+    this.addNodeFromVisualizationFunction(variableId, variableName, position);
 
     this.computationManagerServ.resetMaxSize();
 
     // Todo - QuickHelp OFF;
 
-    this.liveModel.UpdateFunctions.validateUpdateFunction(id);
+    this.liveModel.UpdateFunctions.validateUpdateFunction(variableId);
     this.liveModel.Export.saveModel();
 
     if (addIntoUndoRedo) {
       this.undoRedoStore.getState().addOperation({
-        undo: () => this.removeVariable(id, true),
+        undo: () => this.removeVariable(variableId, true),
         redo: () =>
           this.addVariable(
             false,
             false,
             position,
-            name,
+            variableId,
+            variableName,
             controllable,
             phenotype
           ),
       });
     }
 
-    return id;
+    return variableId;
   }
 
   /** Removes variable and displays warnings if necessary

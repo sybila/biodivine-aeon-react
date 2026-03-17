@@ -30,6 +30,7 @@ export interface VariablesLMInt {
     modAllowed: boolean,
     addIntoUndoRedo: boolean,
     position?: Position,
+    id?: number,
     name?: string,
     controllable?: boolean,
     phenotype?: any

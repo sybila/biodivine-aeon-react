@@ -81,13 +81,20 @@ class ImportLM implements ImportLMInt {
     }
 
     if (control == undefined) {
-      return this.liveModel.Variables.addVariable(true,false, position, name);
+      return this.liveModel.Variables.addVariable(
+        true,
+        false,
+        position,
+        undefined,
+        name
+      );
     }
 
     return this.liveModel.Variables.addVariable(
       true,
       false,
       position,
+      undefined,
       name,
       control[0],
       control[1]
