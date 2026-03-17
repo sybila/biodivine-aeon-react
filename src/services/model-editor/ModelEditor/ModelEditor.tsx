@@ -101,7 +101,7 @@ class ModelEditor implements ModelEditorInt {
 
   /** Removes a variable */
   public async removeVariable(id: number) {
-    await this.liveModelServ.Variables.removeVariable(id);
+    await this.liveModelServ.Variables.removeVariable(id, true);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component

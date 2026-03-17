@@ -151,6 +151,11 @@ class CytoscapeME implements ModelVisualizationInt {
         this.renameNode(id, newName);
       }
     );
+    this.liveModel.Variables.setGetNodePositionFromVisualizationFunction(
+      (id: number) => {
+        return this.getNodePosition(id);
+      }
+    );
   }
 
   private initOptions(): CytoscapeOptions {
@@ -570,11 +575,12 @@ class CytoscapeME implements ModelVisualizationInt {
   }
 
   /** Ensure that the graph contains edge which corresponds to the provided regulation. */
-  public ensureRegulation(regulation: any) {
+  public ensureRegulation(regulation: Regulation) {
     const currentEdge = this.findRegulationEdge(
       regulation.regulator,
       regulation.target
     );
+
     if (currentEdge !== undefined) {
       // Edge exists - just make sure to update data
       const data = currentEdge.data();
@@ -789,10 +795,11 @@ class CytoscapeME implements ModelVisualizationInt {
     }
 
     nodes.forEach(([id, controlInfo]) => {
+      const node = this.cytoscape.getElementById(id);
       if (this.controlEnabledShown && controlInfo.controlEnabled) {
-        this.cytoscape.getElementById(id).style('background-color', '#FFFF66');
+        node.style('background-color', '#FFFF66');
       } else {
-        this.cytoscape.getElementById(id).style('background-color', '');
+        node.removeStyle('background-color');
       }
     });
   }

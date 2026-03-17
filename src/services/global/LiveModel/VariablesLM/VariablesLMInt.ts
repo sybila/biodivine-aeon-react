@@ -21,6 +21,11 @@ export interface VariablesLMInt {
     func: (variableId: number, newName: string) => void
   ): void;
 
+  /** Setter for the function that gets a node's position from the model visualization */
+  setGetNodePositionFromVisualizationFunction(
+    func: (variableId: number) => Position | undefined
+  ): void;
+
   // #endregion
 
   // #region --- Variable Actions ---
@@ -39,11 +44,20 @@ export interface VariablesLMInt {
   /** Removes variable and displays warnings if necessary
    *  Returns true if the variable was removed, false otherwise.
    *  Shows warnings if there are existing results or if the user needs to confirm variable removal.
+   *  @param id - The ID of the variable to be removed.
+   *  @param addIntoUndoRedo - Whether to add this operation into the undo/redo stack.
    */
-  removeVariableWithWarnings(id: number): Promise<boolean>;
+  removeVariableWithWarnings(
+    id: number,
+    addIntoUndoRedo: boolean
+  ): Promise<boolean>;
 
-  /** Remove a variable by its ID */
-  removeVariable(id: number, force?: boolean): void;
+  /** Remove a variable by its ID
+   *  @param id - The ID of the variable to be removed.
+   *  @param addIntoUndoRedo - Whether to add this operation into the undo/redo stack.
+   *  @param force - Whether to force the removal.
+   */
+  removeVariable(id: number, addIntoUndoRedo: boolean, force?: boolean): void;
 
   /** Rename a variable by its ID */
   renameVariable(

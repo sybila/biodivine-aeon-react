@@ -35,7 +35,8 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
         iconAlt="⌫"
         onClick={async () =>
           await liveModelServ.Variables.removeVariableWithWarnings(
-            selectedVariableId
+            selectedVariableId,
+            true
           )
         }
         hintText="Remove (⌫)"
