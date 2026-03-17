@@ -154,6 +154,7 @@ class ImportLM implements ImportLMInt {
       // Create the actual regulation...
       this.liveModel.Regulations.addRegulation(
         true,
+        false,
         regulator,
         target,
         template.observable,

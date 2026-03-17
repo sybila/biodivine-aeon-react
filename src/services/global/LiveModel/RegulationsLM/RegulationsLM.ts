@@ -1,5 +1,6 @@
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import { EdgeMonotonicity, type Regulation } from '../../../../types';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -30,15 +31,20 @@ class RegulationsLM implements RegulationsLMInt {
 
   private regulationsStore: ZustandStore<RegulationsStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   constructor(
     liveModel: LiveModelInt,
+
     regulationsStore: ZustandStore<RegulationsStatus>,
-    variablesStore: ZustandStore<VariablesStatus>
+    variablesStore: ZustandStore<VariablesStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
+
     this.regulationsStore = regulationsStore;
     this.variablesStore = variablesStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
   }
 
   // #endregion
@@ -67,6 +73,7 @@ class RegulationsLM implements RegulationsLMInt {
 
   public addRegulation(
     modAllowed: boolean,
+    addIntoUndoRedo: boolean,
     regulatorId: number,
     targetId: number,
     isObservable: boolean,
@@ -86,6 +93,22 @@ class RegulationsLM implements RegulationsLMInt {
 
     this.regulationsStore.getState().addRegulation(regulation);
     this.regulationChanged(regulation);
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => this.removeRegulation(regulatorId, targetId, true),
+        redo: () =>
+          this.addRegulation(
+            false,
+            false,
+            regulatorId,
+            targetId,
+            isObservable,
+            monotonicity
+          ),
+      });
+    }
+
     return true;
   }
 

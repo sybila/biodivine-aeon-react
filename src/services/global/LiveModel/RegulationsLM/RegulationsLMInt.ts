@@ -22,6 +22,7 @@ export interface RegulationsLMInt {
 
   addRegulation(
     modAllowed: boolean,
+    addIntoUndoRedo: boolean,
     regulatorId: number,
     targetId: number,
     isObservable: boolean,

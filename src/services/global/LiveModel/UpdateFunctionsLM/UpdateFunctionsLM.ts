@@ -193,6 +193,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
             () =>
               this.liveModel.Regulations.addRegulation(
                 false,
+                false,
                 variable.id,
                 id,
                 true,

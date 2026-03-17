@@ -73,7 +73,7 @@ class LiveModel implements LiveModelInt {
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
-    undoRedoStore: ZustandStore<UndoRedoState>
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.computationManagerServ = computationManagerServ;
     this.warningServ = warningServ;
@@ -93,7 +93,7 @@ class LiveModel implements LiveModelInt {
       updateFunctionsStore,
       controlStore,
       modelInfoStore,
-      undoRedoStore
+      modelUndoRedoStore
     );
 
     this.tabStore.getState().firstTabOnClick = () => {
@@ -141,7 +141,7 @@ class LiveModel implements LiveModelInt {
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
-    undoRedoStore: ZustandStore<UndoRedoState>
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.Models = new ModelsLM(this, this.loadedModelStore);
     this.Info = new InfoLM(this, modelInfoStore);
@@ -153,7 +153,7 @@ class LiveModel implements LiveModelInt {
       regulationsStore,
       updateFunctionsStore,
       variablesStore,
-      undoRedoStore
+      modelUndoRedoStore
     );
     this.UpdateFunctions = new UpdateFunctionsLM(
       this,
@@ -166,7 +166,8 @@ class LiveModel implements LiveModelInt {
     this.Regulations = new RegulationsLM(
       this,
       regulationsStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore
     );
     this.Control = new ControlLM(
       this,

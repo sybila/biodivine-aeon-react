@@ -357,6 +357,7 @@ class CytoscapeME implements ModelVisualizationInt {
         if (
           !this.liveModel.Regulations.addRegulation(
             false,
+            true,
             Number(sourceNode.id()),
             Number(targetNode.id()),
             true,
