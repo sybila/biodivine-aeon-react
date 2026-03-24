@@ -22,6 +22,8 @@ import createRegulationsStore from '../../stores/LiveModel/RegulationsStore/crea
 import type { RegulationsStatus } from '../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import createUpdateFunctionsStore from '../../stores/LiveModel/UpdateFunctionsStore/createUpdateFunctionsStore';
 import type { UpdateFunctionsState } from '../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import createVariablePositionsStore from '../../stores/LiveModel/VariablePositions/createVariablePositionsStore';
+import type { VariablePositionsState } from '../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import createVariablesStore from '../../stores/LiveModel/VariablesStore/createVariablesStore';
 import type { VariablesStatus } from '../../stores/LiveModel/VariablesStore/VariablesStatus';
 import createModelEditorStatusStore from '../../stores/ModelEditor/createModelEditorStatusStore';
@@ -66,6 +68,7 @@ class StoresProvider implements StoresProviderInt {
   public loadedModelStore: ZustandStore<ModelState>;
   public modelInfoStore: ZustandStore<ModelInfoState>;
   public variablesStore: ZustandStore<VariablesStatus>;
+  public variablePositionsStore: ZustandStore<VariablePositionsState>;
   public regulationsStore: ZustandStore<RegulationsStatus>;
   public updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   public controlStore: ZustandStore<ControlStatus>;
@@ -97,6 +100,7 @@ class StoresProvider implements StoresProviderInt {
     this.loadedModelStore = createLoadedModelStore();
     this.modelInfoStore = createModelInfoStore();
     this.variablesStore = createVariablesStore();
+    this.variablePositionsStore = createVariablePositionsStore();
     this.regulationsStore = createRegulationsStore();
     this.updateFunctionsStore = createUpdateFunctionsStore(this.variablesStore);
     this.controlStore = createControlStore();

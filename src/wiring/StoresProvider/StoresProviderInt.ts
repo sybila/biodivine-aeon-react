@@ -10,6 +10,7 @@ import type { ModelState } from '../../stores/LiveModel/LoadedModelStore/ModelSt
 import type { ModelInfoState } from '../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablePositionsState } from '../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { VariablesStatus } from '../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
@@ -49,6 +50,7 @@ export interface StoresProviderInt {
   loadedModelStore: ZustandStore<ModelState>;
   modelInfoStore: ZustandStore<ModelInfoState>;
   variablesStore: ZustandStore<VariablesStatus>;
+  variablePositionsStore: ZustandStore<VariablePositionsState>;
   regulationsStore: ZustandStore<RegulationsStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   controlStore: ZustandStore<ControlStatus>;
