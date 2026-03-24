@@ -8,6 +8,8 @@ export type VariablePositionsState = {
   setVariablePosition: (variableId: number, position: Position) => void;
   /** Remove the position of a variable node */
   removeVariablePosition: (variableId: number) => void;
+  /**  */
+  setPositionOfAllVariables: (positions: Record<number, Position>) => void;
   /** Function to clear all variable positions */
   clear: () => void;
 };

@@ -23,6 +23,10 @@ function createVariablePositionsStore(): ZustandStore<VariablePositionsState> {
       });
     },
 
+    setPositionOfAllVariables: (positions) => {
+      set({ variablePositions: positions });
+    },
+
     clear: () => set({ variablePositions: {} }),
   }));
 }
