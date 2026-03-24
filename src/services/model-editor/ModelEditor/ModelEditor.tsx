@@ -217,7 +217,9 @@ class ModelEditor implements ModelEditorInt {
   ): string | undefined {
     const error = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
-      updateFunction
+      updateFunction,
+      true,
+      false
     );
 
     if (error) {

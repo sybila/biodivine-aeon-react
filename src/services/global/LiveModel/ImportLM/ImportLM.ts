@@ -187,6 +187,7 @@ class ImportLM implements ImportLMInt {
       const error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
         updateFunctions[key],
+        false,
         true
       );
       if (error !== undefined) {

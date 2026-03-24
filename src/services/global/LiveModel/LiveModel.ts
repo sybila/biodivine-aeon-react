@@ -166,7 +166,8 @@ class LiveModel implements LiveModelInt {
       this.warningServ,
       regulationsStore,
       updateFunctionsStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore
     );
     this.Regulations = new RegulationsLM(
       this,
