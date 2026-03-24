@@ -24,6 +24,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
       messageServ,
       storesProvider.controlStore,
       storesProvider.modelEditorStatusStore,
+      storesProvider.modelUndoRedoStore,
       storesProvider.variablePositionsStore
     );
     this.modelEditorServ = new ModelEditor(
