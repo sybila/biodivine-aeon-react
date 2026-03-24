@@ -4,6 +4,7 @@ import type { ModelState } from '../../../stores/LiveModel/LoadedModelStore/Mode
 import type { ModelInfoState } from '../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
@@ -73,7 +74,8 @@ class LiveModel implements LiveModelInt {
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
-    modelUndoRedoStore: ZustandStore<UndoRedoState>
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.computationManagerServ = computationManagerServ;
     this.warningServ = warningServ;
@@ -93,7 +95,8 @@ class LiveModel implements LiveModelInt {
       updateFunctionsStore,
       controlStore,
       modelInfoStore,
-      modelUndoRedoStore
+      modelUndoRedoStore,
+      variablePositionsStore
     );
 
     this.tabStore.getState().firstTabOnClick = () => {
@@ -141,7 +144,8 @@ class LiveModel implements LiveModelInt {
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
-    modelUndoRedoStore: ZustandStore<UndoRedoState>
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.Models = new ModelsLM(this, this.loadedModelStore);
     this.Info = new InfoLM(this, modelInfoStore);
@@ -153,7 +157,8 @@ class LiveModel implements LiveModelInt {
       regulationsStore,
       updateFunctionsStore,
       variablesStore,
-      modelUndoRedoStore
+      modelUndoRedoStore,
+      variablePositionsStore
     );
     this.UpdateFunctions = new UpdateFunctionsLM(
       this,

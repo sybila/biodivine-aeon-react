@@ -1,6 +1,8 @@
 import { type CytoscapeOptions } from 'cytoscape';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
+import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
@@ -47,18 +49,24 @@ class CytoscapeME implements ModelVisualizationInt {
 
   private controlStore: ZustandStore<ControlStatus>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
+  private variablePositionsStore: ZustandStore<VariablePositionsState>;
 
   constructor(
     liveModel: LiveModelInt,
     messageServ: MessageInt,
     controlStore: ZustandStore<ControlStatus>,
-    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.liveModel = liveModel;
     this.messageServ = messageServ;
 
     this.controlStore = controlStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
+    this.variablePositionsStore = variablePositionsStore;
   }
 
   // #endregion
@@ -435,6 +443,26 @@ class CytoscapeME implements ModelVisualizationInt {
       if (node.selected()) this.renderMenuForSelectedNode(node);
       this.renderMenuForSelectedEdge();
     });
+    node.on('dragfree', (_: any) => {
+      const position = node.position();
+      const newPosition: Position = [position.x, position.y];
+      const oldPosition: Position =
+        this.variablePositionsStore.getState().variablePositions[id] ??
+        newPosition;
+
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.setNodePosition(id, oldPosition);
+        },
+        redo: () => {
+          this.setNodePosition(id, newPosition);
+        },
+      });
+
+      this.variablePositionsStore
+        .getState()
+        .setVariablePosition(id, newPosition);
+    });
   }
 
   /** Remove the node with the given ID from the graph. */
@@ -499,6 +527,15 @@ class CytoscapeME implements ModelVisualizationInt {
       return [position.x, position.y];
     }
     return undefined;
+  }
+
+  /** Function for setting the position of a node with the given id. */
+  private setNodePosition(id: number, position: Position): void {
+    const currentNode = this.cytoscape.getElementById(id);
+    if (currentNode !== undefined && currentNode.length > 0) {
+      currentNode.position({ x: position[0], y: position[1] });
+      this.variablePositionsStore.getState().setVariablePosition(id, position);
+    }
   }
 
   // #endregion

@@ -79,7 +79,8 @@ class GlobalServicesProvider {
       storesProvider.updateFunctionsStore,
       storesProvider.controlStore,
       storesProvider.modelInfoStore,
-      storesProvider.modelUndoRedoStore
+      storesProvider.modelUndoRedoStore,
+      storesProvider.variablePositionsStore
     );
   }
 }

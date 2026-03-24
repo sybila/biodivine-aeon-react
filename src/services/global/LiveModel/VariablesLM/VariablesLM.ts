@@ -1,10 +1,12 @@
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablePositionsState } from '../../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { ControlInfo, Position, Variable } from '../../../../types';
+import ObjectProvider from '../../../../wiring/ObjectProvider';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -66,6 +68,7 @@ class VariablesLM implements VariablesLMInt {
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private variablesStore: ZustandStore<VariablesStatus>;
   private undoRedoStore: ZustandStore<UndoRedoState>;
+  private variablePositionsStore: ZustandStore<VariablePositionsState>;
 
   constructor(
     liveModel: LiveModelInt,
@@ -76,7 +79,8 @@ class VariablesLM implements VariablesLMInt {
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     variablesStore: ZustandStore<VariablesStatus>,
-    undoRedoStore: ZustandStore<UndoRedoState>
+    undoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.liveModel = liveModel;
     this.computationManagerServ = computationManagerServ;
@@ -87,6 +91,7 @@ class VariablesLM implements VariablesLMInt {
     this.updateFunctionsStore = updateFunctionsStore;
     this.variablesStore = variablesStore;
     this.undoRedoStore = undoRedoStore;
+    this.variablePositionsStore = variablePositionsStore;
   }
 
   // #endregion
@@ -158,6 +163,7 @@ class VariablesLM implements VariablesLMInt {
 
     this.variablesStore.getState().addVariable(variable);
     this.controlStore.getState().addInfo(variableId, controlInfo);
+    this.variablePositionsStore.getState().setVariablePosition(variableId, position);
 
     this.addNodeFromVisualizationFunction(variableId, variableName, position);
 
@@ -241,6 +247,7 @@ class VariablesLM implements VariablesLMInt {
     this.variablesStore.getState().removeVariable(id);
     this.liveModel.Control.removeControlInfo(id, force);
     this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
+    this.variablePositionsStore.getState().removeVariablePosition(id);
 
     this.removeNodeFromVisualizationFunction(id);
 
