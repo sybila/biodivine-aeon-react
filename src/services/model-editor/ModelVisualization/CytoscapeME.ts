@@ -538,6 +538,28 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
+  /** Extracts position of all nodes and saves it into Record<number, Position> (number - node ID, Position - node position [x, y]). */
+  private savePositionOfAllNodes(
+    saveFunction: (variablePositions: Record<number, Position>) => void
+  ) {
+    const variablePositions: Record<number, Position> = {};
+    this.cytoscape.nodes().forEach((node: any) => {
+      const position = node.position();
+      variablePositions[Number(node.id())] = [position.x, position.y];
+    });
+    saveFunction(variablePositions);
+  }
+
+  /** Sets position of all nodes from the provided record. */
+  private setPositionOfAllNodes(setFrom: Record<number, Position>) {
+    this.cytoscape.nodes().forEach((node: any) => {
+      const position = setFrom[node.id()];
+      if (position !== undefined) {
+        node.position({ x: position[0], y: position[1] });
+      }
+    });
+  }
+
   // #endregion
 
   // #region --- Edge Management ---
@@ -742,6 +764,10 @@ class CytoscapeME implements ModelVisualizationInt {
         gravity: 0.5,
         fit: true,
         nodeDimensionsIncludeLabels: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .start();
   }
@@ -758,6 +784,10 @@ class CytoscapeME implements ModelVisualizationInt {
         animationDuration: 300,
         fit: true,
         nodeDimensionsIncludeLabels: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .start();
   }
@@ -800,6 +830,10 @@ class CytoscapeME implements ModelVisualizationInt {
         animationDuration: 300,
         nodeDimensionsIncludeLabels: true,
         fit: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .run();
   }
@@ -812,6 +846,36 @@ class CytoscapeME implements ModelVisualizationInt {
   /** Layout the nodes in a control-enabled manner. */
   public layoutControlEnabled() {
     this.applyConcentricLayout(false);
+  }
+
+  /** Callback function for layout changes.
+   *  Saves positions of all nodes after layout change and adds the operation to undo-redo stack.
+   */
+  private layoutCallback() {
+    const oldPositions: Record<number, Position> = {
+      ...this.variablePositionsStore.getState().variablePositions,
+    };
+
+    this.savePositionOfAllNodes(
+      (variablePositions: Record<number, Position>) => {
+        this.variablePositionsStore
+          .getState()
+          .setPositionOfAllVariables(variablePositions);
+      }
+    );
+
+    const newPositions: Record<number, Position> = {
+      ...this.variablePositionsStore.getState().variablePositions,
+    };
+
+    this.modelUndoRedoStore.getState().addOperation({
+      undo: () => {
+        this.setPositionOfAllNodes(oldPositions);
+      },
+      redo: () => {
+        this.setPositionOfAllNodes(newPositions);
+      },
+    });
   }
 
   // #endregion
