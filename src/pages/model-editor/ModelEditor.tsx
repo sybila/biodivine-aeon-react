@@ -9,6 +9,8 @@ import EyeIcon from '../../assets/icons/eye.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
+import UndoIcon from '../../assets/icons/undo.svg';
+import RedoIcon from '../../assets/icons/redo.svg';
 
 import KeepAlive from 'react-activation';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
@@ -203,7 +205,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           onClick={() =>
             ObjectProvider.StoresProvider.modelUndoRedoStore.getState().undo()
           }
-          iconSrc={''}
+          iconSrc={UndoIcon}
           iconAlt="U"
           showTag={true}
           tagText="Undo"
@@ -213,7 +215,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           onClick={() =>
             ObjectProvider.StoresProvider.modelUndoRedoStore.getState().redo()
           }
-          iconSrc={''}
+          iconSrc={RedoIcon}
           iconAlt="R"
           showTag={true}
           tagText="Redo"
