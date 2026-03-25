@@ -1,6 +1,8 @@
 import { type CytoscapeOptions } from 'cytoscape';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
+import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
@@ -47,18 +49,24 @@ class CytoscapeME implements ModelVisualizationInt {
 
   private controlStore: ZustandStore<ControlStatus>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
+  private variablePositionsStore: ZustandStore<VariablePositionsState>;
 
   constructor(
     liveModel: LiveModelInt,
     messageServ: MessageInt,
     controlStore: ZustandStore<ControlStatus>,
-    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.liveModel = liveModel;
     this.messageServ = messageServ;
 
     this.controlStore = controlStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
+    this.variablePositionsStore = variablePositionsStore;
   }
 
   // #endregion
@@ -94,7 +102,7 @@ class CytoscapeME implements ModelVisualizationInt {
         this.lastClickTimestamp &&
         now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
-        this.liveModel.Variables.addVariable(false, [
+        this.liveModel.Variables.addVariable(false, true, [
           e.position['x'],
           e.position['y'],
         ]);
@@ -149,6 +157,11 @@ class CytoscapeME implements ModelVisualizationInt {
     this.liveModel.Variables.setRenameNodeFromVisualizationFunction(
       (id: number, newName: string) => {
         this.renameNode(id, newName);
+      }
+    );
+    this.liveModel.Variables.setGetNodePositionFromVisualizationFunction(
+      (id: number) => {
+        return this.getNodePosition(id);
       }
     );
   }
@@ -357,6 +370,7 @@ class CytoscapeME implements ModelVisualizationInt {
         if (
           !this.liveModel.Regulations.addRegulation(
             false,
+            true,
             Number(sourceNode.id()),
             Number(targetNode.id()),
             true,
@@ -429,6 +443,26 @@ class CytoscapeME implements ModelVisualizationInt {
       if (node.selected()) this.renderMenuForSelectedNode(node);
       this.renderMenuForSelectedEdge();
     });
+    node.on('dragfree', (_: any) => {
+      const position = node.position();
+      const newPosition: Position = [position.x, position.y];
+      const oldPosition: Position =
+        this.variablePositionsStore.getState().variablePositions[id] ??
+        newPosition;
+
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.setNodePosition(id, oldPosition);
+        },
+        redo: () => {
+          this.setNodePosition(id, newPosition);
+        },
+      });
+
+      this.variablePositionsStore
+        .getState()
+        .setVariablePosition(id, newPosition);
+    });
   }
 
   /** Remove the node with the given ID from the graph. */
@@ -493,6 +527,37 @@ class CytoscapeME implements ModelVisualizationInt {
       return [position.x, position.y];
     }
     return undefined;
+  }
+
+  /** Function for setting the position of a node with the given id. */
+  private setNodePosition(id: number, position: Position): void {
+    const currentNode = this.cytoscape.getElementById(id);
+    if (currentNode !== undefined && currentNode.length > 0) {
+      currentNode.position({ x: position[0], y: position[1] });
+      this.variablePositionsStore.getState().setVariablePosition(id, position);
+    }
+  }
+
+  /** Extracts position of all nodes and saves it into Record<number, Position> (number - node ID, Position - node position [x, y]). */
+  private savePositionOfAllNodes(
+    saveFunction: (variablePositions: Record<number, Position>) => void
+  ) {
+    const variablePositions: Record<number, Position> = {};
+    this.cytoscape.nodes().forEach((node: any) => {
+      const position = node.position();
+      variablePositions[Number(node.id())] = [position.x, position.y];
+    });
+    saveFunction(variablePositions);
+  }
+
+  /** Sets position of all nodes from the provided record. */
+  private setPositionOfAllNodes(setFrom: Record<number, Position>) {
+    this.cytoscape.nodes().forEach((node: any) => {
+      const position = setFrom[node.id()];
+      if (position !== undefined) {
+        node.position({ x: position[0], y: position[1] });
+      }
+    });
   }
 
   // #endregion
@@ -569,11 +634,12 @@ class CytoscapeME implements ModelVisualizationInt {
   }
 
   /** Ensure that the graph contains edge which corresponds to the provided regulation. */
-  public ensureRegulation(regulation: any) {
+  public ensureRegulation(regulation: Regulation) {
     const currentEdge = this.findRegulationEdge(
       regulation.regulator,
       regulation.target
     );
+
     if (currentEdge !== undefined) {
       // Edge exists - just make sure to update data
       const data = currentEdge.data();
@@ -698,6 +764,10 @@ class CytoscapeME implements ModelVisualizationInt {
         gravity: 0.5,
         fit: true,
         nodeDimensionsIncludeLabels: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .start();
   }
@@ -714,6 +784,10 @@ class CytoscapeME implements ModelVisualizationInt {
         animationDuration: 300,
         fit: true,
         nodeDimensionsIncludeLabels: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .start();
   }
@@ -756,6 +830,10 @@ class CytoscapeME implements ModelVisualizationInt {
         animationDuration: 300,
         nodeDimensionsIncludeLabels: true,
         fit: true,
+
+        stop: () => {
+          this.layoutCallback();
+        },
       })
       .run();
   }
@@ -768,6 +846,36 @@ class CytoscapeME implements ModelVisualizationInt {
   /** Layout the nodes in a control-enabled manner. */
   public layoutControlEnabled() {
     this.applyConcentricLayout(false);
+  }
+
+  /** Callback function for layout changes.
+   *  Saves positions of all nodes after layout change and adds the operation to undo-redo stack.
+   */
+  private layoutCallback() {
+    const oldPositions: Record<number, Position> = {
+      ...this.variablePositionsStore.getState().variablePositions,
+    };
+
+    this.savePositionOfAllNodes(
+      (variablePositions: Record<number, Position>) => {
+        this.variablePositionsStore
+          .getState()
+          .setPositionOfAllVariables(variablePositions);
+      }
+    );
+
+    const newPositions: Record<number, Position> = {
+      ...this.variablePositionsStore.getState().variablePositions,
+    };
+
+    this.modelUndoRedoStore.getState().addOperation({
+      undo: () => {
+        this.setPositionOfAllNodes(oldPositions);
+      },
+      redo: () => {
+        this.setPositionOfAllNodes(newPositions);
+      },
+    });
   }
 
   // #endregion
@@ -788,10 +896,11 @@ class CytoscapeME implements ModelVisualizationInt {
     }
 
     nodes.forEach(([id, controlInfo]) => {
+      const node = this.cytoscape.getElementById(id);
       if (this.controlEnabledShown && controlInfo.controlEnabled) {
-        this.cytoscape.getElementById(id).style('background-color', '#FFFF66');
+        node.style('background-color', '#FFFF66');
       } else {
-        this.cytoscape.getElementById(id).style('background-color', '');
+        node.removeStyle('background-color');
       }
     });
   }

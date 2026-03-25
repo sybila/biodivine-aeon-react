@@ -15,7 +15,8 @@ export interface UpdateFunctionsLMInt {
   setUpdateFunction(
     id: number,
     functionString: string,
-    force?: boolean
+    addIntoUndoRedo: boolean,
+    force: boolean
   ): string | undefined;
 
   /** Deletes the update function for a variable.

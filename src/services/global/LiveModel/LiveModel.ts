@@ -4,9 +4,11 @@ import type { ModelState } from '../../../stores/LiveModel/LoadedModelStore/Mode
 import type { ModelInfoState } from '../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
+import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
@@ -71,7 +73,9 @@ class LiveModel implements LiveModelInt {
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
-    modelInfoStore: ZustandStore<ModelInfoState>
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.computationManagerServ = computationManagerServ;
     this.warningServ = warningServ;
@@ -90,7 +94,9 @@ class LiveModel implements LiveModelInt {
       regulationsStore,
       updateFunctionsStore,
       controlStore,
-      modelInfoStore
+      modelInfoStore,
+      modelUndoRedoStore,
+      variablePositionsStore
     );
 
     this.tabStore.getState().firstTabOnClick = () => {
@@ -137,7 +143,9 @@ class LiveModel implements LiveModelInt {
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
     controlStore: ZustandStore<ControlStatus>,
-    modelInfoStore: ZustandStore<ModelInfoState>
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.Models = new ModelsLM(this, this.loadedModelStore);
     this.Info = new InfoLM(this, modelInfoStore);
@@ -148,7 +156,9 @@ class LiveModel implements LiveModelInt {
       controlStore,
       regulationsStore,
       updateFunctionsStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore,
+      variablePositionsStore
     );
     this.UpdateFunctions = new UpdateFunctionsLM(
       this,
@@ -156,12 +166,14 @@ class LiveModel implements LiveModelInt {
       this.warningServ,
       regulationsStore,
       updateFunctionsStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore
     );
     this.Regulations = new RegulationsLM(
       this,
       regulationsStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore
     );
     this.Control = new ControlLM(
       this,

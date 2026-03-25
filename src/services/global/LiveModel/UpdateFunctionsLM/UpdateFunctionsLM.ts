@@ -1,6 +1,7 @@
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
@@ -20,6 +21,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
   private regulationsStore: ZustandStore<RegulationsStatus>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private variablesStore: ZustandStore<VariablesStatus>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   constructor(
     liveModel: LiveModelInt,
@@ -27,7 +29,8 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     warningServ: WarningInt,
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
-    variablesStore: ZustandStore<VariablesStatus>
+    variablesStore: ZustandStore<VariablesStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
     this.computationManagerServ = computationManagerServ;
@@ -36,6 +39,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     this.regulationsStore = regulationsStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.variablesStore = variablesStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
   }
 
   // #endregion
@@ -51,6 +55,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
   public setUpdateFunction(
     id: number,
     functionString: string,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): string | undefined {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -67,6 +72,10 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
       return check;
     }
 
+    const existing = this.updateFunctionsStore
+      .getState()
+      .getUpdateFunctionId(id);
+
     if (functionString.length === 0) {
       this.updateFunctionsStore.getState().deleteUpdateFunctionId(id);
     } else {
@@ -75,6 +84,23 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
         metadata: check,
       });
     }
+
+    this.modelUndoRedoStore.getState().addOperation({
+      undo: () => {
+        if (existing) {
+          this.setUpdateFunction(id, existing.functionString, false, false);
+        } else {
+          this.deleteUpdateFunctionId(id);
+        }
+      },
+      redo: () => {
+        if (functionString.length === 0) {
+          this.deleteUpdateFunctionId(id);
+        } else {
+          this.setUpdateFunction(id, functionString, false, false);
+        }
+      },
+    });
 
     this.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
@@ -192,6 +218,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
             myName,
             () =>
               this.liveModel.Regulations.addRegulation(
+                false,
                 false,
                 variable.id,
                 id,

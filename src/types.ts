@@ -426,6 +426,18 @@ export type Warning = {
 
 // #endregion
 
+// #region --- Undo/Redo ---
+
+/** Functions for undoing/redoing of operation.
+ *  The `undo` function should revert the last operation, while the `redo` function should re-apply the last undone operation.
+ */
+export type UndoRedoFunctions = {
+  undo: () => void;
+  redo: () => void;
+};
+
+// #endregion
+
 // #region --- Visualization Status ---
 
 export type VisualizationStatus = {

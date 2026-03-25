@@ -81,12 +81,20 @@ class ImportLM implements ImportLMInt {
     }
 
     if (control == undefined) {
-      return this.liveModel.Variables.addVariable(true, position, name);
+      return this.liveModel.Variables.addVariable(
+        true,
+        false,
+        position,
+        undefined,
+        name
+      );
     }
 
     return this.liveModel.Variables.addVariable(
       true,
+      false,
       position,
+      undefined,
       name,
       control[0],
       control[1]
@@ -146,6 +154,7 @@ class ImportLM implements ImportLMInt {
       // Create the actual regulation...
       this.liveModel.Regulations.addRegulation(
         true,
+        false,
         regulator,
         target,
         template.observable,
@@ -178,6 +187,7 @@ class ImportLM implements ImportLMInt {
       const error = this.liveModel.UpdateFunctions.setUpdateFunction(
         variable,
         updateFunctions[key],
+        false,
         true
       );
       if (error !== undefined) {

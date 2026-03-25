@@ -78,7 +78,7 @@ class ModelEditor implements ModelEditorInt {
 
   /** Adds a new variable and zooms on it */
   public addVariable() {
-    const newVariableId = this.liveModelServ.Variables.addVariable(true);
+    const newVariableId = this.liveModelServ.Variables.addVariable(true, true);
     if (newVariableId !== undefined) {
       this.zoomOnVariable(newVariableId);
     }
@@ -101,7 +101,7 @@ class ModelEditor implements ModelEditorInt {
 
   /** Removes a variable */
   public async removeVariable(id: number) {
-    await this.liveModelServ.Variables.removeVariable(id);
+    await this.liveModelServ.Variables.removeVariable(id, true);
   }
 
   /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
@@ -217,7 +217,9 @@ class ModelEditor implements ModelEditorInt {
   ): string | undefined {
     const error = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
-      updateFunction
+      updateFunction,
+      true,
+      false
     );
 
     if (error) {

@@ -1,7 +1,9 @@
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablePositionsState } from '../../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { ControlInfo, Position, Variable } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
@@ -36,6 +38,16 @@ class VariablesLM implements VariablesLMInt {
     );
   };
 
+  /** Function which returns position of node inside the visualization. */
+  private getNodePositionFromVisualizationFunction: (
+    variableId: number
+  ) => Position | undefined = (_) => {
+    console.warn(
+      'VariablesLM: No function set to get node position from model visualization'
+    );
+    return undefined;
+  };
+
   /** Function which renames node in the model visualization */
   private renameNodeFromVisualizationFunction: (
     variableId: number,
@@ -54,15 +66,20 @@ class VariablesLM implements VariablesLMInt {
   private regulationsStore: ZustandStore<RegulationsStatus>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private variablesStore: ZustandStore<VariablesStatus>;
+  private undoRedoStore: ZustandStore<UndoRedoState>;
+  private variablePositionsStore: ZustandStore<VariablePositionsState>;
 
   constructor(
     liveModel: LiveModelInt,
     computationManagerServ: ComputationManagerInt,
     warningServ: WarningInt,
+
     controlStore: ZustandStore<ControlStatus>,
     regulationsStore: ZustandStore<RegulationsStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
-    variablesStore: ZustandStore<VariablesStatus>
+    variablesStore: ZustandStore<VariablesStatus>,
+    undoRedoStore: ZustandStore<UndoRedoState>,
+    variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.liveModel = liveModel;
     this.computationManagerServ = computationManagerServ;
@@ -72,6 +89,8 @@ class VariablesLM implements VariablesLMInt {
     this.regulationsStore = regulationsStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.variablesStore = variablesStore;
+    this.undoRedoStore = undoRedoStore;
+    this.variablePositionsStore = variablePositionsStore;
   }
 
   // #endregion
@@ -102,6 +121,14 @@ class VariablesLM implements VariablesLMInt {
     }
   }
 
+  public setGetNodePositionFromVisualizationFunction(
+    func: (variableId: number) => Position | undefined
+  ): void {
+    if (func != undefined) {
+      this.getNodePositionFromVisualizationFunction = func;
+    }
+  }
+
   // #endregion
 
   // #region --- Variable Actions ---
@@ -109,7 +136,9 @@ class VariablesLM implements VariablesLMInt {
   /** Add a variable to the model */
   public addVariable(
     modAllowed: boolean,
+    addIntoUndoRedo: boolean,
     position: Position = [0.0, 0.0],
+    id?: number,
     name?: string,
     controllable: boolean = true,
     phenotype: any = null
@@ -118,11 +147,11 @@ class VariablesLM implements VariablesLMInt {
       return;
     }
 
-    const id = this.idCounter++;
-    const variableName = name ?? `v_${id + 1}`;
+    const variableId: number = id ?? this.idCounter++;
+    const variableName = name ?? `v_${variableId + 1}`;
 
     const variable: Variable = {
-      id,
+      id: variableId,
       name: variableName,
     };
 
@@ -132,24 +161,47 @@ class VariablesLM implements VariablesLMInt {
     };
 
     this.variablesStore.getState().addVariable(variable);
-    this.controlStore.getState().addInfo(id, controlInfo);
+    this.controlStore.getState().addInfo(variableId, controlInfo);
+    this.variablePositionsStore
+      .getState()
+      .setVariablePosition(variableId, position);
 
-    this.addNodeFromVisualizationFunction(id, variableName, position);
+    this.addNodeFromVisualizationFunction(variableId, variableName, position);
 
     this.computationManagerServ.resetMaxSize();
 
     // Todo - QuickHelp OFF;
 
-    this.liveModel.UpdateFunctions.validateUpdateFunction(id);
+    this.liveModel.UpdateFunctions.validateUpdateFunction(variableId);
     this.liveModel.Export.saveModel();
-    return id;
+
+    if (addIntoUndoRedo) {
+      this.undoRedoStore.getState().addOperation({
+        undo: () => this.removeVariable(variableId, false),
+        redo: () =>
+          this.addVariable(
+            false,
+            false,
+            position,
+            variableId,
+            variableName,
+            controllable,
+            phenotype
+          ),
+      });
+    }
+
+    return variableId;
   }
 
   /** Removes variable and displays warnings if necessary
    *  Returns true if the variable was removed, false otherwise.
    *  Shows warnings if there are existing results or if the user needs to confirm variable removal.
    */
-  public async removeVariableWithWarnings(id: number): Promise<boolean> {
+  public async removeVariableWithWarnings(
+    id: number,
+    addIntoUndoRedo: boolean
+  ): Promise<boolean> {
     const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable || !this.liveModel.modelCanBeModified()) return false;
 
@@ -157,16 +209,23 @@ class VariablesLM implements VariablesLMInt {
       return false;
     }
 
-    this.removeVariable(id, true);
+    this.removeVariable(id, addIntoUndoRedo, true);
     return true;
   }
 
   /** Remove a variable by its ID */
-  public removeVariable(id: number, force: boolean = false): void {
+  public removeVariable(
+    id: number,
+    addIntoUndoRedo: boolean,
+    force: boolean = false
+  ): void {
     if (!force && !this.liveModel.modelCanBeModified()) return;
 
     const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable) return;
+
+    const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
+    const position = this.getNodePositionFromVisualizationFunction(id);
 
     const updateTargets: number[] = [];
     const toRemove = this.regulationsStore
@@ -176,6 +235,7 @@ class VariablesLM implements VariablesLMInt {
 
     for (const reg of toRemove) {
       this.liveModel.Regulations.removeRegulation(
+        false,
         reg.regulator,
         reg.target,
         force
@@ -188,10 +248,9 @@ class VariablesLM implements VariablesLMInt {
     this.variablesStore.getState().removeVariable(id);
     this.liveModel.Control.removeControlInfo(id, force);
     this.liveModel.UpdateFunctions.deleteUpdateFunctionId(id);
+    this.variablePositionsStore.getState().removeVariablePosition(id);
 
     this.removeNodeFromVisualizationFunction(id);
-    // TODO - remove
-    //CytoscapeME.removeNode(id);
 
     if (this.liveModel.isEmpty()) {
       //Todo - add QuickHelp ON;
@@ -199,6 +258,7 @@ class VariablesLM implements VariablesLMInt {
 
     this.liveModel.Export.saveModel();
 
+    // TODO - optimize by only validating
     for (const affectedId of updateTargets) {
       const fn = this.updateFunctionsStore
         .getState()
@@ -207,10 +267,41 @@ class VariablesLM implements VariablesLMInt {
         this.liveModel.UpdateFunctions.setUpdateFunction(
           affectedId,
           fn.functionString,
+          false,
           force
         );
       }
       this.liveModel.UpdateFunctions.validateUpdateFunction(affectedId);
+    }
+
+    if (addIntoUndoRedo) {
+      this.undoRedoStore.getState().addOperation({
+        undo: () => {
+          this.addVariable(
+            false,
+            false,
+            position ?? [0, 0],
+            variable.id,
+            variable.name,
+            controlInfo?.controlEnabled ?? true,
+            controlInfo?.phenotype ?? null
+          );
+          // TODO - remove set timeout after fixing problem with cytoscape not updating fast enough after adding node back (causes edges to not be rendered, because they are added before the node is rendered)
+          setTimeout(() => {
+            for (const reg of toRemove) {
+              this.liveModel.Regulations.addRegulation(
+                false,
+                false,
+                reg.regulator,
+                reg.target,
+                reg.observable,
+                reg.monotonicity
+              );
+            }
+          }, 50);
+        },
+        redo: () => this.removeVariable(id, false, false),
+      });
     }
   }
 
@@ -273,7 +364,7 @@ class VariablesLM implements VariablesLMInt {
     }
 
     for (const id of toRemove) {
-      this.removeVariable(id);
+      this.removeVariable(id, false);
     }
 
     return toRemove.length;
@@ -294,7 +385,7 @@ class VariablesLM implements VariablesLMInt {
     }
 
     for (const id of toRemove) {
-      this.removeVariable(id);
+      this.removeVariable(id, false);
     }
 
     return toRemove.length;
@@ -331,7 +422,7 @@ class VariablesLM implements VariablesLMInt {
   /** Removes all variables from the model. */
   public clear() {
     for (const variable of this.variablesStore.getState().getAllVariables()) {
-      this.removeVariable(variable.id, true);
+      this.removeVariable(variable.id, false, true);
     }
   }
 

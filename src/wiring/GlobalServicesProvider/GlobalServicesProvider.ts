@@ -38,7 +38,11 @@ class GlobalServicesProvider {
       infoMessageFunction,
       errorMessageFunction
     );
-    this.loadingServ = new Loading(startLoadingFunction, endLoadingFunction, storesProvider.tabsStore);
+    this.loadingServ = new Loading(
+      startLoadingFunction,
+      endLoadingFunction,
+      storesProvider.tabsStore
+    );
     this.computationManagerServ = new ComputationManager(
       this.messageServ,
       this.loadingServ,
@@ -74,7 +78,9 @@ class GlobalServicesProvider {
       storesProvider.regulationsStore,
       storesProvider.updateFunctionsStore,
       storesProvider.controlStore,
-      storesProvider.modelInfoStore
+      storesProvider.modelInfoStore,
+      storesProvider.modelUndoRedoStore,
+      storesProvider.variablePositionsStore
     );
   }
 }

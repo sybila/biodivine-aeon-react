@@ -9,6 +9,8 @@ import EyeIcon from '../../assets/icons/eye.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
+import UndoIcon from '../../assets/icons/undo.svg';
+import RedoIcon from '../../assets/icons/redo.svg';
 
 import KeepAlive from 'react-activation';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
@@ -19,6 +21,7 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
+import ObjectProvider from '../../wiring/ObjectProvider';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
@@ -195,6 +198,27 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           iconAlt="Visual"
           showTag={true}
           tagText="Visual Options"
+        ></IconButtonReact>
+        {/*TODO - Remove when proper undo/redo buttons created*/}
+        <IconButtonReact
+          isActive={false}
+          onClick={() =>
+            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().undo()
+          }
+          iconSrc={UndoIcon}
+          iconAlt="U"
+          showTag={true}
+          tagText="Undo"
+        ></IconButtonReact>
+        <IconButtonReact
+          isActive={false}
+          onClick={() =>
+            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().redo()
+          }
+          iconSrc={RedoIcon}
+          iconAlt="R"
+          showTag={true}
+          tagText="Redo"
         ></IconButtonReact>
       </SideButtonMenu>
 
