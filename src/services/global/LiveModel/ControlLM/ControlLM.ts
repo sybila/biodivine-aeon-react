@@ -1,5 +1,6 @@
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   ControlEnabledVars,
@@ -24,8 +25,8 @@ class ControlLM implements ControlLMInt {
   private computationManager: ComputationManagerInt;
 
   private controlStore: ZustandStore<ControlStatus>;
-
   private variablesStore: ZustandStore<VariablesStatus>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   private oscillation: Oscillation = 'allowed';
 
@@ -39,12 +40,15 @@ class ControlLM implements ControlLMInt {
     liveModel: LiveModelInt,
     computationManager: ComputationManagerInt,
     controlStore: ZustandStore<ControlStatus>,
-    variablesStore: ZustandStore<VariablesStatus>
+    variablesStore: ZustandStore<VariablesStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
     this.computationManager = computationManager;
+
     this.controlStore = controlStore;
     this.variablesStore = variablesStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
 
     this.onControlChange = [];
     this.onPhenotypeChange = [];
@@ -148,11 +152,16 @@ class ControlLM implements ControlLMInt {
   public changePhenotypeById(
     id: number,
     phenotype: Phenotype,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
       return;
     }
+
+    const oldControlInfo = this.controlStore
+      .getState()
+      .getVariableControlInfo(id);
 
     this.controlStore.getState().setPhenotype(id, phenotype);
 
@@ -161,12 +170,29 @@ class ControlLM implements ControlLMInt {
     if (controlInfo) {
       this.runCallbacks(this.onPhenotypeChange, [[id, controlInfo]]);
     }
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.changePhenotypeById(
+            id,
+            oldControlInfo?.phenotype ?? null,
+            false,
+            false
+          );
+        },
+        redo: () => {
+          this.changePhenotypeById(id, phenotype ?? null, false, false);
+        },
+      });
+    }
   }
 
   /** Change variable control enabled state by its ID */
   public changeControlEnabledById(
     id: number,
     controlEnabled: boolean,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -185,6 +211,17 @@ class ControlLM implements ControlLMInt {
     }
 
     this.computationManager.resetMaxSize();
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.changeControlEnabledById(id, !controlEnabled, false, false);
+        },
+        redo: () => {
+          this.changeControlEnabledById(id, controlEnabled, false, false);
+        },
+      });
+    }
   }
 
   /** Remove control information for a variable by its ID */

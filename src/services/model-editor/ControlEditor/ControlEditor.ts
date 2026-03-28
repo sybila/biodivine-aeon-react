@@ -93,7 +93,12 @@ class ControlEditor implements ControlEditorInt {
 
   /** Changes the control enabled state of a variable by its ID */
   public changeControlEnabled(id: number, enabled: boolean) {
-    this.liveModelServ.Control.changeControlEnabledById(id, enabled);
+    this.liveModelServ.Control.changeControlEnabledById(
+      id,
+      enabled,
+      true,
+      false
+    );
   }
 
   /** Toggles the control enabled state of a variable by its ID */
@@ -105,7 +110,9 @@ class ControlEditor implements ControlEditorInt {
     if (controlInfo) {
       this.liveModelServ.Control.changeControlEnabledById(
         id,
-        !controlInfo.controlEnabled
+        !controlInfo.controlEnabled,
+        true,
+        false
       );
     }
   }
@@ -142,7 +149,7 @@ class ControlEditor implements ControlEditorInt {
 
   /** Changes the phenotype state of a variable by its ID */
   public changePhenotype(id: number, phenotype: Phenotype) {
-    this.liveModelServ.Control.changePhenotypeById(id, phenotype);
+    this.liveModelServ.Control.changePhenotypeById(id, phenotype, true, false);
   }
 
   /** Toggles the phenotype state of a variable by its ID */
@@ -155,13 +162,13 @@ class ControlEditor implements ControlEditorInt {
 
     switch (controlInfo.phenotype) {
       case true:
-        this.liveModelServ.Control.changePhenotypeById(id, false);
+        this.liveModelServ.Control.changePhenotypeById(id, false, true, false);
         break;
       case false:
-        this.liveModelServ.Control.changePhenotypeById(id, null);
+        this.liveModelServ.Control.changePhenotypeById(id, null, true, false);
         break;
       default:
-        this.liveModelServ.Control.changePhenotypeById(id, true);
+        this.liveModelServ.Control.changePhenotypeById(id, true, true, false);
     }
   }
 
