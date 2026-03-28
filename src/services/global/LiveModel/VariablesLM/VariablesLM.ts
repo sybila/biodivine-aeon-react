@@ -286,6 +286,20 @@ class VariablesLM implements VariablesLMInt {
             controlInfo?.controlEnabled ?? true,
             controlInfo?.phenotype ?? null
           );
+
+          this.liveModel.Control.changeControlEnabledById(
+            id,
+            controlInfo?.controlEnabled ?? true,
+            false,
+            false
+          );
+
+          this.liveModel.Control.changePhenotypeById(
+            id,
+            controlInfo?.phenotype ?? null,
+            false,
+            false
+          );
           // TODO - remove set timeout after fixing problem with cytoscape not updating fast enough after adding node back (causes edges to not be rendered, because they are added before the node is rendered)
           setTimeout(() => {
             for (const reg of toRemove) {

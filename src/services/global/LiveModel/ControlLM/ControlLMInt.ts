@@ -44,13 +44,19 @@ export interface ControlLMInt {
   // #region --- Change Control Info ---
 
   /** Change control information for a variable by its ID */
-  changePhenotypeById(id: number, phenotype: Phenotype, force?: boolean): void;
+  changePhenotypeById(
+    id: number,
+    phenotype: Phenotype,
+    addIntoUndoRedo: boolean,
+    force: boolean
+  ): void;
 
   /** Change variable control enabled state by its ID */
   changeControlEnabledById(
     id: number,
     controlEnabled: boolean,
-    force?: boolean
+    addIntoUndoRedo: boolean,
+    force: boolean
   ): void;
 
   /** Remove control information for a variable by its ID */

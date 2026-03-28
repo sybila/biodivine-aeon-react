@@ -179,7 +179,8 @@ class LiveModel implements LiveModelInt {
       this,
       this.computationManagerServ,
       controlStore,
-      variablesStore
+      variablesStore,
+      modelUndoRedoStore
     );
     this.Import = new ImportLM(
       this,
