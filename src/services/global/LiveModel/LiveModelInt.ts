@@ -1,3 +1,4 @@
+import type { ComputationModes } from '../../../types';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
 import type { ExportLMInt } from './ExportLM/ExportLMInt';
 import type { ImportLMInt } from './ImportLM/ImportLMInt';
@@ -64,7 +65,7 @@ export interface LiveModelInt {
   /** Function which blocks model modifications and initializes warnings || shows errors.
    *  Returns true if the model can be modified, false otherwise.
    */
-  modelCanBeModified(): boolean;
+  modelCanBeModified(computationMode?: ComputationModes): boolean;
 
   // #endregion
 }

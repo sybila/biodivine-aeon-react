@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
@@ -25,6 +25,10 @@ const BaseLayout = () => {
     (state) => state.results
   );
 
+  const newResultsAvailable: boolean = useMemo(() => {
+    return Object.values(loadedResults).some((value) => value !== undefined);
+  }, [loadedResults]);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,10 +46,10 @@ const BaseLayout = () => {
   }, []);
 
   useEffect(() => {
-    if (loadedResults) {
+    if (newResultsAvailable) {
       setActiveOverlayWindow('Results');
     }
-  }, [loadedResults]);
+  }, [newResultsAvailable]);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {

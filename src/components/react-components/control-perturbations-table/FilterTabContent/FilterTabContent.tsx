@@ -19,8 +19,8 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
   perturbationFilterSortStore,
 }) => {
   // We know that when type is 'Control', results is ControlResults
-  const controlInfo: ControlResults | undefined = resultsStatusStore((state) =>
-    state.type === 'Control' ? (state.results as ControlResults) : undefined
+  const controlInfo: ControlResults | undefined = resultsStatusStore(
+    (state) => (state.results.Control as ControlResults) ?? undefined
   );
 
   if (!controlInfo) {

@@ -16,17 +16,15 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   const [phenAsText, setPhenotypeAsText] = useState<boolean>(false);
 
   // We know that when type is 'Control', results is ControlResults
-  const controlStats = resultsStatusStore((state) =>
-    state.type === 'Control'
-      ? (state.results as ControlResults).stats
-      : undefined
+  const controlResult: ControlResults | undefined = resultsStatusStore(
+    (state) => state.results.Control as ControlResults
   );
 
-  const controlPrecomputation = resultsStatusStore((state) =>
-    state.type === 'Control'
-      ? (state.results as ControlResults).preComputationInfo
-      : undefined
-  );
+  const controlStats = controlResult ? controlResult.stats : undefined;
+
+  const controlPrecomputation = controlResult
+    ? controlResult.preComputationInfo
+    : undefined;
 
   const controlEnabledPhenotypeVars = useMemo(() => {
     return liveModelServ.Control.getPhenotypeControlEnabledVars();

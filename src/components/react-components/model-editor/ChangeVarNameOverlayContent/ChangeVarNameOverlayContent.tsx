@@ -15,7 +15,9 @@ const ChangeVarNameOverlayContent: React.FC<
           singleFontSize="25px"
           varId={varId}
           varName={varName}
-          onUpdate={modelEditorServ.changeVariableName}
+          onUpdate={(id: number, newName: string) =>
+            modelEditorServ.changeVariableName(id, newName)
+          }
         />
       </div>
     </div>

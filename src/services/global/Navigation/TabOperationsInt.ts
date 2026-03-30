@@ -1,4 +1,4 @@
-import type { TabType } from '../../../types';
+import type { ComputationModes, TabType } from '../../../types';
 
 /** Class defining for operations on navigation tabs */
 export interface TabOperationsInt {
@@ -7,4 +7,7 @@ export interface TabOperationsInt {
 
   /** Returns the icon for a given tab type */
   getTabTypeIcon(tabType: TabType): string;
+
+  /** Returns the tab types associated with a given computation mode */
+  getTabTypeFromComputationMode(mode: ComputationModes): Array<TabType>;
 }

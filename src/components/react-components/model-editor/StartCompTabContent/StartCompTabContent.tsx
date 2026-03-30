@@ -9,6 +9,7 @@ import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   liveModelServ,
   computationManagerServ,
+  resultsOperationsServ,
   warningServ,
   tabStore,
   resultsStatusStore,
@@ -36,7 +37,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
     const currentComputationFunction = getComputationFunction();
 
     if (
-      resultsStatusStore.getState().results ||
+      resultsStatusStore.getState().isResultsConflict(computationMode) ||
       !tabStore.getState().isEmpty()
     ) {
       warningServ.addStartComputationResultsWarning(currentComputationFunction);

@@ -39,7 +39,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           singleFontSize="16px"
           varId={id}
           varName={name}
-          onUpdate={modelEditorServ.changeVariableName}
+          onUpdate={(id: number, newName: string) =>
+            modelEditorServ.changeVariableName(id, newName)
+          }
         />
       </section>
 

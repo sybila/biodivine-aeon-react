@@ -39,6 +39,10 @@ export type TabsState = {
   getActiveTab: () => TabInfo | undefined;
   /** Checks if there are any opened tabs except for the Model Editor Tab. */
   isEmpty: () => boolean;
+  /** Checks if a tab of a specific type exists. */
+  existsTabWithType: (tabTypes: Array<TabType> | null) => boolean;
+  /** Closes results tab with predefined types. */
+  closeByTabType(tabTypes: Array<TabType>): void;
   /** Clears all opened tabs. Except for the Model Editor Tab */
   clear: () => void;
 };

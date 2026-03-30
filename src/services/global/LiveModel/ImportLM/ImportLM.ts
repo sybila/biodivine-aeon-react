@@ -315,7 +315,9 @@ class ImportLM implements ImportLMInt {
    */
   public async importAeonWithWarnings(modelString: string): Promise<boolean> {
     if (
-      this.resultsStatusStore.getState().results != undefined ||
+      Object.values(this.resultsStatusStore.getState().results).some(
+        (value) => value !== undefined
+      ) ||
       !this.tabsStore.getState().isEmpty()
     ) {
       const proceed = await this.warningServ.addRemoveResultsWarning(
