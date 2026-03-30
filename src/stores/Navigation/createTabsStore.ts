@@ -127,6 +127,28 @@ function createTabsStore(): ZustandStore<TabsState> {
 
     isEmpty: () => Object.keys(get().openedTabs).length === 1,
 
+    existsTabWithType: (tabTypes: Array<TabType> | null) => {
+      if (tabTypes === null || tabTypes.length === 0) {
+        return get().isEmpty();
+      }
+
+      return Object.values(get().openedTabs).some((tab) =>
+        tabTypes.includes(tab.type)
+      );
+    },
+
+    closeByTabType: (tabTypes: Array<TabType>) => {
+      const tabsToClose = Object.values(get().openedTabs).filter((tab) =>
+        tabTypes.includes(tab.type)
+      );
+
+      tabsToClose.forEach((tab) => {
+        if (tab.id !== 0) {
+          get().removeTab(tab.id);
+        }
+      });
+    },
+
     clear: () => {
       get()
         .getAllTabs()
