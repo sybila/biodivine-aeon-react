@@ -1,4 +1,4 @@
-import type { TabType } from '../../../types';
+import type { ComputationModes, TabType } from '../../../types';
 
 import AttractorBifurcationExplorerIcon from '../../../assets/icons/attractor-bifurcation-explorer.svg';
 import AttractorVisualizerIcon from '../../../assets/icons/attractor-visualizer.svg';
@@ -43,6 +43,18 @@ class TabOperations implements TabOperationsInt {
   /** Returns the icon for a given tab type */
   public getTabTypeIcon(tabType: TabType): string {
     return this.tabTypeToIcon[tabType] ?? '';
+  }
+
+  /** Returns the tab types associated with a given computation mode */
+  public getTabTypeFromComputationMode(mode: ComputationModes): Array<TabType> {
+    switch (mode) {
+      case 'Attractor Analysis':
+        return ['Attractor Bifurcation Explorer', 'Attractor Visualizer'];
+      case 'Control':
+        return ['Control Perturbations Table'];
+      default:
+        return [];
+    }
   }
 }
 

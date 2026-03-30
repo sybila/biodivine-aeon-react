@@ -2,6 +2,7 @@ import type { ComputationManagerInt } from '../../services/global/ComputationMan
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
+import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
@@ -29,6 +30,7 @@ export type ModelEditorProps = {
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   fileConvertorsServ: FileConvertorsInt;
+  resultsOperationsServ: ResultsOperationsInt;
   warningServ: WarningInt;
   messageServ: MessageInt;
   loadingServ: LoadingInt;

@@ -26,6 +26,7 @@ import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import type { LoadingInt } from '../Loading/LoadingInt';
 import type { MessageInt } from '../Message/MessageInt';
+import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
 import type { ComputationManagerInt } from './ComputationManagerInt';
 
 /**
@@ -55,6 +56,7 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Reference to the LiveModel service. Needs to be set after creation of the ComputationManager because of circular dependencies. */
   private liveModelServ: LiveModelInt | undefined = undefined;
+  private tabOperationsServ: TabOperationsInt;
   private messageServ: MessageInt;
   private loadingServ: LoadingInt;
 
@@ -66,6 +68,7 @@ class ComputationManager implements ComputationManagerInt {
   private tabsStore: ZustandStore<TabsState>;
 
   constructor(
+    tabOperationsServ: TabOperationsInt,
     messageServ: MessageInt,
     loadingServ: LoadingInt,
 
@@ -76,6 +79,7 @@ class ComputationManager implements ComputationManagerInt {
     variablesStore: ZustandStore<VariablesStatus>,
     tabsStore: ZustandStore<TabsState>
   ) {
+    this.tabOperationsServ = tabOperationsServ;
     this.messageServ = messageServ;
     this.loadingServ = loadingServ;
 
@@ -265,8 +269,14 @@ class ComputationManager implements ComputationManagerInt {
       }
     }
 
-    this.resultsStatusStore.getState().clear();
-    this.tabsStore.getState().clear();
+    this.resultsStatusStore.getState().clearResult(this.computationMode);
+    this.tabsStore
+      .getState()
+      .closeByTabType(
+        this.tabOperationsServ.getTabTypeFromComputationMode(
+          this.computationMode
+        )
+      );
 
     return;
   }
@@ -798,12 +808,8 @@ class ComputationManager implements ComputationManagerInt {
     type: ComputationModes | undefined,
     results: AttractorResults | ControlResults | undefined
   ): void {
-    if (type) {
-      this.resultsStatusStore.getState().setType(type);
-    }
-
-    if (results) {
-      this.resultsStatusStore.getState().setResults(results);
+    if (type && results) {
+      this.resultsStatusStore.getState().setResults(type, results);
     }
 
     if (error) {

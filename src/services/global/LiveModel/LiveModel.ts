@@ -10,10 +10,12 @@ import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorS
 import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import type { ComputationModes } from '../../../types';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
 import type { LoadingInt } from '../Loading/LoadingInt';
 import type { MessageInt } from '../Message/MessageInt';
+import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
 import type { WarningInt } from '../Warning/WarningInt';
 import ControlLM from './ControlLM/ControlLM';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
@@ -50,6 +52,7 @@ class LiveModel implements LiveModelInt {
   public disable_dynamic_validation: boolean = false;
 
   private computationManagerServ: ComputationManagerInt;
+  private tabOperationsServ: TabOperationsInt;
   private warningServ: WarningInt;
   private messageServ: MessageInt;
 
@@ -62,6 +65,7 @@ class LiveModel implements LiveModelInt {
     computationManagerServ: ComputationManagerInt,
     warningServ: WarningInt,
     fileHelpersServ: FileHelpersInt,
+    tabOperationsServ: TabOperationsInt,
     messageServ: MessageInt,
     loadingServ: LoadingInt,
 
@@ -78,6 +82,7 @@ class LiveModel implements LiveModelInt {
     variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.computationManagerServ = computationManagerServ;
+    this.tabOperationsServ = tabOperationsServ;
     this.warningServ = warningServ;
     this.messageServ = messageServ;
 
@@ -222,7 +227,7 @@ class LiveModel implements LiveModelInt {
   /** Function which blocks model modifications and initializes warnings || shows errors.
    *  Returns true if the model can be modified, false otherwise.
    */
-  public modelCanBeModified(): boolean {
+  public modelCanBeModified(computationMode?: ComputationModes): boolean {
     if (this.loadedModelStore.getState().loadedModelType !== 'main') {
       this.messageServ.showError(
         'You can only modify the model in the Model Editor. Please switch to the Model Editor to proceed.'
@@ -230,8 +235,20 @@ class LiveModel implements LiveModelInt {
       return false;
     }
     if (
-      !this.tabStore.getState().isEmpty() ||
-      this.resultsStatusStore.getState().results !== undefined
+      this.tabStore
+        .getState()
+        .existsTabWithType(
+          !computationMode
+            ? null
+            : this.tabOperationsServ.getTabTypeFromComputationMode(
+                computationMode
+              )
+        ) ||
+      (!computationMode
+        ? Object.values(this.resultsStatusStore.getState().results).some(
+            (v) => !!v
+          )
+        : this.resultsStatusStore.getState().isResultsConflict(computationMode))
     ) {
       this.warningServ.addModelModificationRemoveResultsWarning();
       return false;

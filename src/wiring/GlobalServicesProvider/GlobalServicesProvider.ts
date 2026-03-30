@@ -43,16 +43,7 @@ class GlobalServicesProvider {
       endLoadingFunction,
       storesProvider.tabsStore
     );
-    this.computationManagerServ = new ComputationManager(
-      this.messageServ,
-      this.loadingServ,
-      storesProvider.bifurcationExplorerStatusStore,
-      storesProvider.resultsStatusStore,
-      storesProvider.computeEngineStatusStore,
-      storesProvider.updateFunctionsStore,
-      storesProvider.variablesStore,
-      storesProvider.tabsStore
-    );
+
     this.warningServ = new Warning(
       storesProvider.resultsStatusStore,
       storesProvider.tabsStore,
@@ -64,10 +55,24 @@ class GlobalServicesProvider {
       utilitiesServiceProvider.dataFormatersServ,
       utilitiesServiceProvider.fileHelpersServ
     );
+
+    this.computationManagerServ = new ComputationManager(
+      this.tabOperationsServ,
+      this.messageServ,
+      this.loadingServ,
+      storesProvider.bifurcationExplorerStatusStore,
+      storesProvider.resultsStatusStore,
+      storesProvider.computeEngineStatusStore,
+      storesProvider.updateFunctionsStore,
+      storesProvider.variablesStore,
+      storesProvider.tabsStore
+    );
+
     this.liveModelServ = new LiveModel(
       this.computationManagerServ,
       this.warningServ,
       utilitiesServiceProvider.fileHelpersServ,
+      this.tabOperationsServ,
       this.messageServ,
       this.loadingServ,
       storesProvider.loadedModelStore,

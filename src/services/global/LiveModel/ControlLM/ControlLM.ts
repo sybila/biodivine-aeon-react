@@ -155,7 +155,7 @@ class ControlLM implements ControlLMInt {
     addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
-    if (!force && !this.liveModel.modelCanBeModified()) {
+    if (!force && !this.liveModel.modelCanBeModified("Control")) {
       return;
     }
 
@@ -195,7 +195,7 @@ class ControlLM implements ControlLMInt {
     addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
-    if (!force && !this.liveModel.modelCanBeModified()) {
+    if (!force && !this.liveModel.modelCanBeModified("Control")) {
       console.log(
         'Model cannot be modified at the moment change control enabled.'
       );
@@ -226,7 +226,7 @@ class ControlLM implements ControlLMInt {
 
   /** Remove control information for a variable by its ID */
   public removeControlInfo(id: number, force = false): void {
-    if (!force && !this.liveModel.modelCanBeModified()) {
+    if (!force && !this.liveModel.modelCanBeModified("Control")) {
       return;
     }
 

@@ -17,8 +17,8 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   const [perturbationsAsText, setPerturbationsAsText] = useState(false);
 
   const perturbations = resultsStatusStore((state) =>
-    state.type === 'Control' && state.results
-      ? (state.results as ControlResults).perturbations
+    state.results.Control != undefined
+      ? (state.results.Control as ControlResults).perturbations
       : undefined
   );
 
