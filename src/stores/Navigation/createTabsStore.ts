@@ -129,7 +129,7 @@ function createTabsStore(): ZustandStore<TabsState> {
 
     existsTabWithType: (tabTypes: Array<TabType> | null) => {
       if (tabTypes === null || tabTypes.length === 0) {
-        return get().isEmpty();
+        return !get().isEmpty();
       }
 
       return Object.values(get().openedTabs).some((tab) =>
