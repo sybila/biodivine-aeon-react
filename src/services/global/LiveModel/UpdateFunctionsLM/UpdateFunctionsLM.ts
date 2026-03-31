@@ -85,22 +85,24 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
       });
     }
 
-    this.modelUndoRedoStore.getState().addOperation({
-      undo: () => {
-        if (existing) {
-          this.setUpdateFunction(id, existing.functionString, false, false);
-        } else {
-          this.deleteUpdateFunctionId(id);
-        }
-      },
-      redo: () => {
-        if (functionString.length === 0) {
-          this.deleteUpdateFunctionId(id);
-        } else {
-          this.setUpdateFunction(id, functionString, false, false);
-        }
-      },
-    });
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          if (existing) {
+            this.setUpdateFunction(id, existing.functionString, false, false);
+          } else {
+            this.deleteUpdateFunctionId(id);
+          }
+        },
+        redo: () => {
+          if (functionString.length === 0) {
+            this.deleteUpdateFunctionId(id);
+          } else {
+            this.setUpdateFunction(id, functionString, false, false);
+          }
+        },
+      });
+    }
 
     this.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
