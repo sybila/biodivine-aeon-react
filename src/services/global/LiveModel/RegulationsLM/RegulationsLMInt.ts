@@ -45,13 +45,15 @@ export interface RegulationsLMInt {
   setObservability(
     regulatorId: number,
     targetId: number,
-    isObservable: boolean
+    isObservable: boolean,
+    addIntoUndoRedo: boolean
   ): void;
 
   toggleObservability(
     regulatorId: number,
     targetId: number,
-    force?: boolean
+    addIntoUndoRedo: boolean,
+    force: boolean
   ): void;
 
   // #endregion

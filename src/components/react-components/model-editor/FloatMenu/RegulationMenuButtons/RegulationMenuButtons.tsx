@@ -93,7 +93,9 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         onClick={() =>
           liveModelServ.Regulations.toggleObservability(
             regulationInfo.regulator,
-            regulationInfo.target
+            regulationInfo.target,
+            true,
+            false
           )
         }
         hintText={observabilityInfo.hint}

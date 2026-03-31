@@ -208,7 +208,7 @@ class ModelEditor implements ModelEditorInt {
   }
 
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
-    this.liveModelServ.Regulations.toggleObservability(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleObservability(regulatorId, targetId, true, false);
   }
 
   // #endregion

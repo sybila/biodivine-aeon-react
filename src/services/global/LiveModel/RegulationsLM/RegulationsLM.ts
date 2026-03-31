@@ -164,7 +164,8 @@ class RegulationsLM implements RegulationsLMInt {
   public setObservability(
     regulatorId: number,
     targetId: number,
-    isObservable: boolean
+    isObservable: boolean,
+    addIntoUndoRedo: boolean
   ): void {
     const regulation = this.regulationsStore
       .getState()
@@ -174,12 +175,27 @@ class RegulationsLM implements RegulationsLMInt {
         .getState()
         .setObservability(regulatorId, targetId, isObservable);
       this.regulationChanged({ ...regulation, observable: isObservable });
+
+      if (addIntoUndoRedo) {
+        this.modelUndoRedoStore.getState().addOperation({
+          undo: () =>
+            this.setObservability(
+              regulatorId,
+              targetId,
+              regulation.observable,
+              false
+            ),
+          redo: () =>
+            this.setObservability(regulatorId, targetId, isObservable, false),
+        });
+      }
     }
   }
 
   public toggleObservability(
     regulatorId: number,
     targetId: number,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) return;
@@ -195,6 +211,25 @@ class RegulationsLM implements RegulationsLMInt {
         ...regulation,
         observable: !regulation.observable,
       });
+
+      if (addIntoUndoRedo) {
+        this.modelUndoRedoStore.getState().addOperation({
+          undo: () =>
+            this.setObservability(
+              regulatorId,
+              targetId,
+              regulation.observable,
+              false
+            ),
+          redo: () =>
+            this.setObservability(
+              regulatorId,
+              targetId,
+              !regulation.observable,
+              false
+            ),
+        });
+      }
     }
   }
 
