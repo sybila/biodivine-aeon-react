@@ -323,6 +323,7 @@ class VariablesLM implements VariablesLMInt {
   public renameVariable(
     id: number,
     newName: string,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): string | undefined {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -349,10 +350,12 @@ class VariablesLM implements VariablesLMInt {
 
     this.liveModel.Export.saveModel();
 
-    this.undoRedoStore.getState().addOperation({
-      undo: () => this.renameVariable(id, variable.name, false),
-      redo: () => this.renameVariable(id, newName, false),
-    });
+    if (addIntoUndoRedo) {
+      this.undoRedoStore.getState().addOperation({
+        undo: () => this.renameVariable(id, variable.name, false, false),
+        redo: () => this.renameVariable(id, newName, false, false),
+      });
+    }
 
     return undefined;
   }

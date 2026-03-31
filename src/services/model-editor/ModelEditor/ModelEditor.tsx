@@ -87,7 +87,12 @@ class ModelEditor implements ModelEditorInt {
   /** Changes the name of a variable */
   public changeVariableName(id: number, newName: string): boolean {
     if (newName != '') {
-      const error = this.liveModelServ.Variables.renameVariable(id, newName);
+      const error = this.liveModelServ.Variables.renameVariable(
+        id,
+        newName,
+        false,
+        true
+      );
 
       if (error) {
         this.messageServ.showError('Variable name not changed: ' + error);

@@ -63,7 +63,8 @@ export interface VariablesLMInt {
   renameVariable(
     id: number,
     newName: string,
-    force?: boolean
+    addIntoUndoRedo: boolean,
+    force: boolean
   ): string | undefined;
 
   // #endregion
