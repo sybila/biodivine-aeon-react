@@ -2,7 +2,9 @@ import type { ResultsStatus } from '../../../stores/ComputationManager/ResultSta
 import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { WarningState } from '../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import type { ComputationModes } from '../../../types';
 import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
+import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
 import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
@@ -11,19 +13,27 @@ class Warning implements WarningInt {
 
   private waiterFunction: WaiterFunctionInt;
 
+  private tabOperationsServ: TabOperationsInt;
+
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private tabsStore: ZustandStore<TabsState>;
   private warningStore: ZustandStore<WarningState>;
 
   constructor(
+    tabOperationsServ: TabOperationsInt,
+
     resultsStatusStore: ZustandStore<ResultsStatus>,
     tabsStore: ZustandStore<TabsState>,
     warningStore: ZustandStore<WarningState>,
+
     waiterFunction: WaiterFunctionInt
   ) {
+    this.tabOperationsServ = tabOperationsServ;
+
     this.resultsStatusStore = resultsStatusStore;
     this.tabsStore = tabsStore;
     this.warningStore = warningStore;
+
     this.waiterFunction = waiterFunction;
   }
 
@@ -111,7 +121,7 @@ class Warning implements WarningInt {
   // #region --- Model Modification Warning ---
 
   /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
-  public addModelModificationRemoveResultsWarning(): void {
+  public addModelModificationRemoveAllResultsWarning(): void {
     this.warningStore
       .getState()
       .addWarning(
@@ -128,6 +138,38 @@ class Warning implements WarningInt {
             action: () => {
               this.resultsStatusStore.getState().clear();
               this.tabsStore.getState().clear();
+            },
+          },
+        ]
+      );
+  }
+
+  /** Adds a warning that modifying the model will clear the results and close all tabs connected with computation type. */
+  public addModelModificationRemoveComputationResultsWarning(
+    computationMode: ComputationModes
+  ): void {
+    this.warningStore
+      .getState()
+      .addWarning(
+        `Modifying the model will delete all results and close every tab connected with the ${computationMode} computation.`,
+        [
+          {
+            text: 'Cancel',
+            buttonWidth: '150px',
+            action: () => {},
+          },
+          {
+            text: 'Delete Results',
+            buttonWidth: '150px',
+            action: () => {
+              this.resultsStatusStore.getState().clearResult(computationMode);
+              this.tabsStore
+                .getState()
+                .closeByTabType(
+                  this.tabOperationsServ.getTabTypeFromComputationMode(
+                    computationMode
+                  )
+                );
             },
           },
         ]

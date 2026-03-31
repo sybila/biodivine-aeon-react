@@ -44,16 +44,18 @@ class GlobalServicesProvider {
       storesProvider.tabsStore
     );
 
-    this.warningServ = new Warning(
-      storesProvider.resultsStatusStore,
-      storesProvider.tabsStore,
-      storesProvider.warningStore,
-      utilitiesServiceProvider.waiterFunctionServ
-    );
     this.tabOperationsServ = new TabOperations(storesProvider.tabsStore);
     this.resultsOperationsServ = new ResultsOperations(
       utilitiesServiceProvider.dataFormatersServ,
       utilitiesServiceProvider.fileHelpersServ
+    );
+
+    this.warningServ = new Warning(
+      this.tabOperationsServ,
+      storesProvider.resultsStatusStore,
+      storesProvider.tabsStore,
+      storesProvider.warningStore,
+      utilitiesServiceProvider.waiterFunctionServ
     );
 
     this.computationManagerServ = new ComputationManager(

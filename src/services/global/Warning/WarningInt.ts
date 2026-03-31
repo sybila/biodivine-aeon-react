@@ -1,3 +1,5 @@
+import type { ComputationModes } from '../../../types';
+
 /**
  * Interface for creation and management of warnings in the application
  */
@@ -42,7 +44,12 @@ export interface WarningInt {
   // #region --- Model Modification Warning ---
 
   /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
-  addModelModificationRemoveResultsWarning(): void;
+  addModelModificationRemoveAllResultsWarning(): void;
+
+  /** Adds a warning that modifying the model will clear the results and close all tabs connected with computation type. */
+  addModelModificationRemoveComputationResultsWarning(
+    computationMode: ComputationModes
+  ): void;
 
   // #endregion
 
