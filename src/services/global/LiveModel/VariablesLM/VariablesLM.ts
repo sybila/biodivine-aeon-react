@@ -323,6 +323,7 @@ class VariablesLM implements VariablesLMInt {
   public renameVariable(
     id: number,
     newName: string,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): string | undefined {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -340,8 +341,6 @@ class VariablesLM implements VariablesLMInt {
     this.variablesStore.getState().renameVariable(id, newName);
 
     this.renameNodeFromVisualizationFunction(id, newName);
-    // TODO - remove
-    //CytoscapeME.renameNode(id, newName);
 
     for (const reg of this.regulationsStore.getState().getAllRegulations()) {
       if (reg.regulator === id || reg.target === id) {
@@ -350,6 +349,14 @@ class VariablesLM implements VariablesLMInt {
     }
 
     this.liveModel.Export.saveModel();
+
+    if (addIntoUndoRedo) {
+      this.undoRedoStore.getState().addOperation({
+        undo: () => this.renameVariable(id, variable.name, false, false),
+        redo: () => this.renameVariable(id, newName, false, false),
+      });
+    }
+
     return undefined;
   }
 

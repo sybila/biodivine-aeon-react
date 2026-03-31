@@ -87,7 +87,12 @@ class ModelEditor implements ModelEditorInt {
   /** Changes the name of a variable */
   public changeVariableName(id: number, newName: string): boolean {
     if (newName != '') {
-      const error = this.liveModelServ.Variables.renameVariable(id, newName);
+      const error = this.liveModelServ.Variables.renameVariable(
+        id,
+        newName,
+        true,
+        false
+      );
 
       if (error) {
         this.messageServ.showError('Variable name not changed: ' + error);
@@ -199,11 +204,21 @@ class ModelEditor implements ModelEditorInt {
   // #region --- Regulation Actions ---
 
   public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
-    this.liveModelServ.Regulations.toggleMonotonicity(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleMonotonicity(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
-    this.liveModelServ.Regulations.toggleObservability(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleObservability(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   // #endregion
@@ -240,12 +255,12 @@ class ModelEditor implements ModelEditorInt {
 
   /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
-    this.liveModelServ.Info.setModelDescription(description);
+    this.liveModelServ.Info.setModelDescription(description, true, false);
   }
 
   /** Sets the model name in the LiveModel */
   public setModelName(name: string) {
-    this.liveModelServ.Info.setModelName(name);
+    this.liveModelServ.Info.setModelName(name, true, false);
   }
 
   // #endregion

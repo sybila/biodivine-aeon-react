@@ -367,8 +367,8 @@ class ImportLM implements ImportLMInt {
     this.liveModel.clear();
 
     // Set model metadata
-    this.liveModel.Info.setModelName(modelName, true);
-    this.liveModel.Info.setModelDescription(modelDescription, true);
+    this.liveModel.Info.setModelName(modelName, false, true);
+    this.liveModel.Info.setModelDescription(modelDescription, false, true);
 
     this.setRegulations(regulations, positions, control);
     this.setUpdateFunctions(updateFunctions, positions, control);

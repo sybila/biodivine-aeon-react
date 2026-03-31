@@ -5,10 +5,14 @@ export interface InfoLMInt {
   // #region --- Setters ---
 
   /** Set the model name and trigger UI update */
-  setModelName(name: string, force?: boolean): void;
+  setModelName(name: string, addIntoUndoRedo: boolean, force: boolean): void;
 
   /** Set the model description and trigger UI update */
-  setModelDescription(description: string, force?: boolean): void;
+  setModelDescription(
+    description: string,
+    addIntoUndoRedo: boolean,
+    force: boolean
+  ): void;
 
   // #endregion
 }
