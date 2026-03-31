@@ -46,7 +46,7 @@ class Warning implements WarningInt {
     this.warningStore
       .getState()
       .addWarning(
-        'Starting a new computation will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',
+        'Starting a new computation will clear the results and close all tabs connected to the with the same computation type (ex. Attractor Analysis). Do you want to proceed?',
         [
           { text: 'Cancel', action: () => {} },
           {
