@@ -33,7 +33,7 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
   useEffect(() => {
     if (selectedResultsMode === undefined || !results[selectedResultsMode]) {
       const definedResults = Object.entries(results).filter(
-        (_, value) => value != undefined
+        (value) => value[1] != undefined
       );
 
       if (definedResults.length > 0) {
