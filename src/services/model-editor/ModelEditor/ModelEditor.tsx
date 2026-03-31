@@ -204,11 +204,21 @@ class ModelEditor implements ModelEditorInt {
   // #region --- Regulation Actions ---
 
   public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
-    this.liveModelServ.Regulations.toggleMonotonicity(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleMonotonicity(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
-    this.liveModelServ.Regulations.toggleObservability(regulatorId, targetId, true, false);
+    this.liveModelServ.Regulations.toggleObservability(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   // #endregion

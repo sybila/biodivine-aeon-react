@@ -108,7 +108,9 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         onClick={() =>
           liveModelServ.Regulations.toggleMonotonicity(
             regulationInfo.regulator,
-            regulationInfo.target
+            regulationInfo.target,
+            true,
+            false
           )
         }
         hintText={monotocityInfo.hint}
