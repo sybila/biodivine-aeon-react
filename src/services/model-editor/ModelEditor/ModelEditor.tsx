@@ -90,8 +90,8 @@ class ModelEditor implements ModelEditorInt {
       const error = this.liveModelServ.Variables.renameVariable(
         id,
         newName,
-        false,
-        true
+        true,
+        false
       );
 
       if (error) {
