@@ -1,4 +1,5 @@
 import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { InfoLMInt } from './InfoLMInt';
@@ -12,13 +13,18 @@ class InfoLM implements InfoLMInt {
   private liveModel: LiveModelInt;
 
   private modelInfoStore: ZustandStore<ModelInfoState>;
+  private modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   constructor(
     liveModel: LiveModelInt,
-    modelInfoStore: ZustandStore<ModelInfoState>
+
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
+
     this.modelInfoStore = modelInfoStore;
+    this.modelUndoRedoStore = modelUndoRedoStore;
   }
 
   // #endregion
@@ -26,7 +32,11 @@ class InfoLM implements InfoLMInt {
   // #region --- Setters ---
 
   /** Set the model name and trigger UI update */
-  public setModelName(name: string, force: boolean = false): void {
+  public setModelName(
+    name: string,
+    addIntoUndoRedo: boolean,
+    force: boolean = false
+  ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
       return;
     }
@@ -36,12 +46,20 @@ class InfoLM implements InfoLMInt {
       this.modelInfoStore.getState().setModelName(name);
       window.document.title = `Biodivine/Aeon - ${name}`;
       this.infoChanged();
+
+      if (addIntoUndoRedo) {
+        this.modelUndoRedoStore.getState().addOperation({
+          undo: () => this.setModelName(modelName, false, true),
+          redo: () => this.setModelName(name, false, true),
+        });
+      }
     }
   }
 
   /** Set the model description and trigger UI update */
   public setModelDescription(
     description: string,
+    addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
     if (!force && !this.liveModel.modelCanBeModified()) {
@@ -54,6 +72,13 @@ class InfoLM implements InfoLMInt {
     if (modelDescription !== description) {
       this.modelInfoStore.getState().setModelDescription(description);
       this.infoChanged();
+
+      if (addIntoUndoRedo) {
+        this.modelUndoRedoStore.getState().addOperation({
+          undo: () => this.setModelDescription(modelDescription, false, true),
+          redo: () => this.setModelDescription(description, false, true),
+        });
+      }
     }
   }
 

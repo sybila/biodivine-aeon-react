@@ -153,7 +153,7 @@ class LiveModel implements LiveModelInt {
     variablePositionsStore: ZustandStore<VariablePositionsState>
   ) {
     this.Models = new ModelsLM(this, this.loadedModelStore);
-    this.Info = new InfoLM(this, modelInfoStore);
+    this.Info = new InfoLM(this, modelInfoStore, modelUndoRedoStore);
     this.Variables = new VariablesLM(
       this,
       this.computationManagerServ,
