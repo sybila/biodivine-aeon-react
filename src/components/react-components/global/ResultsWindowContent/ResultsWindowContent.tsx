@@ -25,24 +25,29 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
     ComputationModes | undefined
   >(undefined);
 
-  const results: Record<
-    ComputationModes,
-    AttractorResults | ControlResults | undefined
-  > = resultsStatusStore((state) => state.results);
+  const lastAddedResults = resultsStatusStore(
+    (state) => state.lastAddedResults
+  );
 
   useEffect(() => {
-    if (selectedResultsMode === undefined || !results[selectedResultsMode]) {
-      const definedResults = Object.entries(results).filter(
-        (value) => value[1] != undefined
-      );
+    if (lastAddedResults !== undefined) {
+      setSelectedResultsMode(lastAddedResults.mode);
+      return;
+    }
+
+    if (
+      selectedResultsMode === undefined ||
+      !resultsStatusStore.getState().results[selectedResultsMode]
+    ) {
+      const definedResults = resultsStatusStore.getState().getDefinedResults();
 
       if (definedResults.length > 0) {
-        setSelectedResultsMode(definedResults[0][0] as ComputationModes);
+        setSelectedResultsMode(definedResults[0][0]);
       } else {
         setSelectedResultsMode(undefined);
       }
     }
-  }, [results]);
+  }, [lastAddedResults]);
 
   const renderButtons = () => {
     const renderButton = (mode: ComputationModes) => (
@@ -54,9 +59,7 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
       />
     );
 
-    const resultsArray = Object.entries(results).filter(
-      (value) => value[1] != null
-    );
+    const resultsArray = resultsStatusStore.getState().getDefinedResults();
 
     const mid = Math.ceil(resultsArray.length / 2);
 
