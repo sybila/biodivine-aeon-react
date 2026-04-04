@@ -426,6 +426,17 @@ export type Warning = {
 
 // #endregion
 
+// #region --- Results Status ---
+
+export type Results = AttractorResults | ControlResults;
+
+export type TimestampedResultsMode = {
+  mode: ComputationModes;
+  timestamp: number | undefined;
+};
+
+// #endregion
+
 // #region --- Undo/Redo ---
 
 /** Functions for undoing/redoing of operation.
