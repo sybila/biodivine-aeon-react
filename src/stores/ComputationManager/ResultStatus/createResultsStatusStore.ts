@@ -8,12 +8,16 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
       'Attractor Analysis': undefined,
       Control: undefined,
     },
+    lastAddedResults: undefined,
+
     setResults: (mode, results) =>
       set((state) => ({
         results: {
           ...state.results,
           [mode]: results,
         },
+        lastAddedResults:
+          results !== undefined ? { mode, timestamp: Date.now() } : undefined,
       })),
 
     isResultsConflict: (mode) => {
@@ -30,6 +34,7 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
           ...state.results,
           [mode]: undefined,
         },
+        lastAddedResults: undefined,
       })),
 
     clear: () =>
@@ -38,6 +43,7 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
           'Attractor Analysis': undefined,
           Control: undefined,
         },
+        lastAddedResults: undefined,
       })),
   }));
 }
