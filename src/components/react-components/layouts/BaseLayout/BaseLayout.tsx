@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
@@ -36,12 +36,10 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
 }) => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
-
-  const loadedResults = resultsStatusStore((state) => state.results);
-
-  const newResultsAvailable: boolean = useMemo(() => {
-    return Object.values(loadedResults).some((value) => value !== undefined);
-  }, [loadedResults]);
+  const lastAddedResultsTimestamp = resultsStatusStore(
+    (state) => state.lastAddedResults?.timestamp
+  );
+  const hasMountedRef = useRef(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,10 +58,16 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   }, []);
 
   useEffect(() => {
-    if (newResultsAvailable) {
+    // Ignore the first render to avoid opening window for stale preloaded state.
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    if (lastAddedResultsTimestamp !== undefined) {
       setActiveOverlayWindow('Results');
     }
-  }, [newResultsAvailable]);
+  }, [lastAddedResultsTimestamp]);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
