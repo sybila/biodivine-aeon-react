@@ -155,7 +155,7 @@ class CytoscapeTSSD {
           selector: 'node[type = "leaf"]',
           style: {
             'border-color': '#546E7A',
-            'font-family': 'symbols',
+            'font-family': 'FiraMono',
             'font-size': '16pt',
           },
         },
