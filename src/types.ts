@@ -380,9 +380,12 @@ export type NodeDataTSSD = {
   type: NodeTypeTSSD;
 };
 
-export type VisualizationNodeDataTSSD = NodeDataTSSD & {
+export type VisualizationNodeDataTSSD = {
+  id: string;
   label: string;
   action: 'remove';
+  treeData: NodeDataTSSD;
+  type: NodeTypeTSSD;
 };
 
 export type NodeTypeTSSD = 'decision' | 'leaf';

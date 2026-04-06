@@ -239,6 +239,7 @@ class CytoscapeTSSD {
     // Todo - add quick help for tree explorer
 
     const nodeData: VisualizationNodeDataTSSD = e.target.data();
+
     if (nodeData.action == 'remove') {
       if (!nodeData.id) return;
       // This is a remove button for a specifc tree node.
@@ -246,7 +247,9 @@ class CytoscapeTSSD {
       return;
     }
 
-    this.trapSpaceSDStatusStore.getState().changeSelectedNode(nodeData);
+    const nodeDataTSSD: NodeDataTSSD = nodeData.treeData;
+
+    this.trapSpaceSDStatusStore.getState().changeSelectedNode(nodeDataTSSD);
     if (nodeData.type === 'decision') this.selectedDecisionNode(e);
   }
 
