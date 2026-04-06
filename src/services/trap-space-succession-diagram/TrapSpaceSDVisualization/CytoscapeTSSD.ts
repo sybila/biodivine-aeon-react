@@ -266,7 +266,7 @@ class CytoscapeTSSD {
    * Selects/Unselects nodes as needed.
    * If targetId is provided, it will be selected. */
   public refreshSelection(targetId?: string) {
-    let selected = this.cytoscape.$(':selected'); // node or edge that are selected
+    const selected = this.cytoscape.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {
       selected.unselect();
     }
