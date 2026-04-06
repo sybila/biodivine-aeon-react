@@ -25,6 +25,9 @@ export interface TrapSpaceSuccessionDiagramInt {
    *  Unselects and re-selects the current selected node. */
   refreshSelection: () => void;
 
+  /** Removes node from the succession diagram. */
+  removeNode(nodeId: number): void;
+
   // #endregion
 
   // #region --- Decision management ---

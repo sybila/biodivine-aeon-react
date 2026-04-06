@@ -272,5 +272,18 @@ export interface ComputeEngineInt {
     ) => void
   ): void;
 
+  /** Deletes decision from trap space succession diagram.
+   *  @param nodeId - (number) ID of the node from which the decision will be deleted.
+   *  @param callback - (function) Function which takes a node and a list of removed node IDs. This function is used to remove the deleted node and its child nodes from the visualization after they are deleted.
+   */
+  deleteDecisionTSSD(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      node: NodeDataTSSD | undefined,
+      removedNodes: number[]
+    ) => void
+  ): void;
+
   // #endregion
 }

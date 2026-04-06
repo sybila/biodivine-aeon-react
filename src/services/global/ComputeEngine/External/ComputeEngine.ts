@@ -1107,6 +1107,30 @@ class ComputeEngine implements ComputeEngineInt {
     // );
   }
 
+  public deleteDecisionTSSD(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      node: NodeDataTSSD | undefined,
+      removedNodes: number[]
+    ) => void
+  ): void {
+    callback(undefined, undefined, []);
+    // TODO - implement this endpoint in the compute engine and uncomment the backend request.
+    // this.backendRequest(
+    //   '/revert_decision_tssd/' + nodeId,
+    //   (
+    //     error: string | undefined,
+    //     response: DeleteBifDecisionResponse | undefined
+    //   ) => {
+    //     if (callback !== undefined) {
+    //       callback(error, response?.node ?? undefined, response?.removed ?? []);
+    //     }
+    //   },
+    //   'POST'
+    // );
+  }
+
   // #endregion
 
   // #region --- Results ---

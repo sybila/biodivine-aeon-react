@@ -87,6 +87,33 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.visualization.refreshSelection();
   }
 
+  /** Removes nodes from visualization.
+   *  @param node - (NodeDataTSSD | undefined) The node which will be selected after the removal. If undefined, no node will be selected.
+   *  @param removedNodes - (number[]) List of IDs of removed nodes. These nodes will be removed from the visualization.
+   */
+  private removeFromVisualization(
+    node: NodeDataTSSD | undefined,
+    removedNodes: number[]
+  ) {
+    if (removedNodes.length > 0) {
+      for (const removed of removedNodes) {
+        this.visualization.removeNode(removed.toString());
+      }
+    }
+    if (node !== undefined) {
+      this.visualization.ensureNode(node);
+      this.visualization.refreshSelection(node.id.toString());
+    } else {
+      this.visualization.refreshSelection();
+    }
+  }
+
+  public removeNode(nodeId: number): void {
+    this.computationManagerServ.deleteDecisionTSSD(nodeId, (node, removed) => {
+      this.removeFromVisualization(node, removed);
+    });
+  }
+
   // #endregion
 
   // #region --- Make Decision ---

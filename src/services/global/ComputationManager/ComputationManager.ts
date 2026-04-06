@@ -900,6 +900,50 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
+  private deleteDecisionTSSDCallback(
+    error: string | undefined,
+    node: NodeDataTSSD | undefined,
+    removed: number[] | undefined,
+    removeNodesFromVisualizationFunction: (
+      node: NodeDataTSSD,
+      removedNodes: number[]
+    ) => void
+  ): void {
+    if (error || !node) {
+      this.messageServ.showError(
+        `Error deleting decision: ${error ?? 'Internal error'}`
+      );
+      return;
+    }
+
+    if (!removed || removed.length === 0) {
+      this.messageServ.showInfo(
+        `Decision for node ${node.id} was deleted, but no nodes were removed.`
+      );
+      return;
+    }
+
+    removeNodesFromVisualizationFunction(node, removed);
+  }
+
+  public deleteDecisionTSSD(
+    nodeId: number,
+    removeNodesFromVisualizationFunction: (
+      node: NodeDataTSSD,
+      removedNodes: number[]
+    ) => void
+  ): void {
+    this.loadingServ.startLoading();
+    this.computeEngine.deleteDecisionTSSD(nodeId, (error, node, removed) => {
+      this.deleteDecisionTSSDCallback(
+        error,
+        node,
+        removed,
+        removeNodesFromVisualizationFunction
+      );
+    });
+  }
+
   // #endregion
 
   // #region --- Results ---

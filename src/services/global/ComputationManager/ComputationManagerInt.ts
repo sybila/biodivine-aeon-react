@@ -234,6 +234,18 @@ export interface ComputationManagerInt {
     insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
   ): void;
 
+  /** Deletes decision from trap space succession diagram.
+   *  @param nodeId - (number) ID of the node from which the decision will be deleted.
+   *  @param removeNodesFromVisualizationFunction - (function) Function which takes a node and a list of removed node IDs. This function is used to remove the deleted node and its child nodes from the visualization after they are deleted.
+   */
+  deleteDecisionTSSD(
+    nodeId: number,
+    removeNodesFromVisualizationFunction: (
+      node: NodeDataTSSD,
+      removedNodes: number[]
+    ) => void
+  ): void;
+
   // #endregion
 
   // #region --- Results ---
