@@ -129,7 +129,14 @@ export const ControlPerturbationsTableRoute = createRoute({
 export const TrapSpaceSuccessionDiagramRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/trap-space-succession-diagram',
-  component: () => <TrapSpaceSuccessionDiagram />,
+  component: () => (
+    <TrapSpaceSuccessionDiagram
+      trapSpaceSDServ={
+        ObjectProvider.TrapSpaceSuccessionDiagramnServicesProvider
+          .trapSpaceSDServ
+      }
+    />
+  ),
 });
 
 export const routeTree = rootRoute.addChildren([
