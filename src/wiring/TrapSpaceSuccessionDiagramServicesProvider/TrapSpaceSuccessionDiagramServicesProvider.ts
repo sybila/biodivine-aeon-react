@@ -1,7 +1,7 @@
-import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
-import type { MessageInt } from '../../services/global/Message/MessageInt';
 import TrapSpaceSuccessionDiagram from '../../services/trap-space-succession-diagram/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagram';
 import type { TrapSpaceSuccessionDiagramInt } from '../../services/trap-space-succession-diagram/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
+import type { DataFormatersInt } from '../../services/utilities/DataFormaters/DataFormatersInt';
+import type { GlobalServicesProviderInt } from '../GlobalServicesProvider/GlobalServicesProviderInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { TrapSpaceSuccessionDiagramServicesProviderInt } from './TrapSpaceSuccessionDiagramServicesProviderInt';
 
@@ -10,12 +10,13 @@ class TrapSpaceSuccessionDiagramServicesProvider implements TrapSpaceSuccessionD
 
   constructor(
     storesProvider: StoresProviderInt,
-    computationManagerServ: ComputationManagerInt,
-    messageServ: MessageInt
+    globalServicesProvider: GlobalServicesProviderInt,
+    dataFormatersServ: DataFormatersInt
   ) {
     this.trapSpaceSDServ = new TrapSpaceSuccessionDiagram(
-      messageServ,
-      computationManagerServ,
+      globalServicesProvider.messageServ,
+      dataFormatersServ,
+      globalServicesProvider.computationManagerServ,
       storesProvider.trapSpaceSDStatusStore
     );
   }

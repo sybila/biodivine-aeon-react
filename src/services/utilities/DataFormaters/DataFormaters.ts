@@ -3,6 +3,20 @@ import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */
 class DataFormaters implements DataFormatersInt {
+
+  /** Converts a record of variable states to a string
+   *  The record maps variable ids to their states (0, 1, or * for free/unpercolated).
+   * @param variableStates - (Record<string, number | undefined>) An object mapping variable names to their states (0, 1, or undefined for free/unpercolated).
+   */
+  public convertRecordOfVariableStatesToString(
+    variableStates: Record<string, number | undefined>
+  ): string {
+    return Object.entries(variableStates)
+      .sort(([keyA], [keyB]) => Number(keyA) - Number(keyB))
+      .map(([_, value]) => (value === 0 ? '0' : value === 1 ? '1' : '*'))
+      .join('');
+  }
+
   /** Converts a robustness value from decimal fraction to a percentage string. */
   public convertRobustnessToPercentage(robustness: number): string {
     if (robustness === undefined) {

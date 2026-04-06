@@ -8,6 +8,7 @@ import type {
   VisualOptionsSwitchableABE,
 } from '../../../types';
 import type { MessageInt } from '../../global/Message/MessageInt';
+import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 
 const remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -37,6 +38,7 @@ class CytoscapeTSSD {
   private container: HTMLElement | null = null;
 
   private messageServ: MessageInt;
+  private dataFormatersServ: DataFormatersInt;
 
   private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
@@ -44,9 +46,13 @@ class CytoscapeTSSD {
 
   constructor(
     messageServ: MessageInt,
+    dataFormatersServ: DataFormatersInt,
+
     trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>
   ) {
     this.messageServ = messageServ;
+    this.dataFormatersServ = dataFormatersServ;
+
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
 
     this.removeNodeFunction = (_: number) => {
@@ -355,9 +361,9 @@ class CytoscapeTSSD {
     }
 
     data.type = treeData.type;
-    data.label = Object.entries(treeData.variableValues)
-      .map(([variable, value]) => `${variable}=${value ?? '*'}`)
-      .join(', ');
+    data.label = this.dataFormatersServ.convertRecordOfVariableStatesToString(
+      treeData.variableValues
+    );
     data.treeData = treeData;
     let opacity = 1.0;
     if (this.showMass) {

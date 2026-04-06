@@ -3,6 +3,7 @@ import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { DecisionsTSSD, NodeDataTSSD } from '../../../types';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
+import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 import CytoscapeTSSD from '../TrapSpaceSDVisualization/CytoscapeTSSD';
 import type { TrapSpaceSuccessionDiagramInt } from './TrapSpaceSuccessionDiagramInt';
 
@@ -17,12 +18,17 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   constructor(
     messageServ: MessageInt,
+    dataFormatersServ: DataFormatersInt,
     computationManagerServ: ComputationManagerInt,
 
     trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>
   ) {
     this.isEmpty = true;
-    this.visualization = new CytoscapeTSSD(messageServ, trapSpaceSDStatusStore);
+    this.visualization = new CytoscapeTSSD(
+      messageServ,
+      dataFormatersServ,
+      trapSpaceSDStatusStore
+    );
 
     this.computationManagerServ = computationManagerServ;
 
