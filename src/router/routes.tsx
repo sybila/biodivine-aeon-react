@@ -135,6 +135,9 @@ export const TrapSpaceSuccessionDiagramRoute = createRoute({
         ObjectProvider.TrapSpaceSuccessionDiagramnServicesProvider
           .trapSpaceSDServ
       }
+      trapSpaceSDStatusStore={
+        ObjectProvider.StoresProvider.trapSpaceSDStatusStore
+      }
     />
   ),
 });

@@ -4,15 +4,19 @@ import type { TrapSpaceSDStatusState } from './TrapSpaceSDStatusState';
 
 function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
   return create<TrapSpaceSDStatusState>()((set, get) => ({
-    selectedNode: null,
     visualizationStatus: null,
+    activeMenuTab: null,
     availableDecisions: null,
+    selectedNode: null,
 
     setVisualizationStatus: (status) => {
       set({ visualizationStatus: status });
     },
     setAvailableDecisions: (decisions) => {
       set({ availableDecisions: decisions });
+    },
+    setActiveMenuTab: (tab) => {
+      set({ activeMenuTab: tab });
     },
     changeSelectedNode: (node) => {
       if (node === null) {
