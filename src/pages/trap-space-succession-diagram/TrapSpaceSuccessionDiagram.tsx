@@ -3,9 +3,11 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import VisualizationCanvas from '../../components/react-components/global/VisualizationCanvas/VisualizationCanvas';
 import type { MenuTabTypeTrapSpaceSD } from '../../types';
-import ObjectProvider from '../../wiring/ObjectProvider';
+import type { TrapSpaceSuccessionDiagramProps } from './TrapSpaceSuccessionDiagramProps';
 
-const TrapSpaceSuccessionDiagram: React.FC = () => {
+const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
+  trapSpaceSDServ,
+}) => {
   /** Check if the succession diagram canvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
 
@@ -13,7 +15,7 @@ const TrapSpaceSuccessionDiagram: React.FC = () => {
 
   useEffect(() => {
     if (initialized) {
-      ObjectProvider.TrapSpaceSuccessionDiagramnServicesProvider.trapSpaceSDServ.openSuccessionDiagram();
+      trapSpaceSDServ.openSuccessionDiagram();
     }
   }, [initialized]);
 
@@ -58,9 +60,7 @@ const TrapSpaceSuccessionDiagram: React.FC = () => {
         initialized={initialized}
         setInitialized={(initialized: boolean) => setInitialized(initialized)}
         initializeCanvas={(container) => {
-          ObjectProvider.TrapSpaceSuccessionDiagramnServicesProvider.trapSpaceSDServ.init(
-            container
-          );
+          trapSpaceSDServ.init(container);
         }}
       />
     </>
