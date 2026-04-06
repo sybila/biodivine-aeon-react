@@ -3,6 +3,7 @@ import type {
   ComputationModes,
   ComputationStatus,
   ControlResults,
+  NodeDataTSSD,
   StabilityAnalysisModes,
 } from '../../../types';
 import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
@@ -205,6 +206,14 @@ export interface ComputationManagerInt {
   // #region --- Control Computation ---
 
   startControlComputation(): void;
+
+  // #endregion
+
+  // #region --- Trap Space Succession Diagram ---
+
+  getTrapSpaceSuccessionDiagram(
+    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
+  ): void;
 
   // #endregion
 

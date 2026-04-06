@@ -12,6 +12,7 @@ import type {
   Decisions,
   ModelObject,
   NodeDataBE,
+  NodeDataTSSD,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   TimestampResponse,
@@ -908,6 +909,84 @@ class ComputeEngine implements ComputeEngineInt {
       'POST',
       model
     );
+  }
+
+  // #endregion
+
+  // #region --- Trap Space Succession Diagram ---
+
+  public getTrapSpaceSuccessionDiagram(
+    model: string,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataTSSD[] | undefined
+    ) => void
+  ): void {
+    // TODO - remove this mock data when the endpoint is implemented in the compute engine. This is just to be able to work on the frontend part of the succession diagram before the backend is ready.
+    callback(undefined, [
+      {
+        id: 0,
+        variableValues: {
+          A: undefined,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 8,
+        childNodeIds: [1, 2, 4],
+        type: 'decision',
+      },
+      {
+        id: 1,
+        variableValues: {
+          A: 0,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 4,
+        childNodeIds: [3],
+        type: 'decision',
+      },
+      {
+        id: 2,
+        variableValues: {
+          A: 1,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 4,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+      {
+        id: 3,
+        variableValues: {
+          A: 0,
+          B: 0,
+          C: undefined,
+        },
+        cardinality: 2,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+      {
+        id: 4,
+        variableValues: {
+          A: 0,
+          B: 1,
+          C: undefined,
+        },
+        cardinality: 2,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+    ]);
+    // TODO - implement this endpoint in the compute engine and uncomment the backend request. For now, this function will return an error to avoid confusion.
+    // this.backendRequest(
+    //   '/get_trap_space_succession_diagram',
+    //   callback,
+    //   'GET',
+    //   null
+    // );
   }
 
   // #endregion

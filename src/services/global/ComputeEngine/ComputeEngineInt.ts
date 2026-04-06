@@ -5,6 +5,7 @@ import type {
   Decisions,
   ModelObject,
   NodeDataBE,
+  NodeDataTSSD,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
@@ -227,6 +228,18 @@ export interface ComputeEngineInt {
       engineStatus: string | undefined,
       compStatus: ComputationStatus | undefined,
       color: string | undefined
+    ) => void
+  ): void;
+
+  // #endregion
+
+  // #region --- Trap Space Succession Diagram ---
+
+  getTrapSpaceSuccessionDiagram(
+    model: string,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataTSSD[] | undefined
     ) => void
   ): void;
 

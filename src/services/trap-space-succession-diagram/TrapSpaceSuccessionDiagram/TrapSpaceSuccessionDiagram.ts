@@ -1,22 +1,53 @@
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { NodeDataTSSD } from '../../../types';
+import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import CytoscapeTSSD from '../TrapSpaceSDVisualization/CytoscapeTSSD';
 import type { TrapSpaceSuccessionDiagramInt } from './TrapSpaceSuccessionDiagramInt';
 
 class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
+  private isEmpty: boolean;
+
   private visualization: CytoscapeTSSD;
+
+  private computationManagerServ: ComputationManagerInt;
+
+  private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
   constructor(
     messageServ: MessageInt,
+    computationManagerServ: ComputationManagerInt,
+
     trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>
   ) {
+    this.isEmpty = true;
     this.visualization = new CytoscapeTSSD(messageServ, trapSpaceSDStatusStore);
+
+    this.computationManagerServ = computationManagerServ;
+
+    this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
   }
 
   public init(container: HTMLDivElement): void {
     this.visualization.init(container);
+  }
+
+  // #region --- Succession diagram management ---
+
+  /** Opens the succession diagram, loading it if necessary. */
+  public openSuccessionDiagram(): void {
+    if (this.isEmpty) {
+      const hasSavedVisualizationStatus =
+        this.trapSpaceSDStatusStore.getState().visualizationStatus !== null;
+      this.computationManagerServ.getTrapSpaceSuccessionDiagram((nodeList: NodeDataTSSD[]) => {
+        this.insertSuccessionDiagram(
+          nodeList,
+          !hasSavedVisualizationStatus,
+          !hasSavedVisualizationStatus
+        );
+      });
+    }
   }
 
   public insertSuccessionDiagram(
@@ -39,6 +70,8 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       this.visualization.applyTreeLayout(fit, animate);
     }
   }
+
+  // #endregion
 }
 
 export default TrapSpaceSuccessionDiagram;

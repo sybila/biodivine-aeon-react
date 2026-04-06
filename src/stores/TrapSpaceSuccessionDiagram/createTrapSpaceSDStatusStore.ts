@@ -5,6 +5,10 @@ import type { TrapSpaceSDStatusState } from './TrapSpaceSDStatusState';
 function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
   return create<TrapSpaceSDStatusState>()((set, get) => ({
     selectedNode: null,
+    visualizationStatus: null,
+    setVisualizationStatus: (status) => {
+      set({ visualizationStatus: status });
+    },
 
     changeSelectedNode: (node) => {
       if (node === null) {
@@ -13,8 +17,9 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
       }
       set({ selectedNode: node });
     },
+
     clearSelectedNodeInfo: () => {
-      set({ selectedNode: null });
+      set({ selectedNode: null, visualizationStatus: null });
     },
   }));
 }

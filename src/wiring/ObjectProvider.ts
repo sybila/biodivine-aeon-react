@@ -72,6 +72,7 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.TrapSpaceSuccessionDiagramnServicesProvider =
       new TrapSpaceSuccessionDiagramServicesProvider(
         this.StoresProvider,
+        this.GlobalServicesProvider.computationManagerServ,
         this.GlobalServicesProvider.messageServ
       );
   }

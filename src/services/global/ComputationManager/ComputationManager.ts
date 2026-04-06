@@ -15,6 +15,7 @@ import type {
   Decisions,
   ModelObject,
   NodeDataBE,
+  NodeDataTSSD,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
@@ -795,6 +796,49 @@ class ComputationManager implements ComputationManagerInt {
       this.getMaxNumberOfResults(),
       { ...phenotypeControlEnabled, oscillation: oscillation },
       this.setComputationStatus
+    );
+  }
+
+  // #endregion
+
+  // #region --- Trap Space Succession Diagram ---
+
+  private getSuccessionDiagramCallback(
+    error: string | undefined,
+    nodes: NodeDataTSSD[] | undefined,
+    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
+  ): void {
+    if (error || !nodes) {
+      this.messageServ.showError(
+        `Error fetching trap space succession diagram: ${error ?? 'Internal error'}`
+      );
+    } else {
+      insertSuccessionDiagramFunction(nodes);
+    }
+
+    this.loadingServ.endLoading();
+  }
+
+  public getTrapSpaceSuccessionDiagram(
+    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
+  ): void {
+    const model = this.getLiveModel()!.Export.exportAeon();
+
+    try {
+      this.computationCanStart(model);
+    } catch (error: unknown) {
+      this.messageServ.showError((error as Error).message);
+      return;
+    }
+
+    this.computeEngine.getTrapSpaceSuccessionDiagram(
+      model,
+      (error: string | undefined, nodes: NodeDataTSSD[] | undefined) =>
+        this.getSuccessionDiagramCallback(
+          error,
+          nodes,
+          insertSuccessionDiagramFunction
+        )
     );
   }
 
