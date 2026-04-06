@@ -4,6 +4,7 @@ import type { ControlPerturbationsTableServicesProviderInt } from './ControlPert
 import type { GlobalServicesProviderInt } from './GlobalServicesProvider/GlobalServicesProviderInt';
 import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProvider/ModelEditorServicesProviderInt';
 import type { StoresProviderInt } from './StoresProvider/StoresProviderInt';
+import type { TrapSpaceSuccessionDiagramServicesProviderInt } from './TrapSpaceSuccessionDiagramServicesProvider/TrapSpaceSuccessionDiagramServicesProviderInt';
 import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 
 /** Interface which provides objects (services, stores) for the rest of the application (UI)*/
@@ -12,6 +13,7 @@ export interface ObjectProviderInt {
   AttractorVisualizerServicesProvider: AttractorVisualizerServicesProviderInt;
   AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
   ControlPerturbationsTableServicesProvider: ControlPerturbationsTableServicesProviderInt;
+  TrapSpaceSuccessionDiagramnServicesProvider: TrapSpaceSuccessionDiagramServicesProviderInt;
 
   GlobalServicesProvider: GlobalServicesProviderInt;
   UtilitiesServiceProvider: UtilitiesServiceProviderInt;

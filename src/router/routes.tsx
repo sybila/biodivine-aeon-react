@@ -3,6 +3,7 @@ import AttractorBifurcationExplorer from '../pages/attractor-bifurcation-explore
 import AttractorVisualizer from '../pages/attractor-visualizer/AttractorVisualizer';
 import ControlPerturbationsTable from '../pages/control-perturbations-table/ControlPerturbationTable';
 import ModelEditor from '../pages/model-editor/ModelEditor';
+import TrapSpaceSuccessionDiagram from '../pages/trap-space-succession-diagram/TrapSpaceSuccessionDiagram';
 import ObjectProvider from '../wiring/ObjectProvider';
 import { rootRoute } from './root';
 
@@ -125,6 +126,12 @@ export const ControlPerturbationsTableRoute = createRoute({
   ),
 });
 
+export const TrapSpaceSuccessionDiagramRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/trap-space-succession-diagram',
+  component: () => <TrapSpaceSuccessionDiagram />,
+});
+
 export const routeTree = rootRoute.addChildren([
   defaultRedirect,
   modelEditorRoute,
@@ -132,4 +139,5 @@ export const routeTree = rootRoute.addChildren([
   AttractorVisualizerRoute,
   WitnessRoute,
   ControlPerturbationsTableRoute,
+  TrapSpaceSuccessionDiagramRoute,
 ]);

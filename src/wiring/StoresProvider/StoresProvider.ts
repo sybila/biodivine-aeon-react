@@ -30,6 +30,8 @@ import createModelEditorStatusStore from '../../stores/ModelEditor/createModelEd
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import createTabsStore from '../../stores/Navigation/createTabsStore';
 import type { TabsState } from '../../stores/Navigation/TabState';
+import createTrapSpaceSDStatusStore from '../../stores/TrapSpaceSuccessionDiagram/createTrapSpaceSDStatusStore';
+import type { TrapSpaceSDStatusState } from '../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import createUndoRedoStore from '../../stores/UndoRedo/createUndoRedoStore';
 import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
 import createWarningStore from '../../stores/Warning/createWarningStore';
@@ -44,6 +46,7 @@ class StoresProvider implements StoresProviderInt {
   public attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
   public modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
   public perturbationFiltersSortStore: ZustandStore<PerturbationFiltersSortState>;
+  public trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
   // #endregion
 
@@ -88,6 +91,7 @@ class StoresProvider implements StoresProviderInt {
       createAttractorVisualizerStatusStore();
     this.modelEditorStatusStore = createModelEditorStatusStore();
     this.perturbationFiltersSortStore = createPerturbationFilterSortStore();
+    this.trapSpaceSDStatusStore = createTrapSpaceSDStatusStore();
 
     this.computeEngineStatusStore = createComputeEngineStatusStore();
     this.resultsStatusStore = createResultsStatusStore();

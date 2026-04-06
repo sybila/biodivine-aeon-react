@@ -14,6 +14,7 @@ import type { VariablePositionsState } from '../../stores/LiveModel/VariablePosi
 import type { VariablesStatus } from '../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
+import type { TrapSpaceSDStatusState } from '../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
 import type { WarningState } from '../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -26,6 +27,7 @@ export interface StoresProviderInt {
   attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
   perturbationFiltersSortStore: ZustandStore<PerturbationFiltersSortState>;
+  trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
   // #endregion
 

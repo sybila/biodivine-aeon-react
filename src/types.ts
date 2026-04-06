@@ -365,6 +365,30 @@ export type PertVariableFilterStatus =
 
 // #endregion
 
+// #region --- Trap Space Succession Diagram ---
+
+export type MenuTabTypeTrapSpaceSD = null;
+
+export type NodeDataTSSD = {
+  id: number;
+  /** Maps variable ids (keys) to state of variable. If variable state is undefined, it means the variable is free (unpercolated). */
+  variableValues: Record<string, number | undefined>;
+  /** Number of interpretations for which this node is valid */
+  cardinality: number;
+  /** Ids of nodes which are children of this node */
+  childNodeIds: number[];
+  type: NodeTypeTSSD;
+};
+
+export type VisualizationNodeDataTSSD = NodeDataTSSD & {
+  label: string;
+  action: 'remove';
+};
+
+export type NodeTypeTSSD = 'decision' | 'leaf';
+
+// #endregion
+
 // #region --- Visual Options ---
 
 export type VisualOptionsButtonSection = {

@@ -13,6 +13,8 @@ import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProvid
 import type { ObjectProviderInt } from './ObjectProviderInt';
 import StoresProvider from './StoresProvider/StoresProvider';
 import type { StoresProviderInt } from './StoresProvider/StoresProviderInt';
+import TrapSpaceSuccessionDiagramServicesProvider from './TrapSpaceSuccessionDiagramServicesProvider/TrapSpaceSuccessionDiagramServicesProvider';
+import type { TrapSpaceSuccessionDiagramServicesProviderInt } from './TrapSpaceSuccessionDiagramServicesProvider/TrapSpaceSuccessionDiagramServicesProviderInt';
 import UtilitiesServiceProvider from './UtilitiesServiceProvider/UtilitiesServiceProvider';
 import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 
@@ -21,6 +23,7 @@ class ObjectProviderClass implements ObjectProviderInt {
   public AttractorVisualizerServicesProvider: AttractorVisualizerServicesProviderInt;
   public AttractorBifurcationExplorerServicesProvider: AttractorBifurcationExplorerServicesProviderInt;
   public ControlPerturbationsTableServicesProvider: ControlPerturbationsTableServicesProviderInt;
+  public TrapSpaceSuccessionDiagramnServicesProvider: TrapSpaceSuccessionDiagramServicesProviderInt;
 
   public GlobalServicesProvider: GlobalServicesProviderInt;
   public UtilitiesServiceProvider: UtilitiesServiceProviderInt;
@@ -65,6 +68,11 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.ControlPerturbationsTableServicesProvider =
       new ControlPerturbationsTableServicesProvider(
         this.StoresProvider.perturbationFiltersSortStore
+      );
+    this.TrapSpaceSuccessionDiagramnServicesProvider =
+      new TrapSpaceSuccessionDiagramServicesProvider(
+        this.StoresProvider,
+        this.GlobalServicesProvider.messageServ
       );
   }
 }
