@@ -13,6 +13,7 @@ import type {
   ControlComputationParams,
   ControlResults,
   Decisions,
+  DecisionsTSSD,
   ModelObject,
   NodeDataBE,
   NodeDataTSSD,
@@ -839,6 +840,63 @@ class ComputationManager implements ComputationManagerInt {
           nodes,
           insertSuccessionDiagramFunction
         )
+    );
+  }
+
+  private getDecisionsTSSDCallback(
+    error: string | undefined,
+    decisions: DecisionsTSSD | undefined,
+    setDecisionsFunction: (decisions: DecisionsTSSD) => void
+  ) {
+    if (error || !decisions) {
+      this.messageServ.showError(
+        `Error fetching decisions: ${error ?? 'Internal error'}`
+      );
+    } else {
+      setDecisionsFunction(decisions);
+    }
+
+    this.loadingServ.endLoading();
+  }
+
+  public getDecisionsTSSD(
+    nodeId: number,
+    setDecisionsFunction: (decisions: DecisionsTSSD) => void
+  ): void {
+    this.loadingServ.startLoading();
+    this.computeEngine.getDecisionsTSSD(nodeId, (error, decisions) =>
+      this.getDecisionsTSSDCallback(error, decisions, setDecisionsFunction)
+    );
+  }
+
+  private makeDecisionTSSDCallback(
+    error: string | undefined,
+    node: NodeDataTSSD[] | undefined,
+    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
+  ): void {
+    if (error || !node) {
+      this.messageServ.showError(
+        `Error making decision: ${error ?? 'Internal error'}`
+      );
+    } else {
+      insertSuccessionDiagramFunction(node);
+    }
+
+    this.loadingServ.endLoading();
+  }
+
+  public makeDecisionTSSD(
+    nodeId: number,
+    decisionId: number,
+    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
+  ): void {
+    this.loadingServ.startLoading();
+    this.computeEngine.makeDecisionTSSD(nodeId, decisionId, (error, node) =>
+      this.makeDecisionTSSDCallback(
+        error,
+        node,
+        insertSuccessionDiagramFunction
+      )
     );
   }
 

@@ -18,4 +18,24 @@ export interface TrapSpaceSuccessionDiagramInt {
   ) => void;
 
   // #endregion
+
+  // #region --- Node Operations ---
+
+  /** Refreshes the selection in the TrapSpaceSuccessionDiagram.
+   *  Unselects and re-selects the current selected node. */
+  refreshSelection: () => void;
+
+  // #endregion
+
+  // #region --- Decision management ---
+
+  /** Gets all possible decisions for a specific node.
+   *  @param nodeId - (number) The ID of the node to fetch decisions for.
+   */
+  getDecisions(nodeId: number): void;
+
+  /** Extends succession diagram by adding new node corresponding to the selected decision. */
+  makeDecision(nodeId: number, decisionId: number): void;
+
+  // #endregion
 }

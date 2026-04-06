@@ -10,6 +10,7 @@ import type {
   ControlResultNoId,
   ControlResults,
   Decisions,
+  DecisionsTSSD,
   ModelObject,
   NodeDataBE,
   NodeDataTSSD,
@@ -986,6 +987,123 @@ class ComputeEngine implements ComputeEngineInt {
     //   callback,
     //   'GET',
     //   null
+    // );
+  }
+
+  public getDecisionsTSSD(
+    nodeId: number,
+    callback: (
+      error: string | undefined,
+      decisions: DecisionsTSSD | undefined
+    ) => void
+  ): void {
+    // TODO - implement this endpoint in the compute engine and uncomment the backend request.
+    callback(undefined, [
+      { id: 0, variableValues: {}, numberOfInterpretations: 4 },
+      { id: 1, variableValues: { A: 1 }, numberOfInterpretations: 4 },
+      { id: 0, variableValues: { B: 0 }, numberOfInterpretations: 4 },
+      { id: 1, variableValues: { B: 1 }, numberOfInterpretations: 4 },
+      { id: 0, variableValues: { C: 0 }, numberOfInterpretations: 2 },
+      { id: 1, variableValues: { C: 1 }, numberOfInterpretations: 2 },
+    ]);
+    // this.backendRequest(
+    //   '/get_attributes_tssd/' + nodeId,
+    //   (error: string | undefined, response: DecisionsTSSD | undefined) => {
+    //     callback?.(error, response);
+    //   },
+    //   'GET'
+    // );
+  }
+
+  public makeDecisionTSSD(
+    nodeId: number,
+    decisionId: number,
+    callback: (
+      error: string | undefined,
+      nodes: NodeDataTSSD[] | undefined
+    ) => void
+  ): void {
+    callback(undefined, [
+      {
+        id: 0,
+        variableValues: {
+          A: undefined,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 8,
+        childNodeIds: [1, 2, 4],
+        type: 'decision',
+      },
+      {
+        id: 1,
+        variableValues: {
+          A: 0,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 4,
+        childNodeIds: [3],
+        type: 'decision',
+      },
+      {
+        id: 2,
+        variableValues: {
+          A: 1,
+          B: undefined,
+          C: undefined,
+        },
+        cardinality: 4,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+      {
+        id: 3,
+        variableValues: {
+          A: 0,
+          B: 0,
+          C: undefined,
+        },
+        cardinality: 2,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+      {
+        id: 4,
+        variableValues: {
+          A: 0,
+          B: 1,
+          C: undefined,
+        },
+        cardinality: 2,
+        childNodeIds: [5],
+        type: 'leaf',
+      },
+      {
+        id: 5,
+        variableValues: {
+          A: 1,
+          B: 0,
+          C: undefined,
+        },
+        cardinality: 2,
+        childNodeIds: [],
+        type: 'leaf',
+      },
+    ]);
+
+    // TODO - implement this endpoint in the compute engine and uncomment the backend request.
+    // this.backendRequest(
+    //   '/make_decision_tssd/' + nodeId + '/' + decisionId,
+    //   (
+    //     error: string | undefined,
+    //     response: NodeDataTSSD[] | undefined
+    //   ) => {
+    //     if (callback !== undefined) {
+    //       callback(error, response);
+    //     }
+    //   },
+    //   'POST'
     // );
   }
 

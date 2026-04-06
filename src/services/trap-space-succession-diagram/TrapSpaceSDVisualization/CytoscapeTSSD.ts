@@ -271,7 +271,7 @@ class CytoscapeTSSD {
       selected.unselect();
     }
 
-    // If there was an error and this.bifurcationExplorerStatusStore has selected node, unselect it
+    // If there was an error and this.trapSpaceSDStatusStore has selected node, unselect it
     if (
       selected <= 0 &&
       this.trapSpaceSDStatusStore.getState().selectedNode != null
