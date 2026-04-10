@@ -60,10 +60,7 @@ export class ColoredWords extends LitElement {
       overflow-y: var(--colored-words-cont-overflow-y, auto);
       gap: var(--colored-words-word-gap, 0.5rem);
       font-size: var(--colored-words-font-size, 21px);
-      font-family: var(
-        --colored-words-font-family,
-        "'Arial', sans-serif"
-      );
+      font-family: var(--colored-words-font-family, 'Arial', sans-serif);
       line-height: var(--colored-words-line-height, 22px);
     }
   `;
@@ -97,11 +94,7 @@ export class ColoredWords extends LitElement {
     update('contOverflowY', '--colored-words-cont-overflow-y', 'auto');
     update('wordGap', '--colored-words-word-gap', '0.5rem');
     update('fontSize', '--colored-words-font-size', '21px');
-    update(
-      'fontFamily',
-      '--colored-words-font-family',
-      "'Arial', sans-serif"
-    );
+    update('fontFamily', '--colored-words-font-family', 'Arial, sans-serif');
     update('lineHeight', '--colored-words-line-height', '22px');
   }
 
