@@ -178,9 +178,11 @@ export type TabType =
 
 export type PossibleTabsTypes = TabType | ComputationModes;
 
-export type TabInfo<T extends PossibleTabsTypes> = {
+export type PossibleTabIds = number | ComputationModes;
+
+export type TabInfo<T extends PossibleTabsTypes, R extends PossibleTabIds> = {
   /** Unique identifier for the tab */
-  id: number;
+  id: R;
   /** Type of the tab */
   type: T;
   /** Path of the tab */

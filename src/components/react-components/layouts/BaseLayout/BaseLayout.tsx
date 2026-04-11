@@ -155,6 +155,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
             tabOperationsServ={tabOperationsServ}
             helpHoverStore={helpHoverStore}
             tabsStore={tabsStore}
+            resultsStatusStore={resultsStatusStore}
           />
         </NavigationDockContent>
       </PopUpBarReact>

@@ -9,14 +9,19 @@ import type { TabBarProps } from './TabBarProps';
 const TabBar: React.FC<TabBarProps> = ({
   setTabBarHelpHover,
   tabOperationsServ,
+
   helpHoverStore,
   tabsStore,
+  resultsStatusStore,
 }) => {
   const [deleteModeOn, setDeleteModeOn] = useState(false);
 
   const tabs = tabsStore((state) => state.openedTabs);
+  const results = resultsStatusStore((state) => state.results);
+  const selectedResults = resultsStatusStore((state) => state.lastAddedResults);
 
   const tabsArray = useMemo(() => Object.values(tabs), [tabs]);
+  const resultsArray = useMemo(() => Object.values(results), [results]);
 
   return (
     <div className="flex flex-row h-full w-fit gap-3 justify-start items-center">
@@ -41,7 +46,7 @@ const TabBar: React.FC<TabBarProps> = ({
 
       <div className="h-[90%] w-1 bg-black" />
 
-      <DynamicTabs<TabType>
+      <DynamicTabs<TabType, number>
         tabs={tabsArray}
         deleteModeOn={(tabId) => deleteModeOn && tabId !== 0}
         getIcon={(tabType) => tabOperationsServ.getTabTypeIcon(tabType)}
