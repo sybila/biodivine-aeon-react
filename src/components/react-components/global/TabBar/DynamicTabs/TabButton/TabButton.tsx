@@ -1,4 +1,4 @@
-import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
+import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
 import type { TabButtonProps } from './TabButtonProps';
 
 const TabButton: React.FC<TabButtonProps> = ({
