@@ -9,13 +9,15 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     this.dataFormatersServ = dataFormatersServ;
   }
 
-  /** Tests if the evaluated string starts with any of the search terms in the array */
-  private startsWithInArray(
+  /** Tests if the evaluated string matches any of the search terms in the array */
+  private searchInArray(
     evaluatedString: string,
     searchTermAsArray: string[]
   ): boolean {
+    const evaluatedStringLowerCase = evaluatedString.toLowerCase();
+
     for (const searchTerm of searchTermAsArray) {
-      if (evaluatedString.startsWith(searchTerm)) {
+      if (evaluatedStringLowerCase.includes(searchTerm)) {
         return true;
       }
     }
@@ -32,14 +34,17 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     if (searchText === undefined || searchText === '') return variables;
 
     const searchTerms =
-      this.dataFormatersServ.convertCommaSeparatedStringToArray(searchText);
+      this.dataFormatersServ.convertCommaSeparatedStringToArray(
+        searchText,
+        true
+      );
 
     if (searchTerms[searchTerms.length - 1] === '') {
       return variables;
     }
 
     return variables.filter((variable) =>
-      this.startsWithInArray(variable.name, searchTerms)
+      this.searchInArray(variable.name, searchTerms)
     );
   }
 
@@ -53,13 +58,16 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     if (searchText === undefined || searchText === '') return strings;
 
     const searchTerms =
-      this.dataFormatersServ.convertCommaSeparatedStringToArray(searchText);
+      this.dataFormatersServ.convertCommaSeparatedStringToArray(
+        searchText,
+        true
+      );
 
     if (searchTerms[searchTerms.length - 1] === '') {
       return strings;
     }
 
-    return strings.filter((str) => this.startsWithInArray(str, searchTerms));
+    return strings.filter((str) => this.searchInArray(str, searchTerms));
   }
 }
 
