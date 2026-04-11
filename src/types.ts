@@ -176,11 +176,13 @@ export type TabType =
   | 'Witness'
   | 'Control Perturbations Table';
 
-export type TabInfo = {
+export type PossibleTabsTypes = TabType | ComputationModes;
+
+export type TabInfo<T extends PossibleTabsTypes> = {
   /** Unique identifier for the tab */
   id: number;
   /** Type of the tab */
-  type: TabType;
+  type: T;
   /** Path of the tab */
   path: string;
   /** Callback function to be executed when the tab is clicked */
