@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
@@ -15,7 +15,7 @@ import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import type { BaseLayoutProps } from './BaseLayoutProps';
 
-type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
+export type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
 const BaseLayout: React.FC<BaseLayoutProps> = ({
   attractorVisualizerServ,
@@ -36,10 +36,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
 }) => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
-  const lastAddedResultsTimestamp = resultsStatusStore(
-    (state) => state.lastAddedResults?.timestamp
-  );
-  const hasMountedRef = useRef(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,18 +52,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
       navigate({ to: '/model-editor' });
     }
   }, []);
-
-  useEffect(() => {
-    // Ignore the first render to avoid opening window for stale preloaded state.
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      return;
-    }
-
-    if (lastAddedResultsTimestamp !== undefined) {
-      setActiveOverlayWindow('Results');
-    }
-  }, [lastAddedResultsTimestamp]);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
@@ -147,11 +131,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           handleComputeEngineClick={() =>
             setActiveOverlayWindow('Compute Engine')
           }
-          handleResultsClick={() => setActiveOverlayWindow('Results')}
           setNavBarHelpHover={setNavBarHelpHover}
         >
           <TabBar
             setTabBarHelpHover={setNavBarHelpHover}
+            setActiveWindow={(windowType) => setActiveOverlayWindow(windowType)}
             tabOperationsServ={tabOperationsServ}
             helpHoverStore={helpHoverStore}
             tabsStore={tabsStore}

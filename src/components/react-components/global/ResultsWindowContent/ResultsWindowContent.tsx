@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
 import type {
   AttractorResults,
   ComputationModes,
   ControlResults,
 } from '../../../../types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import ArrowSelectButton from '../ArrowsSelectButton/ArrowsSelectButton';
 import AttractorResultsTable from './AttractorResultsTable/AttractorResultsTable';
 import ControlResultsStats from './ControlResultsStats/ControlResultsStats';
 import type { ResultsWindowContentProps } from './ResultsWindowContentProps';
@@ -21,63 +19,9 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
   tabsStore,
   resultsStatusStore,
 }) => {
-  const [selectedResultsMode, setSelectedResultsMode] = useState<
-    ComputationModes | undefined
-  >(undefined);
-
-  const lastAddedResults = resultsStatusStore(
-    (state) => state.lastAddedResults
+  const selectedResultsMode = resultsStatusStore(
+    (state) => state.selectedResults
   );
-
-  useEffect(() => {
-    if (lastAddedResults !== undefined) {
-      setSelectedResultsMode(lastAddedResults.mode);
-      return;
-    }
-
-    if (
-      selectedResultsMode === undefined ||
-      !resultsStatusStore.getState().results[selectedResultsMode]
-    ) {
-      const definedResults = resultsStatusStore.getState().getDefinedResults();
-
-      if (definedResults.length > 0) {
-        setSelectedResultsMode(definedResults[0][0]);
-      } else {
-        setSelectedResultsMode(undefined);
-      }
-    }
-  }, [lastAddedResults]);
-
-  const renderButtons = () => {
-    const renderButton = (mode: ComputationModes) => (
-      <ArrowSelectButton
-        key={mode}
-        active={selectedResultsMode === mode}
-        text={mode}
-        onClick={() => setSelectedResultsMode(mode)}
-      />
-    );
-
-    const resultsArray = resultsStatusStore.getState().getDefinedResults();
-
-    const mid = Math.ceil(resultsArray.length / 2);
-
-    const firstCol = resultsArray.slice(0, mid);
-    const secondCol = resultsArray.slice(mid);
-
-    return (
-      <section className="flex flex-row w-full">
-        <div className="w-1/2">
-          {firstCol.map((value) => renderButton(value[0] as ComputationModes))}
-        </div>
-
-        <div className="w-1/2">
-          {secondCol.map((value) => renderButton(value[0] as ComputationModes))}
-        </div>
-      </section>
-    );
-  };
 
   const renderEmptyResults = () => {
     return (
@@ -128,8 +72,6 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
 
   return (
     <section className="flex flex-col h-fit w-fit items-center justify-start gap-2">
-      {renderButtons()}
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
       {getResultsComponent(selectedResultsMode)}
     </section>
   );

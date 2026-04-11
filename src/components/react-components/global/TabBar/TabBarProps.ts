@@ -3,9 +3,11 @@ import type { ResultsStatus } from '../../../../stores/ComputationManager/Result
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import type { OverlayWindowTypeME } from '../../layouts/BaseLayout/BaseLayout';
 
 export type TabBarProps = {
   setTabBarHelpHover: (event: MouseEvent, text: string) => void;
+  setActiveWindow: (windowName: OverlayWindowTypeME) => void;
 
   tabOperationsServ: TabOperationsInt;
 
