@@ -22,5 +22,8 @@ export interface DataFormatersInt {
 
   /** Converts a comma-separated string into an array of trimmed strings.
    */
-  convertCommaSeparatedStringToArray(text: string): Array<string>;
+  convertCommaSeparatedStringToArray(
+    text: string,
+    toLowerCase?: boolean
+  ): Array<string>;
 }
