@@ -52,7 +52,7 @@ function createTabsStore(): ZustandStore<TabsState> {
       }
 
       const id = get().idNow;
-      const newTab: TabInfo = {
+      const newTab: TabInfo<TabType, number> = {
         id,
         path,
         onClick,
