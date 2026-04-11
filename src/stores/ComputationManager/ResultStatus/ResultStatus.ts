@@ -1,7 +1,5 @@
 import type {
-  AttractorResults,
   ComputationModes,
-  ControlResults,
   Results,
   TimestampedResultsMode,
 } from '../../../types';
@@ -17,16 +15,16 @@ export type ResultsStatus = {
    *  If there are no results, it returns undefined.
    */
   lastAddedResults: TimestampedResultsMode | undefined;
+  /** Contains last result type selected in the results menu. */
+  selectedResults: ComputationModes | undefined;
   /** Tests if there is a conflict in the results for the given computation mode.
    *  If there is possible conflict (there are results for that mode), it returns true, otherwise false.
    *  @param mode - The computation mode to check for results conflict.
    *  @param resultsStore - The Zustand store containing the results status.
    */
   isResultsConflict: (mode: ComputationModes) => boolean;
-  setResults: (
-    mode: ComputationModes,
-    results: Results | undefined
-  ) => void;
+  setSelectedResults: (mode: ComputationModes | undefined) => void;
+  setResults: (mode: ComputationModes, results: Results | undefined) => void;
   /** Returns list of currently defined results.
    *  Each item in the list is a tuple containing the computation mode and the corresponding results.
    *  If there are no results, it returns an empty list.
