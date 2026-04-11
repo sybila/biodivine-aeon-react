@@ -23,6 +23,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   }[] = useMemo(() => {
     if (!selectedNode) return [];
 
+    // Counts how many variables are fixed (have state 0 or 1) and how many are free (have state undefined/*)
     const stateNumbers: [number, number] = Object.values(
       selectedNode.variableValues
     ).reduce<[number, number]>(
