@@ -42,12 +42,21 @@ const TabBar: React.FC<TabBarProps> = ({
         {Object.values(tabs).map((tab) => (
           <TabButton
             key={tab.id}
-            {...tab}
-            deleteMode={deleteModeOn}
-            setHelpHover={setTabBarHelpHover}
-            tabOperationsServ={tabOperationsServ}
-            helpHoverStore={helpHoverStore}
-            tabsStore={tabsStore}
+            active={tab.active}
+            deleteMode={deleteModeOn && tab.id != 0}
+            icon={tabOperationsServ.getTabTypeIcon(tab.type)}
+            iconAlt={tab.type}
+            setHelpHover={(event) => setTabBarHelpHover(event, tab.type)}
+            clearHelpHover={() => helpHoverStore.getState().clear()}
+            handleClick={() => {
+              if (deleteModeOn) {
+                if (tab.id != 0) {
+                  tabsStore.getState().removeTab(tab.id);
+                }
+              } else if (!tab.active) {
+                tabsStore.getState().setActiveTab(tab.id);
+              }
+            }}
           />
         ))}
       </div>
