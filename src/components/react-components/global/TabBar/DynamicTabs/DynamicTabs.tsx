@@ -11,7 +11,7 @@ const DynamicTabs = <T extends PossibleTabsTypes, R extends PossibleTabIds>({
   handleTabClick,
 }: DynamicTabsProps<T, R>) => {
   return (
-    <div className="h-full min-w-[100px] max-w-[500px] overflow-x-auto flex items-center justify-start gap-2 px-2">
+    <div className="h-full min-w-fit max-w-[500px] overflow-x-auto flex items-center justify-start gap-2 px-2">
       {tabs.map((tab) => (
         <TabButton
           key={tab.id}
