@@ -195,6 +195,7 @@ export type TabInfo<T extends PossibleTabsTypes, R extends PossibleTabIds> = {
   onClose?: () => void;
   /** Indicates if the tab is currently active */
   active: boolean;
+  text: string;
 };
 
 // #endregion

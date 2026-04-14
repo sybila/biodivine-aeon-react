@@ -44,6 +44,7 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
             type: key as ComputationModes,
             path: '',
             active: selectedResults === key,
+            text: key + ' Results',
           });
         }
         return acc;

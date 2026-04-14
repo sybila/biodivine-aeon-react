@@ -19,7 +19,7 @@ const DynamicTabs = <T extends PossibleTabsTypes, R extends PossibleTabIds>({
           deleteMode={deleteModeOn(tab.id)}
           icon={getIcon(tab.type)}
           iconAlt={tab.type}
-          setHelpHover={(event) => setTabBarHelpHover(event, tab.type)}
+          setHelpHover={(event) => setTabBarHelpHover(event, tab.text)}
           clearHelpHover={() => clearHelpHover()}
           handleClick={() => handleTabClick(tab.id, tab.active)}
         />
