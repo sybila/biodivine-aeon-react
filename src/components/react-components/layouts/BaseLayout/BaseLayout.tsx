@@ -81,6 +81,22 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
     }
   };
 
+  const getOnCloseFunctionForOverlayWindow = (
+    windowType: OverlayWindowTypeME
+  ) => {
+    switch (windowType) {
+      case 'Compute Engine':
+        return () => setActiveOverlayWindow(null);
+      case 'Results':
+        return () => {
+          setActiveOverlayWindow(null);
+          resultsStatusStore.getState().setSelectedResults(undefined);
+        };
+      default:
+        return () => {};
+    }
+  };
+
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
     helpHoverStore.getState().setHelpHover(event, text, -85);
   };
@@ -105,8 +121,12 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}
-          handleCloseClick={() => setActiveOverlayWindow(null)}
-          handleBackgroundClick={() => setActiveOverlayWindow(null)}
+          handleCloseClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
+          handleBackgroundClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
         >
           {renderOverlayWindowContent()}
         </OverlayWindowReact>
