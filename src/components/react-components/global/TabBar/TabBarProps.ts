@@ -1,4 +1,5 @@
 import type { TabOperationsInt } from '../../../../services/global/Navigation/TabOperationsInt';
+import type { ResultsOperationsInt } from '../../../../services/global/ResultsOperations/ResultsOperationsInt';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
@@ -10,6 +11,7 @@ export type TabBarProps = {
   setActiveWindow: (windowName: OverlayWindowTypeME) => void;
 
   tabOperationsServ: TabOperationsInt;
+  resultsOperationsServ: ResultsOperationsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
   tabsStore: ZustandStore<TabsState>;

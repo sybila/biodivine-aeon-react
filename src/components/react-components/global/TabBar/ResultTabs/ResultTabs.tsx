@@ -9,6 +9,9 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
   clearHelpHover,
   openResultsWindow,
   closeResultsWindow,
+
+  resultsOperationsServ,
+
   resultsStatusStore,
 }) => {
   const [lastAddedResultsTimestamp, setLastAddedResultsTimestamp] = useState<
@@ -64,7 +67,7 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
         },
       ]}
       deleteModeOn={(_) => false}
-      getIcon={(tabType) => 'TODO'}
+      getIcon={() => resultsOperationsServ.getResultTabIcon(null)}
       setTabBarHelpHover={setTabBarHelpHover}
       clearHelpHover={clearHelpHover}
       handleTabClick={(_, __) => undefined}
@@ -73,7 +76,7 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
     <DynamicTabs<ComputationModes, ComputationModes>
       tabs={resultsArray}
       deleteModeOn={(_) => deleteModeOn}
-      getIcon={(tabType) => 'TODO'}
+      getIcon={(tabType) => resultsOperationsServ.getResultTabIcon(tabType)}
       setTabBarHelpHover={setTabBarHelpHover}
       clearHelpHover={clearHelpHover}
       handleTabClick={(tabId, active) => {

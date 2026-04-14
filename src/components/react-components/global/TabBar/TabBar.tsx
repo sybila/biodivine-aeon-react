@@ -10,6 +10,7 @@ const TabBar: React.FC<TabBarProps> = ({
   setTabBarHelpHover,
   setActiveWindow,
   tabOperationsServ,
+  resultsOperationsServ,
 
   helpHoverStore,
   tabsStore,
@@ -46,6 +47,7 @@ const TabBar: React.FC<TabBarProps> = ({
         openResultsWindow={() => setActiveWindow('Results')}
         closeResultsWindow={() => setActiveWindow(null)}
         clearHelpHover={() => helpHoverStore.getState().clear()}
+        resultsOperationsServ={resultsOperationsServ}
         resultsStatusStore={resultsStatusStore}
       />
 

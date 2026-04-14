@@ -1,3 +1,4 @@
+import type { ResultsOperationsInt } from '../../../../../services/global/ResultsOperations/ResultsOperationsInt';
 import type { ResultsStatus } from '../../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
@@ -7,5 +8,8 @@ export type ResultTabsProps = {
   openResultsWindow: () => void;
   closeResultsWindow: () => void;
   clearHelpHover: () => void;
+
+  resultsOperationsServ: ResultsOperationsInt;
+
   resultsStatusStore: ZustandStore<ResultsStatus>;
 };

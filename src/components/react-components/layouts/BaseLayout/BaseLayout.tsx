@@ -137,6 +137,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
             setTabBarHelpHover={setNavBarHelpHover}
             setActiveWindow={(windowType) => setActiveOverlayWindow(windowType)}
             tabOperationsServ={tabOperationsServ}
+            resultsOperationsServ={resultsOperationsServ}
             helpHoverStore={helpHoverStore}
             tabsStore={tabsStore}
             resultsStatusStore={resultsStatusStore}
