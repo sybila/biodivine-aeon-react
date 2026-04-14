@@ -62,7 +62,7 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
           id: 'no-results',
           type: 'no-results',
           path: '',
-          active: false,
+          active: true,
           text: 'No Results Available',
         },
       ]}
