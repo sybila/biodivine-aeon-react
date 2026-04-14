@@ -148,13 +148,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
       >
         <NavigationDockContent
           helpHoverStore={helpHoverStore}
-          handleComputeEngineClick={() => {
-            if (activeOverlayWindow === 'Compute Engine') {
-              setActiveOverlayWindow(null);
-            } else {
-              setActiveOverlayWindow('Compute Engine');
-            }
-          }}
+          handleComputeEngineClick={() =>
+            setActiveOverlayWindow(
+              activeOverlayWindow === 'Compute Engine' ? null : 'Compute Engine'
+            )
+          }
           setNavBarHelpHover={setNavBarHelpHover}
         >
           <TabBar
