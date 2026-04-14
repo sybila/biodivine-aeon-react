@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { ComputationModes } from '../../../../types';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ComputationExtendableContent from './ComputationExtendableContent/ComputationExtendableContent';
@@ -8,40 +7,22 @@ import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   liveModelServ,
   computationManagerServ,
-  resultsOperationsServ,
   warningServ,
   tabStore,
   resultsStatusStore,
   controlStore,
 }) => {
-  const [computationMode, setComputationMode] = useState<ComputationModes>(
-    computationManagerServ.getComputationMode()
-  );
-
-  const changeComputationMode = (mode: ComputationModes) => {
-    computationManagerServ.setComputationMode(mode);
-    setComputationMode(mode);
-  };
-
-  const getComputationFunction = () => {
-    switch (computationMode) {
-      case 'Attractor Analysis':
-        return () => computationManagerServ.startAttractorAnalysis();
-      case 'Control':
-        return () => computationManagerServ.startControlComputation();
-    }
-  };
-
-  const showResultsWarningIfNeeded = () => {
-    const currentComputationFunction = getComputationFunction();
-
+  const showResultsWarningIfNeeded = (
+    computationMode: ComputationModes,
+    computationFunction: () => void
+  ) => {
     if (
       resultsStatusStore.getState().isResultsConflict(computationMode) ||
       !tabStore.getState().isEmpty()
     ) {
-      warningServ.addStartComputationResultsWarning(currentComputationFunction);
+      warningServ.addStartComputationResultsWarning(computationFunction);
     } else {
-      currentComputationFunction();
+      computationFunction();
     }
   };
 
@@ -53,12 +34,20 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
 
       <ComputationExtendableContent
         computationName="Attractor Analysis"
-        startComputationFunction={() => showResultsWarningIfNeeded()}
+        startComputationFunction={() =>
+          showResultsWarningIfNeeded('Attractor Analysis', () =>
+            computationManagerServ.startAttractorAnalysis()
+          )
+        }
       />
 
       <ComputationExtendableContent
         computationName="Control"
-        startComputationFunction={() => showResultsWarningIfNeeded()}
+        startComputationFunction={() =>
+          showResultsWarningIfNeeded('Control', () =>
+            computationManagerServ.startControlComputation()
+          )
+        }
       >
         <ControlCompParams
           computationManagerServ={computationManagerServ}

@@ -30,7 +30,6 @@ export type ModelEditorProps = {
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   fileConvertorsServ: FileConvertorsInt;
-  resultsOperationsServ: ResultsOperationsInt;
   warningServ: WarningInt;
   messageServ: MessageInt;
   loadingServ: LoadingInt;
