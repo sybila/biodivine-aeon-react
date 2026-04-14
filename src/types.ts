@@ -176,9 +176,9 @@ export type TabType =
   | 'Witness'
   | 'Control Perturbations Table';
 
-export type PossibleTabsTypes = TabType | ComputationModes;
+export type PossibleTabsTypes = TabType | ComputationModes | string;
 
-export type PossibleTabIds = number | ComputationModes;
+export type PossibleTabIds = number | ComputationModes | string;
 
 export type TabInfo<T extends PossibleTabsTypes, R extends PossibleTabIds> = {
   /** Unique identifier for the tab */

@@ -52,7 +52,24 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
     [results, selectedResults]
   );
 
-  return resultsArray.length === 0 ? null : (
+  return resultsArray.length === 0 ? (
+    <DynamicTabs<string, string>
+      tabs={[
+        {
+          id: 'no-results',
+          type: 'no-results',
+          path: '',
+          active: false,
+          text: 'No Results Available',
+        },
+      ]}
+      deleteModeOn={(_) => false}
+      getIcon={(tabType) => 'TODO'}
+      setTabBarHelpHover={setTabBarHelpHover}
+      clearHelpHover={clearHelpHover}
+      handleTabClick={(_, __) => undefined}
+    />
+  ) : (
     <DynamicTabs<ComputationModes, ComputationModes>
       tabs={resultsArray}
       deleteModeOn={(_) => deleteModeOn}
