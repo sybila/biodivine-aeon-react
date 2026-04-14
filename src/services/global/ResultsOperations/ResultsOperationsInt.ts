@@ -1,4 +1,4 @@
-import type { ControlResult } from '../../../types';
+import type { ComputationModes, ControlResult } from '../../../types';
 
 /** Interface for performing operations on results. (eg. exporting to CSV) */
 export interface ResultsOperationsInt {
@@ -11,4 +11,10 @@ export interface ResultsOperationsInt {
     controlPerturbations: Array<ControlResult>,
     fileName: string
   ): Promise<void>;
+
+  /** Get the icon for a result tab based on its type.
+   *  @param resultType (ComputationModes | null) - The type of the result.
+   *  @returns The icon name for the result tab. If resultType is null or doesn't match any known types, returns a default results icon.
+   */
+  getResultTabIcon(resultType: ComputationModes | null): string;
 }
