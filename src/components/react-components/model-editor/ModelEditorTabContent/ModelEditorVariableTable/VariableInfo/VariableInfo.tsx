@@ -22,9 +22,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 }) => {
   return (
     <ExtendableContentReact
-      compWidth="100%"
-      topOverflowX="visible"
-      topOverflowY="visible"
+      contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
       hover={hoverVariable}

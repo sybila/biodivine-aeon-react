@@ -18,7 +18,7 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
   const renderTopSection = () => {
     return (
       <section
-        className="flex flex-col justify-between items-center h-full max-h-full w-full gap-[3px] overflow-auto"
+        className="flex flex-col justify-between items-center h-full w-full gap-[3px] overflow-auto"
         slot="top-content"
       >
         <div className="w-[97%] min-h-[25px] max-h-[50px] px-[1%] overflow-auto">
@@ -120,11 +120,13 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
             textFontSize="16px"
           />
           <StatEntryReact
+            compHeight="20px"
             compWidth="95%"
             statName="Negative"
             statValue={`${decision.left.length ?? 'unknown'}`}
           />
           <StatEntryReact
+            compHeight="20px"
             compWidth="95%"
             statName="Positive"
             statValue={`${decision.right.length ?? 'unknown'}`}
@@ -141,6 +143,7 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
             textFontSize="16px"
           />
           <StatEntryReact
+            compHeight="20px"
             compWidth="95%"
             statName="Negative"
             statValue={`${getInterpretationPercentage(
@@ -149,6 +152,7 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
             )}%`}
           />
           <StatEntryReact
+            compHeight="20px"
             compWidth="95%"
             statName="Positive"
             statValue={`${getInterpretationPercentage(
@@ -186,16 +190,11 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
 
   return (
     <ExtendableContentReact
-      compWidth="100%"
+      contWidth="100%"
       topHeight="140px"
-      topMaxHeight="140px"
-      topContentWidth="100%"
-      topContentMaxWidth="100%"
+      topContentHeight="140px"
       topBottomGap="5px"
-      extendContentHeight="calc(100% - 145px)"
-      extendContentMaxHeight="calc(100% - 145px)"
-      contExtendedHeight="500px"
-      contExtendedMaxHeight="500px"
+      extendContentHeight="350px"
     >
       {renderTopSection()}
       {renderBottomSection()}
