@@ -7,7 +7,10 @@ import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   liveModelServ,
   computationManagerServ,
+  openCloseOperationsServ,
   warningServ,
+  messageServ,
+
   tabStore,
   resultsStatusStore,
   controlStore,
@@ -16,7 +19,12 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
     computationMode: ComputationModes,
     computationFunction: () => void
   ) => {
-    if (
+    if (!computationManagerServ.isComputeEngineConnected()) {
+      messageServ.showError(
+        'Cannot start computation: Compute Engine is not connected.'
+      );
+      openCloseOperationsServ.openComputeEngineMenu();
+    } else if (
       resultsStatusStore.getState().isResultsConflict(computationMode) ||
       !tabStore.getState().isEmpty()
     ) {

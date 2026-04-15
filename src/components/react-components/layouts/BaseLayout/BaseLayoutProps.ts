@@ -3,6 +3,7 @@ import type { AttractorVisualizerInt } from '../../../../services/attractor-visu
 import type { ControlPerturbationsTableInt } from '../../../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import type { ComputationManagerInt } from '../../../../services/global/ComputationManager/ComputationManagerInt';
 import type { TabOperationsInt } from '../../../../services/global/Navigation/TabOperationsInt';
+import type { OpenCloseOperationsInt } from '../../../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import type { ResultsOperationsInt } from '../../../../services/global/ResultsOperations/ResultsOperationsInt';
 import type { DataFormatersInt } from '../../../../services/utilities/DataFormaters/DataFormatersInt';
 import type { ComputeEngineStatusState } from '../../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
@@ -20,6 +21,7 @@ export type BaseLayoutProps = {
   controlPerturbationsTableServ: ControlPerturbationsTableInt;
   computationManagerServ: ComputationManagerInt;
   resultsOperationsServ: ResultsOperationsInt;
+  openCloseOperationsServ: OpenCloseOperationsInt;
   tabOperationsServ: TabOperationsInt;
   dataFormatersServ: DataFormatersInt;
 

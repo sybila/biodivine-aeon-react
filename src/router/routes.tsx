@@ -23,6 +23,9 @@ const ModelEditorComponent = () => (
     searchAndFilterHelpersServ={
       ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
     }
+    openCloseOperationsServ={
+      ObjectProvider.GlobalServicesProvider.openCloseOperationsServ
+    }
     warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
     messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}

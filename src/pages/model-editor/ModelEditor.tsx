@@ -22,6 +22,7 @@ import StartCompTabContent from '../../components/react-components/model-editor/
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
+import OpenCloseOperations from '../../services/global/OpenCloseOperations/OpenCloseOperations';
 
 type TabTypeME =
   | 'Start Computation'
@@ -40,6 +41,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   computationManagerServ,
   searchAndFilterHelpersServ,
   fileConvertorsServ,
+  openCloseOperationsServ,
   warningServ,
   messageServ,
   loadingServ,
@@ -77,7 +79,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <StartCompTabContent
             liveModelServ={liveModelServ}
             computationManagerServ={computationManagerServ}
+            openCloseOperationsServ={openCloseOperationsServ}
             warningServ={warningServ}
+            messageServ={messageServ}
             tabStore={tabStore}
             resultsStatusStore={resultsStatusStore}
             controlStore={controlStore}

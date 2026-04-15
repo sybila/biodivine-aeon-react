@@ -23,6 +23,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   controlPerturbationsTableServ,
   computationManagerServ,
   resultsOperationsServ,
+  openCloseOperationsServ,
   tabOperationsServ,
   dataFormatersServ,
 
@@ -96,6 +97,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
         return () => {};
     }
   };
+
+  openCloseOperationsServ.setOpenComputeEngineMenu(() => {
+    getOnCloseFunctionForOverlayWindow(activeOverlayWindow)();
+    setActiveOverlayWindow('Compute Engine');
+  });
 
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
     helpHoverStore.getState().setHelpHover(event, text, -85);
