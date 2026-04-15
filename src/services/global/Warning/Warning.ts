@@ -144,14 +144,15 @@ class Warning implements WarningInt {
       );
   }
 
-  /** Adds a warning that modifying the model will clear the results and close all tabs connected with computation type. */
-  public addModelModificationRemoveComputationResultsWarning(
+  /** Adds a warning that performing operation will clear the results and close all tabs connected with computation type. */
+  public addRemoveComputationResultsWarning(
+    operation: string,
     computationMode: ComputationModes
   ): void {
     this.warningStore
       .getState()
       .addWarning(
-        `Modifying the model will delete all results and close every tab connected with the ${computationMode} computation.`,
+        `${operation} will delete all results and close every tab connected with the ${computationMode} computation.`,
         [
           {
             text: 'Cancel',

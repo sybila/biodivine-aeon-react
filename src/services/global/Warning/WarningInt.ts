@@ -46,8 +46,12 @@ export interface WarningInt {
   /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
   addModelModificationRemoveAllResultsWarning(): void;
 
-  /** Adds a warning that modifying the model will clear the results and close all tabs connected with computation type. */
-  addModelModificationRemoveComputationResultsWarning(
+  /** Adds a warning that performing operation will clear the results and close all tabs connected with computation type.
+   *  @param operation - The operation being performed that is causing the warning (ex. "Removing variable X", "Changing regulation Y") - this will be included in the warning text to clarify what action is causing the results to be removed.
+   *  @param computationMode - The computation type of the results that will be affected (ex. "Attractor Analysis", "Control")
+   */
+  addRemoveComputationResultsWarning(
+    operation: string,
     computationMode: ComputationModes
   ): void;
 
