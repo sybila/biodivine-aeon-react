@@ -29,6 +29,7 @@ const ComputationExtendableContent: React.FC<
       contHoverColor={contHoverColor}
       contBorder={contBorder}
       contHoverBorder={contHoverBorder}
+      buttonHoverColor={contHoverColor}
       buttonColor="none"
       topHeight="30px"
       extended={isExtended}
