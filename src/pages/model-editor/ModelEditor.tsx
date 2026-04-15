@@ -199,27 +199,34 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
-        {/*TODO - Remove when proper undo/redo buttons created*/}
-        <IconButtonReact
-          isActive={false}
-          onClick={() =>
-            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().undo()
-          }
-          iconSrc={UndoIcon}
-          iconAlt="U"
-          showTag={true}
-          tagText="Undo"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={false}
-          onClick={() =>
-            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().redo()
-          }
-          iconSrc={RedoIcon}
-          iconAlt="R"
-          showTag={true}
-          tagText="Redo"
-        ></IconButtonReact>
+        {modelType !== 'witness' ? (
+          <>
+            <IconButtonReact
+              isActive={false}
+              onClick={() =>
+                ObjectProvider.StoresProvider.modelUndoRedoStore
+                  .getState()
+                  .undo()
+              }
+              iconSrc={UndoIcon}
+              iconAlt="U"
+              showTag={true}
+              tagText="Undo"
+            />
+            <IconButtonReact
+              isActive={false}
+              onClick={() =>
+                ObjectProvider.StoresProvider.modelUndoRedoStore
+                  .getState()
+                  .redo()
+              }
+              iconSrc={RedoIcon}
+              iconAlt="R"
+              showTag={true}
+              tagText="Redo"
+            />
+          </>
+        ) : null}
       </SideButtonMenu>
 
       <ContentTab
