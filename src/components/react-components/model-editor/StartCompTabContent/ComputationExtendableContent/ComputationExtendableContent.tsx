@@ -12,17 +12,23 @@ const ComputationExtendableContent: React.FC<
   return (
     <ExtendableContentReact
       contWidth="99%"
+      contColor="var(--color-secondary)"
+      contHoverColor='var(--color-secondary-light-highlight)'
+      contBorder="2px solid var(--color-secondary)"
+      contHoverBorder="2px solid var(--color-secondary-light-highlight)"
+      buttonColor='none'
+      topHeight="30px"
       extended={isExtended}
       onClick={() => setIsExtended(!isExtended)}
     >
       <section
-        className="flex flex-col justify-between items-center h-full max-h-full w-full gap-[3px] overflow-auto select-none"
+        className="flex flex-col justify-center items-start h-[25px] max-h-full w-full gap-[3px] overflow-auto select-none pl-[20px]"
         slot="top-content"
       >
         <SimpleHeaderReact
           headerText={computationName ?? 'unknown'}
           compHeight="100%"
-          compWidth="100%"
+          compWidth="fit-content"
           lineHeight="25px"
           textFontSize="20px"
           alignHeader="start"

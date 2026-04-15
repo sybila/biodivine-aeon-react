@@ -33,6 +33,7 @@
 :root {
   --color-bg-base: #fff;
   --color-secondary: #e7ecee;
+  --color-secondary-light-highlight: #e7ecee94;
   --color-highlight: #cfd8dc;
 
   --color-grey: #bebebe;

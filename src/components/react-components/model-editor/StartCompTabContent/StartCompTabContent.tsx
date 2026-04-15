@@ -29,7 +29,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
   liveModelServ.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
-    <div className="flex flex-col items-center w-full max-h-[70vh] gap-3 overflow-x-hidden overflow-y-auto pb-[4px]">
+    <div className="flex flex-col items-center w-full max-h-[70vh] gap-4 overflow-x-hidden overflow-y-auto pb-[4px]">
       <SeparatorLine width="98%" />
 
       <ComputationExtendableContent
