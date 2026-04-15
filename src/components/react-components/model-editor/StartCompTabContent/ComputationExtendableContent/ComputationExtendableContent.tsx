@@ -60,6 +60,7 @@ const ComputationExtendableContent: React.FC<
 
         <TextButtonReact
           text="Start Computation"
+          buttonColor='var(--color-primary)'
           onClick={() => startComputationFunction()}
           compHeight="40px"
           compWidth="95%"
