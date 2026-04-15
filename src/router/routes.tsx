@@ -40,6 +40,7 @@ const ModelEditorComponent = () => (
     updateFunctionsStore={ObjectProvider.StoresProvider.updateFunctionsStore}
     modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
     loadedModelStore={ObjectProvider.StoresProvider.loadedModelStore}
+    modelUndoRedoStore={ObjectProvider.StoresProvider.modelUndoRedoStore}
   />
 );
 

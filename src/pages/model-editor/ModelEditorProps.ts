@@ -18,6 +18,7 @@ import type { UpdateFunctionsState } from '../../stores/LiveModel/UpdateFunction
 import type { VariablesStatus } from '../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
 import type { TabsState } from '../../stores/Navigation/TabState';
+import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
 
 export type ModelEditorProps = {
@@ -47,6 +48,7 @@ export type ModelEditorProps = {
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   modelInfoStore: ZustandStore<ModelInfoState>;
   loadedModelStore: ZustandStore<ModelState>;
+  modelUndoRedoStore: ZustandStore<UndoRedoState>;
 
   // # endregion
 };

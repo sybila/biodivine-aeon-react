@@ -21,7 +21,6 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
-import ObjectProvider from '../../wiring/ObjectProvider';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 type TabTypeME =
@@ -54,6 +53,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   updateFunctionsStore,
   modelInfoStore,
   loadedModelStore,
+  modelUndoRedoStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = loadedModelStore(
@@ -203,11 +203,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <>
             <IconButtonReact
               isActive={false}
-              onClick={() =>
-                ObjectProvider.StoresProvider.modelUndoRedoStore
-                  .getState()
-                  .undo()
-              }
+              onClick={() => modelUndoRedoStore.getState().undo()}
               iconSrc={UndoIcon}
               iconAlt="U"
               showTag={true}
@@ -215,11 +211,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             />
             <IconButtonReact
               isActive={false}
-              onClick={() =>
-                ObjectProvider.StoresProvider.modelUndoRedoStore
-                  .getState()
-                  .redo()
-              }
+              onClick={() => modelUndoRedoStore.getState().redo()}
               iconSrc={RedoIcon}
               iconAlt="R"
               showTag={true}
