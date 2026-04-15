@@ -8,6 +8,8 @@ import Message from '../../services/global/Message/Message';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import TabOperations from '../../services/global/Navigation/TabOperations';
 import type { TabOperationsInt } from '../../services/global/Navigation/TabOperationsInt';
+import OpenCloseOperations from '../../services/global/OpenCloseOperations/OpenCloseOperations';
+import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import ResultsOperations from '../../services/global/ResultsOperations/ResultsOperations';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
 import Warning from '../../services/global/Warning/Warning';
@@ -20,6 +22,7 @@ class GlobalServicesProvider {
   public liveModelServ: LiveModelInt;
   public tabOperationsServ: TabOperationsInt;
   public resultsOperationsServ: ResultsOperationsInt;
+  public openCloseOperationsServ: OpenCloseOperationsInt;
   public warningServ: WarningInt;
   public messageServ: MessageInt;
   public loadingServ: LoadingInt;
@@ -33,6 +36,8 @@ class GlobalServicesProvider {
     startLoadingFunction: () => void,
     endLoadingFunction: () => void
   ) {
+    this.openCloseOperationsServ = new OpenCloseOperations();
+
     this.messageServ = new Message(
       successMessageFunction,
       infoMessageFunction,
