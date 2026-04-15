@@ -10,6 +10,7 @@ export type ResultTabsProps = {
   clearHelpHover: () => void;
 
   resultsOperationsServ: ResultsOperationsInt;
+  warningServ: WarningInt;
 
   resultsStatusStore: ZustandStore<ResultsStatus>;
 };

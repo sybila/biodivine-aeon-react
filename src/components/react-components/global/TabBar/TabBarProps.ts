@@ -1,5 +1,6 @@
 import type { TabOperationsInt } from '../../../../services/global/Navigation/TabOperationsInt';
 import type { ResultsOperationsInt } from '../../../../services/global/ResultsOperations/ResultsOperationsInt';
+import type { WarningInt } from '../../../../services/global/Warning/WarningInt';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
@@ -12,6 +13,7 @@ export type TabBarProps = {
 
   tabOperationsServ: TabOperationsInt;
   resultsOperationsServ: ResultsOperationsInt;
+  warningServ: WarningInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
   tabsStore: ZustandStore<TabsState>;

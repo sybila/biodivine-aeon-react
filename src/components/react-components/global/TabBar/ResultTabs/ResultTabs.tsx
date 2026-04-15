@@ -11,6 +11,7 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
   closeResultsWindow,
 
   resultsOperationsServ,
+  warningServ,
 
   resultsStatusStore,
 }) => {
@@ -81,7 +82,10 @@ const ResultTabs: React.FC<ResultTabsProps> = ({
       clearHelpHover={clearHelpHover}
       handleTabClick={(tabId, active) => {
         if (deleteModeOn) {
-          resultsStatusStore.getState().clearResult(tabId);
+          warningServ.addRemoveComputationResultsWarning(
+            'This operation',
+            tabId
+          );
         } else if (!active && results[tabId] !== undefined) {
           resultsStatusStore.getState().setSelectedResults(tabId);
           openResultsWindow();

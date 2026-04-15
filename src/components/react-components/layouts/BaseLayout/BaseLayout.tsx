@@ -26,6 +26,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   openCloseOperationsServ,
   tabOperationsServ,
   dataFormatersServ,
+  warningServ,
 
   computeEngineStatusStore,
   resultsStatusStore,
@@ -166,6 +167,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
             setActiveWindow={(windowType) => setActiveOverlayWindow(windowType)}
             tabOperationsServ={tabOperationsServ}
             resultsOperationsServ={resultsOperationsServ}
+            warningServ={warningServ}
             helpHoverStore={helpHoverStore}
             tabsStore={tabsStore}
             resultsStatusStore={resultsStatusStore}
