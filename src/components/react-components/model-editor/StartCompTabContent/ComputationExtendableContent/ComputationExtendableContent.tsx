@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ExtendableContentReact from '../../../lit-wrappers/ExtendableContentReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
@@ -7,16 +7,29 @@ import type { ComputationExtendableContentProps } from './ComputationExtendableC
 const ComputationExtendableContent: React.FC<
   ComputationExtendableContentProps
 > = ({ computationName, startComputationFunction, children }) => {
-  const [isExtended, setIsExtended] = React.useState(false);
+  const [isExtended, setIsExtended] = useState(false);
+  const [isExtendedContentHovered, setIsExtendedContentHovered] =
+    useState(false);
+
+  const contColor = 'var(--color-secondary)';
+  const contBorder = '2px solid var(--color-secondary)';
+  const cursorStyle = isExtendedContentHovered ? 'default' : 'pointer';
+  const contHoverColor = isExtendedContentHovered
+    ? contColor
+    : 'var(--color-secondary-light-highlight)';
+  const contHoverBorder = isExtendedContentHovered
+    ? contBorder
+    : '2px solid var(--color-secondary-light-highlight)';
 
   return (
     <ExtendableContentReact
+      style={{ cursor: cursorStyle }}
       contWidth="99%"
-      contColor="var(--color-secondary)"
-      contHoverColor='var(--color-secondary-light-highlight)'
-      contBorder="2px solid var(--color-secondary)"
-      contHoverBorder="2px solid var(--color-secondary-light-highlight)"
-      buttonColor='none'
+      contColor={contColor}
+      contHoverColor={contHoverColor}
+      contBorder={contBorder}
+      contHoverBorder={contHoverBorder}
+      buttonColor="none"
       topHeight="30px"
       extended={isExtended}
       onClick={() => setIsExtended(!isExtended)}
@@ -38,6 +51,9 @@ const ComputationExtendableContent: React.FC<
       <section
         className="flex flex-col justify-between items-center h-fit w-full gap-3 mt-2 mb-2"
         slot="extended-content"
+        onMouseEnter={() => setIsExtendedContentHovered(true)}
+        onMouseLeave={() => setIsExtendedContentHovered(false)}
+        onClick={(event) => event.stopPropagation()}
       >
         {children}
 
