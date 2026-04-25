@@ -27,6 +27,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   tabOperationsServ,
   dataFormatersServ,
   warningServ,
+  stringProviderServ,
 
   computeEngineStatusStore,
   resultsStatusStore,
@@ -113,6 +114,17 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
         <StatusBar
           onClick={() => setActiveOverlayWindow('Compute Engine')}
+          setHelpHover={(e: MouseEvent) => {
+            helpHoverStore
+              .getState()
+              .setHelpHover(
+                e,
+                stringProviderServ.ToolTips.GlobalTooltips.computeEngineStatus()
+              );
+          }}
+          clearHelpHover={() => {
+            helpHoverStore.getState().clear();
+          }}
           computeEngineStatusStore={computeEngineStatusStore}
         />
         <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />

@@ -12,12 +12,15 @@ import OpenCloseOperations from '../../services/global/OpenCloseOperations/OpenC
 import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import ResultsOperations from '../../services/global/ResultsOperations/ResultsOperations';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
+import StringProvider from '../../services/global/StringProvider/StringProvider';
+import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import Warning from '../../services/global/Warning/Warning';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { UtilitiesServiceProviderInt } from '../UtilitiesServiceProvider/UtilitiesServiceProviderInt';
+import type { GlobalServicesProviderInt } from './GlobalServicesProviderInt';
 
-class GlobalServicesProvider {
+class GlobalServicesProvider implements GlobalServicesProviderInt {
   public computationManagerServ: ComputationManagerInt;
   public liveModelServ: LiveModelInt;
   public tabOperationsServ: TabOperationsInt;
@@ -26,6 +29,7 @@ class GlobalServicesProvider {
   public warningServ: WarningInt;
   public messageServ: MessageInt;
   public loadingServ: LoadingInt;
+  public stringProviderServ: StringProviderInt;
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
@@ -37,6 +41,8 @@ class GlobalServicesProvider {
     endLoadingFunction: () => void
   ) {
     this.openCloseOperationsServ = new OpenCloseOperations();
+
+    this.stringProviderServ = new StringProvider();
 
     this.messageServ = new Message(
       successMessageFunction,

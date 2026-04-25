@@ -29,6 +29,9 @@ const baseLayout = () => (
       ObjectProvider.UtilitiesServiceProvider.dataFormatersServ
     }
     warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
+    stringProviderServ={
+      ObjectProvider.GlobalServicesProvider.stringProviderServ
+    }
     computeEngineStatusStore={
       ObjectProvider.StoresProvider.computeEngineStatusStore
     }
