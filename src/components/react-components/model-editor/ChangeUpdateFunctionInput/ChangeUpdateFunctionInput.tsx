@@ -4,7 +4,8 @@ import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInput
 const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   compHeight,
   compWidth,
-  inputHeight,
+  inputMinHeight,
+  inputMaxHeight,
   inputWidth,
   inputFontSize,
   validationMinHeight,
@@ -37,12 +38,12 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
       className="flex flex-col justify-center items-center"
     >
       <InvisibleInputReact
-        contMinHeight={inputHeight}
-        contMaxHeight={inputHeight}
+        contMinHeight={inputMinHeight}
+        contMaxHeight={inputMaxHeight}
         contMinWidth={inputWidth}
         contMaxWidth={inputWidth}
-        textBoxMinHeight={inputHeight}
-        textBoxMaxHeight={inputHeight}
+        textBoxMinHeight={inputMinHeight}
+        textBoxMaxHeight={inputMaxHeight}
         textBoxMinWidth={inputWidth}
         textBoxMaxWidth={inputWidth}
         fontSize={inputFontSize}

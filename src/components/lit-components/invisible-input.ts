@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 type StyleProperty =
@@ -304,6 +304,20 @@ export class InvisibleInput extends LitElement {
     );
   }
 
+  private autoResize(el: HTMLTextAreaElement) {
+    const maxHeight = this.textBoxMaxHeight
+      ? parseInt(this.textBoxMaxHeight.replace('px', ''), 10)
+      : 28;
+
+    const minHeight = this.textBoxMinHeight
+      ? parseInt(this.textBoxMinHeight.replace('px', ''), 10)
+      : 28;
+
+    el.style.height = 'auto';
+
+    el.style.height = `${Math.min(Math.max(el.scrollHeight, minHeight), maxHeight)}px`;
+  }
+
   static defaultIconSrc =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMyAxNy4yNVYyMWgzLjc1TDE3LjgxIDkuOTRsLTMuNzUtMy43NUwzIDE3LjI1ek0yMC43MSA3LjA0Yy4zOS0uMzkuMzktMS4wMiAwLTEuNDFsLTIuMzQtMi4zNGMtLjM5LS4zOS0xLjAyLS4zOS0xLjQxIDBsLTEuODMgMS44MyAzLjc1IDMuNzUgMS44My0xLjgzeiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=';
 
@@ -337,6 +351,8 @@ export class InvisibleInput extends LitElement {
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
+            @input=${(e: Event) =>
+              this.autoResize(e.target as HTMLTextAreaElement)}
             part="multiline-text-input"
           >
           </textarea>`}
