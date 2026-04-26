@@ -112,7 +112,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                   className="mr-1"
                   compHeight="90%"
                   compWidth="47%"
-                  text="hide all"
+                  text="collapse all"
                   handleClick={() => {
                     setExtendFunctions.forEach((func) => func(false));
                   }}
