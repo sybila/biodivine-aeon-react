@@ -6,13 +6,19 @@ import VariableInfo from './VariableInfo/VariableInfo';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
+  exposeSetExtend,
+
   modelEditorServ,
   searchAndFilterHelpersServ,
+
   regulationsStore,
   variablesStore,
   modelEditorStatusStore,
   updateFunctionsStore,
+  
 }) => {
+  
+
   const selectedItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.selectedItemInfo
   );
@@ -70,6 +76,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
           regulationsStore={regulationsStore}
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}
+          exposeSetExtend={exposeSetExtend}
         />
       ))}
     </section>

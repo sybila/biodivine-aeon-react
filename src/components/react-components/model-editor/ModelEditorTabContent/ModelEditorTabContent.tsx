@@ -30,6 +30,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   const [showModelDescription, setShowModelDescription] =
     useState<boolean>(false);
 
+  const setExtendFunctions: Array<(extend: boolean) => void> = [];
+
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
       modelEditorServ.setVariableSearch(name);
@@ -87,25 +89,49 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             />
           </section>
 
-          <section className="flex flex-row justify-between w-full h-[30px] gap-1">
+          <section className="flex flex-col items-center justify-between w-full h-[60px] gap-1">
             <DotHeaderReact
-              compHeight="99%"
-              compWidth="50%"
+              compHeight="49%"
+              compWidth="100%"
               headerText="Variables"
               justifyHeader="start"
             />
-            <TextIconButtonReact
-              className="mr-1"
-              compHeight="90%"
-              compWidth="30%"
-              iconSrc={AddIcon}
-              iconAlt="Add"
-              iconHeight="19px"
-              text="Add Variable"
-              handleClick={() => {
-                modelEditorServ.addVariable();
-              }}
-            />
+
+            <section className="flex flex-row justify-between w-[95%] h-[50%] gap-1">
+              <div className="flex flex-row items-center justify-between w-[50%] h-full">
+                <TextButtonReact
+                  className="mr-1"
+                  compHeight="90%"
+                  compWidth="47%"
+                  text="expand all"
+                  handleClick={() => {
+                    setExtendFunctions.forEach((func) => func(true));
+                  }}
+                />
+                <TextButtonReact
+                  className="mr-1"
+                  compHeight="90%"
+                  compWidth="47%"
+                  text="hide all"
+                  handleClick={() => {
+                    setExtendFunctions.forEach((func) => func(false));
+                  }}
+                />
+              </div>
+
+              <TextIconButtonReact
+                className="mr-1"
+                compHeight="90%"
+                compWidth="30%"
+                iconSrc={AddIcon}
+                iconAlt="Add"
+                iconHeight="19px"
+                text="Add Variable"
+                handleClick={() => {
+                  modelEditorServ.addVariable();
+                }}
+              />
+            </section>
           </section>
 
           <TextInputReact
@@ -117,6 +143,9 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
 
           <ModelEditorVariableTable
             searchText={variableSearchText}
+            exposeSetExtend={(extendFunction) =>
+              setExtendFunctions.push(extendFunction)
+            }
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             regulationsStore={regulationsStore}

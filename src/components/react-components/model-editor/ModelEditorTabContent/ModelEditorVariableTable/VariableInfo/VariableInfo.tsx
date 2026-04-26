@@ -19,6 +19,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
+  exposeSetExtend,
 }) => {
   return (
     <ExtendableContentReact
@@ -29,6 +30,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       active={selectedVariable}
       handleMouseEnter={() => modelEditorServ.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => modelEditorServ.hoverVariableCytoscape(id, false)}
+      exposeSetExtend={(func: (extend: boolean) => void) =>
+        exposeSetExtend(func)
+      }
     >
       <section slot="top-content" className="h-full w-[60%]">
         <VariableNameInput
@@ -102,7 +106,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           compWidth="100%"
           inputFontSize="16px"
           inputMinHeight="28px"
-          inputMaxHeight='90px'
+          inputMaxHeight="90px"
           inputWidth="100%"
           validationMinHeight="20px"
           validationMaxHeight="40px"

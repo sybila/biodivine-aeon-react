@@ -8,8 +8,11 @@ import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type ModelEditorVariableTableProps = {
   searchText: string | undefined;
+  exposeSetExtend: (extendFunction: (extend: boolean) => void) => void;
+
   modelEditorServ: ModelEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
+
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;

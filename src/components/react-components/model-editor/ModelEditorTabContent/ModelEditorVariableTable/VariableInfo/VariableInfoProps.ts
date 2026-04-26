@@ -14,4 +14,5 @@ export type VariableInfoProps = Variable & {
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  exposeSetExtend: (extendFunction: (extend: boolean) => void) => void;
 };
