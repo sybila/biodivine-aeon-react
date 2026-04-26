@@ -10,9 +10,9 @@ const ChangeVarNameOverlayContent: React.FC<
     <div className="flex justify-center items-center h-[90px] w-[300px]">
       <div className="flex flex-row justify-center items-center h-[35px] w-[99%] bg-gray-200 rounded-[15px]">
         <VariableNameInput
-          height="90%"
-          width="90%"
-          singleFontSize="25px"
+          height="28px"
+          width="271px"
+          fontSize="25px"
           varId={varId}
           varName={varName}
           onUpdate={(id: number, newName: string) =>

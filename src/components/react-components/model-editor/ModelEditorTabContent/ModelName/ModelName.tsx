@@ -19,11 +19,17 @@ const ModelName: React.FC<ModelNameProps> = ({
 
   return (
     <InvisibleInputReact
-      compHeight="35px"
-      compWidth="99%"
-      singleFontSize="22px"
+      contMinHeight="35px"
+      contMaxHeight="35px"
+      contMinWidth="488px"
+      contMaxWidth="488px"
+      textBoxMinWidth='488px'
+      textBoxMaxWidth='488px'
+      textBoxMinHeight='30px'
+      textBoxMaxHeight='30px'
+      fontSize="22px"
       placeholder="Model Name"
-      singleTextAlign="center"
+      textAlign="center"
       value={modelName ?? undefined}
       handleChange={(value) => {
         if (isActiveWitness) {

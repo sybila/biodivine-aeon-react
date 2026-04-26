@@ -41,11 +41,17 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
         />
       </section>
       <InvisibleInputReact
-        compHeight="400px"
-        compWidth="99%"
+        contMinHeight="400px"
+        contMaxHeight="400px"
+        contMinWidth="479px"
+        contMaxWidth="479px"
+        textBoxMinHeight='400px'
+        textBoxMaxHeight='400px'
+        textBoxMinWidth='475px'
+        textBoxMaxWidth='475px'
         placeholder="(model description)"
-        multiTextAlign="start"
-        multiFontSize="14px"
+        textAlign="start"
+        fontSize="14px"
         multiLine={true}
         value={modelDescription}
         handleChange={(value) => {

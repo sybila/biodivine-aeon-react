@@ -32,9 +32,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     >
       <section slot="top-content" className="h-full w-[60%]">
         <VariableNameInput
-          height="100%"
-          width="100%"
-          singleFontSize="16px"
+          height="28px"
+          width="250px"
+          fontSize="16px"
           varId={id}
           varName={name}
           onUpdate={(id: number, newName: string) =>

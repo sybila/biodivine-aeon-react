@@ -127,10 +127,16 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
   return (
     <div className="flex flex-col items-center w-[600px] h-fit gap-3 pointer-events-auto">
       <InvisibleInputReact
-        compHeight="20px"
-        compWidth="100%"
+        contMinHeight="20px"
+        contMaxHeight='20px'
+        contMinWidth="600px"
+        contMaxWidth='600px'
+        textBoxMinHeight='20px'
+        textBoxMaxHeight='20px'
+        textBoxMinWidth='600px'
+        textBoxMaxWidth='600px'
         placeholder="Compute Engine URL"
-        singleTextAlign="center"
+        textAlign="center"
         handleChange={computationManagerServ.setComputeEngineAddress}
         value={computationManagerServ.getComputeEngineAddress()}
       />

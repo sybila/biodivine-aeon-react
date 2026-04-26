@@ -37,15 +37,21 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
       className="flex flex-col justify-center items-center"
     >
       <InvisibleInputReact
-        compHeight={inputHeight}
-        compWidth={inputWidth}
-        multiFontSize={inputFontSize}
+        contMinHeight={inputHeight}
+        contMaxHeight={inputHeight}
+        contMinWidth={inputWidth}
+        contMaxWidth={inputWidth}
+        textBoxMinHeight={inputHeight}
+        textBoxMaxHeight={inputHeight}
+        textBoxMinWidth={inputWidth}
+        textBoxMaxWidth={inputWidth}
+        fontSize={inputFontSize}
         multiLine={true}
         placeholder={`$f_${varName}(...)`}
         value={updateFunction}
         handleChange={changeUpdateFunction}
-        multiTextColor="var(--base-text-color)"
-        multiPlaceholderColor="var(--placeholder-text-color)"
+        textColor="var(--base-text-color)"
+        placeholderColor="var(--placeholder-text-color)"
       />
       <span
         className="min-h-[20px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"

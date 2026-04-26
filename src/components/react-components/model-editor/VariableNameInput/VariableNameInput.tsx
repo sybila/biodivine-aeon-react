@@ -5,7 +5,7 @@ import type { VariableNameInputProps } from './VariableNameInputProps';
 const VariableNameInput: React.FC<VariableNameInputProps> = ({
   height,
   width,
-  singleFontSize,
+  fontSize,
   varId,
   varName,
   onUpdate,
@@ -25,9 +25,15 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
 
   return (
     <InvisibleInputReact
-      compHeight={height}
-      compWidth={width}
-      singleFontSize={singleFontSize}
+      contMinHeight={height}
+      contMaxHeight={height}
+      contMinWidth={width}
+      contMaxWidth={width}
+      textBoxMinWidth={width}
+      textBoxMaxWidth={width}
+      textBoxMaxHeight={height}
+      textBoxMinHeight={height}
+      fontSize={fontSize}
       value={varName}
       placeholder="(variable name)"
       error={nameError}
