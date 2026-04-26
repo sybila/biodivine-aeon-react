@@ -355,6 +355,12 @@ class ComputationManager implements ComputationManagerInt {
         updateFunctionFragment,
         this.validateUpdateFunctionCallback.bind(this)
       );
+    } else {
+      this.updateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+        status:
+          'Cannot validate update function:\n Compute engine not connected',
+        isError: true,
+      });
     }
   }
 
