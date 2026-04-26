@@ -55,6 +55,9 @@
   --font-family-fira-mono: 'FiraMono', 'monospace';
   --font-family-fira-bold: 'FiraMonoBold', 'monospace';
 
+  --base-text-color: black;
+  --placeholder-text-color: #bebebe;
+
   line-height: 1.5;
   font-weight: 400;
 

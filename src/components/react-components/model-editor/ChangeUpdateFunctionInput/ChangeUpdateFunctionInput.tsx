@@ -44,6 +44,8 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         placeholder={`$f_${varName}(...)`}
         value={updateFunction}
         handleChange={changeUpdateFunction}
+        multiTextColor="var(--base-text-color)"
+        multiPlaceholderColor="var(--placeholder-text-color)"
       />
       <span
         className="min-h-[20px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"
