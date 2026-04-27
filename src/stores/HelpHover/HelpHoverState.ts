@@ -1,11 +1,13 @@
+import type { Position } from '../../types';
+
 /** Zustand store for managing the help hover in the application. */
 export type HelpHoverState = {
   /**
    * Coordinates for the help hover, or null if the hover is hidden.
-   * x is the horizontal offset in pixels from the viewport left.
-   * y is the vertical offset in pixels from the viewport top.
+   * x (index 0) is the horizontal offset in pixels from the viewport left.
+   * y (index 1) is the vertical offset in pixels from the viewport top.
    */
-  position: { x: number; y: number } | null;
+  position: Position | null;
   /** The current content to be displayed in the help hover.
    * If null, the help hover is hidden.
    */

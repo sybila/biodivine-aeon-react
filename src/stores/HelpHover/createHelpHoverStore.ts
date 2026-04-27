@@ -24,7 +24,7 @@ function createHelpHoverStore(): ZustandStore<HelpHoverState> {
       const y = centerY + window.scrollY + (adjustTop || 0);
 
       set({
-        position: { x, y },
+        position: [x, y],
         helpText,
         isTooltip: isTooltip,
       });
@@ -40,7 +40,7 @@ function createHelpHoverStore(): ZustandStore<HelpHoverState> {
       const y = event.clientY + window.scrollY + (adjustTop || 0);
 
       set({
-        position: { x, y },
+        position: [x, y],
         helpText,
         isTooltip: isTooltip,
       });

@@ -37,6 +37,8 @@
   --color-secondary-light-highlight: #e7ecee94;
   --color-highlight: #cfd8dc;
 
+  --color-tooltip-bg: #c2d3dae9;
+
   --color-grey: #bebebe;
   --color-darker-grey: #b1b1b1ff;
   --color-grey-light: #d6d4d4;
@@ -56,6 +58,7 @@
   --font-family-fira-bold: 'FiraMonoBold', 'monospace';
 
   --base-text-color: black;
+  --lighter-text-color: #464545;
   --placeholder-text-color: gray;
 
   line-height: 1.5;
