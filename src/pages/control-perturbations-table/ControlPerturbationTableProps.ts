@@ -1,6 +1,7 @@
 import type { ControlPerturbationsTableInt } from '../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
+import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import type { DataFormatersInt } from '../../services/utilities/DataFormaters/DataFormatersInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
@@ -13,6 +14,7 @@ export type ControlPerturbationTableProps = {
   dataFormatersServ: DataFormatersInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   loadingServ: LoadingInt;
+  stringProviderServ: StringProviderInt;
 
   resultsStatusStore: ZustandStore<ResultsStatus>;
   perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;

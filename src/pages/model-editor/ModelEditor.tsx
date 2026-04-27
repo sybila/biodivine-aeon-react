@@ -141,7 +141,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         );
       case 'Help':
         return (
-          <HelpTabContent text="Hover over elements in the model editor to get more information about them. Click on the elements to get even more detailed information and options." />
+          <HelpTabContent text={stringProviderServ.HelpTexts.modelEditor()} />
         );
       default:
         return null;

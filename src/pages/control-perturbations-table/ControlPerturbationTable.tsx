@@ -3,10 +3,10 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
 import FilterIcon from '../../assets/icons/filter.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import OverviewIcon from '../../assets/icons/overview.svg';
 import PagesIcon from '../../assets/icons/pages.svg';
 import SortingIcon from '../../assets/icons/sorting.svg';
-import HelpIcon from '../../assets/icons/help.svg';
 
 import FilterTabContent from '../../components/react-components/control-perturbations-table/FilterTabContent/FilterTabContent';
 import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
@@ -25,6 +25,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   dataFormatersServ,
   searchAndFilterHelpersServ,
   loadingServ,
+  stringProviderServ,
 
   resultsStatusStore,
   perturbationFilterSortStore,
@@ -80,9 +81,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
       case 'Help':
         return (
           <HelpTabContent
-            text={
-              'This table shows the perturbations of the currently loaded model. You can filter and sort the perturbations using the buttons above the table. You can also navigate through the pages of perturbations using the page button. Clicking on a perturbation will show its details in the side panel.'
-            }
+            text={stringProviderServ.HelpTexts.controlPerturbationsTable()}
           />
         );
       default:

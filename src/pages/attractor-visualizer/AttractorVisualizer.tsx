@@ -18,8 +18,10 @@ type TabTypeAV = 'State Overview' | 'Witness Update Functions' | 'Help' | null;
 
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
-  attractorVisualizerStatusStore,
   messageServ,
+  stringProviderServ,
+
+  attractorVisualizerStatusStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
   const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
@@ -56,9 +58,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
       case 'Help':
         return (
           <HelpTabContent
-            text={
-              'This visualizer shows the attractors of the currently loaded model. You can select an attractor to see its details in the side panel.'
-            }
+            text={stringProviderServ.HelpTexts.attractorVisualizer()}
           />
         );
       default:

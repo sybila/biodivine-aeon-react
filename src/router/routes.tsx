@@ -76,6 +76,9 @@ export const AttractorBifurcationExplorerRoute = createRoute({
       behaviorClassOperationsServ={
         ObjectProvider.UtilitiesServiceProvider.behaviorClassOperationsServ
       }
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
       }
@@ -92,10 +95,13 @@ export const AttractorVisualizerRoute = createRoute({
         ObjectProvider.AttractorVisualizerServicesProvider
           .attractorVisualizerServ
       }
+      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
       }
-      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     />
   ),
 });
@@ -123,6 +129,9 @@ export const ControlPerturbationsTableRoute = createRoute({
         ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
       }
       loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore

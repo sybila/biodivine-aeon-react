@@ -23,6 +23,8 @@ const AttractorBifurcationExplorer: React.FC<
 > = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  stringProviderServ,
+
   bifurcationExplorerStatusStore,
 }) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
@@ -72,9 +74,7 @@ const AttractorBifurcationExplorer: React.FC<
       case 'Help':
         return (
           <HelpTabContent
-            text={
-              'This visualizer shows the attractors of the currently loaded model and their bifurcation relations. You can select an attractor to see its details in the side panel. You can also perform stability analysis and make decisions based on the bifurcation tree.'
-            }
+            text={stringProviderServ.HelpTexts.attractorBifurcationExplorer()}
           />
         );
       default:
