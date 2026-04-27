@@ -244,7 +244,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       </SideButtonMenu>
 
       <ContentTab
-        overflowY="hidden"
+        overflowY="auto"
         showTab={activeTab !== null}
         onClose={() => showHideTab(null)}
         headerText={activeTab ?? ''}
