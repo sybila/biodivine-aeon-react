@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Position } from '../../../../types';
 import type { HelpHoverProps } from './HelpHoverProps';
 
 const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
+  const [visible, setVisible] = useState<boolean>(false);
+
   const helpHoverPosition: Position | null = helpHoverStore(
     (state) => state.position
   );
@@ -11,7 +14,17 @@ const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
   );
   const isTooltip: boolean = helpHoverStore((state) => state.isTooltip);
 
-  if (!helpHoverPosition || !helpHoverText) {
+  const shouldRender = helpHoverPosition && helpHoverText;
+
+  useEffect(() => {
+    if (shouldRender) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [helpHoverPosition, helpHoverText]);
+
+  if (!shouldRender) {
     return null;
   }
 
@@ -28,9 +41,12 @@ const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
       style={{
         top: helpHoverPosition[1],
         left: helpHoverPosition[0],
-        transform: 'translate(-50%, -50%)',
+        transform: visible
+          ? 'translate(-50%, -50%) scale(1)'
+          : 'translate(-50%, -50%) scale(0.8)',
         zIndex: zIndex,
         boxShadow: '0px 2px 5px #d0d0d0',
+        opacity: visible ? 1 : 0,
       }}
     >
       <span
