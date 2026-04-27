@@ -60,16 +60,6 @@ export interface ComputationManagerInt {
 
   // #endregion
 
-  // #region --- Computation Mode Setters/Getters ---
-
-  /** Returns currently set computation mode */
-  getComputationMode(): ComputationModes;
-
-  /** Sets computation mode */
-  setComputationMode(mode: ComputationModes): void;
-
-  // #endregion
-
   // #region --- Connection Manager ---
 
   isComputeEngineConnected(): boolean;
