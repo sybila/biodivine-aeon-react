@@ -214,8 +214,38 @@ class ComputationManager implements ComputationManagerInt {
     return this.computeEngine.isConnected();
   }
 
+  private toggleConnectionCallback(
+    warning: string | undefined,
+    error: string | undefined,
+    engineStatus: string | undefined,
+    compStatus: ComputationStatus | undefined,
+    color: string | undefined
+  ): void {
+    this.setComputationStatus(warning, error, engineStatus, compStatus, color);
+
+    if (this.isComputeEngineConnected()) {
+      this.getLiveModel()?.UpdateFunctions.validateAllUpdateFunctions();
+    }
+  }
+
   public toggleConnection(): void {
-    this.computeEngine.toggleConnection(this.setComputationStatus);
+    this.computeEngine.toggleConnection(
+      (
+        warning: string | undefined,
+        error: string | undefined,
+        engineStatus: string | undefined,
+        compStatus: ComputationStatus | undefined,
+        color: string | undefined
+      ) => {
+        this.toggleConnectionCallback(
+          warning,
+          error,
+          engineStatus,
+          compStatus,
+          color
+        );
+      }
+    );
   }
 
   public computationIsRunning(): boolean {
