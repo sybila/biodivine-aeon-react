@@ -6,16 +6,18 @@ import FilterIcon from '../../assets/icons/filter.svg';
 import OverviewIcon from '../../assets/icons/overview.svg';
 import PagesIcon from '../../assets/icons/pages.svg';
 import SortingIcon from '../../assets/icons/sorting.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 
 import FilterTabContent from '../../components/react-components/control-perturbations-table/FilterTabContent/FilterTabContent';
 import OverviewTabContent from '../../components/react-components/control-perturbations-table/OverviewTabContent/OverviewTabContent';
 import PagesTabContent from '../../components/react-components/control-perturbations-table/PagesTabContent/PagesTabContent';
 import PerturbationTable from '../../components/react-components/control-perturbations-table/PerturbationTable/PerturbationTable';
 import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
 import type { ControlPerturbationTableProps } from './ControlPerturbationTableProps';
 
-type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | null;
+type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | 'Help' | null;
 
 const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   liveModelServ,
@@ -23,7 +25,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   dataFormatersServ,
   searchAndFilterHelpersServ,
   loadingServ,
-  
+
   resultsStatusStore,
   perturbationFilterSortStore,
 }) => {
@@ -73,6 +75,14 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             startFilter={startFilter}
             nextPageExists={nextPageExists}
             perturbationFilterSortStore={perturbationFilterSortStore}
+          />
+        );
+      case 'Help':
+        return (
+          <HelpTabContent
+            text={
+              'This table shows the perturbations of the currently loaded model. You can filter and sort the perturbations using the buttons above the table. You can also navigate through the pages of perturbations using the page button. Clicking on a perturbation will show its details in the side panel.'
+            }
           />
         );
       default:
@@ -132,6 +142,15 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           iconAlt="Pages"
           showTag={true}
           tagText="Pages"
+        />
+
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
         />
       </TopButtonMenu>
 

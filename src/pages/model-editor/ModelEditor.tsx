@@ -7,12 +7,14 @@ import ModelEditorCanvas from '../../components/react-components/model-editor/Mo
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 import RedoIcon from '../../assets/icons/redo.svg';
 import UndoIcon from '../../assets/icons/undo.svg';
 
 import KeepAlive from 'react-activation';
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
@@ -22,7 +24,6 @@ import StartCompTabContent from '../../components/react-components/model-editor/
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
-import OpenCloseOperations from '../../services/global/OpenCloseOperations/OpenCloseOperations';
 
 type TabTypeME =
   | 'Start Computation'
@@ -31,6 +32,7 @@ type TabTypeME =
   | 'Model Editor'
   | 'Control Editor'
   | 'Visual Options'
+  | 'Help'
   | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
@@ -137,6 +139,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         return (
           <VisualOptionsTabContent modelVisualization={modelVisualization} />
         );
+      case 'Help':
+        return (
+          <HelpTabContent text="Hover over elements in the model editor to get more information about them. Click on the elements to get even more detailed information and options." />
+        );
       default:
         return null;
     }
@@ -207,6 +213,14 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
+        />
         {modelType !== 'witness' ? (
           <>
             <IconButtonReact

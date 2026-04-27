@@ -208,6 +208,7 @@ export type MenuTabTypeABE =
   | 'Stability Analysis'
   | 'Make Decision'
   | 'Visual Options'
+  | 'Help'
   | null;
 
 /** Possible Node Stability Analysis Modes */

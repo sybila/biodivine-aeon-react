@@ -7,11 +7,14 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
+import HelpIcon from '../../assets/icons/help.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
-import UpdateFuncitons from '../../assets/icons/update_functions.svg';
+import UpdateFunctionsIcon from '../../assets/icons/update_functions.svg';
+
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
 
-type TabTypeAV = 'State Overview' | 'Witness Update Functions' | null;
+type TabTypeAV = 'State Overview' | 'Witness Update Functions' | 'Help' | null;
 
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
@@ -50,6 +53,14 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
             attractorVisualizerServ={attractorVisualizerServ}
           />
         );
+      case 'Help':
+        return (
+          <HelpTabContent
+            text={
+              'This visualizer shows the attractors of the currently loaded model. You can select an attractor to see its details in the side panel.'
+            }
+          />
+        );
       default:
         return null;
     }
@@ -78,10 +89,18 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
         <IconButtonReact
           isActive={activeTab === 'Witness Update Functions'}
           onClick={() => showHideTab('Witness Update Functions')}
-          iconSrc={UpdateFuncitons}
+          iconSrc={UpdateFunctionsIcon}
           iconAlt="Update Functions"
           showTag={true}
           tagText="Witness Update Functions"
+        />
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
         />
       </SideButtonMenu>
 

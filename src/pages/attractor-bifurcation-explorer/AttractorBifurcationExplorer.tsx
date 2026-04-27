@@ -9,9 +9,12 @@ import SideButtonMenu from '../../components/react-components/global/SideButtonM
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
 import EyeIcon from '../../assets/icons/eye.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StabilityIcon from '../../assets/icons/stability_analysis.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
+
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import type { MenuTabTypeABE } from '../../types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
@@ -66,6 +69,14 @@ const AttractorBifurcationExplorer: React.FC<
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
           />
         );
+      case 'Help':
+        return (
+          <HelpTabContent
+            text={
+              'This visualizer shows the attractors of the currently loaded model and their bifurcation relations. You can select an attractor to see its details in the side panel. You can also perform stability analysis and make decisions based on the bifurcation tree.'
+            }
+          />
+        );
       default:
         return null;
     }
@@ -116,6 +127,14 @@ const AttractorBifurcationExplorer: React.FC<
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
+        />
       </SideButtonMenu>
 
       <ContentTab
