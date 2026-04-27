@@ -43,6 +43,16 @@ Use this menu to run computations on your model, including:
 `.trim();
   }
 
+  witness(): string {
+    return `
+# Witness Help
+
+The **Witness** page allows you to explore the witness of your Boolean network model.
+
+The witness represents a specific interpretation of the model (fully specified boolean network). It allows similar interactions as the model editor, however witness page does not allow changes to the model and running computations.
+`.trim();
+  }
+
   attractorVisualizer(): string {
     return `
 # Attractor Visualizer Help

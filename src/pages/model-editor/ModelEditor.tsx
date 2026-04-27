@@ -66,11 +66,13 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
     (state) => state.loadedModelType
   );
 
+  const isWitness = modelType === 'witness';
+
   useEffect(() => {
     if (
-      (modelType === 'witness' &&
+      (isWitness &&
         (activeTab === 'Start Computation' || activeTab === 'Import/Export')) ||
-      (modelType !== 'witness' && activeTab === 'Export Witness')
+      (!isWitness && activeTab === 'Export Witness')
     ) {
       setActiveTab(null);
     }
@@ -141,7 +143,13 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         );
       case 'Help':
         return (
-          <HelpTabContent text={stringProviderServ.HelpTexts.modelEditor()} />
+          <HelpTabContent
+            text={
+              isWitness
+                ? stringProviderServ.HelpTexts.witness()
+                : stringProviderServ.HelpTexts.modelEditor()
+            }
+          />
         );
       default:
         return null;
