@@ -1,8 +1,34 @@
-import type { HelpTextsInt } from "./HelpTextsInt";
+import type { HelpTextsInt } from './HelpTextsInt';
 
 class HelpTexts implements HelpTextsInt {
   modelEditor(): string {
-    return 'The Model Editor allows you to create and edit your models. You can add variables, define their update functions, and set initial conditions. Use the toolbar on the left to access different editing features.';
+    return `
+# Model Editor
+
+The Model Editor page is where you can create and edit your boolean network models.
+
+## Menus
+
+### Start Computation Menu
+
+The Start Computation menu allows you to run various computations on your model, such as computing attractors, and control perturbations.
+
+### Import/Export Menu
+
+The Import/Export menu allows you to import and export your model in various formats, such as .aeon, .bnet, and .sbml. You can also import some predefined models from our model repository.
+
+### Model Editor Menu
+
+The Model Editor menu provides you with basic functionality for creation/editing of your model, such as adding and removing variables, editing update functions...
+
+### Control Editor Menu
+
+The Control Editor menu allows you to create and edit control connected parameters of your model. These parameters consists of phenotype variables and control-enabled variables.
+
+### Visual Options Menu
+
+The Visual Options menu allows you to customize the visualization of your model in the editor. It allows you to change the layout of the graph or to toggle highliting of certain elements.
+`.trim();
   }
 
   attractorVisualizer(): string {
