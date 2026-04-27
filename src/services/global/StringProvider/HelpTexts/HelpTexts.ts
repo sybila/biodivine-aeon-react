@@ -3,31 +3,43 @@ import type { HelpTextsInt } from './HelpTextsInt';
 class HelpTexts implements HelpTextsInt {
   modelEditor(): string {
     return `
-# Model Editor
+# Model Editor Help
 
-The Model Editor page is where you can create and edit your boolean network models.
+The **Model Editor** page allows you to create, edit, and manage Boolean network models. Below is an overview of the main menus and their functions.
 
-## Menus
+---
+
+## Menus Overview
 
 ### Start Computation Menu
 
-The Start Computation menu allows you to run various computations on your model, such as computing attractors, and control perturbations.
+Use this menu to run computations on your model, including:
+- Attractor analysis
+- Control perturbation exploration
 
 ### Import/Export Menu
 
-The Import/Export menu allows you to import and export your model in various formats, such as .aeon, .bnet, and .sbml. You can also import some predefined models from our model repository.
+- Import models from supported formats such as '.aeon', '.bnet', and '.sbml', or from the model repository.
+- Export your current model in various formats for sharing or backup.
 
 ### Model Editor Menu
 
-The Model Editor menu provides you with basic functionality for creation/editing of your model, such as adding and removing variables, editing update functions...
+- Add or remove variables.
+- Edit update functions for each variable.
+- Modify the structure of your model as needed.
 
 ### Control Editor Menu
 
-The Control Editor menu allows you to create and edit control connected parameters of your model. These parameters consists of phenotype variables and control-enabled variables.
+- Define and edit control parameters.
+- Manage phenotype variables and control-enabled variables.
 
 ### Visual Options Menu
 
-The Visual Options menu allows you to customize the visualization of your model in the editor. It allows you to change the layout of the graph or to toggle highliting of certain elements.
+- Customize the graph layout.
+- Highlight or focus on specific elements to enhance visualization.
+
+---
+
 `.trim();
   }
 
