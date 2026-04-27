@@ -1,8 +1,10 @@
+import React, { useMemo } from 'react';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
+import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
 import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
@@ -15,12 +17,23 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   selectedVariable,
   hoverRegulation,
   selectedRegulation,
+  exposeSetExtend,
+
   modelEditorServ,
+  stringProviderServ,
+
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
-  exposeSetExtend,
+  helpHoverStore,
 }) => {
+  const regulationsObj = regulationsStore((state) => state.regulations);
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === id),
+    [regulationsObj, id]
+  );
+
   return (
     <ExtendableContentReact
       contWidth="100%"
@@ -34,16 +47,42 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         exposeSetExtend(func)
       }
     >
-      <section slot="top-content" className="h-full w-[60%]">
+      <section
+        slot="top-content"
+        className="h-full w-[80%] flex flex-row justify-between items-center  shrink-0"
+      >
         <VariableNameInput
           height="28px"
-          width="250px"
+          width="200px"
           fontSize="16px"
           varId={id}
           varName={name}
           onUpdate={(id: number, newName: string) =>
             modelEditorServ.changeVariableName(id, newName)
           }
+        />
+
+        <SimpleHeaderReact
+          compHeight="28px"
+          compWidth="100px"
+          textFontSize="16px"
+          lineHeight="28px"
+          textFontWeight="normal"
+          textFontFamily="var(--font-family-fira-mono)"
+          headerText={`A: ${regulations.length}`}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.variableArity(
+                  regulations.length
+                ),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
 
@@ -80,13 +119,12 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
       <section slot="extended-content" className="h-fit w-full">
         <RegulationInfoList
-          varId={id}
           height="77px"
           width="100%"
+          variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
           selectedRegulation={selectedRegulation}
           modelEditorServ={modelEditorServ}
-          regulationsStore={regulationsStore}
           variablesStore={variablesStore}
         />
       </section>

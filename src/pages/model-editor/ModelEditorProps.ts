@@ -4,6 +4,7 @@ import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
+import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
@@ -11,6 +12,7 @@ import type { ModelVisualizationInt } from '../../services/model-editor/ModelVis
 import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/FileConvertorsInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { HelpHoverState } from '../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ModelState } from '../../stores/LiveModel/LoadedModelStore/ModelState';
 import type { ModelInfoState } from '../../stores/LiveModel/ModelInfoStore/ModelInfoState';
@@ -36,6 +38,7 @@ export type ModelEditorProps = {
   warningServ: WarningInt;
   messageServ: MessageInt;
   loadingServ: LoadingInt;
+  stringProviderServ: StringProviderInt;
 
   // # endregion
 
@@ -51,6 +54,7 @@ export type ModelEditorProps = {
   modelInfoStore: ZustandStore<ModelInfoState>;
   loadedModelStore: ZustandStore<ModelState>;
   modelUndoRedoStore: ZustandStore<UndoRedoState>;
+  helpHoverStore: ZustandStore<HelpHoverState>;
 
   // # endregion
 };

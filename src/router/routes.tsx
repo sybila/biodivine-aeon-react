@@ -32,6 +32,9 @@ const ModelEditorComponent = () => (
     fileConvertorsServ={
       ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
     }
+    stringProviderServ={
+      ObjectProvider.GlobalServicesProvider.stringProviderServ
+    }
     modelEditorStatusStore={
       ObjectProvider.StoresProvider.modelEditorStatusStore
     }
@@ -44,6 +47,7 @@ const ModelEditorComponent = () => (
     modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
     loadedModelStore={ObjectProvider.StoresProvider.loadedModelStore}
     modelUndoRedoStore={ObjectProvider.StoresProvider.modelUndoRedoStore}
+    helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
   />
 );
 

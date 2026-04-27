@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useMemo } from 'react';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
@@ -11,6 +12,13 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   variablesStore,
   updateFunctionsStore,
 }) => {
+  const regulationsObj = regulationsStore((state) => state.regulations);
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === varId),
+    [regulationsObj, varId]
+  );
+
   return (
     <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
       <DotHeaderReact
@@ -22,13 +30,12 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
       />
       <div className="h-fit w-full">
         <RegulationInfoList
-          varId={varId}
           height="77px"
           width="100%"
+          variableRegulations={regulations}
           hoverRegulation={undefined}
           selectedRegulation={undefined}
           modelEditorServ={modelEditorServ}
-          regulationsStore={regulationsStore}
           variablesStore={variablesStore}
         />
       </div>

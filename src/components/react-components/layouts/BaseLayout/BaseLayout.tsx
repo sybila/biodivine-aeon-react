@@ -106,7 +106,9 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   });
 
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
-    helpHoverStore.getState().setHelpHover(event, text, -85);
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtElementCenter(event, text, false, -85);
   };
 
   return (
@@ -117,9 +119,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           setHelpHover={(e: MouseEvent) => {
             helpHoverStore
               .getState()
-              .setHelpHover(
+              .setHelpHoverAtMouse(
                 e,
-                stringProviderServ.ToolTips.GlobalTooltips.computeEngineStatus()
+                stringProviderServ.ToolTips.GlobalTooltips.computeEngineStatus(),
+                true,
+                50
               );
           }}
           clearHelpHover={() => {

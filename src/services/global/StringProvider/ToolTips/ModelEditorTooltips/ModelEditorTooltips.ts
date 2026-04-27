@@ -1,6 +1,14 @@
 import type { ModelEditorTooltipsInt } from './ModelEditorTooltipsInt';
 
 class ModelEditorTooltips implements ModelEditorTooltipsInt {
+  // #region Variable Info
+
+  public variableArity(arity: number): string {
+    return 'Arity: ' + arity + '.';
+  }
+
+  // #endregion
+
   // #region Base Variable Operations
 
   public changeVariableName(): string {

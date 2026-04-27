@@ -45,6 +45,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   warningServ,
   messageServ,
   loadingServ,
+  stringProviderServ,
 
   modelEditorStatusStore,
   tabStore,
@@ -56,6 +57,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   modelInfoStore,
   loadedModelStore,
   modelUndoRedoStore,
+  helpHoverStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeME>(null);
   const modelType: ModelType = loadedModelStore(
@@ -109,12 +111,14 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             messageServ={messageServ}
+            stringProviderServ={stringProviderServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             updateFunctionsStore={updateFunctionsStore}
             tabStore={tabStore}
             modelInfoStore={modelInfoStore}
             modelEditorStatusStore={modelEditorStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Control Editor':

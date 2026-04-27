@@ -1,4 +1,11 @@
 export interface ModelEditorTooltipsInt {
+
+  // #region Variable Info
+
+  variableArity(arity: number): string;
+
+  // #endregion
+  
   // #region Base Variable Operations
 
   changeVariableName(): string;

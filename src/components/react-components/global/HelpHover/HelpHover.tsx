@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import type { HelpHoverProps } from './HelpHoverProps';
 
 const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
@@ -8,7 +9,7 @@ const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
     return null;
   }
 
-  return (
+  return createPortal(
     <div
       className="h-[50px] min-w-[100px] max-w-[20%] text-[20px] rounded-[24px] bg-[var(--color-secondary)] p-5 absolute flex items-center justify-center shadow-lg transition-all duration-200 ease-in-out"
       style={{
@@ -25,7 +26,8 @@ const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
       >
         {helpHoverText}
       </span>
-    </div>
+    </div>,
+    document.body
   );
 };
 

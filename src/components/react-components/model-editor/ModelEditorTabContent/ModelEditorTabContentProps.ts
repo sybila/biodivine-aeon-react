@@ -1,7 +1,9 @@
 import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../../../services/global/Message/MessageInt';
+import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
+import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
@@ -15,6 +17,7 @@ export type ModelEditorTabContentProps = {
   modelEditorServ: ModelEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   messageServ: MessageInt;
+  stringProviderServ: StringProviderInt;
 
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;
@@ -22,4 +25,5 @@ export type ModelEditorTabContentProps = {
   tabStore: ZustandStore<TabsState>;
   modelInfoStore: ZustandStore<ModelInfoState>;
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  helpHoverStore: ZustandStore<HelpHoverState>;
 };

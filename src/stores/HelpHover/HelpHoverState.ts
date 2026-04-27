@@ -10,15 +10,38 @@ export type HelpHoverState = {
    * If null, the help hover is hidden.
    */
   helpText: string | null;
-  /** Set the help hover state.
+  /** Defines whether the help hover should be styled as a tooltip.
+   */
+  isTooltip: boolean;
+  /** Set the help hover state. The hover will be positioned at the center of the event target element.
    *  @param event (MouseEvent) - event to get the position from
    *  @param helpText (string) - text to be displayed in the help hover
+   *  @param isTooltip (boolean) - whether the hover should be styled as a tooltip
+   *  @param adjustTop (number, optional) - additional vertical offset in pixels to adjust the hover position
+   *  @param adjustLeft (number, optional) - additional horizontal offset in pixels to adjust the hover position
    */
-  setHelpHover(
+  setHelpHoverAtElementCenter(
     event: MouseEvent,
     helpText: string,
+    isTooltip: boolean,
     adjustTop?: number,
     adjustLeft?: number
   ): void;
+
+  /** Set the help hover state. The hover will be positioned relatively to the mouse position.
+   *  @param event (MouseEvent) - event to get the position from
+   *  @param helpText (string) - text to be displayed in the help hover
+   *  @param isTooltip (boolean) - whether the hover should be styled as a tooltip
+   *  @param adjustTop (number, optional) - additional vertical offset in pixels to adjust the hover position
+   *  @param adjustLeft (number, optional) - additional horizontal offset in pixels to adjust the hover position
+   */
+  setHelpHoverAtMouse(
+    event: MouseEvent,
+    helpText: string,
+    isTooltip: boolean,
+    adjustTop?: number,
+    adjustLeft?: number
+  ): void;
+
   clear: () => void;
 };

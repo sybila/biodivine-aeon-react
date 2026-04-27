@@ -5,10 +5,12 @@ import type { HelpHoverState } from './HelpHoverState';
 function createHelpHoverStore(): ZustandStore<HelpHoverState> {
   return create<HelpHoverState>()((set) => ({
     position: null,
+    isTooltip: false,
     helpText: null,
-    setHelpHover: (
+    setHelpHoverAtElementCenter: (
       event: MouseEvent,
       helpText: string,
+      isTooltip: boolean,
       adjustTop?: number,
       adjustLeft?: number
     ) => {
@@ -18,15 +20,32 @@ function createHelpHoverStore(): ZustandStore<HelpHoverState> {
       const centerY = rect.top + rect.height / 2;
 
       // Apply any adjustments
-      const x = centerX + (adjustLeft || 0);
-      const y = centerY + (adjustTop || 0);
+      const x = centerX + window.scrollX + (adjustLeft || 0);
+      const y = centerY + window.scrollY + (adjustTop || 0);
 
       set({
         position: { x, y },
         helpText,
+        isTooltip: isTooltip,
       });
     },
-    clear: () => set({ position: null, helpText: null }),
+    setHelpHoverAtMouse: (
+      event: MouseEvent,
+      helpText: string,
+      isTooltip: boolean,
+      adjustTop?: number,
+      adjustLeft?: number
+    ) => {
+      const x = event.clientX + window.scrollX + (adjustLeft || 0);
+      const y = event.clientY + window.scrollY + (adjustTop || 0);
+
+      set({
+        position: { x, y },
+        helpText,
+        isTooltip: isTooltip,
+      });
+    },
+    clear: () => set({ position: null, helpText: null, isTooltip: false }),
   }));
 }
 export default createHelpHoverStore;
