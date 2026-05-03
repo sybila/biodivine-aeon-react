@@ -76,7 +76,15 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       onMouseLeave={() => controlEditorServ.hoverVariableCytoscape(id, false)}
       onClick={() => toggleSelect(name)}
     >
-      <span className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)">
+      <span
+        className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)"
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(e.nativeEvent, name, true, -50, 50)
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
+      >
         {name}
       </span>
 
