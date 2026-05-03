@@ -10,10 +10,13 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   searchAndFilterHelpersServ,
+  stringProviderServ,
   loadingServ,
+
   variablesStore,
   controlStore,
   modelEditorStatusStore,
+  helpHoverStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     controlEditorServ.getVariableSearch()
@@ -67,8 +70,11 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
    * - The button label (string)
    * - The button color (string)
    * - The onClick handler function (() => void)
+   * - The onMouseEnter handler function ((e: React.MouseEvent) => void)
    */
-  const statusButtons: Array<[string, string, () => void]> = [
+  const statusButtons: Array<
+    [string, string, () => void, (e: React.MouseEvent) => void]
+  > = [
     [
       'N',
       'var(--color-grey)',
@@ -77,6 +83,18 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           Object.entries(selectedVariables),
           false
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+              false
+            ),
+            true,
+            -50,
+            200
+          ),
     ],
     [
       'E',
@@ -86,6 +104,18 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           Object.entries(selectedVariables),
           true
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+              true
+            ),
+            true,
+            -50,
+            150
+          ),
     ],
     [
       'N',
@@ -95,6 +125,16 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           Object.entries(selectedVariables),
           null
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.removeVariableFromPhenotype(),
+            true,
+            -50,
+            20
+          ),
     ],
     [
       'T',
@@ -104,6 +144,17 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           Object.entries(selectedVariables),
           true
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+              'true'
+            ),
+            true,
+            -50
+          ),
     ],
     [
       'F',
@@ -113,6 +164,17 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           Object.entries(selectedVariables),
           false
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+              'false'
+            ),
+            true,
+            -50
+          ),
     ],
   ];
 
@@ -127,7 +189,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, onClick], index) => (
+          {statusButtons.map(([label, color, onClick, onMouseEnter], index) => (
             <TextButtonReact
               key={index}
               compHeight="29px"
@@ -135,6 +197,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               text={label}
               handleClick={onClick}
               buttonColor={color}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={() => helpHoverStore.getState().clear()}
             />
           ))}
         </div>
@@ -144,6 +208,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           setSelectedVariables={(newSelected) =>
             updateSelectedVariables(newSelected)
           }
+          stringProviderServ={stringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 

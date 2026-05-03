@@ -1,3 +1,5 @@
+import type React from 'react';
+import type { Oscillation } from '../../../../../types';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { PhenotypeOscillationButtonProps } from './PhenotypeOscillationButtonProps';
 
@@ -6,21 +8,33 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
   oscillationValue,
   setOscillationValue,
   compWidth,
+
+  stringProviderServ,
+
+  helpHoverStore,
 }) => {
-  const circleThroughOscillation = () => {
-    switch (oscillationValue) {
+  const getNextOscillation = (current: Oscillation): Oscillation => {
+    switch (current) {
       case 'allowed':
-        setOscillationValue('forbidden');
-        controlEditorServ.setPhenotypeOscillation('forbidden');
-        break;
+        return 'forbidden';
       case 'forbidden':
-        setOscillationValue('required');
-        controlEditorServ.setPhenotypeOscillation('required');
-        break;
+        return 'required';
       default:
-        setOscillationValue('allowed');
-        controlEditorServ.setPhenotypeOscillation('allowed');
+        return 'allowed';
     }
+  };
+
+  const circleThroughOscillation = () => {
+    const nextOscillation = getNextOscillation(oscillationValue);
+    setOscillationValue(nextOscillation);
+    helpHoverStore
+      .getState()
+      .setHelpHoverText(
+        stringProviderServ.ToolTips.ModelEditorTooltips.changeOscillation(
+          getNextOscillation(nextOscillation)
+        )
+      );
+    controlEditorServ.setPhenotypeOscillation(nextOscillation);
   };
 
   return (
@@ -28,6 +42,19 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
       text={oscillationValue}
       handleClick={() => circleThroughOscillation()}
       compWidth={compWidth}
+      onMouseEnter={(e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeOscillation(
+              getNextOscillation(oscillationValue)
+            ),
+            true,
+            -50
+          )
+      }
+      onMouseLeave={() => helpHoverStore.getState().clear()}
     />
   );
 };

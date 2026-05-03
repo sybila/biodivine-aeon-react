@@ -131,10 +131,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            stringProviderServ={stringProviderServ}
             loadingServ={loadingServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Visual Options':

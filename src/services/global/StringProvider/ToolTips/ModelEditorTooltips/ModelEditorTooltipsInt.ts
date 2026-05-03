@@ -37,7 +37,7 @@ export interface ModelEditorTooltipsInt {
   changeOscillation(oscillationValue: string): string;
   changeVariablePhenotype(phenotypeValue: string): string;
   removeVariableFromPhenotype(): string;
-  changeVariableControlEnabled(controlEnabledValue: string): string;
+  changeVariableControlEnabled(controlEnabledValue: boolean): string;
 
   // #endregion
 

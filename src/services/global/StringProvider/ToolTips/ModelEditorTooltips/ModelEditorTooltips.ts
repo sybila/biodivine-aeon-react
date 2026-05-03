@@ -69,23 +69,25 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
 
   public changeOscillation(oscillationValue: string): string {
     return (
-      'Change the oscillation of the variable to ' + oscillationValue + '.'
+      'Change the oscillation of the variable to "' + oscillationValue + '".'
     );
   }
 
   public changeVariablePhenotype(phenotypeValue: string): string {
-    return 'Change the phenotype of the variable to ' + phenotypeValue + '.';
+    return 'Change the phenotype of the variable to "' + phenotypeValue + '".';
   }
 
   public removeVariableFromPhenotype(): string {
     return 'Remove the variable from the phenotype.';
   }
 
-  public changeVariableControlEnabled(controlEnabledValue: string): string {
+  public changeVariableControlEnabled(controlEnabledValue: boolean): string {
+    const controlEnabledString = controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled';
+
     return (
-      'Change the control enabled status of the variable to ' +
-      controlEnabledValue +
-      '.'
+      'Change the control enabled status of the variable to "' +
+      controlEnabledString +
+      '".'
     );
   }
 
