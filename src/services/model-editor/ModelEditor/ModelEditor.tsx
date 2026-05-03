@@ -1,6 +1,7 @@
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { HelpHoverState } from '../../../stores/HelpHover/HelpHoverState';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
@@ -13,6 +14,7 @@ import type {
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
+import type { StringProviderInt } from '../../global/StringProvider/StringProviderInt';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorInt } from './ModelEditorInt';
 
@@ -28,6 +30,7 @@ class ModelEditor implements ModelEditorInt {
 
   private modelVisualizationServ: ModelVisualizationInt;
   private liveModelServ: LiveModelInt;
+  private stringProviderServ: StringProviderInt;
   private messageServ: MessageInt;
 
   private overlayWindowStore: ZustandStore<OverlayWindowState>;
@@ -35,20 +38,24 @@ class ModelEditor implements ModelEditorInt {
   private variablesStore: ZustandStore<VariablesStatus>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private helpHoverStore: ZustandStore<HelpHoverState>;
 
   constructor(
     modelVisualization: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
+    stringProviderServ: StringProviderInt,
     messageServ: MessageInt,
 
     overlayWindowStore: ZustandStore<OverlayWindowState>,
     regulationStore: ZustandStore<RegulationsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
-    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    helpHoverStore: ZustandStore<HelpHoverState>
   ) {
     this.modelVisualizationServ = modelVisualization;
     this.liveModelServ = liveModelServ;
+    this.stringProviderServ = stringProviderServ;
     this.messageServ = messageServ;
 
     this.overlayWindowStore = overlayWindowStore;
@@ -56,6 +63,7 @@ class ModelEditor implements ModelEditorInt {
     this.variablesStore = variablesStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
+    this.helpHoverStore = helpHoverStore;
   }
 
   // #endregion
@@ -309,6 +317,8 @@ class ModelEditor implements ModelEditorInt {
         <ChangeVarNameOverlayContent
           varId={varId}
           modelEditorServ={this}
+          stringProviderServ={this.stringProviderServ}
+          helpHoverStore={this.helpHoverStore}
           variablesStore={this.variablesStore}
         />
       ),
@@ -327,9 +337,11 @@ class ModelEditor implements ModelEditorInt {
         <ChangeUpFunOverlayContent
           varId={varId}
           modelEditorServ={this}
+          stringProviderServ={this.stringProviderServ}
           regulationsStore={this.regulationStore}
           variablesStore={this.variablesStore}
           updateFunctionsStore={this.updateFunctionsStore}
+          helpHoverStore={this.helpHoverStore}
         />
       ),
     });

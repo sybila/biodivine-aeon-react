@@ -10,8 +10,12 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
   variableRegulations,
   hoverRegulation,
   selectedRegulation,
+
   modelEditorServ,
+  stringProviderServ,
+
   variablesStore,
+  helpHoverStore,
 }) => {
   if (variableRegulations.length === 0) {
     return (
@@ -46,7 +50,9 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
             false
           }
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
           {...regulation}
         ></RegulationInfo>
       ))}

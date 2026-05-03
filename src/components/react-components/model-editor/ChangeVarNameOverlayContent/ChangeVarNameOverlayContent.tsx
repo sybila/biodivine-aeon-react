@@ -3,7 +3,13 @@ import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableName
 
 const ChangeVarNameOverlayContent: React.FC<
   ChangeVariableNameOverlayContentProps
-> = ({ varId, modelEditorServ, variablesStore }) => {
+> = ({
+  varId,
+  modelEditorServ,
+  variablesStore,
+  stringProviderServ,
+  helpHoverStore,
+}) => {
   const varName = variablesStore.getState().variables[varId]?.name ?? '';
 
   return (
@@ -18,6 +24,8 @@ const ChangeVarNameOverlayContent: React.FC<
           onUpdate={(id: number, newName: string) =>
             modelEditorServ.changeVariableName(id, newName)
           }
+          stringProviderServ={stringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </div>
     </div>

@@ -12,6 +12,7 @@ export interface ModelEditorTooltipsInt {
   changeVariableUpdateFunction(): string;
   searchVariable(): string;
   deleteVariable(): string;
+  findVariableInVisualization(): string;
 
   // #endregion
 

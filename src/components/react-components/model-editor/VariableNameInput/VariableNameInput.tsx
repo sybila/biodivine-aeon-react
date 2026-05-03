@@ -9,6 +9,10 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
   varId,
   varName,
   onUpdate,
+
+  stringProviderServ,
+
+  helpHoverStore,
 }) => {
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
@@ -22,6 +26,19 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
     const success = onUpdate(varId, newName);
     setNameError(!success);
   };
+
+  const handleMouseEnter = (e: React.MouseEvent) =>
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtMouse(
+        e.nativeEvent,
+        varName.length > 0
+          ? varName
+          : stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableName(),
+        true,
+        -50
+      );
+  const handleMouseLeave = () => helpHoverStore.getState().clear();
 
   return (
     <InvisibleInputReact
@@ -38,6 +55,8 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
       placeholder="(variable name)"
       error={nameError}
       handleChange={updateVariableName}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     />
   );
 };

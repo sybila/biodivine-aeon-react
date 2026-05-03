@@ -24,7 +24,11 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
   }
 
   public deleteVariable(): string {
-    return 'Delete the selected variable.';
+    return 'Delete variable.';
+  }
+
+  public findVariableInVisualization(): string {
+    return 'Find the variable in the visualization.';
   }
 
   // #endregion

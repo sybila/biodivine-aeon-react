@@ -60,6 +60,9 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           onUpdate={(id: number, newName: string) =>
             modelEditorServ.changeVariableName(id, newName)
           }
+          stringProviderServ={stringProviderServ}
+          helpHoverStore={helpHoverStore}
+
         />
 
         <SimpleHeaderReact
@@ -97,6 +100,17 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSrc={SearchIcon}
           iconAlt="find"
           handleClick={() => modelEditorServ.zoomOnVariable(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.findVariableInVisualization(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
 
         <IconButtonReact
@@ -106,6 +120,17 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSrc={DeleteIcon}
           iconAlt="delete"
           handleClick={async () => await modelEditorServ.removeVariable(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.deleteVariable(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
       </section>
 
@@ -124,8 +149,12 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
           selectedRegulation={selectedRegulation}
+
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
+
           variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
@@ -149,8 +178,11 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           validationMinHeight="20px"
           validationMaxHeight="40px"
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}
+          helpHoverStore={helpHoverStore}
+
         />
       </section>
     </ExtendableContentReact>

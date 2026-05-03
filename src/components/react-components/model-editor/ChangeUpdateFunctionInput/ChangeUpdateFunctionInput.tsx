@@ -11,9 +11,13 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   validationMinHeight,
   validationMaxHeight,
   varId,
+
   modelEditorServ,
+  stringProviderServ,
+
   variablesStore,
   updateFunctionsStore,
+  helpHoverStore,
 }) => {
   const varName = variablesStore(
     (state) => state.variables[varId].name ?? 'Unknown'
@@ -31,6 +35,18 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
 
     modelEditorServ.setUpdateFunction(varId, updateFunction);
   };
+
+  const handleUpdateFunctionMouseEnter = (e: React.MouseEvent) =>
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtMouse(
+        e.nativeEvent,
+        stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
+        true,
+        -80
+      );
+  const handleUpdateFunctionMouseLeave = () =>
+    helpHoverStore.getState().clear();
 
   return (
     <div
@@ -53,6 +69,8 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         handleChange={changeUpdateFunction}
         textColor="var(--base-text-color)"
         placeholderColor="var(--placeholder-text-color)"
+        onMouseEnter={handleUpdateFunctionMouseEnter}
+        onMouseLeave={handleUpdateFunctionMouseLeave}
       />
       <span
         className="min-h-[20px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"

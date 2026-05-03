@@ -7,10 +7,14 @@ import type { ChangeUpFunOverlayContentProps } from './ChangeUpFunOverlayContent
 
 const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   varId,
+
   modelEditorServ,
+  stringProviderServ,
+
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
+  helpHoverStore,
 }) => {
   const regulationsObj = regulationsStore((state) => state.regulations);
 
@@ -36,7 +40,9 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           hoverRegulation={undefined}
           selectedRegulation={undefined}
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
         />
       </div>
 
@@ -60,8 +66,10 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           validationMinHeight="40px"
           validationMaxHeight="50px"
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}
+          helpHoverStore={helpHoverStore}
         />
       </div>
     </div>
