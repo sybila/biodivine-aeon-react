@@ -1,3 +1,4 @@
+import type { Phenotype } from '../../../../../types';
 import type { ModelEditorTooltipsInt } from './ModelEditorTooltipsInt';
 
 class ModelEditorTooltips implements ModelEditorTooltipsInt {
@@ -73,6 +74,16 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
     );
   }
 
+  public currentPhenotype(phenotypeValue: Phenotype): string {
+    if (phenotypeValue != null) {
+      return (
+        'The current phenotype of the variable is "' + phenotypeValue + '".'
+      );
+    }
+
+    return 'The variable is currently not part of the phenotype.';
+  }
+
   public changeVariablePhenotype(phenotypeValue: string): string {
     return 'Change the phenotype of the variable to "' + phenotypeValue + '".';
   }
@@ -81,8 +92,18 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
     return 'Remove the variable from the phenotype.';
   }
 
+  public currentControlEnabled(controlEnabledValue: boolean): string {
+    return (
+      'The variable is currently ' +
+      (controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled') +
+      '.'
+    );
+  }
+
   public changeVariableControlEnabled(controlEnabledValue: boolean): string {
-    const controlEnabledString = controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled';
+    const controlEnabledString = controlEnabledValue
+      ? 'Control Enabled'
+      : 'Not Control Enabled';
 
     return (
       'Change the control enabled status of the variable to "' +

@@ -231,7 +231,9 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               selected={selectedVariables[variable.name] ?? false}
               toggleSelect={toggleVariableSelect}
               controlEditorServ={controlEditorServ}
+              stringProviderServ={stringProviderServ}
               controlStore={controlStore}
+              helpHoverStore={helpHoverStore}
             />
           ))}
         </section>

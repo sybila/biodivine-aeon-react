@@ -1,3 +1,5 @@
+import type { Phenotype } from '../../../../../types';
+
 /** Tooltips for the Model Editor page */
 export interface ModelEditorTooltipsInt {
   // #region Variable Info
@@ -35,8 +37,10 @@ export interface ModelEditorTooltipsInt {
   // #region Control
 
   changeOscillation(oscillationValue: string): string;
+  currentPhenotype(phenotypeValue: Phenotype): string;
   changeVariablePhenotype(phenotypeValue: string): string;
   removeVariableFromPhenotype(): string;
+  currentControlEnabled(controlEnabledValue: boolean): string;
   changeVariableControlEnabled(controlEnabledValue: boolean): string;
 
   // #endregion
