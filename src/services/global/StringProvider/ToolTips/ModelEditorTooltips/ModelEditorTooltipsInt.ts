@@ -45,6 +45,13 @@ export interface ModelEditorTooltipsInt {
 
   // #endregion
 
+  // #region Visual Options
+
+  variableLayout(layoutName: string): string;
+  highlightVariable(highlightType: string): string;
+
+  // #endregion
+
   // #region General Operations
 
   showModelDescription(): string;

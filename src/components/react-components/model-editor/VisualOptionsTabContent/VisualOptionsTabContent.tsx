@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import type { VisualOptionsButtonSection } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import type { VisualOptionsButtonSection } from '../../../../types';
 import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';
 
 const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   modelVisualization,
+
+  stringProviderServ,
+
+  helpHoverStore,
 }) => {
   const [activeButtons, setActiveButtons] = useState<Record<string, boolean>>({
     Phenotype: modelVisualization.isPhenotypeHighlighted(),
@@ -15,12 +19,72 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   const layouts: VisualOptionsButtonSection = {
     headerText: 'Variable Layouts',
     buttons: [
-      ['Organic', () => modelVisualization.layoutCose(), false],
-      ['Hierarchical', () => modelVisualization.layoutDagre(), false],
-      ['Phenotype', () => modelVisualization.layoutPhenotype(), false],
+      [
+        'Organic',
+        () => modelVisualization.layoutCose(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+                'Cose'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Hierarchical',
+        () => modelVisualization.layoutDagre(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+                'Dagre'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Phenotype',
+        () => modelVisualization.layoutPhenotype(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+                'Phenotype'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
       [
         'Control-Enabled',
         () => modelVisualization.layoutControlEnabled(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+                'Control-Enabled'
+              ),
+              true,
+              -50,
+              150
+            ),
         false,
       ],
     ],
@@ -38,6 +102,18 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             Phenotype: !prev['Phenotype'],
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.highlightVariable(
+                'Phenotype'
+              ),
+              true,
+              -50,
+              150
+            ),
         activeButtons['Phenotype'] ?? false,
       ],
       [
@@ -49,6 +125,18 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             'Control-Enabled': !prev['Control-Enabled'],
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.highlightVariable(
+                'Control-Enabled'
+              ),
+              true,
+              -50,
+              150
+            ),
         activeButtons['Control-Enabled'] ?? false,
       ],
     ],
@@ -72,24 +160,28 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
         />
         <section className="flex flex-row items-center justify-between w-full h-fit gap-1 mb-2 overflow-visible">
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
-            {firstHalf.map(([label, onClick, isActive]) => (
+            {firstHalf.map(([label, onClick, onMouseEnter, isActive]) => (
               <TextButtonReact
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
-            {secondHalf.map(([label, onClick, isActive]) => (
+            {secondHalf.map(([label, onClick, onMouseEnter, isActive]) => (
               <TextButtonReact
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>

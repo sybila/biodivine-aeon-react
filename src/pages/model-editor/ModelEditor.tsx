@@ -141,7 +141,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         );
       case 'Visual Options':
         return (
-          <VisualOptionsTabContent modelVisualization={modelVisualization} />
+          <VisualOptionsTabContent
+            modelVisualization={modelVisualization}
+            stringProviderServ={stringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
         );
       case 'Help':
         return (

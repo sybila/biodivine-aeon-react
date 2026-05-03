@@ -411,7 +411,7 @@ export type DecisionsTSSD = Array<DecisionTSSD>;
 
 export type VisualOptionsButtonSection = {
   headerText: string;
-  buttons: Array<[string, () => void, boolean]>;
+  buttons: Array<[string, () => void, (e: React.MouseEvent) => void, boolean]>;
 };
 
 export type VisualOptionsSwitchableABE = {

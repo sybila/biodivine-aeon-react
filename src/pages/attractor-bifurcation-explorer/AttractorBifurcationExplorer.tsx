@@ -26,6 +26,7 @@ const AttractorBifurcationExplorer: React.FC<
   stringProviderServ,
 
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -69,6 +70,8 @@ const AttractorBifurcationExplorer: React.FC<
         return (
           <VisualOptionsTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            stringProviderServ={stringProviderServ}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Help':

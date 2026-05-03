@@ -82,6 +82,7 @@ export const AttractorBifurcationExplorerRoute = createRoute({
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
       }
+      helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),
 });

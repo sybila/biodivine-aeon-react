@@ -114,6 +114,18 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
 
   // #endregion
 
+  // #region Visual Options
+
+  variableLayout(layoutName: string): string {
+    return 'Change the layout of the variables to "' + layoutName + '" layout.';
+  }
+
+  highlightVariable(highlightType: string): string {
+    return 'Highlight variables by "' + highlightType + '".';
+  }
+
+  // #endregion
+
   // #region General Operations
 
   public showModelDescription(): string {
