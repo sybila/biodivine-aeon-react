@@ -45,5 +45,10 @@ export type HelpHoverState = {
     adjustLeft?: number
   ): void;
 
+  /** Change the text displayed in the help hover.
+   *  @param helpText (string) - text to be displayed in the help hover
+   */
+  setHelpHoverText(helpText: string): void;
+
   clear: () => void;
 };

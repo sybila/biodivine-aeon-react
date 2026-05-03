@@ -45,6 +45,7 @@ function createHelpHoverStore(): ZustandStore<HelpHoverState> {
         isTooltip: isTooltip,
       });
     },
+    setHelpHoverText: (helpText: string) => set({ helpText }),
     clear: () => set({ position: null, helpText: null, isTooltip: false }),
   }));
 }

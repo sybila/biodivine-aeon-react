@@ -8,8 +8,13 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
   setShowModelDescription,
   modelEditorServ,
   messageServ,
+
   tabStore,
   modelInfoStore,
+
+  setHelpHover,
+  setHelpHoverText,
+  clearHelpHover,
 }) => {
   const modelDescription = modelInfoStore((state) =>
     state.getModelDescription()
@@ -36,7 +41,12 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
           compWidth="35%"
           textFontSize="13px"
           text="Hide Model description"
-          handleClick={() => setShowModelDescription(false)}
+          handleClick={() => {
+            setHelpHoverText(true);
+            setShowModelDescription(false);
+          }}
+          onMouseEnter={(e: React.MouseEvent) => setHelpHover(e, false)}
+          onMouseLeave={() => clearHelpHover()}
           active={true}
         />
       </section>
@@ -45,10 +55,10 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
         contMaxHeight="400px"
         contMinWidth="479px"
         contMaxWidth="479px"
-        textBoxMinHeight='400px'
-        textBoxMaxHeight='400px'
-        textBoxMinWidth='475px'
-        textBoxMaxWidth='475px'
+        textBoxMinHeight="400px"
+        textBoxMaxHeight="400px"
+        textBoxMinWidth="475px"
+        textBoxMaxWidth="475px"
         placeholder="(model description)"
         textAlign="start"
         fontSize="14px"

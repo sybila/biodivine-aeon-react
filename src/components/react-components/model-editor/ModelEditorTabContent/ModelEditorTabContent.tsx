@@ -41,6 +41,32 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
     }
   };
 
+  const getShowHideModelDescriptionTooltipText = (show: boolean) => {
+    return show
+      ? stringProviderServ.ToolTips.ModelEditorTooltips.showModelDescription()
+      : stringProviderServ.ToolTips.ModelEditorTooltips.hideModelDescription();
+  };
+
+  const setShowHideModelDescriptionTooltipText = (show: boolean) => {
+    helpHoverStore
+      .getState()
+      .setHelpHoverText(getShowHideModelDescriptionTooltipText(show));
+  };
+
+  const showHideModelDescriptionTooltip = (
+    e: React.MouseEvent,
+    show: boolean
+  ) => {
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtMouse(
+        e.nativeEvent,
+        getShowHideModelDescriptionTooltipText(show),
+        true,
+        -50
+      );
+  };
+
   liveModelServ.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
@@ -48,8 +74,10 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
       <ModelName
         modelEditorServ={modelEditorServ}
         messageServ={messageServ}
+        stringProviderServ={stringProviderServ}
         tabStore={tabStore}
         modelInfoStore={modelInfoStore}
+        helpHoverStore={helpHoverStore}
       />
       {showModelDescription ? (
         <ModelDescription
@@ -58,6 +86,9 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           messageServ={messageServ}
           tabStore={tabStore}
           modelInfoStore={modelInfoStore}
+          setHelpHover={showHideModelDescriptionTooltip}
+          setHelpHoverText={setShowHideModelDescriptionTooltipText}
+          clearHelpHover={helpHoverStore.getState().clear}
         />
       ) : (
         <>
@@ -76,10 +107,15 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                 text={`${
                   showModelDescription ? 'Hide' : 'Show'
                 } Model description`}
-                handleClick={() =>
-                  setShowModelDescription(!showModelDescription)
-                }
+                handleClick={() => {
+                  setShowHideModelDescriptionTooltipText(false);
+                  setShowModelDescription(!showModelDescription);
+                }}
                 active={false}
+                onMouseEnter={(e: React.MouseEvent) =>
+                  showHideModelDescriptionTooltip(e, true)
+                }
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             </section>
 
@@ -109,6 +145,17 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                   handleClick={() => {
                     setExtendFunctions.forEach((func) => func(true));
                   }}
+                  onMouseEnter={(e: React.MouseEvent) =>
+                    helpHoverStore
+                      .getState()
+                      .setHelpHoverAtMouse(
+                        e.nativeEvent,
+                        stringProviderServ.ToolTips.ModelEditorTooltips.extendAllVariables(),
+                        true,
+                        -50
+                      )
+                  }
+                  onMouseLeave={() => helpHoverStore.getState().clear()}
                 />
                 <TextButtonReact
                   className="mr-1"
@@ -118,6 +165,17 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                   handleClick={() => {
                     setExtendFunctions.forEach((func) => func(false));
                   }}
+                  onMouseEnter={(e: React.MouseEvent) =>
+                    helpHoverStore
+                      .getState()
+                      .setHelpHoverAtMouse(
+                        e.nativeEvent,
+                        stringProviderServ.ToolTips.ModelEditorTooltips.collapseAllVariables(),
+                        true,
+                        -50
+                      )
+                  }
+                  onMouseLeave={() => helpHoverStore.getState().clear()}
                 />
               </div>
 
@@ -132,6 +190,17 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                 handleClick={() => {
                   modelEditorServ.addVariable();
                 }}
+                onMouseEnter={(e: React.MouseEvent) =>
+                  helpHoverStore
+                    .getState()
+                    .setHelpHoverAtMouse(
+                      e.nativeEvent,
+                      stringProviderServ.ToolTips.ModelEditorTooltips.addNewVariable(),
+                      true,
+                      -50
+                    )
+                }
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             </section>
           </section>

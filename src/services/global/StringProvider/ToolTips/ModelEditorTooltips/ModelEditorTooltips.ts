@@ -23,12 +23,24 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
     return 'Search for a variable.';
   }
 
+  public addNewVariable(): string {
+    return 'Add a new variable.';
+  }
+
   public deleteVariable(): string {
     return 'Delete variable.';
   }
 
   public findVariableInVisualization(): string {
     return 'Find the variable in the visualization.';
+  }
+
+  // #endregion
+
+  // #region Model Operations
+
+  public changeModelName(): string {
+    return 'Change the name of the model.';
   }
 
   // #endregion
@@ -75,6 +87,26 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
       controlEnabledValue +
       '.'
     );
+  }
+
+  // #endregion
+
+  // #region General Operations
+
+  public showModelDescription(): string {
+    return 'Show the description of the model.';
+  }
+
+  public hideModelDescription(): string {
+    return 'Hide the description of the model.';
+  }
+
+  public extendAllVariables(): string {
+    return 'Extend all variables.';
+  }
+
+  public collapseAllVariables(): string {
+    return 'Collapse all variables.';
   }
 
   // #endregion

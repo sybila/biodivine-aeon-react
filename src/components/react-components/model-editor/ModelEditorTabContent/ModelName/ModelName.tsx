@@ -5,9 +5,11 @@ import type { ModelNameProps } from './ModelNameProps';
 const ModelName: React.FC<ModelNameProps> = ({
   modelEditorServ,
   messageServ,
+  stringProviderServ,
 
   tabStore,
   modelInfoStore,
+  helpHoverStore,
 }) => {
   const modelName = modelInfoStore((state) => state.modelName);
   const tabState = tabStore((state) => state);
@@ -23,10 +25,10 @@ const ModelName: React.FC<ModelNameProps> = ({
       contMaxHeight="35px"
       contMinWidth="488px"
       contMaxWidth="488px"
-      textBoxMinWidth='488px'
-      textBoxMaxWidth='488px'
-      textBoxMinHeight='30px'
-      textBoxMaxHeight='30px'
+      textBoxMinWidth="488px"
+      textBoxMaxWidth="488px"
+      textBoxMinHeight="30px"
+      textBoxMaxHeight="30px"
       fontSize="22px"
       placeholder="Model Name"
       textAlign="center"
@@ -40,6 +42,17 @@ const ModelName: React.FC<ModelNameProps> = ({
           modelEditorServ.setModelName(value);
         }
       }}
+      onMouseEnter={(e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            modelName.length > 0 ? modelName : stringProviderServ.ToolTips.ModelEditorTooltips.changeModelName(),
+            true,
+            40
+          )
+      }
+      onMouseLeave={() => helpHoverStore.getState().clear()}
     />
   );
 };
