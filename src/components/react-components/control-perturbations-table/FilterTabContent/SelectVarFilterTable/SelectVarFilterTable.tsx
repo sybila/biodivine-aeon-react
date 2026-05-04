@@ -16,9 +16,9 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
   perturbationFilterSortStore,
   helpHoverStore,
 }) => {
-  const [selectedVariables, setSelectedVariables] = useState<
-    Record<string, boolean>
-  >({});
+  const [selectedVariables, setSelectedVariables] = useState<Set<string>>(
+    new Set()
+  );
 
   const [searchText, setSearchText] = useState('');
 
@@ -28,10 +28,15 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
 
   const toggleVariableSelect = (variableName: string) => {
     loadingServ.startLoading();
-    setSelectedVariables((prev) => ({
-      ...prev,
-      [variableName]: !prev[variableName],
-    }));
+    setSelectedVariables((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(variableName)) {
+        newSet.delete(variableName);
+      } else {
+        newSet.add(variableName);
+      }
+      return newSet;
+    });
     loadingServ.endLoading();
   };
 
@@ -42,7 +47,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     const newFilterVariables = { ...filterVariables };
 
     variableNames.forEach((name) => {
-      if (selectedVariables[name]) {
+      if (selectedVariables.has(name)) {
         if (newStatus === null) {
           delete newFilterVariables[name];
         } else {
@@ -112,7 +117,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
           ))}
         </div>
 
-        <SelectionButtons
+        <SelectionButtons<string>
           keys={variableNames}
           selectedVariables={selectedVariables}
           setSelectedVariables={setSelectedVariables}
@@ -132,7 +137,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
           <SelectVarFilterTableRow
             key={name}
             varName={name}
-            isSelected={!!selectedVariables[name]}
+            isSelected={selectedVariables.has(name)}
             toggleSelect={toggleVariableSelect}
             pertStatus={filterVariables[name]}
           />

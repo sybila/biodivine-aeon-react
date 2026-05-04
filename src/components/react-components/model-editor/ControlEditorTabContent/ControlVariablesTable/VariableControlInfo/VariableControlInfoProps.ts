@@ -9,7 +9,7 @@ export type VariableControlInfoProps = {
   name: string;
   hover: boolean;
   selected: boolean;
-  toggleSelect: (variableName: string) => void;
+  toggleSelect: (variableId: number) => void;
 
   controlEditorServ: ControlEditorInt;
   stringProviderServ: StringProviderInt;

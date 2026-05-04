@@ -490,13 +490,17 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Set the given node as selected. */
   public selectNode(id: number) {
-    let selected = this.cytoscape.$(':selected'); // node or edge that are selected
-    if (selected.length == 1) {
-      selected.unselect();
-    }
-    let node = this.cytoscape.getElementById(id);
+    const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       node.select();
+    }
+  }
+
+  /** Sets the given node as not selected */
+  public unselectNode(id: number) {
+    const node = this.cytoscape.getElementById(id);
+    if (node !== undefined) {
+      node.unselect();
     }
   }
 
@@ -624,6 +628,15 @@ class CytoscapeME implements ModelVisualizationInt {
     } else {
       return undefined;
     }
+  }
+
+  // #endregion
+
+  // #region --- Global Select ---
+
+  /** Unselects all items selected in the cytoscape editor. */
+  public unselectAll(): void {
+    this.cytoscape.elements(':selected').unselect();
   }
 
   // #endregion

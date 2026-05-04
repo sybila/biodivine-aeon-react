@@ -23,6 +23,9 @@ export interface ModelVisualizationInt {
   /** Set the given node as selected. */
   selectNode(id: number): void;
 
+  /** Set the given node as not selected. */
+  unselectNode(id: number): void;
+
   /** Return an id of the selected node, or undefined if nothing is selected. */
   getSelectedNodeId(): string | undefined;
 
@@ -38,6 +41,13 @@ export interface ModelVisualizationInt {
 
   /** Allow to externally set which edge is hovered - just make sure to unset it later. */
   hoverEdge(regulatorId: number, targetId: number, isHover: boolean): void;
+
+  // #endregion
+
+  // #region --- Global Select ---
+
+  /** Unselects all items selected in the cytoscape editor. */
+  unselectAll(): void;
 
   // #endregion
 

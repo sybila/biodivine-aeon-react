@@ -5,45 +5,37 @@ import ToggleSelectionIcon from '../../../../assets/icons/toggle_selection.svg';
 import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 import type { SelectionButtonsProps } from './SelectionButtonsProps';
 
-const SelectionButtons: React.FC<SelectionButtonsProps> = ({
+function SelectionButtons<T extends string | number>({
   keys,
   selectedVariables,
   setSelectedVariables,
   buttonBorderRadius = '10px',
   buttonSize = '29px',
-
   stringProviderServ,
-
   helpHoverStore,
-}) => {
+}: SelectionButtonsProps<T>) {
   const selectAll = () => {
     setSelectedVariables(
-      keys.reduce(
-        (acc, key) => {
-          acc[key] = true;
-          return acc;
-        },
-        {} as Record<string, boolean>
-      )
+      keys.reduce((acc, key) => {
+        acc.add(key);
+        return acc;
+      }, new Set<T>())
     );
   };
 
   const toggleSelected = () => {
     setSelectedVariables(
-      keys.reduce(
-        (acc, key) => {
-          if (!selectedVariables[key]) {
-            acc[key] = !selectedVariables[key];
-          }
-          return acc;
-        },
-        {} as Record<string, boolean>
-      )
+      keys.reduce((acc, key) => {
+        if (!selectedVariables.has(key)) {
+          acc.add(key);
+        }
+        return acc;
+      }, new Set<T>())
     );
   };
 
   const deselectAll = () => {
-    setSelectedVariables({});
+    setSelectedVariables(new Set());
   };
 
   /** Array of buttons for changing the selection status of variables.
@@ -117,6 +109,6 @@ const SelectionButtons: React.FC<SelectionButtonsProps> = ({
       ))}
     </div>
   );
-};
+}
 
 export default SelectionButtons;

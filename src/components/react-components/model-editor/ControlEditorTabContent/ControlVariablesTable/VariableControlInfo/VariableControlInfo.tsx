@@ -72,9 +72,13 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       contentOverflowY="visible"
       hover={hover}
       active={selected}
-      onMouseEnter={() => controlEditorServ.hoverVariableCytoscape(id, true)}
-      onMouseLeave={() => controlEditorServ.hoverVariableCytoscape(id, false)}
-      onClick={() => toggleSelect(name)}
+      onMouseEnter={() =>
+        controlEditorServ.hoverVariableVisualization(id, true)
+      }
+      onMouseLeave={() =>
+        controlEditorServ.hoverVariableVisualization(id, false)
+      }
+      onClick={() => toggleSelect(id)}
     >
       <span
         className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)"

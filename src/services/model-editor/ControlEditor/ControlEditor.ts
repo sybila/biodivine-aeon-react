@@ -10,13 +10,6 @@ import type { ControlEditorInt } from './ControlEditorInt';
 class ControlEditor implements ControlEditorInt {
   // #region --- Properties + Constructor ---
 
-  /** Record containing all selected variables in the ControlEditorTabContent.tsx component.
-   *  Key: variable name
-   *  Value: whether the variable is selected or not (true = selected, false = not selected)
-   *  If variables is missing from the record, it is considered not selected (false).
-   */
-  private selectedVariables: Record<string, boolean> = {};
-
   /** Currently searched variable name in the ControlEditorTabContent.tsx component */
   private variableSearch: string = '';
 
@@ -44,24 +37,6 @@ class ControlEditor implements ControlEditorInt {
   // #endregion
 
   // #region --- Hover/Select Variable Functions ---
-
-  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
-   *  Key: variable name
-   *  Value: whether the variable is selected or not (true = selected, false = not selected)
-   *  If variables is missing from the record, it is considered not selected (false).
-   */
-  public setSelectVariables(newSelected: Record<string, boolean>) {
-    this.selectedVariables = newSelected;
-  }
-
-  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component.
-   * Key: variable name
-   * Value: whether the variable is selected or not (true = selected, false = not selected)
-   * If variables is missing from the record, it is considered not selected (false).
-   */
-  public getSelectedVariables(): Record<string, boolean> {
-    return this.selectedVariables;
-  }
 
   /** Toggles hover state on a variable in the ControlEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
@@ -118,28 +93,23 @@ class ControlEditor implements ControlEditorInt {
   }
 
   /** Changes the control enabled state of selected variables.
-   *  @param selectedVariables - Array of tuples where each tuple contains:
-   *    - variable name (string)
-   *    - whether the variable is selected (boolean)
+   *  @param selectedVariables - Set of variable IDs:
    *  @param controlEnabled - The new control enabled state to set (true or false)
    *  Only variables that are marked as selected (true) will have their control enabled state changed.
    *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
    *  If a variable name does not correspond to any existing variable, it will be ignored.
    */
   public changeControlEnabledSelected(
-    selectedVariables: Array<[string, boolean]>,
+    selectedVariables: Set<number>,
     controlEnabled: boolean
   ) {
-    selectedVariables.forEach(([varName, isSelected]) => {
-      if (!isSelected) return;
-
-      const variableId = this.variablesStore
+    selectedVariables.forEach((variableId) => {
+      const variable = this.variablesStore
         .getState()
-        .variableFromName(varName)?.id;
+        .variableFromId(variableId);
+      if (!variable) return;
 
-      if (variableId != undefined && variableId !== null) {
-        this.changeControlEnabled(variableId, controlEnabled);
-      }
+      this.changeControlEnabled(variableId, controlEnabled);
     });
   }
 
@@ -182,19 +152,16 @@ class ControlEditor implements ControlEditorInt {
    *  If a variable name does not correspond to any existing variable, it will be ignored.
    */
   public changePhenotypeSelected(
-    selectedVariables: Array<[string, boolean]>,
+    selectedVariables: Set<number>,
     phenotype: Phenotype
   ) {
-    selectedVariables.forEach(([varName, isSelected]) => {
-      if (!isSelected) return;
-
-      const variableId = this.variablesStore
+    selectedVariables.forEach((variableId) => {
+      const variable = this.variablesStore
         .getState()
-        .variableFromName(varName)?.id;
+        .variableFromId(variableId);
+      if (!variable) return;
 
-      if (variableId != undefined && variableId !== null) {
-        this.changePhenotype(variableId, phenotype);
-      }
+      this.changePhenotype(variableId, phenotype);
     });
   }
 
@@ -219,8 +186,24 @@ class ControlEditor implements ControlEditorInt {
   /** Toggles hover state on a variable node in the CytoscapeMe canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    */
-  public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
+  public hoverVariableVisualization(id: number, turnOnHover: boolean) {
     this.modelVisualizationServ.hoverNode(id, turnOnHover);
+  }
+
+  /** Toggles selection state on a variable node in the modelVisualizationServ canvas.
+   *  If `turnOnSelect` is true, it selects the node; if false, it unselects it.
+   */
+  public selectVariableVisualization(id: number, turnOnSelect: boolean) {
+    if (turnOnSelect) {
+      this.modelVisualizationServ.selectNode(id);
+    } else {
+      this.modelVisualizationServ.unselectNode(id);
+    }
+  }
+
+  /** Unselects all items selected in the model visualization canvas. */
+  public unselectAllVisualization() {
+    this.modelVisualizationServ.unselectAll();
   }
 
   // #endregion
