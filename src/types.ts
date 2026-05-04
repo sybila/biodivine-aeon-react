@@ -7,9 +7,25 @@ export type Position = [number, number];
 
 // #region --- Model Editor Status ---
 
-export type ModelEditorItem =
-  | { type: 'variable'; id: number }
-  | { type: 'regulation'; regulationIds: RegulationVariables };
+/** Set containing variable ids. */
+export type VariableIdSet = Set<number>;
+
+/** A record mapping each target variable id to a set of regulator variable ids */
+export type RegulationRecord = Record<number, Set<number>>;
+
+export type ModelEditorItems = {
+  variables: VariableIdSet;
+  regulations: RegulationRecord;
+};
+
+export type ModelEditorVariable = { type: 'variable'; id: number };
+
+export type ModelEditorRegulation = {
+  type: 'regulation';
+  regulationIds: RegulationVariables;
+};
+
+export type ModelEditorItem = ModelEditorVariable | ModelEditorRegulation;
 
 // #endregion
 

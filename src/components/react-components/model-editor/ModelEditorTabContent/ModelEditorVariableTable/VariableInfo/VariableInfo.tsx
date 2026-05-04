@@ -16,7 +16,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverVariable,
   selectedVariable,
   hoverRegulation,
-  selectedRegulation,
+  selectedRegulatorIds,
   exposeSetExtend,
 
   modelEditorServ,
@@ -148,7 +148,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           width="100%"
           variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
-          selectedRegulation={selectedRegulation}
+          selectedRegulatorIds={selectedRegulatorIds}
 
           modelEditorServ={modelEditorServ}
           stringProviderServ={stringProviderServ}

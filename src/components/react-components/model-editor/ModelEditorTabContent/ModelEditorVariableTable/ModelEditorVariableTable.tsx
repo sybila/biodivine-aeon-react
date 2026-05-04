@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
-import type { ModelEditorItem, Variable } from '../../../../../types';
+import type {
+  ModelEditorItem,
+  ModelEditorItems,
+  Variable,
+} from '../../../../../types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import VariableInfo from './VariableInfo/VariableInfo';
@@ -18,8 +22,8 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   updateFunctionsStore,
   helpHoverStore,
 }) => {
-  const selectedItemInfo: ModelEditorItem | null = modelEditorStatusStore(
-    (state) => state.selectedItemInfo
+  const selectedItemsInfo: ModelEditorItems = modelEditorStatusStore(
+    (state) => state.selectedItemsInfo
   );
   const hoverItemInfo: ModelEditorItem | null = modelEditorStatusStore(
     (state) => state.hoverItemInfo
@@ -27,15 +31,9 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
 
   const hoverVariableId =
     hoverItemInfo?.type === 'variable' ? hoverItemInfo.id : null;
-  const selectedVariableId =
-    selectedItemInfo?.type === 'variable' ? selectedItemInfo.id : null;
 
   const hoverRegulation =
     hoverItemInfo?.type === 'regulation' ? hoverItemInfo.regulationIds : null;
-  const selectedRegulation =
-    selectedItemInfo?.type === 'regulation'
-      ? selectedItemInfo.regulationIds
-      : null;
 
   const variablesObj = variablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
@@ -60,17 +58,13 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
           hoverVariable={
             hoverVariableId !== null && hoverVariableId === variable.id
           }
-          selectedVariable={selectedVariableId === variable.id}
+          selectedVariable={selectedItemsInfo.variables.has(variable.id)}
           hoverRegulation={
             hoverRegulation && hoverRegulation.target === variable.id
               ? hoverRegulation
               : undefined
           }
-          selectedRegulation={
-            selectedRegulation && selectedRegulation.target === variable.id
-              ? selectedRegulation
-              : undefined
-          }
+          selectedRegulatorIds={selectedItemsInfo.regulations[variable.id]}
           exposeSetExtend={exposeSetExtend}
           modelEditorServ={modelEditorServ}
           stringProviderServ={stringProviderServ}

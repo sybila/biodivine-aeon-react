@@ -7,11 +7,7 @@ import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunct
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type {
-  ModelEditorItem,
-  ModelStats,
-  RegulationVariables,
-} from '../../../types';
+import type { ModelStats, RegulationVariables } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { StringProviderInt } from '../../global/StringProvider/StringProviderInt';
@@ -115,96 +111,6 @@ class ModelEditor implements ModelEditorInt {
   /** Removes a variable */
   public async removeVariable(id: number) {
     await this.liveModelServ.Variables.removeVariable(id, true);
-  }
-
-  /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  public hoverVariable(id: number, turnOnHover: boolean) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'variable') {
-      if (!turnOnHover) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-
-      if (hoverInfo.id === id) {
-        return;
-      }
-    }
-
-    if (turnOnHover) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'variable', id });
-    }
-  }
-
-  // #endregion
-
-  // #region --- Regulation Selection/Hover ---
-
-  /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
-  public getSelectedRegulation(): RegulationVariables | null {
-    const selectedItemInfo: ModelEditorItem | null =
-      this.modelEditorStatusStore.getState().selectedItemInfo;
-
-    return selectedItemInfo?.type === 'regulation'
-      ? selectedItemInfo.regulationIds
-      : null;
-  }
-
-  /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
-  public setSelectedRegulation(regulation: RegulationVariables | null) {
-    this.modelEditorStatusStore
-      .getState()
-      .setSelectedItemInfo(
-        regulation ? { type: 'regulation', regulationIds: regulation } : null
-      );
-  }
-
-  /** Toggles hover state on a regulation in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  public hoverRegulation(
-    regulation: RegulationVariables,
-    turnOnHover: boolean
-  ) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'regulation') {
-      if (!turnOnHover) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-    }
-
-    if (turnOnHover) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
-    }
-  }
-
-  /** Toggles selected state on a regulation in the ModelEditorTabContent.tsx component
-   * If `select` is true, it sets regulation as selected; if false, it unselects it.
-   */
-  public selectRegulation(regulation: RegulationVariables, select: boolean) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'regulation') {
-      if (!select) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-    }
-
-    if (select) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
-    }
   }
 
   // #endregion

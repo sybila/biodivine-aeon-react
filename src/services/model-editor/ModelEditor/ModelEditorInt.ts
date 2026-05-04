@@ -25,31 +25,6 @@ export interface ModelEditorInt {
   /** Removes a variable */
   removeVariable(id: number): Promise<void>;
 
-  /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  hoverVariable(id: number, turnOnHover: boolean): void;
-
-  // #endregion
-
-  // #region --- Regulation Selection/Hover ---
-
-  /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
-  getSelectedRegulation(): RegulationVariables | null;
-
-  /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
-  setSelectedRegulation(regulation: RegulationVariables | null): void;
-
-  /** Toggles hover state on a regulation in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  hoverRegulation(regulation: RegulationVariables, turnOnHover: boolean): void;
-
-  /** Toggles selected state on a regulation in the ModelEditorTabContent.tsx component
-   * If `select` is true, it sets regulation as selected; if false, it unselects it.
-   */
-  selectRegulation(regulation: RegulationVariables, select: boolean): void;
-
   // #endregion
 
   // #region --- Regulation Actions ---

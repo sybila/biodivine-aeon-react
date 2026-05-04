@@ -9,7 +9,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
   width,
   variableRegulations,
   hoverRegulation,
-  selectedRegulation,
+  selectedRegulatorIds,
 
   modelEditorServ,
   stringProviderServ,
@@ -45,8 +45,8 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
             false
           }
           selected={
-            (selectedRegulation &&
-              selectedRegulation.regulator === regulation.regulator) ??
+            (selectedRegulatorIds &&
+              selectedRegulatorIds.has(regulation.regulator)) ??
             false
           }
           modelEditorServ={modelEditorServ}

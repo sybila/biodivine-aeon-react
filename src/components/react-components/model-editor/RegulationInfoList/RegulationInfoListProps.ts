@@ -11,7 +11,7 @@ export type RegulationInfoListProps = {
   variableRegulations: Regulation[];
 
   hoverRegulation: RegulationVariables | undefined;
-  selectedRegulation: RegulationVariables | undefined;
+  selectedRegulatorIds: Set<number> | undefined;
 
   modelEditorServ: ModelEditorInt;
   stringProviderServ: StringProviderInt;
