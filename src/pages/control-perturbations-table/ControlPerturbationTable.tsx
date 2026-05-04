@@ -29,6 +29,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
 
   resultsStatusStore,
   perturbationFilterSortStore,
+  helpHoverStore,
 }) => {
   const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
 
@@ -56,9 +57,11 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             setStartFilter={setStartFilter}
             startFilter={startFilter}
             loadingServ={loadingServ}
+            stringProviderServ={stringProviderServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             resultsStatusStore={resultsStatusStore}
             perturbationFilterSortStore={perturbationFilterSortStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Sorting':

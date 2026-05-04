@@ -137,6 +137,7 @@ export const ControlPerturbationsTableRoute = createRoute({
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
       }
+      helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),
 });

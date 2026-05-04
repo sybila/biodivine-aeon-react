@@ -6,6 +6,7 @@ import type { DataFormatersInt } from '../../services/utilities/DataFormaters/Da
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
+import type { HelpHoverState } from '../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
 
 export type ControlPerturbationTableProps = {
@@ -18,4 +19,5 @@ export type ControlPerturbationTableProps = {
 
   resultsStatusStore: ZustandStore<ResultsStatus>;
   perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;
+  helpHoverStore: ZustandStore<HelpHoverState>;
 };

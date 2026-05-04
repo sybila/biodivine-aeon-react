@@ -13,10 +13,12 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
   startFilter,
 
   searchAndFilterHelpersServ,
+  stringProviderServ,
   loadingServ,
 
   resultsStatusStore,
   perturbationFilterSortStore,
+  helpHoverStore,
 }) => {
   // We know that when type is 'Control', results is ControlResults
   const controlInfo: ControlResults | undefined = resultsStatusStore(
@@ -121,6 +123,8 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         loadingServ={loadingServ}
         perturbationFilterSortStore={perturbationFilterSortStore}
+        stringProviderServ={stringProviderServ}
+        helpHoverStore={helpHoverStore}
       />
 
       <SeparatorLine />

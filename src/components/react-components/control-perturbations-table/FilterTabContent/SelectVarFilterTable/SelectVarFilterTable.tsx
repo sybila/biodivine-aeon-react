@@ -10,9 +10,11 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
   variableNames,
 
   searchAndFilterHelpersServ,
+  stringProviderServ,
   loadingServ,
 
   perturbationFilterSortStore,
+  helpHoverStore,
 }) => {
   const [selectedVariables, setSelectedVariables] = useState<
     Record<string, boolean>
@@ -114,6 +116,8 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
           keys={variableNames}
           selectedVariables={selectedVariables}
           setSelectedVariables={setSelectedVariables}
+          stringProviderServ={stringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
