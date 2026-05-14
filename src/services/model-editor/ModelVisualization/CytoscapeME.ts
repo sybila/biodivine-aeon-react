@@ -12,6 +12,7 @@ import {
   type Position,
   type Regulation,
   type RegulationVariables,
+  type Variable,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
@@ -726,10 +727,21 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Pan and zoom the graph to show the whole model. */
-  public fit() {
-    this.cytoscape.fit();
-    this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
+  /** Pan and zoom the graph to show the whole model.
+   *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
+   */
+  public fit(variables?: Variable[]): void {
+    if (variables !== undefined && variables.length > 0) {
+      const variableSet = new Set(variables.map((variable) => variable.id));
+      const nodes = this.cytoscape
+        .nodes()
+        .filter((node: any) => variableSet.has(Number(node.data().id)));
+      this.cytoscape.fit(nodes, 100);
+    } else {
+      this.cytoscape.fit();
+    }
+
+    //this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
   }
 
   // #endregion
