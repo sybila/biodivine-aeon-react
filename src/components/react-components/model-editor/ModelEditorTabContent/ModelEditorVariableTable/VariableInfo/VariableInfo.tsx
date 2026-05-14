@@ -72,7 +72,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           lineHeight="28px"
           textFontWeight="normal"
           textFontFamily="var(--font-family-fira-mono)"
-          headerText={`A: ${regulations.length}`}
+          headerText={`#↓ ${regulations.length}`}
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
               .getState()
