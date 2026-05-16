@@ -8,8 +8,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 export type ChangeUpdateFunctionInputProps = {
   compHeight: string;
   compWidth: string;
-  inputMinHeight: string;
-  inputMaxHeight: string;
+  inputHeight: string;
   inputWidth: string;
   inputFontSize: string;
   validationMinHeight: string;

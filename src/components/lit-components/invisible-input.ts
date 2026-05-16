@@ -2,21 +2,16 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 type StyleProperty =
-  | 'contMaxHeight'
-  | 'contMinHeight'
-  | 'contMaxWidth'
-  | 'contMinWidth'
+  | 'compHeight'
+  | 'compWidth'
   | 'contPadX'
   | 'contPadY'
   | 'contBorderRadius'
   | 'contOverflowX'
   | 'contOverflowY'
+  | 'contBgColor'
   | 'contFocusBgColor'
   | 'contErrorBgColor'
-  | 'textBoxMaxHeight'
-  | 'textBoxMaxWidth'
-  | 'textBoxMinHeight'
-  | 'textBoxMinWidth'
   | 'textLineHeight'
   | 'fontFamily'
   | 'fontWeight'
@@ -34,10 +29,10 @@ type StyleProperty =
 
 @customElement('invisible-input')
 export class InvisibleInput extends LitElement {
-  @property({ type: String }) declare contMaxHeight?: string;
-  @property({ type: String }) declare contMinHeight?: string;
-  @property({ type: String }) declare contMaxWidth?: string;
-  @property({ type: String }) declare contMinWidth?: string;
+  @property({ type: String }) declare compHeight?: string;
+  @property({ type: String }) declare compWidth?: string;
+
+  @property({ type: String }) declare contBgColor?: string;
   @property({ type: String }) declare contFocusBgColor?: string;
   @property({ type: String }) declare contErrorBgColor?: string;
 
@@ -47,10 +42,6 @@ export class InvisibleInput extends LitElement {
   @property({ type: String }) declare contOverflowX?: string;
   @property({ type: String }) declare contOverflowY?: string;
 
-  @property({ type: String }) declare textBoxMinHeight?: string;
-  @property({ type: String }) declare textBoxMinWidth?: string;
-  @property({ type: String }) declare textBoxMaxHeight?: string;
-  @property({ type: String }) declare textBoxMaxWidth?: string;
   @property({ type: String }) declare textLineHeight?: string;
 
   @property({ type: String }) declare fontFamily?: string;
@@ -84,30 +75,25 @@ export class InvisibleInput extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
-      min-height: var(--invisible-input-cont-min-height, 28px);
-      min-width: var(--invisible-input-cont-min-width, 400px);
-      max-height: var(--invisible-input-cont-max-height, 28px);
-      max-width: var(--invisible-input-cont-max-width, 400px);
+      height: var(--invisible-input-comp-height, 28px);
+      width: var(--invisible-input-comp-width, 300px);
     }
 
     #container {
       position: relative;
       display: inline-block;
-      min-height: var(--invisible-input-cont-min-height, 28px);
-      min-width: var(--invisible-input-cont-min-width, 400px);
-      max-height: var(--invisible-input-cont-max-height, 28px);
-      max-width: var(--invisible-input-cont-max-width, 400px);
-
+      height: 100%;
+      width: 100%;
+      background-color: var(--invisible-input-cont-bg-color, transparent);
       box-sizing: border-box;
-      padding: var(--invisible-input-cont-padx, 0)
-        var(--invisible-input-cont-pady, 0);
+      padding: var(--invisible-input-cont-pady, 0)
+        var(--invisible-input-cont-padx, 0);
+
       border-radius: var(--invisible-input-border-radius, 4px);
       transition: 0.3s;
     }
 
-    #container.error,
-    #text-input.error,
-    #multiline-text-input.error {
+    #container.error {
       background-color: var(
         --invisible-input-cont-error-bg-color,
         rgba(200, 40, 40, 0.4)
@@ -125,10 +111,8 @@ export class InvisibleInput extends LitElement {
     }
 
     #text-input {
-      min-height: var(--invisible-input-textbox-min-height, 28px);
-      min-width: var(--invisible-input-textbox-min-width, 400px);
-      max-height: var(--invisible-input-textbox-max-height, 28px);
-      max-width: var(--invisible-input-textbox-max-width, 400px);
+      height: 100%;
+      width: 100%;
       font-family: var(--invisible-input-font-family, 'FiraMono', monospace);
       background: none;
       border: none;
@@ -162,10 +146,8 @@ export class InvisibleInput extends LitElement {
     }
 
     #multiline-text-input {
-      min-height: var(--invisible-input-textbox-min-height, 28px);
-      min-width: var(--invisible-input-textbox-min-width, 400px);
-      max-height: var(--invisible-input-textbox-max-height, 28px);
-      max-width: var(--invisible-input-textbox-max-width, 400px);
+      height: 100%;
+      width: 100%;
       background: none;
       border: none;
       line-height: var(--invisible-input-text-line-height, 27px);
@@ -248,10 +230,8 @@ export class InvisibleInput extends LitElement {
     const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update('contMinHeight', '--invisible-input-cont-min-height', '28px');
-    update('contMinWidth', '--invisible-input-cont-min-width', '400px');
-    update('contMaxHeight', '--invisible-input-cont-max-height', '28px');
-    update('contMaxWidth', '--invisible-input-cont-max-width', '400px');
+    update('compHeight', '--invisible-input-comp-height', '28px');
+    update('compWidth', '--invisible-input-comp-width', '300px');
 
     update('contOverflowX', '--invisible-input-cont-overflow-x', 'auto');
     update('contOverflowY', '--invisible-input-cont-overflow-y', 'auto');
@@ -259,6 +239,7 @@ export class InvisibleInput extends LitElement {
     update('contPadY', '--invisible-input-cont-pady', '0');
     update('contBorderRadius', '--invisible-input-border-radius', '4px');
 
+    update('contBgColor', '--invisible-input-cont-bg-color', 'transparent');
     update(
       'contFocusBgColor',
       '--invisible-input-cont-focus-bg-color',
@@ -270,10 +251,6 @@ export class InvisibleInput extends LitElement {
       'rgba(200, 40, 40, 0.4)'
     );
 
-    update('textBoxMinHeight', '--invisible-input-textbox-min-height', '28px');
-    update('textBoxMinWidth', '--invisible-input-textbox-min-width', '400px');
-    update('textBoxMaxHeight', '--invisible-input-textbox-max-height', '28px');
-    update('textBoxMaxWidth', '--invisible-input-textbox-max-width', '400px');
     update('textLineHeight', '--invisible-input-text-line-height', '27px');
     update(
       'fontFamily',
@@ -304,20 +281,6 @@ export class InvisibleInput extends LitElement {
     );
   }
 
-  private autoResize(el: HTMLTextAreaElement) {
-    const maxHeight = this.textBoxMaxHeight
-      ? parseInt(this.textBoxMaxHeight.replace('px', ''), 10)
-      : 28;
-
-    const minHeight = this.textBoxMinHeight
-      ? parseInt(this.textBoxMinHeight.replace('px', ''), 10)
-      : 28;
-
-    el.style.height = 'auto';
-
-    el.style.height = `${Math.min(Math.max(el.scrollHeight, minHeight), maxHeight)}px`;
-  }
-
   static defaultIconSrc =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMyAxNy4yNVYyMWgzLjc1TDE3LjgxIDkuOTRsLTMuNzUtMy43NUwzIDE3LjI1ek0yMC43MSA3LjA0Yy4zOS0uMzkuMzktMS4wMiAwLTEuNDFsLTIuMzQtMi4zNGMtLjM5LS4zOS0xLjAyLS4zOS0xLjQxIDBsLTEuODMgMS44MyAzLjc1IDMuNzUgMS44My0xLjgzeiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=';
 
@@ -334,7 +297,6 @@ export class InvisibleInput extends LitElement {
       ${!this.multiLine
         ? html`<input
             id="text-input"
-            class="${error}"
             .value="${initialValue}"
             placeholder=${this.placeholder}
             type="text"
@@ -345,14 +307,11 @@ export class InvisibleInput extends LitElement {
           />`
         : html`<textarea
             id="multiline-text-input"
-            class="${error}"
             .value=${initialValue}
             placeholder=${this.placeholder}
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
-            @input=${(e: Event) =>
-              this.autoResize(e.target as HTMLTextAreaElement)}
             part="multiline-text-input"
           >
           </textarea>`}

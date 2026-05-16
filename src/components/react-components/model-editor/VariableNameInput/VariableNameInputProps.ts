@@ -9,8 +9,4 @@ export type VariableNameInputProps = {
   varId: number;
   varName: string;
   onUpdate: (id: number, newName: string) => boolean;
-
-  stringProviderServ: StringProviderInt;
-
-  helpHoverStore: ZustandStore<HelpHoverState>;
 };

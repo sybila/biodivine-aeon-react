@@ -3,31 +3,21 @@ import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableName
 
 const ChangeVarNameOverlayContent: React.FC<
   ChangeVariableNameOverlayContentProps
-> = ({
-  varId,
-  modelEditorServ,
-  variablesStore,
-  stringProviderServ,
-  helpHoverStore,
-}) => {
+> = ({ varId, modelEditorServ, variablesStore }) => {
   const varName = variablesStore.getState().variables[varId]?.name ?? '';
 
   return (
-    <div className="flex justify-center items-center h-[90px] w-[300px]">
-      <div className="flex flex-row justify-center items-center h-[35px] w-[99%] bg-gray-200 rounded-[15px]">
-        <VariableNameInput
-          height="28px"
-          width="271px"
-          fontSize="25px"
-          varId={varId}
-          varName={varName}
-          onUpdate={(id: number, newName: string) =>
-            modelEditorServ.changeVariableName(id, newName)
-          }
-          stringProviderServ={stringProviderServ}
-          helpHoverStore={helpHoverStore}
-        />
-      </div>
+    <div className="flex justify-center items-center h-[20vh] w-[50vw]">
+      <VariableNameInput
+        height="20vh"
+        width="50vw"
+        fontSize="25px"
+        varId={varId}
+        varName={varName}
+        onUpdate={(id: number, newName: string) =>
+          modelEditorServ.changeVariableName(id, newName)
+        }
+      />
     </div>
   );
 };

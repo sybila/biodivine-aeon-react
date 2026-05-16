@@ -51,14 +51,8 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
         />
       </section>
       <InvisibleInputReact
-        contMinHeight="400px"
-        contMaxHeight="400px"
-        contMinWidth="479px"
-        contMaxWidth="479px"
-        textBoxMinHeight="400px"
-        textBoxMaxHeight="400px"
-        textBoxMinWidth="475px"
-        textBoxMaxWidth="475px"
+        compHeight="400px"
+        compWidth="475px"
         placeholder="(model description)"
         textAlign="start"
         fontSize="14px"

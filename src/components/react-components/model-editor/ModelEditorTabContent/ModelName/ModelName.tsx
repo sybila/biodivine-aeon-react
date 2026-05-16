@@ -21,14 +21,8 @@ const ModelName: React.FC<ModelNameProps> = ({
 
   return (
     <InvisibleInputReact
-      contMinHeight="35px"
-      contMaxHeight="35px"
-      contMinWidth="488px"
-      contMaxWidth="488px"
-      textBoxMinWidth="488px"
-      textBoxMaxWidth="488px"
-      textBoxMinHeight="30px"
-      textBoxMaxHeight="30px"
+      compHeight="35px"
+      compWidth="488px"
       fontSize="22px"
       placeholder="Model Name"
       textAlign="center"
@@ -47,7 +41,9 @@ const ModelName: React.FC<ModelNameProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            modelName.length > 0 ? modelName : stringProviderServ.ToolTips.ModelEditorTooltips.changeModelName(),
+            modelName.length > 0
+              ? modelName
+              : stringProviderServ.ToolTips.ModelEditorTooltips.changeModelName(),
             true,
             40
           )

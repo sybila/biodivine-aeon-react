@@ -223,8 +223,6 @@ class ModelEditor implements ModelEditorInt {
         <ChangeVarNameOverlayContent
           varId={varId}
           modelEditorServ={this}
-          stringProviderServ={this.stringProviderServ}
-          helpHoverStore={this.helpHoverStore}
           variablesStore={this.variablesStore}
         />
       ),
