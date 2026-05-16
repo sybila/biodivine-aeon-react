@@ -37,6 +37,9 @@ export class HorizontalHidableContent extends LitElement {
   @property({ type: String }) declare buttonWidth?: string;
   @property({ type: String }) declare buttonHoverColor?: string;
 
+  @property({ type: Function }) declare buttonOnMouseEnter?: (e: MouseEvent) => void;
+  @property({ type: Function }) declare buttonOnMouseLeave?: (e: MouseEvent) => void;
+
   @property({ type: String }) declare iconHeight?: string;
   @property({ type: String }) declare iconWidth?: string;
   @property({ type: String }) declare iconSrc?: string;
@@ -199,6 +202,8 @@ export class HorizontalHidableContent extends LitElement {
         id="visibility-button"
         part="visibility-button"
         @click=${this.toggleVisibility}
+        @mouseenter=${(e: MouseEvent) => this.buttonOnMouseEnter?.(e)}
+        @mouseleave=${(e: MouseEvent) => this.buttonOnMouseLeave?.(e)}
       >
         <img
           id="visibility-icon"
