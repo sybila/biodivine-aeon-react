@@ -184,10 +184,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       >
         <TextInputReact
           slot="content"
-          placeholder='Search variables...'
+          placeholder="Search variables... (press enter to submit)"
           compHeight="100%"
           compWidth="100%"
-          onWrite={(value) =>
+          onSubmit={(value) =>
             modelVisualization.fit(
               searchAndFilterHelpersServ.filterVariablesBySearchTerms(
                 variablesStore.getState().getAllVariables(),
