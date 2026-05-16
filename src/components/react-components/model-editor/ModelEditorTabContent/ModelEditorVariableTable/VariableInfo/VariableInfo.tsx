@@ -4,10 +4,10 @@ import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
+import NonScrollableTextReact from '../../../../lit-wrappers/NonScrollableTextReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
-import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
 import type { VariableInfoProps } from './VariableInfoProps';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
@@ -51,18 +51,29 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
         slot="top-content"
         className="h-full w-[80%] flex flex-row justify-between items-center  shrink-0"
       >
-        <VariableNameInput
-          height="28px"
-          width="200px"
-          fontSize="16px"
-          varId={id}
-          varName={name}
-          onUpdate={(id: number, newName: string) =>
-            modelEditorServ.changeVariableName(id, newName)
+        <NonScrollableTextReact
+          compHeight="28px"
+          compWidth="200px"
+          textFontSize="16px"
+          textFontFamily="var(--font-family-fira-mono)"
+          textAlign="start"
+          textJustify="center"
+          text={name ? name : ''}
+          className="cursor-pointer"
+          onClick={() => modelEditorServ.openChangeVarNameWindow(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                name.length > 0
+                  ? name
+                  : stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableName(),
+                true,
+                -50
+              )
           }
-          stringProviderServ={stringProviderServ}
-          helpHoverStore={helpHoverStore}
-
+          onMouseLeave={helpHoverStore.getState().clear}
         />
 
         <SimpleHeaderReact
@@ -149,10 +160,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
           selectedRegulatorIds={selectedRegulatorIds}
-
           modelEditorServ={modelEditorServ}
           stringProviderServ={stringProviderServ}
-
           variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
         />
@@ -182,7 +191,6 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}
           helpHoverStore={helpHoverStore}
-
         />
       </section>
     </ExtendableContentReact>
