@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 
 type StyleProperty =
   | 'compHeight'
@@ -68,6 +68,7 @@ export class InvisibleInput extends LitElement {
   @property({ type: Boolean }) declare error?: boolean;
   @property({ type: String }) declare placeholder?: string;
 
+  @property({ type: Function }) declare handleSubmit?: (value: string) => void;
   @property({ type: Function }) declare handleChange?: (value: string) => void;
   @property({ type: Function }) declare handleBlur?: (value: string) => void;
   @property({ type: Function }) declare handleKeyUp?: (value: string) => void;
@@ -281,6 +282,15 @@ export class InvisibleInput extends LitElement {
     );
   }
 
+  public onSubmit(e: KeyboardEvent) {
+    if (this.handleSubmit && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      this.handleSubmit(
+        (e.target as HTMLInputElement | HTMLTextAreaElement).value
+      );
+    }
+  }
+
   static defaultIconSrc =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMyAxNy4yNVYyMWgzLjc1TDE3LjgxIDkuOTRsLTMuNzUtMy43NUwzIDE3LjI1ek0yMC43MSA3LjA0Yy4zOS0uMzkuMzktMS4wMiAwLTEuNDFsLTIuMzQtMi4zNGMtLjM5LS4zOS0xLjAyLS4zOS0xLjQxIDBsLTEuODMgMS44MyAzLjc1IDMuNzUgMS44My0xLjgzeiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=';
 
@@ -303,6 +313,7 @@ export class InvisibleInput extends LitElement {
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
+            @keydown=${this.onSubmit}
             part="singleline-text-input"
           />`
         : html`<textarea
@@ -312,6 +323,7 @@ export class InvisibleInput extends LitElement {
             @blur=${this.blurHandler}
             @change=${this.changeHandler}
             @keyup=${this.keyUpHandler}
+            @keydown=${this.onSubmit}
             part="multiline-text-input"
           >
           </textarea>`}

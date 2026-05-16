@@ -13,12 +13,12 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
+
   const updateVariableName = (newName: string) => {
     if (!newName || newName === '') {
       setNameError(true);
       return;
     }
-
     const success = onUpdate(varId, newName);
     setNameError(!success);
   };
@@ -38,6 +38,7 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
       value={varName}
       placeholder="(variable name)"
       error={nameError}
+      handleSubmit={updateVariableName}
       handleChange={updateVariableName}
     />
   );
