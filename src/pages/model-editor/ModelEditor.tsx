@@ -15,6 +15,8 @@ import UndoIcon from '../../assets/icons/undo.svg';
 
 import KeepAlive from 'react-activation';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
+import HorizontalHidableContentReact from '../../components/react-components/lit-wrappers/HorizontalHidableContentReact';
+import TextInputReact from '../../components/react-components/lit-wrappers/TextInputReact';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
@@ -173,6 +175,29 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
 
   return (
     <>
+      <HorizontalHidableContentReact
+        className="absolute top-[55px] right-[12px] z-1"
+        buttonRight={true}
+        compHeight="40px"
+        buttonWidth="25px"
+        contentWidth="350px"
+      >
+        <TextInputReact
+          slot="content"
+          placeholder='Search variables...'
+          compHeight="100%"
+          compWidth="100%"
+          onWrite={(value) =>
+            modelVisualization.fit(
+              searchAndFilterHelpersServ.filterVariablesBySearchTerms(
+                variablesStore.getState().getAllVariables(),
+                value
+              )
+            )
+          }
+        />
+      </HorizontalHidableContentReact>
+
       <SideButtonMenu>
         {modelType !== 'witness' ? (
           <IconButtonReact
