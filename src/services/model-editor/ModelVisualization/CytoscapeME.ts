@@ -227,6 +227,15 @@ class CytoscapeME implements ModelVisualizationInt {
           },
         },
         {
+          // When a node is highlighted by "fit" action, show it with a dashed border in a different colour.
+          selector: 'node.fit',
+          style: {
+            'border-width': '2.0px',
+            'border-color': '#797979',
+            'border-style': 'dashed',
+          },
+        },
+        {
           // When a node is selected, show it with a thick blue border.
           selector: 'node:selected',
           style: {
@@ -736,12 +745,24 @@ class CytoscapeME implements ModelVisualizationInt {
       const nodes = this.cytoscape
         .nodes()
         .filter((node: any) => variableSet.has(Number(node.data().id)));
+      this.fitHighlightSubset(nodes);
       this.cytoscape.fit(nodes, 100);
     } else {
       this.cytoscape.fit();
     }
 
     //this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
+  }
+
+  /** Highlights a subset of nodes by applying a node fit CSS style class.
+   *  Highlight is removed after a short delay -> this is used in the fit function to visually indicate which nodes were fitted.
+   */
+  private fitHighlightSubset(nodes: any) {
+    nodes.addClass('fit');
+
+    setTimeout(() => {
+      nodes.removeClass('fit');
+    }, 2000);
   }
 
   // #endregion
