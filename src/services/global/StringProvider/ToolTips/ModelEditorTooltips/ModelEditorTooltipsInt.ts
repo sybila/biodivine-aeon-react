@@ -60,4 +60,10 @@ export interface ModelEditorTooltipsInt {
   collapseAllVariables(): string;
 
   // #endregion
+
+  // #region Utilities Menu
+
+  utilitiesMenu(): string;
+
+  // #endregion
 }

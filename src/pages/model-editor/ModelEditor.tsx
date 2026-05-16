@@ -15,14 +15,13 @@ import UndoIcon from '../../assets/icons/undo.svg';
 
 import KeepAlive from 'react-activation';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import HorizontalHidableContentReact from '../../components/react-components/lit-wrappers/HorizontalHidableContentReact';
-import TextInputReact from '../../components/react-components/lit-wrappers/TextInputReact';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
+import UtilitiesMenu from '../../components/react-components/model-editor/UtilitesMenu/UtilitiesMenu';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type { ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
@@ -175,28 +174,13 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
 
   return (
     <>
-      <HorizontalHidableContentReact
-        className="absolute top-[55px] right-[12px] z-1"
-        buttonRight={true}
-        compHeight="40px"
-        buttonWidth="25px"
-        contentWidth="350px"
-      >
-        <TextInputReact
-          slot="content"
-          placeholder="Search variables... (press enter to submit)"
-          compHeight="100%"
-          compWidth="100%"
-          onSubmit={(value) =>
-            modelVisualization.fit(
-              searchAndFilterHelpersServ.filterVariablesBySearchTerms(
-                variablesStore.getState().getAllVariables(),
-                value
-              )
-            )
-          }
-        />
-      </HorizontalHidableContentReact>
+      <UtilitiesMenu
+        modelVisualization={modelVisualization}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        stringProviderServ={stringProviderServ}
+        variablesStore={variablesStore}
+        helpHoverStore={helpHoverStore}
+      />
 
       <SideButtonMenu>
         {modelType !== 'witness' ? (

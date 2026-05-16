@@ -145,6 +145,14 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
   }
 
   // #endregion
+
+  // #region Utilities Menu
+
+  public utilitiesMenu(): string {
+    return 'Show/Hide Utilities Menu';
+  }
+
+  // #endregion
 }
 
 export default ModelEditorTooltips;
