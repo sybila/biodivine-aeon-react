@@ -1,4 +1,5 @@
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
+import UpdateFunctionValidation from '../UpdateFunctionValidation/UpdateFunctionValidation';
 import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
 
 const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
@@ -57,7 +58,9 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         compWidth={inputWidth}
         fontSize={inputFontSize}
         multiLine={true}
-        placeholder={`$f_${varName}(...)`}
+        placeholder={stringProviderServ.OtherStrings.ModelEditorOtherStrings.updateFunctionInputPlaceholder(
+          varName
+        )}
         value={updateFunction}
         handleChange={changeUpdateFunction}
         textColor="var(--base-text-color)"
@@ -65,16 +68,12 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         onMouseEnter={handleUpdateFunctionMouseEnter}
         onMouseLeave={handleUpdateFunctionMouseLeave}
       />
-      <span
-        className="min-h-[20px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"
-        style={{
-          color: updateFunctionStatus.isError ? 'var(--color-red)' : 'black',
-          minHeight: validationMinHeight,
-          maxHeight: validationMaxHeight,
-        }}
-      >
-        {updateFunctionStatus.status}
-      </span>
+      <UpdateFunctionValidation
+        compMinHeight={validationMinHeight}
+        compMaxHeight={validationMaxHeight}
+        compWidth={'95%'}
+        updateFunctionStatus={updateFunctionStatus}
+      />
     </div>
   );
 };

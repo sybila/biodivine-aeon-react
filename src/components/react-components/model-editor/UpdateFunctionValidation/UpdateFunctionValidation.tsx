@@ -1,0 +1,24 @@
+import type { UpdateFunctionValidationProps } from './UpdateFunctionValidationProps';
+
+const UpdateFunctionValidation: React.FC<UpdateFunctionValidationProps> = ({
+  compMinHeight,
+  compMaxHeight,
+  compWidth,
+  updateFunctionStatus,
+}) => {
+  return (
+    <span
+      className="block box-border p-{3px} overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"
+      style={{
+        color: updateFunctionStatus.isError ? 'var(--color-red)' : 'black',
+        minHeight: compMinHeight,
+        maxHeight: compMaxHeight,
+        width: compWidth,
+      }}
+    >
+      {updateFunctionStatus.status}
+    </span>
+  );
+};
+
+export default UpdateFunctionValidation;
