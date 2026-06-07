@@ -24,7 +24,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   );
 
   return (
-    <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
+    <div className="flex flex-col gap-1 justify-center items-center max-h-[40vh] w-[50vw]">
       <DotHeaderReact
         headerText="Regulators"
         compHeight="15px"
@@ -32,19 +32,18 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
         justifyHeader="start"
         textFontSize="12px"
       />
-      <div className="h-fit w-full">
-        <RegulationInfoList
-          height="77px"
-          width="100%"
-          variableRegulations={regulations}
-          hoverRegulation={undefined}
-          selectedRegulatorIds={undefined}
-          modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
-          variablesStore={variablesStore}
-          helpHoverStore={helpHoverStore}
-        />
-      </div>
+
+      <RegulationInfoList
+        height="77px"
+        width="100%"
+        variableRegulations={regulations}
+        hoverRegulation={undefined}
+        selectedRegulatorIds={undefined}
+        modelEditorServ={modelEditorServ}
+        stringProviderServ={stringProviderServ}
+        variablesStore={variablesStore}
+        helpHoverStore={helpHoverStore}
+      />
 
       <DotHeaderReact
         headerText="Update Function"
@@ -54,14 +53,14 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
         textFontSize="12px"
       />
 
-      <div className="h-fit w-fit bg-gray-200 rounded-[15px] p-2">
+      <div className="h-fit w-full bg-gray-200 rounded-[15px] p-2">
         <ChangeUpdateFunctionInput
           varId={varId}
           compHeight="fit-content"
-          compWidth="350px"
+          compWidth="95%"
           inputFontSize="20px"
-          inputHeight="90px"
-          inputWidth="350px"
+          inputHeight="100px"
+          inputWidth="100%"
           validationMinHeight="40px"
           validationMaxHeight="50px"
           modelEditorServ={modelEditorServ}

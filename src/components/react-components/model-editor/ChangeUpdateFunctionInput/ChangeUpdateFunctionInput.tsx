@@ -43,7 +43,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         e.nativeEvent,
         stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
         true,
-        -80
+        -150
       );
   const handleUpdateFunctionMouseLeave = () =>
     helpHoverStore.getState().clear();
@@ -63,6 +63,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         )}
         value={updateFunction}
         handleChange={changeUpdateFunction}
+        handleSubmit={changeUpdateFunction}
         textColor="var(--base-text-color)"
         placeholderColor="var(--placeholder-text-color)"
         onMouseEnter={handleUpdateFunctionMouseEnter}
