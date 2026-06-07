@@ -1,13 +1,15 @@
 import React, { useMemo } from 'react';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
+import type { UpdateFunctionStatus } from '../../../../../../types';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
+import MultilineTextReact from '../../../../lit-wrappers/MultilineTextReact';
 import NonScrollableTextReact from '../../../../lit-wrappers/NonScrollableTextReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
-import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
+import UpdateFunctionValidation from '../../../UpdateFunctionValidation/UpdateFunctionValidation';
 import type { VariableInfoProps } from './VariableInfoProps';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
@@ -28,6 +30,12 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   helpHoverStore,
 }) => {
   const regulationsObj = regulationsStore((state) => state.regulations);
+  const updateFunction: string | undefined = updateFunctionsStore(
+    (state) => state.updateFunctions[id]?.functionString ?? undefined
+  );
+  const updateFunctionStatus: UpdateFunctionStatus = updateFunctionsStore(
+    (state) => state.updateFunctionStatus[id] ?? { status: '', isError: false }
+  );
 
   const regulations = useMemo(
     () => Object.values(regulationsObj).filter((r) => r.target === id),
@@ -176,20 +184,37 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></DotHeaderReact>
 
       <section slot="extended-content" className="h-fit w-full">
-        <ChangeUpdateFunctionInput
-          varId={id}
-          compHeight="fit-content"
+        <MultilineTextReact
+          compHeight="70px"
           compWidth="100%"
-          inputFontSize="16px"
-          inputHeight="90px"
-          inputWidth="100%"
-          validationMinHeight="20px"
-          validationMaxHeight="40px"
-          modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
-          variablesStore={variablesStore}
-          updateFunctionsStore={updateFunctionsStore}
-          helpHoverStore={helpHoverStore}
+          textFontSize="18px"
+          textAlign="center"
+          overflowY="auto"
+          textFontFamily="var(--font-family-fira-mono)"
+          text={updateFunction}
+          placeholder={stringProviderServ.OtherStrings.ModelEditorOtherStrings.updateFunctionInputPlaceholder(
+            name ?? undefined
+          )}
+          handleClick={() => modelEditorServ.openChangeUpdateFunctionWindow(id)}
+          cursor="pointer"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
+                true,
+                -80
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+        />
+
+        <UpdateFunctionValidation
+          compMinHeight={'20px'}
+          compMaxHeight={'50px'}
+          compWidth={'90%'}
+          updateFunctionStatus={updateFunctionStatus}
         />
       </section>
     </ExtendableContentReact>
