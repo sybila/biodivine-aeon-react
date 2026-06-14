@@ -201,6 +201,8 @@ class CytoscapeME implements ModelVisualizationInt {
             label: 'data(name)',
             // put label in the middle of the node (vertically)
             'text-valign': 'center',
+            'text-max-width': '150px',
+            'text-wrap': 'ellipsis',
             width: 'label',
             height: 'label',
             // a rectangle with slightly sloped edges
