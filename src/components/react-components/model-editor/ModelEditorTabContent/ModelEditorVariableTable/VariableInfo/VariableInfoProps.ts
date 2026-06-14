@@ -13,6 +13,7 @@ export type VariableInfoProps = Variable & {
   hoverRegulation: RegulationVariables | undefined;
   selectedRegulatorIds:  Set<number> | undefined;
   exposeSetExtend: (extendFunction: (extend: boolean) => void) => void;
+  setVariableInfoRef: (id: number, element: HTMLElement | null) => void;
 
   modelEditorServ: ModelEditorInt;
   stringProviderServ: StringProviderInt;

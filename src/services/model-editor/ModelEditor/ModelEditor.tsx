@@ -1,4 +1,3 @@
-import type { IconButton } from '../../../components/lit-components/icon-button';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
@@ -224,7 +223,7 @@ class ModelEditor implements ModelEditorInt {
   public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
     const button: MenuTabButton | undefined =
       this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
-
+    console.log(`Attempting to open menu tab: ${tabType}. Button found: ${button !== undefined}`);
     if (button) {
       if (!button.isActive) {
         button.click();
@@ -233,6 +232,21 @@ class ModelEditor implements ModelEditorInt {
     }
 
     return false;
+  }
+
+  /** Scrolls a variable into view in the variable table of the Model Editor menu tab.
+   *  Opens the Model Editor menu tab if it is not already open.
+   *  @param variableId - The id of the variable to scroll into view.
+   *  @returns {void} */
+  public async scrollVariableIntoView(variableId: number): Promise<void> {
+    if (!this.openMenuTab('Model Editor')) {
+      console.warn(
+        'Error: Could not open Model Editor menu tab to scroll variable into view. Missing menu tab button reference'
+      );
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      this.modelEditorStatusStore.getState().setScrollToVariable(variableId);
+    }
   }
 
   // #endregion

@@ -1,4 +1,3 @@
-import type { IconButton } from '../../components/lit-components/icon-button';
 import type {
   MenuTabButton,
   MenuTabTypeMENotNull,
@@ -33,6 +32,15 @@ export type ModelEditorStatus = {
    *  If null, no item is hovered.
    */
   setHoverItemInfo: (itemInfo: ModelEditorItem | null) => void;
+
+  /** The ID of the variable to scroll to in the Model Editor menu tab. */
+  scrollToVariable: number | null;
+
+  /** Sets id of the variable to scroll to. */
+  setScrollToVariable: (variableId: number) => void;
+
+  /** Clears the scroll to variable. */
+  clearScrollToVariable: () => void;
 
   /** Reference to the menu tab buttons. */
   menuTabButtonsRef: Partial<Record<MenuTabTypeMENotNull, MenuTabButton>>;

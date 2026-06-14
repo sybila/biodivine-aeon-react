@@ -86,6 +86,12 @@ export interface ModelEditorInt {
    */
   openMenuTab(tabType: MenuTabTypeMENotNull): boolean;
 
+  /** Scrolls a variable into view in the variable table of the Model Editor menu tab.
+   *  Opens the Model Editor menu tab if it is not already open.
+   *  @param variableId - The id of the variable to scroll into view.
+   *  @returns {void} */
+  scrollVariableIntoView(variableId: number): void;
+
   // #endregion
 
   // #region --- Open Content Overlay Windows ---

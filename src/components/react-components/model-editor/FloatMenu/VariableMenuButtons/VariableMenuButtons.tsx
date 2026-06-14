@@ -47,8 +47,10 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
       <FloatMenuButton
         iconSrc={SearchIcon}
         iconAlt="S"
-        onClick={() => modelEditorServ.openMenuTab('Model Editor')}
-        hintText="Search (S)"
+        onClick={() =>
+          modelEditorServ.scrollVariableIntoView(selectedVariableId)
+        }
+        hintText="Find In Menu (S)"
         setHintText={setHint}
       />
     </div>

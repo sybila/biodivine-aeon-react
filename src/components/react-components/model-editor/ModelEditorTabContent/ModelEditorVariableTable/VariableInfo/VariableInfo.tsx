@@ -20,6 +20,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverRegulation,
   selectedRegulatorIds,
   exposeSetExtend,
+  setVariableInfoRef,
 
   modelEditorServ,
   stringProviderServ,
@@ -44,6 +45,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
   return (
     <ExtendableContentReact
+      ref={(el) => setVariableInfoRef(id, el)}
       contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"

@@ -93,14 +93,17 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
       }),
     hoverItemInfo: null,
     setHoverItemInfo: (itemInfo) => set({ hoverItemInfo: itemInfo }),
+    scrollToVariable: null,
+    setScrollToVariable: (variableId) => set({ scrollToVariable: variableId }),
+    clearScrollToVariable: () => set({ scrollToVariable: null }),
     menuTabButtonsRef: {},
     setMenuTabButtonRef: (tab, el) =>
-    set((state) => ({
-      menuTabButtonsRef: {
-        ...state.menuTabButtonsRef,
-        [tab]: el,
-      },
-    })),
+      set((state) => ({
+        menuTabButtonsRef: {
+          ...state.menuTabButtonsRef,
+          [tab]: el,
+        },
+      })),
     floatingMenuInfo: null,
     setFloatingMenuInfo: (info) => set({ floatingMenuInfo: info }),
     clear: () => {
@@ -108,7 +111,7 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
         selectedItemsInfo: { variables: new Set<number>(), regulations: {} },
         hoverItemInfo: null,
         floatingMenuInfo: null,
-        menuTabButtonsRef: {},
+        scrollToVariable: null,
       });
     },
   }));
