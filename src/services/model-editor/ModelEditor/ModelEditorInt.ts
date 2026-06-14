@@ -1,4 +1,8 @@
-import type { ModelStats, RegulationVariables } from '../../../types';
+import type {
+  MenuTabTypeMENotNull,
+  ModelStats,
+  RegulationVariables,
+} from '../../../types';
 
 /**
  * Interface for ModelEditor service that is used to manage the state of the ModelEditor page.
@@ -71,6 +75,16 @@ export interface ModelEditorInt {
 
   /** Finds variable in the CytoscapeMe canvas nad zooms on it */
   zoomOnVariable(id: number): void;
+
+  // #endregion
+
+  // #region --- Menu Tab Actions ---
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns {boolean} - True if the tab was opened successfully, false otherwise.
+   */
+  openMenuTab(tabType: MenuTabTypeMENotNull): boolean;
 
   // #endregion
 

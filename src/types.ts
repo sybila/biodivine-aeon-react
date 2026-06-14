@@ -7,6 +7,19 @@ export type Position = [number, number];
 
 // #region --- Model Editor Status ---
 
+/** Possible Menus for the Model Editor page without null */
+export type MenuTabTypeMENotNull =
+  | 'Start Computation'
+  | 'Import/Export'
+  | 'Export Witness'
+  | 'Model Editor'
+  | 'Control Editor'
+  | 'Visual Options'
+  | 'Help';
+
+/** Possible Menus for the Model Editor page */
+export type MenuTabTypeME = MenuTabTypeMENotNull | null;
+
 /** Set containing variable ids. */
 export type VariableIdSet = Set<number>;
 
@@ -513,5 +526,12 @@ export type VisualizationStatus = {
   pan: { x: number; y: number };
   zoom: number;
 };
+
+// #endregion
+
+// #region --- Global Components ---
+
+/** Type for button which opens tab menu. */
+export type MenuTabButton = HTMLElement & { isActive: boolean };
 
 // #endregion

@@ -23,18 +23,8 @@ import ModelEditorTabContent from '../../components/react-components/model-edito
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import UtilitiesMenu from '../../components/react-components/model-editor/UtilitesMenu/UtilitiesMenu';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import type { ModelType } from '../../types';
+import type { MenuTabButton, MenuTabTypeME, ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
-
-type TabTypeME =
-  | 'Start Computation'
-  | 'Import/Export'
-  | 'Export Witness'
-  | 'Model Editor'
-  | 'Control Editor'
-  | 'Visual Options'
-  | 'Help'
-  | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
   liveModelServ,
@@ -62,7 +52,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   modelUndoRedoStore,
   helpHoverStore,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+  const [activeTab, setActiveTab] = useState<MenuTabTypeME>(null);
   const modelType: ModelType = loadedModelStore(
     (state) => state.loadedModelType
   );
@@ -163,7 +153,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
     }
   };
 
-  const showHideTab = (tabType: TabTypeME) => {
+  const showHideTab = (tabType: MenuTabTypeME) => {
     if (activeTab === tabType) {
       setActiveTab(null);
       return;
@@ -185,6 +175,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <SideButtonMenu>
         {modelType !== 'witness' ? (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Start Computation', el as MenuTabButton)
+            }
             isActive={activeTab === 'Start Computation'}
             onClick={() => showHideTab('Start Computation')}
             iconSrc={PlayIcon}
@@ -195,6 +190,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         ) : null}
         {modelType !== 'witness' ? (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Import/Export', el as MenuTabButton)
+            }
             isActive={activeTab === 'Import/Export'}
             onClick={() => showHideTab('Import/Export')}
             iconSrc={FileIcon}
@@ -204,6 +204,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         ) : (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Export Witness', el as MenuTabButton)
+            }
             isActive={activeTab === 'Export Witness'}
             onClick={() => showHideTab('Export Witness')}
             iconSrc={FileIcon}
@@ -213,6 +218,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         )}
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Model Editor', el as MenuTabButton)
+          }
           isActive={activeTab === 'Model Editor'}
           onClick={() => showHideTab('Model Editor')}
           iconSrc={ModelIcon}
@@ -221,6 +231,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Control Editor', el as MenuTabButton)
+          }
           isActive={activeTab === 'Control Editor'}
           onClick={() => showHideTab('Control Editor')}
           iconSrc={ControlIcon}
@@ -229,6 +244,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Control Editor"
         ></IconButtonReact>
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Visual Options', el as MenuTabButton)
+          }
           isActive={activeTab === 'Visual Options'}
           onClick={() => showHideTab('Visual Options')}
           iconSrc={EyeIcon}
@@ -237,6 +257,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Visual Options"
         ></IconButtonReact>
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Help', el as MenuTabButton)
+          }
           isActive={activeTab === 'Help'}
           onClick={() => showHideTab('Help')}
           iconSrc={HelpIcon}

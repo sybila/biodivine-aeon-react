@@ -1,3 +1,4 @@
+import type { IconButton } from '../../../components/lit-components/icon-button';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
@@ -7,7 +8,12 @@ import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunct
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { ModelStats, RegulationVariables } from '../../../types';
+import type {
+  MenuTabButton,
+  MenuTabTypeMENotNull,
+  ModelStats,
+  RegulationVariables,
+} from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { StringProviderInt } from '../../global/StringProvider/StringProviderInt';
@@ -209,6 +215,28 @@ class ModelEditor implements ModelEditorInt {
 
   // #endregion
 
+  // #region --- Menu Tab Actions ---
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns {boolean} - True if the tab was opened successfully, false otherwise.
+   */
+  public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
+    const button: MenuTabButton | undefined =
+      this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  // #endregion
+
   // #region --- Open Content Overlay Windows ---
 
   /** Opens the "Change Variable Name" overlay window.
@@ -250,6 +278,8 @@ class ModelEditor implements ModelEditorInt {
       ),
     });
   }
+
+  // #endregion
 }
 
 export default ModelEditor;

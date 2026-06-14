@@ -1,4 +1,11 @@
-import type { ModelEditorItem, ModelEditorItems, Position } from '../../types';
+import type { IconButton } from '../../components/lit-components/icon-button';
+import type {
+  MenuTabButton,
+  MenuTabTypeMENotNull,
+  ModelEditorItem,
+  ModelEditorItems,
+  Position,
+} from '../../types';
 
 /* Zustand store for managing the model editor state */
 export type ModelEditorStatus = {
@@ -26,6 +33,18 @@ export type ModelEditorStatus = {
    *  If null, no item is hovered.
    */
   setHoverItemInfo: (itemInfo: ModelEditorItem | null) => void;
+
+  /** Reference to the menu tab buttons. */
+  menuTabButtonsRef: Partial<Record<MenuTabTypeMENotNull, MenuTabButton>>;
+
+  /** Sets the reference to a menu tab button.
+   *  @param tab - The menu tab type.
+   *  @param el - The HTML button element, or null to clear the reference.
+   */
+  setMenuTabButtonRef: (
+    tab: MenuTabTypeMENotNull,
+    el: MenuTabButton | null
+  ) => void;
 
   /** Information about the floating menu's position and zoom level.
    *  If null, the floating menu is hidden.
