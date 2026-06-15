@@ -223,7 +223,7 @@ class ModelEditor implements ModelEditorInt {
   public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
     const button: MenuTabButton | undefined =
       this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
-    console.log(`Attempting to open menu tab: ${tabType}. Button found: ${button !== undefined}`);
+
     if (button) {
       if (!button.isActive) {
         button.click();
