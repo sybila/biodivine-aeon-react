@@ -32,6 +32,9 @@ const ModelEditorComponent = () => (
     fileConvertorsServ={
       ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
     }
+    shortcutManagerServ={
+      ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+    }
     stringProviderServ={
       ObjectProvider.GlobalServicesProvider.stringProviderServ
     }

@@ -4,6 +4,7 @@ import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
+import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
 import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
@@ -38,6 +39,7 @@ export type ModelEditorProps = {
   warningServ: WarningInt;
   messageServ: MessageInt;
   loadingServ: LoadingInt;
+  shortcutManagerServ?: ShortcutManagerInt;
   stringProviderServ: StringProviderInt;
 
   // # endregion

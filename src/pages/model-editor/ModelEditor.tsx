@@ -38,6 +38,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   warningServ,
   messageServ,
   loadingServ,
+  shortcutManagerServ,
   stringProviderServ,
 
   modelEditorStatusStore,
@@ -58,6 +59,14 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   );
 
   const isWitness = modelType === 'witness';
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Model Editor');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
 
   useEffect(() => {
     if (

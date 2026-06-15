@@ -76,6 +76,10 @@ class ObjectProviderClass implements ObjectProviderInt {
         this.GlobalServicesProvider,
         this.UtilitiesServiceProvider.dataFormatersServ
       );
+
+    this.GlobalServicesProvider.initializeShortcutManager(
+      this.ModelEditorServicesProvider.modelEditorServ
+    );
   }
 }
 
