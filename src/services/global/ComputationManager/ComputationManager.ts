@@ -393,10 +393,14 @@ class ComputationManager implements ComputationManagerInt {
         'witness'
       );
       this.getLiveModel()!.Models.loadModel(modelId);
-      this.tabsStore.getState().addTab(`/witness`, 'Witness', () => {
-        this.getLiveModel()!.Models.loadModel(modelId);
-        () => this.getLiveModel()!.Models.removeModel(modelId);
-      });
+      this.tabsStore.getState().addTab(
+        `/witness`,
+        'Witness',
+        () => {
+          this.getLiveModel()!.Models.loadModel(modelId);
+        },
+        () => this.getLiveModel()!.Models.removeModel(modelId)
+      );
     }
 
     this.loadingServ.endLoading();
@@ -453,8 +457,10 @@ class ComputationManager implements ComputationManagerInt {
 
     try {
       this.computationCanStart(model, 'Attractor Analysis');
-    } catch (error: any) {
-      this.messageServ.showError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.messageServ.showError(error.message);
+      }
       return;
     }
 
@@ -801,8 +807,11 @@ class ComputationManager implements ComputationManagerInt {
 
     try {
       this.computationCanStart(model, 'Control');
-    } catch (error: any) {
-      this.messageServ.showError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.messageServ.showError(error.message);
+      }
+
       return;
     }
 

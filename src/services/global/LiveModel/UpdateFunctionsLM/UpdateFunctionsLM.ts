@@ -12,6 +12,12 @@ import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { UpdateFunctionsLMInt } from './UpdateFunctionsLMInt';
 
+type TokenizationData = {
+  token: string;
+  data?: TokenizationData | string | TokenizationData[];
+  text: string;
+};
+
 class UpdateFunctionsLM implements UpdateFunctionsLMInt {
   // #region --- Properties + Constructor ---
   private liveModel: LiveModelInt;
@@ -181,7 +187,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     let tokens = this.tokenizeUpdateFunction(functionString);
     if (typeof tokens === 'string') return tokens;
 
-    tokens = this.processFunctionCalls(tokens);
+    tokens = this.processFunctionCalls(tokens as any[]);
     if (typeof tokens === 'string') return tokens;
 
     const names = new Set<{ name: string; cardinality: number }>();
@@ -302,7 +308,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     tokens: any[],
     names: Set<{ name: string; cardinality: number }>
   ) {
-    for (let token of tokens) {
+    for (const token of tokens) {
       if (token.token === 'name') {
         names.add({ name: token.data, cardinality: 0 });
       }
@@ -322,9 +328,15 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
    *  @param str The update function as a string.
    *  @returns An array of tokens representing the structure of the update function, or an error message if tokenization fails.
    */
-  private tokenizeUpdateFunction(str: string): string | any[] {
+  private tokenizeUpdateFunction(
+    str: string
+  ): string | TokenizationData[] | TokenizationData {
     const result = this.tokenizeUpdateFunctionRecursive(str, 0, true);
-    return result.error ? result.error : result.data;
+    return result.error
+      ? result.error
+      : result.data
+        ? result.data
+        : 'Internal Error: Failed to tokenize update function string. Please try to restart the application.';
   }
 
   /** Helper function to tokenize the update function recursively. */
@@ -332,11 +344,15 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     str: string,
     i: number,
     top: boolean
-  ): any {
-    let result: any[] = [];
+  ): {
+    data?: TokenizationData[];
+    continue_at?: number;
+    error?: string;
+  } {
+    const result: TokenizationData[] = [];
 
     while (i < str.length) {
-      let c = str[i++];
+      const c = str[i++];
       if (/\s/.test(c)) continue;
 
       if (c === '!') result.push({ token: 'not', text: '!' });
@@ -358,6 +374,14 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
       else if (c === '(') {
         const nested = this.tokenizeUpdateFunctionRecursive(str, i, false);
         if (nested.error) return { error: nested.error };
+
+        if (nested.continue_at == undefined) {
+          return {
+            error:
+              "Internal Error: Failed to tokenize update function string. Please try to restart the application.'",
+          };
+        }
+
         i = nested.continue_at;
         result.push({ token: 'group', data: nested.data, text: '(...)' });
       } else if (/[a-zA-Z0-9{}_]/.test(c)) {
