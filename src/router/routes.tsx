@@ -23,14 +23,20 @@ const ModelEditorComponent = () => (
     searchAndFilterHelpersServ={
       ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
     }
-    resultsOperationsServ={
-      ObjectProvider.GlobalServicesProvider.resultsOperationsServ
+    openCloseOperationsServ={
+      ObjectProvider.GlobalServicesProvider.openCloseOperationsServ
     }
     warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
     messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
     fileConvertorsServ={
       ObjectProvider.UtilitiesServiceProvider.fileConvertorsServ
+    }
+    shortcutManagerServ={
+      ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+    }
+    stringProviderServ={
+      ObjectProvider.GlobalServicesProvider.stringProviderServ
     }
     modelEditorStatusStore={
       ObjectProvider.StoresProvider.modelEditorStatusStore
@@ -43,6 +49,8 @@ const ModelEditorComponent = () => (
     updateFunctionsStore={ObjectProvider.StoresProvider.updateFunctionsStore}
     modelInfoStore={ObjectProvider.StoresProvider.modelInfoStore}
     loadedModelStore={ObjectProvider.StoresProvider.loadedModelStore}
+    modelUndoRedoStore={ObjectProvider.StoresProvider.modelUndoRedoStore}
+    helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
   />
 );
 
@@ -71,9 +79,13 @@ export const AttractorBifurcationExplorerRoute = createRoute({
       behaviorClassOperationsServ={
         ObjectProvider.UtilitiesServiceProvider.behaviorClassOperationsServ
       }
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
       }
+      helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),
 });
@@ -87,10 +99,13 @@ export const AttractorVisualizerRoute = createRoute({
         ObjectProvider.AttractorVisualizerServicesProvider
           .attractorVisualizerServ
       }
+      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
       }
-      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
     />
   ),
 });
@@ -118,10 +133,14 @@ export const ControlPerturbationsTableRoute = createRoute({
         ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
       }
       loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
+      stringProviderServ={
+        ObjectProvider.GlobalServicesProvider.stringProviderServ
+      }
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
       }
+      helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),
 });

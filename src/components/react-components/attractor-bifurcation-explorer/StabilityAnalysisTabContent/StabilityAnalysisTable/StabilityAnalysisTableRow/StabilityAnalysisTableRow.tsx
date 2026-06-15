@@ -126,9 +126,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
 
   return (
     <ExtendableContentReact
-      compWidth="100%"
-      topOverflowX="visible"
-      topOverflowY="visible"
+      contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
     >
@@ -139,7 +137,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
         slot="top-content"
       />
       <div
-        className="flex flex-col items-start justify-start w-full max-h-[100%] overflow-auto gap-1"
+        className="flex flex-col items-start justify-start w-full max-h-[155px] overflow-auto gap-1"
         slot="extended-content"
       >
         {renderHeaders()}

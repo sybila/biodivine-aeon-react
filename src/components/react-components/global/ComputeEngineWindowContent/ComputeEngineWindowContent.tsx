@@ -130,7 +130,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
         compHeight="20px"
         compWidth="100%"
         placeholder="Compute Engine URL"
-        singleTextAlign="center"
+        textAlign="center"
         handleChange={computationManagerServ.setComputeEngineAddress}
         value={computationManagerServ.getComputeEngineAddress()}
       />

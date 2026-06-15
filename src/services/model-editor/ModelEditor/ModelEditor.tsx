@@ -1,18 +1,21 @@
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
 import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { HelpHoverState } from '../../../stores/HelpHover/HelpHoverState';
 import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
-  ModelEditorItem,
+  MenuTabButton,
+  MenuTabTypeMENotNull,
   ModelStats,
   RegulationVariables,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
+import type { StringProviderInt } from '../../global/StringProvider/StringProviderInt';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ModelEditorInt } from './ModelEditorInt';
 
@@ -28,6 +31,7 @@ class ModelEditor implements ModelEditorInt {
 
   private modelVisualizationServ: ModelVisualizationInt;
   private liveModelServ: LiveModelInt;
+  private stringProviderServ: StringProviderInt;
   private messageServ: MessageInt;
 
   private overlayWindowStore: ZustandStore<OverlayWindowState>;
@@ -35,20 +39,24 @@ class ModelEditor implements ModelEditorInt {
   private variablesStore: ZustandStore<VariablesStatus>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private helpHoverStore: ZustandStore<HelpHoverState>;
 
   constructor(
     modelVisualization: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
+    stringProviderServ: StringProviderInt,
     messageServ: MessageInt,
 
     overlayWindowStore: ZustandStore<OverlayWindowState>,
     regulationStore: ZustandStore<RegulationsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
-    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    helpHoverStore: ZustandStore<HelpHoverState>
   ) {
     this.modelVisualizationServ = modelVisualization;
     this.liveModelServ = liveModelServ;
+    this.stringProviderServ = stringProviderServ;
     this.messageServ = messageServ;
 
     this.overlayWindowStore = overlayWindowStore;
@@ -56,6 +64,7 @@ class ModelEditor implements ModelEditorInt {
     this.variablesStore = variablesStore;
     this.updateFunctionsStore = updateFunctionsStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
+    this.helpHoverStore = helpHoverStore;
   }
 
   // #endregion
@@ -107,96 +116,6 @@ class ModelEditor implements ModelEditorInt {
   /** Removes a variable */
   public async removeVariable(id: number) {
     await this.liveModelServ.Variables.removeVariable(id, true);
-  }
-
-  /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  public hoverVariable(id: number, turnOnHover: boolean) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'variable') {
-      if (!turnOnHover) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-
-      if (hoverInfo.id === id) {
-        return;
-      }
-    }
-
-    if (turnOnHover) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'variable', id });
-    }
-  }
-
-  // #endregion
-
-  // #region --- Regulation Selection/Hover ---
-
-  /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
-  public getSelectedRegulation(): RegulationVariables | null {
-    const selectedItemInfo: ModelEditorItem | null =
-      this.modelEditorStatusStore.getState().selectedItemInfo;
-
-    return selectedItemInfo?.type === 'regulation'
-      ? selectedItemInfo.regulationIds
-      : null;
-  }
-
-  /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
-  public setSelectedRegulation(regulation: RegulationVariables | null) {
-    this.modelEditorStatusStore
-      .getState()
-      .setSelectedItemInfo(
-        regulation ? { type: 'regulation', regulationIds: regulation } : null
-      );
-  }
-
-  /** Toggles hover state on a regulation in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
-  public hoverRegulation(
-    regulation: RegulationVariables,
-    turnOnHover: boolean
-  ) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'regulation') {
-      if (!turnOnHover) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-    }
-
-    if (turnOnHover) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
-    }
-  }
-
-  /** Toggles selected state on a regulation in the ModelEditorTabContent.tsx component
-   * If `select` is true, it sets regulation as selected; if false, it unselects it.
-   */
-  public selectRegulation(regulation: RegulationVariables, select: boolean) {
-    const hoverInfo = this.modelEditorStatusStore.getState().hoverItemInfo;
-
-    if (hoverInfo?.type === 'regulation') {
-      if (!select) {
-        this.modelEditorStatusStore.getState().setHoverItemInfo(null);
-        return;
-      }
-    }
-
-    if (select) {
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'regulation', regulationIds: regulation });
-    }
   }
 
   // #endregion
@@ -295,6 +214,43 @@ class ModelEditor implements ModelEditorInt {
 
   // #endregion
 
+  // #region --- Menu Tab Actions ---
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns {boolean} - True if the tab was opened successfully, false otherwise.
+   */
+  public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
+    const button: MenuTabButton | undefined =
+      this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /** Scrolls a variable into view in the variable table of the Model Editor menu tab.
+   *  Opens the Model Editor menu tab if it is not already open.
+   *  @param variableId - The id of the variable to scroll into view.
+   *  @returns {void} */
+  public async scrollVariableIntoView(variableId: number): Promise<void> {
+    if (!this.openMenuTab('Model Editor')) {
+      console.warn(
+        'Error: Could not open Model Editor menu tab to scroll variable into view. Missing menu tab button reference'
+      );
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      this.modelEditorStatusStore.getState().setScrollToVariable(variableId);
+    }
+  }
+
+  // #endregion
+
   // #region --- Open Content Overlay Windows ---
 
   /** Opens the "Change Variable Name" overlay window.
@@ -327,13 +283,17 @@ class ModelEditor implements ModelEditorInt {
         <ChangeUpFunOverlayContent
           varId={varId}
           modelEditorServ={this}
+          stringProviderServ={this.stringProviderServ}
           regulationsStore={this.regulationStore}
           variablesStore={this.variablesStore}
           updateFunctionsStore={this.updateFunctionsStore}
+          helpHoverStore={this.helpHoverStore}
         />
       ),
     });
   }
+
+  // #endregion
 }
 
 export default ModelEditor;

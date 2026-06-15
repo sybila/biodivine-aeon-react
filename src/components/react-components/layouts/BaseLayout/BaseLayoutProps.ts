@@ -3,7 +3,10 @@ import type { AttractorVisualizerInt } from '../../../../services/attractor-visu
 import type { ControlPerturbationsTableInt } from '../../../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import type { ComputationManagerInt } from '../../../../services/global/ComputationManager/ComputationManagerInt';
 import type { TabOperationsInt } from '../../../../services/global/Navigation/TabOperationsInt';
+import type { OpenCloseOperationsInt } from '../../../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import type { ResultsOperationsInt } from '../../../../services/global/ResultsOperations/ResultsOperationsInt';
+import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { WarningInt } from '../../../../services/global/Warning/WarningInt';
 import type { DataFormatersInt } from '../../../../services/utilities/DataFormaters/DataFormatersInt';
 import type { ComputeEngineStatusState } from '../../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
@@ -20,8 +23,11 @@ export type BaseLayoutProps = {
   controlPerturbationsTableServ: ControlPerturbationsTableInt;
   computationManagerServ: ComputationManagerInt;
   resultsOperationsServ: ResultsOperationsInt;
+  openCloseOperationsServ: OpenCloseOperationsInt;
   tabOperationsServ: TabOperationsInt;
   dataFormatersServ: DataFormatersInt;
+  warningServ: WarningInt;
+  stringProviderServ: StringProviderInt;
 
   computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>;
   resultsStatusStore: ZustandStore<ResultsStatus>;

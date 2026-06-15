@@ -2,7 +2,7 @@ import type { TabInfo, TabType } from '../../types';
 
 export type TabsState = {
   /** Property containing information about all opened tabs. */
-  openedTabs: Record<number, TabInfo>;
+  openedTabs: Record<number, TabInfo<TabType, number>>;
   /** Property containing the ID of the next created tab. */
   idNow: number;
 
@@ -30,13 +30,13 @@ export type TabsState = {
   /** Sets the active tab by ID. */
   setActiveTab: (id: number, navigate?: boolean) => void;
   /** Retrieves all opened tabs. */
-  getAllTabs: () => TabInfo[];
+  getAllTabs: () => TabInfo<TabType, number>[];
   /** Retrieves a tab by ID. */
-  getTabById: (id: number) => TabInfo | undefined;
+  getTabById: (id: number) => TabInfo<TabType, number> | undefined;
   /** Retrieves the first tab with a specific type. */
-  getFirstTabWithType: (type: TabType) => TabInfo | undefined;
+  getFirstTabWithType: (type: TabType) => TabInfo<TabType, number> | undefined;
   /** Retrieves the currently active tab. */
-  getActiveTab: () => TabInfo | undefined;
+  getActiveTab: () => TabInfo<TabType, number> | undefined;
   /** Checks if there are any opened tabs except for the Model Editor Tab. */
   isEmpty: () => boolean;
   /** Checks if a tab of a specific type exists. */

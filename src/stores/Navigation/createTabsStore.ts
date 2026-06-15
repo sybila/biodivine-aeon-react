@@ -24,6 +24,7 @@ function createTabsStore(): ZustandStore<TabsState> {
         id: 0,
         path: '/model-editor',
         type: 'Model Editor',
+        text: 'Model Editor',
         active: true,
         onClick: () => {
           get().firstTabOnClick();
@@ -52,13 +53,14 @@ function createTabsStore(): ZustandStore<TabsState> {
       }
 
       const id = get().idNow;
-      const newTab: TabInfo = {
+      const newTab: TabInfo<TabType, number> = {
         id,
         path,
         onClick,
         onLeave,
         onClose,
         type,
+        text: type,
         active: false,
       };
       set((state) => ({
@@ -163,6 +165,7 @@ function createTabsStore(): ZustandStore<TabsState> {
             id: 0,
             path: '/model-editor',
             type: 'Model Editor',
+            text: 'Model Editor',
             active: true,
             onClick: () => {
               get().firstTabOnClick();

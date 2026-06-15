@@ -7,8 +7,12 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   monotonicity,
   hover,
   selected,
+
   modelEditorServ,
+  stringProviderServ,
+
   variablesStore,
+  helpHoverStore,
 }) => {
   const regulatorVar = variablesStore((state) =>
     state.variableFromId(regulator)
@@ -34,13 +38,24 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
         onClick={() => {
           modelEditorServ.toggleRegulationObservability(regulator, target);
         }}
+        onMouseEnter={(e: React.MouseEvent) => {
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.changeObservability(),
+              true,
+              -50
+            );
+        }}
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       >
         {observable ? 'observable' : 'non-observable'}
       </span>
     );
   };
 
-  const getMonocity = () => {
+  const getMonotonicity = () => {
     let color: string = 'text-black';
 
     switch (monotonicity) {
@@ -61,6 +76,17 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
         onClick={() => {
           modelEditorServ.toggleRegulationMonocity(regulator, target);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.ModelEditorTooltips.changeMonotonicity(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       >
         {monotonicity}
       </span>
@@ -105,7 +131,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
       </span>
 
       {getObservable()}
-      {getMonocity()}
+      {getMonotonicity()}
     </div>
   );
 };

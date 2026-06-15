@@ -1,4 +1,4 @@
-import type { ControlInfo } from '../../../../../../types';
+import type { ControlInfo, Phenotype } from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
@@ -13,8 +13,12 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   hover,
   selected,
   toggleSelect,
+
   controlEditorServ,
+  stringProviderServ,
+
   controlStore,
+  helpHoverStore,
 }) => {
   const controlInfo: ControlInfo | undefined = controlStore((state) =>
     state.getVariableControlInfo(id)
@@ -23,6 +27,17 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   if (!controlInfo) {
     return null;
   }
+
+  const getNextPhenotype = (current: Phenotype): Phenotype => {
+    switch (current) {
+      case true:
+        return false;
+      case false:
+        return null;
+      default:
+        return true;
+    }
+  };
 
   const getPhenButtonColor = (hover: boolean) => {
     switch (controlInfo.phenotype) {
@@ -33,6 +48,10 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       default:
         return hover ? 'var(--color-grey-light)' : 'var(--color-grey)';
     }
+  };
+
+  const getNextControlStatus = (current: boolean) => {
+    return !current;
   };
 
   const getControlButtonColor = (hover: boolean) => {
@@ -53,11 +72,23 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       contentOverflowY="visible"
       hover={hover}
       active={selected}
-      onMouseEnter={() => controlEditorServ.hoverVariableCytoscape(id, true)}
-      onMouseLeave={() => controlEditorServ.hoverVariableCytoscape(id, false)}
-      onClick={() => toggleSelect(name)}
+      onMouseEnter={() =>
+        controlEditorServ.hoverVariableVisualization(id, true)
+      }
+      onMouseLeave={() =>
+        controlEditorServ.hoverVariableVisualization(id, false)
+      }
+      onClick={() => toggleSelect(id)}
     >
-      <span className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)">
+      <span
+        className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)"
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(e.nativeEvent, name, true, -50, 50)
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
+      >
         {name}
       </span>
 
@@ -73,7 +104,29 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             iconAlt="Control-Enabled Icon"
             buttonColor={getControlButtonColor(false)}
             buttonHoverColor={getControlButtonColor(true)}
-            handleClick={() => controlEditorServ.toggleControlEnabled(id)}
+            handleClick={() => {
+              controlEditorServ.toggleControlEnabled(id);
+              helpHoverStore
+                .getState()
+                .setHelpHoverText(
+                  stringProviderServ.ToolTips.ModelEditorTooltips.currentControlEnabled(
+                    getNextControlStatus(controlInfo.controlEnabled)
+                  )
+                );
+            }}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  stringProviderServ.ToolTips.ModelEditorTooltips.currentControlEnabled(
+                    controlInfo.controlEnabled
+                  ),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </div>
 
@@ -88,7 +141,29 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             iconAlt="Phenotype Icon"
             buttonColor={getPhenButtonColor(false)}
             buttonHoverColor={getPhenButtonColor(true)}
-            handleClick={() => controlEditorServ.togglePhenotype(id)}
+            handleClick={() => {
+              controlEditorServ.togglePhenotype(id);
+              helpHoverStore
+                .getState()
+                .setHelpHoverText(
+                  stringProviderServ.ToolTips.ModelEditorTooltips.currentPhenotype(
+                    getNextPhenotype(controlInfo.phenotype)
+                  )
+                );
+            }}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  stringProviderServ.ToolTips.ModelEditorTooltips.currentPhenotype(
+                    controlInfo.phenotype
+                  ),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </div>
       </section>

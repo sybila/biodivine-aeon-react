@@ -7,31 +7,24 @@ import ModelEditorCanvas from '../../components/react-components/model-editor/Mo
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 import RedoIcon from '../../assets/icons/redo.svg';
 import UndoIcon from '../../assets/icons/undo.svg';
 
 import KeepAlive from 'react-activation';
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
+import UtilitiesMenu from '../../components/react-components/model-editor/UtilitesMenu/UtilitiesMenu';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import type { ModelType } from '../../types';
-import ObjectProvider from '../../wiring/ObjectProvider';
+import type { MenuTabButton, MenuTabTypeME, ModelType } from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
-
-type TabTypeME =
-  | 'Start Computation'
-  | 'Import/Export'
-  | 'Export Witness'
-  | 'Model Editor'
-  | 'Control Editor'
-  | 'Visual Options'
-  | null;
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
   liveModelServ,
@@ -41,10 +34,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   computationManagerServ,
   searchAndFilterHelpersServ,
   fileConvertorsServ,
-  resultsOperationsServ,
+  openCloseOperationsServ,
   warningServ,
   messageServ,
   loadingServ,
+  shortcutManagerServ,
+  stringProviderServ,
 
   modelEditorStatusStore,
   tabStore,
@@ -55,17 +50,29 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   updateFunctionsStore,
   modelInfoStore,
   loadedModelStore,
+  modelUndoRedoStore,
+  helpHoverStore,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+  const [activeTab, setActiveTab] = useState<MenuTabTypeME>(null);
   const modelType: ModelType = loadedModelStore(
     (state) => state.loadedModelType
   );
 
+  const isWitness = modelType === 'witness';
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Model Editor');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
+
   useEffect(() => {
     if (
-      (modelType === 'witness' &&
+      (isWitness &&
         (activeTab === 'Start Computation' || activeTab === 'Import/Export')) ||
-      (modelType !== 'witness' && activeTab === 'Export Witness')
+      (!isWitness && activeTab === 'Export Witness')
     ) {
       setActiveTab(null);
     }
@@ -78,8 +85,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <StartCompTabContent
             liveModelServ={liveModelServ}
             computationManagerServ={computationManagerServ}
-            resultsOperationsServ={resultsOperationsServ}
+            openCloseOperationsServ={openCloseOperationsServ}
             warningServ={warningServ}
+            messageServ={messageServ}
             tabStore={tabStore}
             resultsStatusStore={resultsStatusStore}
             controlStore={controlStore}
@@ -107,12 +115,14 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             messageServ={messageServ}
+            stringProviderServ={stringProviderServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             updateFunctionsStore={updateFunctionsStore}
             tabStore={tabStore}
             modelInfoStore={modelInfoStore}
             modelEditorStatusStore={modelEditorStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Control Editor':
@@ -121,22 +131,38 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            stringProviderServ={stringProviderServ}
             loadingServ={loadingServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Visual Options':
         return (
-          <VisualOptionsTabContent modelVisualization={modelVisualization} />
+          <VisualOptionsTabContent
+            modelVisualization={modelVisualization}
+            stringProviderServ={stringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
+        );
+      case 'Help':
+        return (
+          <HelpTabContent
+            text={
+              isWitness
+                ? stringProviderServ.HelpTexts.witness()
+                : stringProviderServ.HelpTexts.modelEditor()
+            }
+          />
         );
       default:
         return null;
     }
   };
 
-  const showHideTab = (tabType: TabTypeME) => {
+  const showHideTab = (tabType: MenuTabTypeME) => {
     if (activeTab === tabType) {
       setActiveTab(null);
       return;
@@ -147,9 +173,22 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
 
   return (
     <>
+      <UtilitiesMenu
+        modelVisualization={modelVisualization}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        stringProviderServ={stringProviderServ}
+        variablesStore={variablesStore}
+        helpHoverStore={helpHoverStore}
+      />
+
       <SideButtonMenu>
         {modelType !== 'witness' ? (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Start Computation', el as MenuTabButton)
+            }
             isActive={activeTab === 'Start Computation'}
             onClick={() => showHideTab('Start Computation')}
             iconSrc={PlayIcon}
@@ -160,6 +199,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         ) : null}
         {modelType !== 'witness' ? (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Import/Export', el as MenuTabButton)
+            }
             isActive={activeTab === 'Import/Export'}
             onClick={() => showHideTab('Import/Export')}
             iconSrc={FileIcon}
@@ -169,6 +213,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         ) : (
           <IconButtonReact
+            ref={(el) =>
+              modelEditorStatusStore
+                .getState()
+                .setMenuTabButtonRef('Export Witness', el as MenuTabButton)
+            }
             isActive={activeTab === 'Export Witness'}
             onClick={() => showHideTab('Export Witness')}
             iconSrc={FileIcon}
@@ -178,6 +227,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         )}
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Model Editor', el as MenuTabButton)
+          }
           isActive={activeTab === 'Model Editor'}
           onClick={() => showHideTab('Model Editor')}
           iconSrc={ModelIcon}
@@ -186,6 +240,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Control Editor', el as MenuTabButton)
+          }
           isActive={activeTab === 'Control Editor'}
           onClick={() => showHideTab('Control Editor')}
           iconSrc={ControlIcon}
@@ -194,6 +253,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Control Editor"
         ></IconButtonReact>
         <IconButtonReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Visual Options', el as MenuTabButton)
+          }
           isActive={activeTab === 'Visual Options'}
           onClick={() => showHideTab('Visual Options')}
           iconSrc={EyeIcon}
@@ -201,31 +265,43 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
-        {/*TODO - Remove when proper undo/redo buttons created*/}
         <IconButtonReact
-          isActive={false}
-          onClick={() =>
-            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().undo()
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setMenuTabButtonRef('Help', el as MenuTabButton)
           }
-          iconSrc={UndoIcon}
-          iconAlt="U"
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
           showTag={true}
-          tagText="Undo"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={false}
-          onClick={() =>
-            ObjectProvider.StoresProvider.modelUndoRedoStore.getState().redo()
-          }
-          iconSrc={RedoIcon}
-          iconAlt="R"
-          showTag={true}
-          tagText="Redo"
-        ></IconButtonReact>
+          tagText="Help"
+        />
+        {modelType !== 'witness' ? (
+          <>
+            <IconButtonReact
+              isActive={false}
+              onClick={() => modelUndoRedoStore.getState().undo()}
+              iconSrc={UndoIcon}
+              iconAlt="U"
+              showTag={true}
+              tagText="Undo"
+            />
+            <IconButtonReact
+              isActive={false}
+              onClick={() => modelUndoRedoStore.getState().redo()}
+              iconSrc={RedoIcon}
+              iconAlt="R"
+              showTag={true}
+              tagText="Redo"
+            />
+          </>
+        ) : null}
       </SideButtonMenu>
 
       <ContentTab
-        overflowY="hidden"
+        overflowY="auto"
         showTab={activeTab !== null}
         onClose={() => showHideTab(null)}
         headerText={activeTab ?? ''}

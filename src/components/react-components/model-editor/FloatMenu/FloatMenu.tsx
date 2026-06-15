@@ -11,9 +11,11 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
 }) => {
   const [currentHint, setCurrentHint] = useState<string>('');
 
-  const modelStatus = modelEditorStatusStore((state) => state);
+  const floatingMenuInfo = modelEditorStatusStore(
+    (state) => state.floatingMenuInfo
+  );
 
-  if (!modelStatus.floatingMenuInfo || !modelStatus.selectedItemInfo) {
+  if (!floatingMenuInfo) {
     return null;
   }
 
@@ -22,30 +24,25 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
       className="flex flex-col h-auto w-auto gap-2 justify-around items-center z-8 select-none pointer-events-none"
       style={{
         position: 'absolute',
-        left: modelStatus.floatingMenuInfo.position[0] + 'px',
-        top:
-          modelStatus.floatingMenuInfo.position[1] +
-          52 * modelStatus.floatingMenuInfo.zoom +
-          'px',
+        left: floatingMenuInfo.position[0] + 'px',
+        top: floatingMenuInfo.position[1] + 52 * floatingMenuInfo.zoom + 'px',
         transform:
-          'translate(-50%, -50%) scale(' +
-          modelStatus.floatingMenuInfo.zoom * 0.75 +
-          ')',
+          'translate(-50%, -50%) scale(' + floatingMenuInfo.zoom * 0.75 + ')',
         transformOrigin: 'top top',
       }}
     >
       <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-[var(--color-grey-blue-ultra-light)] pointer-events-auto">
-        {modelStatus.selectedItemInfo.type === 'regulation' ? (
+        {floatingMenuInfo.itemInfo.type === 'regulation' ? (
           <RegulationMenuButtons
             setHint={setCurrentHint}
-            selectedRegulationIds={modelStatus.selectedItemInfo.regulationIds}
+            selectedRegulationIds={floatingMenuInfo.itemInfo.regulationIds}
             liveModelServ={liveModelServ}
             regulationsStore={regulationsStore}
           />
         ) : (
           <VariableMenuButtons
             setHint={setCurrentHint}
-            selectedVariableId={modelStatus.selectedItemInfo.id}
+            selectedVariableId={floatingMenuInfo.itemInfo.id}
             liveModelServ={liveModelServ}
             modelEditorServ={modelEditorServ}
           />

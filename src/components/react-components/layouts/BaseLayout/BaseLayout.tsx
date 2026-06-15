@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
 import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
@@ -15,7 +15,7 @@ import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
 import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import type { BaseLayoutProps } from './BaseLayoutProps';
 
-type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
+export type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
 const BaseLayout: React.FC<BaseLayoutProps> = ({
   attractorVisualizerServ,
@@ -23,8 +23,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   controlPerturbationsTableServ,
   computationManagerServ,
   resultsOperationsServ,
+  openCloseOperationsServ,
   tabOperationsServ,
   dataFormatersServ,
+  warningServ,
+  stringProviderServ,
 
   computeEngineStatusStore,
   resultsStatusStore,
@@ -36,10 +39,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
 }) => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
-  const lastAddedResultsTimestamp = resultsStatusStore(
-    (state) => state.lastAddedResults?.timestamp
-  );
-  const hasMountedRef = useRef(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,18 +55,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
       navigate({ to: '/model-editor' });
     }
   }, []);
-
-  useEffect(() => {
-    // Ignore the first render to avoid opening window for stale preloaded state.
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      return;
-    }
-
-    if (lastAddedResultsTimestamp !== undefined) {
-      setActiveOverlayWindow('Results');
-    }
-  }, [lastAddedResultsTimestamp]);
 
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
@@ -97,8 +84,31 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
     }
   };
 
+  const getOnCloseFunctionForOverlayWindow = (
+    windowType: OverlayWindowTypeME
+  ) => {
+    switch (windowType) {
+      case 'Compute Engine':
+        return () => setActiveOverlayWindow(null);
+      case 'Results':
+        return () => {
+          setActiveOverlayWindow(null);
+          resultsStatusStore.getState().setSelectedResults(undefined);
+        };
+      default:
+        return () => {};
+    }
+  };
+
+  openCloseOperationsServ.setOpenComputeEngineMenu(() => {
+    getOnCloseFunctionForOverlayWindow(activeOverlayWindow)();
+    setActiveOverlayWindow('Compute Engine');
+  });
+
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
-    helpHoverStore.getState().setHelpHover(event, text, -85);
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtElementCenter(event, text, false, -85);
   };
 
   return (
@@ -106,6 +116,19 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
         <StatusBar
           onClick={() => setActiveOverlayWindow('Compute Engine')}
+          setHelpHover={(e: MouseEvent) => {
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                stringProviderServ.ToolTips.GlobalTooltips.computeEngineStatus(),
+                true,
+                50
+              );
+          }}
+          clearHelpHover={() => {
+            helpHoverStore.getState().clear();
+          }}
           computeEngineStatusStore={computeEngineStatusStore}
         />
         <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
@@ -121,8 +144,12 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}
-          handleCloseClick={() => setActiveOverlayWindow(null)}
-          handleBackgroundClick={() => setActiveOverlayWindow(null)}
+          handleCloseClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
+          handleBackgroundClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
         >
           {renderOverlayWindowContent()}
         </OverlayWindowReact>
@@ -145,16 +172,21 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
         <NavigationDockContent
           helpHoverStore={helpHoverStore}
           handleComputeEngineClick={() =>
-            setActiveOverlayWindow('Compute Engine')
+            setActiveOverlayWindow(
+              activeOverlayWindow === 'Compute Engine' ? null : 'Compute Engine'
+            )
           }
-          handleResultsClick={() => setActiveOverlayWindow('Results')}
           setNavBarHelpHover={setNavBarHelpHover}
         >
           <TabBar
             setTabBarHelpHover={setNavBarHelpHover}
+            setActiveWindow={(windowType) => setActiveOverlayWindow(windowType)}
             tabOperationsServ={tabOperationsServ}
+            resultsOperationsServ={resultsOperationsServ}
+            warningServ={warningServ}
             helpHoverStore={helpHoverStore}
             tabsStore={tabsStore}
+            resultsStatusStore={resultsStatusStore}
           />
         </NavigationDockContent>
       </PopUpBarReact>

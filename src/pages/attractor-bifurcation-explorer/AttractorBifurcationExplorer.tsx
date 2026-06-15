@@ -9,9 +9,12 @@ import SideButtonMenu from '../../components/react-components/global/SideButtonM
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
 import EyeIcon from '../../assets/icons/eye.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StabilityIcon from '../../assets/icons/stability_analysis.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
+
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import type { MenuTabTypeABE } from '../../types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
@@ -20,7 +23,10 @@ const AttractorBifurcationExplorer: React.FC<
 > = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  stringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -64,6 +70,14 @@ const AttractorBifurcationExplorer: React.FC<
         return (
           <VisualOptionsTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            stringProviderServ={stringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
+        );
+      case 'Help':
+        return (
+          <HelpTabContent
+            text={stringProviderServ.HelpTexts.attractorBifurcationExplorer()}
           />
         );
       default:
@@ -116,6 +130,14 @@ const AttractorBifurcationExplorer: React.FC<
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
+        />
       </SideButtonMenu>
 
       <ContentTab

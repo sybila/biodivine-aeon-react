@@ -7,9 +7,38 @@ export type Position = [number, number];
 
 // #region --- Model Editor Status ---
 
-export type ModelEditorItem =
-  | { type: 'variable'; id: number }
-  | { type: 'regulation'; regulationIds: RegulationVariables };
+/** Possible Menus for the Model Editor page without null */
+export type MenuTabTypeMENotNull =
+  | 'Start Computation'
+  | 'Import/Export'
+  | 'Export Witness'
+  | 'Model Editor'
+  | 'Control Editor'
+  | 'Visual Options'
+  | 'Help';
+
+/** Possible Menus for the Model Editor page */
+export type MenuTabTypeME = MenuTabTypeMENotNull | null;
+
+/** Set containing variable ids. */
+export type VariableIdSet = Set<number>;
+
+/** A record mapping each target variable id to a set of regulator variable ids */
+export type RegulationRecord = Record<number, Set<number>>;
+
+export type ModelEditorItems = {
+  variables: VariableIdSet;
+  regulations: RegulationRecord;
+};
+
+export type ModelEditorVariable = { type: 'variable'; id: number };
+
+export type ModelEditorRegulation = {
+  type: 'regulation';
+  regulationIds: RegulationVariables;
+};
+
+export type ModelEditorItem = ModelEditorVariable | ModelEditorRegulation;
 
 // #endregion
 
@@ -176,11 +205,15 @@ export type TabType =
   | 'Witness'
   | 'Control Perturbations Table';
 
-export type TabInfo = {
+export type PossibleTabsTypes = TabType | ComputationModes | string;
+
+export type PossibleTabIds = number | ComputationModes | string;
+
+export type TabInfo<T extends PossibleTabsTypes, R extends PossibleTabIds> = {
   /** Unique identifier for the tab */
-  id: number;
+  id: R;
   /** Type of the tab */
-  type: TabType;
+  type: T;
   /** Path of the tab */
   path: string;
   /** Callback function to be executed when the tab is clicked */
@@ -191,6 +224,7 @@ export type TabInfo = {
   onClose?: () => void;
   /** Indicates if the tab is currently active */
   active: boolean;
+  text: string;
 };
 
 // #endregion
@@ -203,6 +237,7 @@ export type MenuTabTypeABE =
   | 'Stability Analysis'
   | 'Make Decision'
   | 'Visual Options'
+  | 'Help'
   | null;
 
 /** Possible Node Stability Analysis Modes */
@@ -405,7 +440,7 @@ export type DecisionsTSSD = Array<DecisionTSSD>;
 
 export type VisualOptionsButtonSection = {
   headerText: string;
-  buttons: Array<[string, () => void, boolean]>;
+  buttons: Array<[string, () => void, (e: React.MouseEvent) => void, boolean]>;
 };
 
 export type VisualOptionsSwitchableABE = {
@@ -491,5 +526,12 @@ export type VisualizationStatus = {
   pan: { x: number; y: number };
   zoom: number;
 };
+
+// #endregion
+
+// #region --- Global Components ---
+
+/** Type for button which opens tab menu. */
+export type MenuTabButton = HTMLElement & { isActive: boolean };
 
 // #endregion

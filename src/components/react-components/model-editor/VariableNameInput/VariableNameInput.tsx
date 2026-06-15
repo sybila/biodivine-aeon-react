@@ -5,7 +5,7 @@ import type { VariableNameInputProps } from './VariableNameInputProps';
 const VariableNameInput: React.FC<VariableNameInputProps> = ({
   height,
   width,
-  singleFontSize,
+  fontSize,
   varId,
   varName,
   onUpdate,
@@ -13,12 +13,12 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
+
   const updateVariableName = (newName: string) => {
     if (!newName || newName === '') {
       setNameError(true);
       return;
     }
-
     const success = onUpdate(varId, newName);
     setNameError(!success);
   };
@@ -27,10 +27,18 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
     <InvisibleInputReact
       compHeight={height}
       compWidth={width}
-      singleFontSize={singleFontSize}
+      contBgColor="var(--color-secondary)"
+      contFocusBgColor="var(--color-highlight)"
+      contBorderRadius="10px"
+      contPadX="2px"
+      contPadY="2px"
+      multiLine={true}
+      fontSize={fontSize}
+      textColor="var(--base-text-color)"
       value={varName}
       placeholder="(variable name)"
       error={nameError}
+      handleSubmit={updateVariableName}
       handleChange={updateVariableName}
     />
   );

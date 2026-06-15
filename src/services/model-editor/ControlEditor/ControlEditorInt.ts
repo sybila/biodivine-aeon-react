@@ -6,20 +6,6 @@ import type { Oscillation, Phenotype } from '../../../types';
 export interface ControlEditorInt {
   // #region --- Hover/Select Variable Functions ---
 
-  /** Sets record of currently selected variables in the ControlEditorTabContent.tsx component.
-   *  Key: variable name
-   *  Value: whether the variable is selected or not (true = selected, false = not selected)
-   *  If variables is missing from the record, it is considered not selected (false).
-   */
-  setSelectVariables(newSelected: Record<string, boolean>): void;
-
-  /** Returns all currently selected variables in the ControlEditorTabContent.tsx component.
-   * Key: variable name
-   * Value: whether the variable is selected or not (true = selected, false = not selected)
-   * If variables is missing from the record, it is considered not selected (false).
-   */
-  getSelectedVariables(): Record<string, boolean>;
-
   /** Toggles hover state on a variable in the ControlEditorTabContent.tsx component
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
@@ -47,16 +33,14 @@ export interface ControlEditorInt {
   toggleControlEnabled(id: number): void;
 
   /** Changes the control enabled state of selected variables.
-   *  @param selectedVariables - Array of tuples where each tuple contains:
-   *    - variable name (string)
-   *    - whether the variable is selected (boolean)
+   *  @param selectedVariables - Set of variable IDs:
    *  @param controlEnabled - The new control enabled state to set (true or false)
    *  Only variables that are marked as selected (true) will have their control enabled state changed.
    *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
    *  If a variable name does not correspond to any existing variable, it will be ignored.
    */
   changeControlEnabledSelected(
-    selectedVariables: Array<[string, boolean]>,
+    selectedVariables: Set<number>,
     controlEnabled: boolean
   ): void;
 
@@ -71,16 +55,14 @@ export interface ControlEditorInt {
   togglePhenotype(id: number): void;
 
   /** Changes the phenotype state of selected variables.
-   *  @param selectedVariables - Array of tuples where each tuple contains:
-   *    - variable name (string)
-   *    - whether the variable is selected (boolean)
+   *  @param selectedVariables - Set of variable IDs:
    *  @param phenotype - The new phenotype state to set (true, false, or null)
    *  Only variables that are marked as selected (true) will have their phenotype state changed.
    *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
    *  If a variable name does not correspond to any existing variable, it will be ignored.
    */
   changePhenotypeSelected(
-    selectedVariables: Array<[string, boolean]>,
+    selectedVariables: Set<number>,
     phenotype: Phenotype
   ): void;
 
@@ -101,7 +83,15 @@ export interface ControlEditorInt {
   /** Toggles hover state on a variable node in the CytoscapeMe canvas.
    * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
    */
-  hoverVariableCytoscape(id: number, turnOnHover: boolean): void;
+  hoverVariableVisualization(id: number, turnOnHover: boolean): void;
+
+  /** Toggles selection state on a variable node in the modelVisualizationServ canvas.
+   *  If `turnOnSelect` is true, it selects the node; if false, it unselects it.
+   */
+  selectVariableVisualization(id: number, turnOnSelect: boolean): void;
+
+  /** Unselects all items selected in the model visualization canvas. */
+  unselectAllVisualization(): void;
 
   // #endregion
 }

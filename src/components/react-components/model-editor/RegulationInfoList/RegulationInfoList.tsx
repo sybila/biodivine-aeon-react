@@ -5,23 +5,19 @@ import RegulationInfo from './RegulationInfo/RegulationInfo';
 import type { RegulationInfoListProps } from './RegulationInfoListProps';
 
 const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
-  varId,
   height,
   width,
+  variableRegulations,
   hoverRegulation,
-  selectedRegulation,
+  selectedRegulatorIds,
+
   modelEditorServ,
-  regulationsStore,
+  stringProviderServ,
+
   variablesStore,
+  helpHoverStore,
 }) => {
-  const regulationsObj = regulationsStore((state) => state.regulations);
-
-  const regulations = useMemo(
-    () => Object.values(regulationsObj).filter((r) => r.target === varId),
-    [regulationsObj, varId]
-  );
-
-  if (regulations.length === 0) {
+  if (variableRegulations.length === 0) {
     return (
       <section
         className="flex justify-center items-center"
@@ -40,7 +36,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
 
   return (
     <section className="overflow-auto" style={{ height: height, width: width }}>
-      {regulations.map((regulation: Regulation) => (
+      {variableRegulations.map((regulation: Regulation) => (
         <RegulationInfo
           key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
           hover={
@@ -49,12 +45,14 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
             false
           }
           selected={
-            (selectedRegulation &&
-              selectedRegulation.regulator === regulation.regulator) ??
+            (selectedRegulatorIds &&
+              selectedRegulatorIds.has(regulation.regulator)) ??
             false
           }
           modelEditorServ={modelEditorServ}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
           {...regulation}
         ></RegulationInfo>
       ))}

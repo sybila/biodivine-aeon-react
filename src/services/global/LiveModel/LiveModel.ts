@@ -251,7 +251,8 @@ class LiveModel implements LiveModelInt {
         : this.resultsStatusStore.getState().isResultsConflict(computationMode))
     ) {
       if (computationMode) {
-        this.warningServ.addModelModificationRemoveComputationResultsWarning(
+        this.warningServ.addRemoveComputationResultsWarning(
+          'Modifying the model',
           computationMode
         );
       } else {

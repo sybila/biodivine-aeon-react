@@ -1,5 +1,9 @@
 import { useMemo, useState } from 'react';
-import type { Variable } from '../../../../../types';
+import type {
+  ModelEditorVariable,
+  Variable,
+  VariableIdSet,
+} from '../../../../../types';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
@@ -10,24 +14,30 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   searchAndFilterHelpersServ,
+  stringProviderServ,
   loadingServ,
+
   variablesStore,
   controlStore,
   modelEditorStatusStore,
+  helpHoverStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
     controlEditorServ.getVariableSearch()
   );
-  const [selectedVariables, setSelectedVariables] = useState<
-    Record<string, boolean>
-  >(controlEditorServ.getSelectedVariables());
+
+  const selectedVariables: VariableIdSet =
+    modelEditorStatusStore((state) => state.selectedItemsInfo.variables) ??
+    new Set();
 
   const variablesObj = variablesStore((state) => state.variables);
 
   const variables = Object.values(variablesObj);
 
-  const variableNames = useMemo(() => {
-    return variables.map((variable) => variable.name ?? 'Unknown Variable');
+  const variableIds = useMemo(() => {
+    return variables
+      .map((variable) => variable.id ?? -1)
+      .filter((id) => id !== -1);
   }, [variables]);
 
   const hoverVariableId = modelEditorStatusStore((state) =>
@@ -41,17 +51,38 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     }
   };
 
-  const updateSelectedVariables = (newSelected: Record<string, boolean>) => {
-    setSelectedVariables(newSelected);
-    controlEditorServ.setSelectVariables(newSelected);
+  const updateSelectedVariables = (newSelected: Set<number>) => {
+    loadingServ.startLoading();
+
+    modelEditorStatusStore.getState().clearSelectedItemsInfo();
+    controlEditorServ.unselectAllVisualization();
+
+    newSelected.forEach((variableId) => {
+      const variable: ModelEditorVariable = {
+        type: 'variable',
+        id: variableId,
+      };
+
+      modelEditorStatusStore.getState().addSelectedItemInfo(variable);
+      controlEditorServ.selectVariableVisualization(variableId, true);
+    });
+
+    loadingServ.endLoading();
   };
 
-  const toggleVariableSelect = (variableName: string) => {
+  const toggleVariableSelect = (variableId: number) => {
     loadingServ.startLoading();
-    updateSelectedVariables({
-      ...selectedVariables,
-      [variableName]: !selectedVariables[variableName],
-    });
+
+    const variable: ModelEditorVariable = { type: 'variable', id: variableId };
+
+    if (selectedVariables.has(variableId)) {
+      modelEditorStatusStore.getState().removeSelectedItemInfo(variable);
+      controlEditorServ.selectVariableVisualization(variableId, false);
+    } else {
+      modelEditorStatusStore.getState().addSelectedItemInfo(variable);
+      controlEditorServ.selectVariableVisualization(variableId, true);
+    }
+
     loadingServ.endLoading();
   };
 
@@ -67,52 +98,96 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
    * - The button label (string)
    * - The button color (string)
    * - The onClick handler function (() => void)
+   * - The onMouseEnter handler function ((e: React.MouseEvent) => void)
    */
-  const statusButtons: Array<[string, string, () => void]> = [
+  const statusButtons: Array<
+    [string, string, () => void, (e: React.MouseEvent) => void]
+  > = [
     [
       'N',
       'var(--color-grey)',
       () =>
         controlEditorServ.changeControlEnabledSelected(
-          Object.entries(selectedVariables),
+          selectedVariables,
           false
         ),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+              false
+            ),
+            true,
+            -50,
+            200
+          ),
     ],
     [
       'E',
       'var(--color-yellow)',
       () =>
-        controlEditorServ.changeControlEnabledSelected(
-          Object.entries(selectedVariables),
-          true
-        ),
+        controlEditorServ.changeControlEnabledSelected(selectedVariables, true),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+              true
+            ),
+            true,
+            -50,
+            150
+          ),
     ],
     [
       'N',
       'var(--color-grey)',
-      () =>
-        controlEditorServ.changePhenotypeSelected(
-          Object.entries(selectedVariables),
-          null
-        ),
+      () => controlEditorServ.changePhenotypeSelected(selectedVariables, null),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.removeVariableFromPhenotype(),
+            true,
+            -50,
+            20
+          ),
     ],
     [
       'T',
       'var(--color-green)',
-      () =>
-        controlEditorServ.changePhenotypeSelected(
-          Object.entries(selectedVariables),
-          true
-        ),
+      () => controlEditorServ.changePhenotypeSelected(selectedVariables, true),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+              'true'
+            ),
+            true,
+            -50
+          ),
     ],
     [
       'F',
       'var(--color-red)',
-      () =>
-        controlEditorServ.changePhenotypeSelected(
-          Object.entries(selectedVariables),
-          false
-        ),
+      () => controlEditorServ.changePhenotypeSelected(selectedVariables, false),
+      (e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+              'false'
+            ),
+            true,
+            -50
+          ),
     ],
   ];
 
@@ -127,7 +202,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, onClick], index) => (
+          {statusButtons.map(([label, color, onClick, onMouseEnter], index) => (
             <TextButtonReact
               key={index}
               compHeight="29px"
@@ -135,15 +210,19 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               text={label}
               handleClick={onClick}
               buttonColor={color}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={() => helpHoverStore.getState().clear()}
             />
           ))}
         </div>
-        <SelectionButtons
-          keys={variableNames}
+        <SelectionButtons<number>
+          keys={variableIds}
           selectedVariables={selectedVariables}
           setSelectedVariables={(newSelected) =>
             updateSelectedVariables(newSelected)
           }
+          stringProviderServ={stringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
@@ -162,10 +241,12 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               id={variable.id}
               name={variable.name ?? 'Unknown Variable'}
               hover={hoverVariableId === variable.id}
-              selected={selectedVariables[variable.name] ?? false}
+              selected={selectedVariables.has(variable.id) ?? false}
               toggleSelect={toggleVariableSelect}
               controlEditorServ={controlEditorServ}
+              stringProviderServ={stringProviderServ}
               controlStore={controlStore}
+              helpHoverStore={helpHoverStore}
             />
           ))}
         </section>

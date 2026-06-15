@@ -107,7 +107,8 @@ class ComputeEngine implements ComputeEngineInt {
 
   /** Open or close connection connection, depending on current status. */
   public toggleConnection(
-    callback:
+    succesfulConnectionCallback: (() => void) | undefined = undefined,
+    pingCallback:
       | ((
           warning: string | undefined,
           error: string | undefined,
@@ -118,16 +119,17 @@ class ComputeEngine implements ComputeEngineInt {
       | undefined = undefined
   ) {
     if (this.connected) {
-      this.closeConnection(callback);
+      this.closeConnection(pingCallback);
     } else {
-      this.openConnection(callback);
+      this.openConnection(succesfulConnectionCallback, pingCallback);
     }
   }
 
   /** Open connection, taking up to date address from user input.
 		Callback is called upon first ping. */
   private openConnection(
-    callback:
+    succesfulConnectionCallback: (() => void) | undefined = undefined,
+    pingCallback:
       | ((
           warning: string | undefined,
           error: string | undefined,
@@ -138,8 +140,8 @@ class ComputeEngine implements ComputeEngineInt {
       | undefined = undefined
   ): void {
     if (!this.address) {
-      if (callback)
-        callback(
+      if (pingCallback)
+        pingCallback(
           undefined,
           'Compute Engine Adress not set',
           'Disconnected',
@@ -150,7 +152,7 @@ class ComputeEngine implements ComputeEngineInt {
       return;
     }
 
-    this.ping(true, 2000, callback);
+    this.ping(true, 2000, succesfulConnectionCallback, pingCallback);
   }
 
   /** Close current connection - return true if really closed. */
@@ -188,6 +190,7 @@ class ComputeEngine implements ComputeEngineInt {
     interval: number,
     error: string | undefined,
     response: AttractorResponse | ControlResponse | undefined,
+    succesfulConnectionCallback: (() => void) | undefined = undefined,
     callback:
       | ((
           warning: string | undefined,
@@ -213,7 +216,7 @@ class ComputeEngine implements ComputeEngineInt {
 
     if (keepAlive && error === undefined) {
       this.pingRepeatToken = setTimeout(() => {
-        this.ping(true, interval, callback);
+        this.ping(true, interval, succesfulConnectionCallback, callback);
       }, interval);
     }
 
@@ -223,7 +226,16 @@ class ComputeEngine implements ComputeEngineInt {
         ? `Your AEON client version is ${config.computeEngine.version}, but your compute engine version is ${response['version']}. You may encounter compatibility issues. For best experience, please download recommended engine binary from the 'Compute Engine' panel.`
         : undefined;
 
+    const previousConnectedStatus = this.connected;
     this.connected = true;
+
+    if (
+      succesfulConnectionCallback &&
+      this.connected &&
+      !previousConnectedStatus
+    ) {
+      succesfulConnectionCallback();
+    }
 
     const statusInfo: ComputationInfo = this.createComputationStatus(response);
 
@@ -251,6 +263,7 @@ class ComputeEngine implements ComputeEngineInt {
   private ping(
     keepAlive: boolean = false,
     interval: number = 2000,
+    succesfulConnectionCallback: (() => void) | undefined = undefined,
     callback:
       | ((
           warning: string | undefined,
@@ -271,14 +284,28 @@ class ComputeEngine implements ComputeEngineInt {
       this.backendRequest(
         '/get_control_computation_status',
         (error: string | undefined, response: ControlResponse | undefined) =>
-          this.pingCallback(keepAlive, interval, error, response, callback),
+          this.pingCallback(
+            keepAlive,
+            interval,
+            error,
+            response,
+            succesfulConnectionCallback,
+            callback
+          ),
         'GET'
       );
     } else {
       this.backendRequest(
         '/ping',
         (error: string | undefined, response: AttractorResponse | undefined) =>
-          this.pingCallback(keepAlive, interval, error, response, callback),
+          this.pingCallback(
+            keepAlive,
+            interval,
+            error,
+            response,
+            succesfulConnectionCallback,
+            callback
+          ),
         'GET'
       );
     }

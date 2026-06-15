@@ -3,7 +3,6 @@ import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */
 class DataFormaters implements DataFormatersInt {
-
   /** Converts a record of variable states to a string
    *  The record maps variable ids to their states (0, 1, or * for free/unpercolated).
    * @param variableStates - (Record<string, number | undefined>) An object mapping variable names to their states (0, 1, or undefined for free/unpercolated).
@@ -54,8 +53,14 @@ class DataFormaters implements DataFormatersInt {
 
   /** Converts a comma-separated string into an array of trimmed strings.
    */
-  public convertCommaSeparatedStringToArray(text: string): Array<string> {
-    return text.split(',').map((item) => item.trim());
+  public convertCommaSeparatedStringToArray(
+    text: string,
+    toLowerCase: boolean = false
+  ): Array<string> {
+    return text.split(',').map((item) => {
+      const trimmedItem = item.trim();
+      return toLowerCase ? trimmedItem.toLowerCase() : trimmedItem;
+    });
   }
 }
 

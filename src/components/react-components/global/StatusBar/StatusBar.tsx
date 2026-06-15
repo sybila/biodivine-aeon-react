@@ -1,8 +1,11 @@
+import React from 'react';
 import Time from '../../../../services/utilities/Time';
 import type { StatusBarProps } from './StatusBarProps';
 
 const StatusBar: React.FC<StatusBarProps> = ({
   onClick,
+  setHelpHover,
+  clearHelpHover,
   computeEngineStatusStore,
 }) => {
   const computeEngineStatus: string = computeEngineStatusStore(
@@ -31,6 +34,10 @@ const StatusBar: React.FC<StatusBarProps> = ({
       className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-[var(--color-secondary)] rounded-md px-3 truncate font-[var(--base-font-family)] text-[21px] select-none pointer-events-auto cursor-pointer"
       style={{ color: color, fontWeight: 'bold' }}
       onClick={onClick}
+      onMouseEnter={(e: React.MouseEvent<HTMLSpanElement>) =>
+        setHelpHover(e.nativeEvent)
+      }
+      onMouseLeave={() => clearHelpHover()}
     >
       {getStatusText()}
     </span>

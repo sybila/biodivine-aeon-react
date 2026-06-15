@@ -24,9 +24,9 @@ const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
       handleCloseClick={() => closeOverlay()}
       compZIndex={zIndex}
       windWidth="auto"
-      windMaxWidth="80%"
+      windMaxWidth="90vw"
       windHeight="auto"
-      windMaxHeight="80%"
+      windMaxHeight="90vh"
       windOverflowX="auto"
       windOverflowY="auto"
     >

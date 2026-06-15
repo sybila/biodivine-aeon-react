@@ -32,8 +32,12 @@
 
 :root {
   --color-bg-base: #fff;
+  --color-primary: #f5f5f5;
   --color-secondary: #e7ecee;
+  --color-secondary-light-highlight: #e7ecee94;
   --color-highlight: #cfd8dc;
+
+  --color-tooltip-bg: #c2d3dae9;
 
   --color-grey: #bebebe;
   --color-darker-grey: #b1b1b1ff;
@@ -52,6 +56,10 @@
   --base-font-family: 'Helvetica', 'Arial', sans-serif;
   --font-family-fira-mono: 'FiraMono', 'monospace';
   --font-family-fira-bold: 'FiraMonoBold', 'monospace';
+
+  --base-text-color: black;
+  --lighter-text-color: #464545;
+  --placeholder-text-color: gray;
 
   line-height: 1.5;
   font-weight: 400;

@@ -1,5 +1,6 @@
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
+import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import ControlEditor from '../../services/model-editor/ControlEditor/ControlEditor';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import ModelEditor from '../../services/model-editor/ModelEditor/ModelEditor';
@@ -16,6 +17,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
 
   constructor(
     liveModelServ: LiveModelInt,
+    stringProviderServ: StringProviderInt,
     messageServ: MessageInt,
     storesProvider: StoresProviderInt
   ) {
@@ -30,12 +32,14 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
     this.modelEditorServ = new ModelEditor(
       this.modelVisualizationServ,
       liveModelServ,
+      stringProviderServ,
       messageServ,
       storesProvider.overlayWindowStore,
       storesProvider.regulationsStore,
       storesProvider.variablesStore,
       storesProvider.updateFunctionsStore,
-      storesProvider.modelEditorStatusStore
+      storesProvider.modelEditorStatusStore,
+      storesProvider.helpHoverStore
     );
     this.controlEditorServ = new ControlEditor(
       this.modelVisualizationServ,

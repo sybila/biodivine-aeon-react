@@ -8,8 +8,13 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
   setShowModelDescription,
   modelEditorServ,
   messageServ,
+
   tabStore,
   modelInfoStore,
+
+  setHelpHover,
+  setHelpHoverText,
+  clearHelpHover,
 }) => {
   const modelDescription = modelInfoStore((state) =>
     state.getModelDescription()
@@ -36,16 +41,21 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
           compWidth="35%"
           textFontSize="13px"
           text="Hide Model description"
-          handleClick={() => setShowModelDescription(false)}
+          handleClick={() => {
+            setHelpHoverText(true);
+            setShowModelDescription(false);
+          }}
+          onMouseEnter={(e: React.MouseEvent) => setHelpHover(e, false)}
+          onMouseLeave={() => clearHelpHover()}
           active={true}
         />
       </section>
       <InvisibleInputReact
         compHeight="400px"
-        compWidth="99%"
+        compWidth="475px"
         placeholder="(model description)"
-        multiTextAlign="start"
-        multiFontSize="14px"
+        textAlign="start"
+        fontSize="14px"
         multiLine={true}
         value={modelDescription}
         handleChange={(value) => {

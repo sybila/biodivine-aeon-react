@@ -7,9 +7,12 @@ import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
   type ControlInfo,
+  type ModelEditorRegulation,
+  type ModelEditorVariable,
   type Position,
   type Regulation,
   type RegulationVariables,
+  type Variable,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
@@ -86,17 +89,21 @@ class CytoscapeME implements ModelVisualizationInt {
 
     // When the user moves or zooms the graph, position of menu must update as well.
     this.cytoscape.on('zoom', (e: any) => {
-      this.renderMenuForSelectedNode();
-      this.renderMenuForSelectedEdge();
+      if (e.target !== this.cytoscape) return;
+
+      this.hideMenu();
     });
     this.cytoscape.on('pan', (e: any) => {
-      this.renderMenuForSelectedNode();
-      this.renderMenuForSelectedEdge();
+      if (e.target !== this.cytoscape) return;
+
+      this.hideMenu();
     });
     this.cytoscape.on('click', (e: any) => {
       if (e.target !== this.cytoscape) return;
 
       let now = new Date().getTime();
+
+      this.hideMenu();
 
       if (
         this.lastClickTimestamp &&
@@ -194,6 +201,8 @@ class CytoscapeME implements ModelVisualizationInt {
             label: 'data(name)',
             // put label in the middle of the node (vertically)
             'text-valign': 'center',
+            'text-max-width': '150px',
+            'text-wrap': 'ellipsis',
             width: 'label',
             height: 'label',
             // a rectangle with slightly sloped edges
@@ -216,6 +225,15 @@ class CytoscapeME implements ModelVisualizationInt {
           style: {
             'border-width': '2.0px',
             'border-color': '#6a7ea5',
+            'border-style': 'dashed',
+          },
+        },
+        {
+          // When a node is highlighted by "fit" action, show it with a dashed border in a different colour.
+          selector: 'node.fit',
+          style: {
+            'border-width': '2.0px',
+            'border-color': '#797979',
             'border-style': 'dashed',
           },
         },
@@ -410,38 +428,30 @@ class CytoscapeME implements ModelVisualizationInt {
       ],
     ]);
 
+    const variable: ModelEditorVariable = { type: 'variable', id: id };
+
     node.on('mouseover', (e: any) => {
       node.addClass('hover');
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'variable', id: id });
+      this.modelEditorStatusStore.getState().setHoverItemInfo(variable);
     });
     node.on('mouseout', (e: any) => {
       node.removeClass('hover');
       this.modelEditorStatusStore.getState().setHoverItemInfo(null);
     });
     node.on('select', (e: any) => {
-      // deselect any previous selection - we don't support multiselection yet
-      for (let selected of this.cytoscape.$(':selected')) {
-        if (selected.data().id != id) {
-          selected.unselect();
-        }
-      }
-      this.modelEditorStatusStore
-        .getState()
-        .setSelectedItemInfo({ type: 'variable', id: id });
-      this.renderMenuForSelectedNode(node);
+      this.renderMenuForSelectedNode(node, variable);
+      this.modelEditorStatusStore.getState().addSelectedItemInfo(variable);
     });
     node.on('unselect', (e: any) => {
-      this.modelEditorStatusStore.getState().setSelectedItemInfo(null);
-      this.modelEditorStatusStore.getState().setFloatingMenuInfo(null); // hide menu
+      this.modelEditorStatusStore.getState().removeSelectedItemInfo(variable);
+      this.hideMenu();
     });
     node.on('click', (e: any) => {
+      this.renderMenuForSelectedNode(node, variable);
       this.lastClickTimestamp = undefined; // ensure that we cannot double-click inside the node
     });
     node.on('drag', (e: any) => {
-      if (node.selected()) this.renderMenuForSelectedNode(node);
-      this.renderMenuForSelectedEdge();
+      if (node.selected()) this.renderMenuForSelectedNode(node, null);
     });
     node.on('dragfree', (_: any) => {
       const position = node.position();
@@ -492,13 +502,17 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Set the given node as selected. */
   public selectNode(id: number) {
-    let selected = this.cytoscape.$(':selected'); // node or edge that are selected
-    if (selected.length == 1) {
-      selected.unselect();
-    }
-    let node = this.cytoscape.getElementById(id);
+    const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       node.select();
+    }
+  }
+
+  /** Sets the given node as not selected */
+  public unselectNode(id: number) {
+    const node = this.cytoscape.getElementById(id);
+    if (node !== undefined) {
+      node.unselect();
     }
   }
 
@@ -572,21 +586,29 @@ class CytoscapeME implements ModelVisualizationInt {
       target: Number(edge.data().target),
     };
 
+    const regulationInfo: ModelEditorRegulation = {
+      type: 'regulation',
+      regulationIds: edgeVars,
+    };
+
     edge.on('select', (e: any) => {
+      this.renderMenuForSelectedEdge(edge, regulationInfo);
       this.modelEditorStatusStore
         .getState()
-        .setSelectedItemInfo({ type: 'regulation', regulationIds: edgeVars });
-      this.renderMenuForSelectedEdge(edge);
+        .addSelectedItemInfo(regulationInfo);
     });
     edge.on('unselect', (e: any) => {
-      this.modelEditorStatusStore.getState().setSelectedItemInfo(null);
-      this.modelEditorStatusStore.getState().setFloatingMenuInfo(null);
+      this.modelEditorStatusStore
+        .getState()
+        .removeSelectedItemInfo(regulationInfo);
+      this.hideMenu();
+    });
+    edge.on('click', (e: any) => {
+      this.renderMenuForSelectedEdge(edge, regulationInfo);
     });
     edge.on('mouseover', (e: any) => {
       edge.addClass('hover');
-      this.modelEditorStatusStore
-        .getState()
-        .setHoverItemInfo({ type: 'regulation', regulationIds: edgeVars });
+      this.modelEditorStatusStore.getState().setHoverItemInfo(regulationInfo);
     });
     edge.on('mouseout', (e: any) => {
       edge.removeClass('hover');
@@ -622,6 +644,15 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #endregion
 
+  // #region --- Global Select ---
+
+  /** Unselects all items selected in the cytoscape editor. */
+  public unselectAll(): void {
+    this.cytoscape.elements(':selected').unselect();
+  }
+
+  // #endregion
+
   // #region --- Regulation Management ---
 
   /** Remove regulation between the two specified nodes. */
@@ -648,7 +679,13 @@ class CytoscapeME implements ModelVisualizationInt {
       this.cytoscape.style().update(); //redraw graph
       if (currentEdge.selected()) {
         // if the edge is selected, we also redraw the edge menu
-        this.renderMenuForSelectedEdge(currentEdge);
+        this.renderMenuForSelectedEdge(currentEdge, {
+          type: 'regulation',
+          regulationIds: {
+            regulator: regulation.regulator,
+            target: regulation.target,
+          },
+        });
       }
     } else {
       // Edge does not exist - create a new one
@@ -701,41 +738,109 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Pan and zoom the graph to show the whole model. */
-  public fit() {
-    this.cytoscape.fit();
-    this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
+  /** Pan and zoom the graph to show the whole model.
+   *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
+   */
+  public fit(variables?: Variable[]): void {
+    if (variables !== undefined && variables.length > 0) {
+      const variableSet = new Set(variables.map((variable) => variable.id));
+      const nodes = this.cytoscape
+        .nodes()
+        .filter((node: any) => variableSet.has(Number(node.data().id)));
+      this.fitHighlightSubset(nodes);
+      this.cytoscape.fit(nodes, 100);
+    } else {
+      this.cytoscape.fit();
+    }
+
+    //this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
+  }
+
+  /** Highlights a subset of nodes by applying a node fit CSS style class.
+   *  Highlight is removed after a short delay -> this is used in the fit function to visually indicate which nodes were fitted.
+   */
+  private fitHighlightSubset(nodes: any) {
+    nodes.addClass('fit');
+
+    setTimeout(() => {
+      nodes.removeClass('fit');
+    }, 2000);
   }
 
   // #endregion
 
   // #region --- Menu Rendering ---
 
-  /** Update the node menu to be shown exactly for this element
-   * (including zoom and other node properties)
-   * If the node is undefined, try to find it
+  /** Update the node menu to be shown exactly for this element.
+   *  If the node is not provided, do nothing.
+   *  If the variable info is not provided, try to find it based on currently shown menu - if it does not match the node, do nothing as well.
+   *  Otherwise, show the menu for the node and variable info provided.
    */
-  private renderMenuForSelectedNode(node?: any) {
-    if (node === undefined) {
-      node = this.cytoscape.nodes(':selected');
-      if (node.length == 0) return; // nothing selected
+  private renderMenuForSelectedNode(
+    node: any,
+    variableInfo: ModelEditorVariable | null
+  ) {
+    if (node === undefined || node === null) {
+      return;
     }
+
+    if (variableInfo === null) {
+      const floatingMenuInfo =
+        this.modelEditorStatusStore.getState().floatingMenuInfo;
+      console.log(node.data());
+      console.log(floatingMenuInfo);
+      if (
+        floatingMenuInfo?.itemInfo.type !== 'variable' ||
+        floatingMenuInfo.itemInfo.id != node.data().id
+      ) {
+        console.log(
+          'Cannot render menu for the node - no variable info provided'
+        );
+        return;
+      }
+
+      variableInfo = floatingMenuInfo.itemInfo;
+    }
+
     let zoom = this.cytoscape.zoom();
     let position = node.renderedPosition();
     //let height = node.height() * zoom;
-    this.modelEditorStatusStore
-      .getState()
-      .setFloatingMenuInfo({ position: [position['x'], position['y']], zoom });
+    this.modelEditorStatusStore.getState().setFloatingMenuInfo({
+      position: [position['x'], position['y']],
+      zoom,
+      itemInfo: variableInfo,
+    });
   }
 
   /** Update the edge menu to be shown exactly for the currently selected edge.
-   * If edge is undefined, try to obtain the selected edge.
+   *  If the edge is not provide, do nothing.
+   *  If the regulation info is not provided, try to find it based on currently shown menu - if it does not match the edge, do nothing as well.
+   *  Otherwise, show the menu for the edge and regulation info provided.
    */
-  private renderMenuForSelectedEdge(edge?: any) {
-    if (edge === undefined) {
-      edge = this.cytoscape.edges(':selected');
-      if (edge.length == 0) return; // nothing selected
+  private renderMenuForSelectedEdge(
+    edge: any,
+    regulationInfo: ModelEditorRegulation | null
+  ) {
+    if (edge === undefined || edge === null) {
+      return;
     }
+
+    if (regulationInfo === null) {
+      const floatingMenuInfo =
+        this.modelEditorStatusStore.getState().floatingMenuInfo;
+
+      if (
+        floatingMenuInfo?.itemInfo.type !== 'regulation' ||
+        floatingMenuInfo.itemInfo.regulationIds.regulator !=
+          edge.data().source ||
+        floatingMenuInfo.itemInfo.regulationIds.target != edge.data().target
+      ) {
+        return;
+      }
+
+      regulationInfo = floatingMenuInfo.itemInfo;
+    }
+
     const zoom = this.cytoscape.zoom();
     const boundingBox = edge.renderedBoundingBox();
     const position: [number, number] = [
@@ -745,7 +850,13 @@ class CytoscapeME implements ModelVisualizationInt {
     this.modelEditorStatusStore.getState().setFloatingMenuInfo({
       position: position,
       zoom,
+      itemInfo: regulationInfo,
     });
+  }
+
+  /** Hide any floating menu. */
+  private hideMenu() {
+    this.modelEditorStatusStore.getState().setFloatingMenuInfo(null);
   }
 
   // #endregion

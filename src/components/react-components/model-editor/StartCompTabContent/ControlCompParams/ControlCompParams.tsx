@@ -57,6 +57,7 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
   return (
     <section className="flex flex-col w-full gap-3">
       <DotHeaderReact
+        style={{ userSelect: 'none' }}
         headerText="Control Computation Parameters"
         compWidth="100%"
         justifyHeader="start"
@@ -65,6 +66,7 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
         <div className="flex flex-col w-[47%] gap-1 justify-center">
           {headers.map((header) => (
             <SimpleHeaderReact
+              style={{ userSelect: 'none' }}
               key={header}
               headerText={`${header}:`}
               textFontSize="18px"

@@ -40,9 +40,6 @@ class ComputationManager implements ComputationManagerInt {
   /** Currently used compute engine comunicator */
   private computeEngine: ComputeEngineInt;
 
-  /** Saves currently set computation mode */
-  private computationMode: ComputationModes = 'Attractor Analysis';
-
   /** Control computation parameters
    * - minRobustness: Minimum robustness for perturbations in %.
    * - maxSize: Maximum size of a perturbation (max number of perturbed variables).
@@ -194,28 +191,43 @@ class ComputationManager implements ComputationManagerInt {
 
   // #endregion
 
-  // #region --- Computation Mode Setters/Getters ---
-
-  /** Returns currently set computation mode */
-  public getComputationMode() {
-    return this.computationMode;
-  }
-
-  /** Sets computation mode */
-  public setComputationMode(mode: ComputationModes) {
-    if (mode) this.computationMode = mode;
-  }
-
-  // #endregion
-
   // #region --- Connection Manager ---
 
   public isComputeEngineConnected(): boolean {
     return this.computeEngine.isConnected();
   }
 
+  /** Callback for pinging of connected compute engine. Used as callback for the toggle connection function.
+   *  This callback is also used on every ping, if the connection to the compute engine is succesful.
+   */
+  private pingCallback(
+    warning: string | undefined,
+    error: string | undefined,
+    engineStatus: string | undefined,
+    compStatus: ComputationStatus | undefined,
+    color: string | undefined
+  ): void {
+    this.setComputationStatus(warning, error, engineStatus, compStatus, color);
+  }
+
+  /** Callback which should run after compute engine has succesfully connected. */
+  private succesfulConnectionCallback() {
+    this.getLiveModel()!.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+  }
+
   public toggleConnection(): void {
-    this.computeEngine.toggleConnection(this.setComputationStatus);
+    this.computeEngine.toggleConnection(
+      () => this.succesfulConnectionCallback(),
+      (
+        warning: string | undefined,
+        error: string | undefined,
+        engineStatus: string | undefined,
+        compStatus: ComputationStatus | undefined,
+        color: string | undefined
+      ) => {
+        this.pingCallback(warning, error, engineStatus, compStatus, color);
+      }
+    );
   }
 
   public computationIsRunning(): boolean {
@@ -227,7 +239,8 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Computation Status ---
 
   private computationCanStart(
-    model: string | undefined
+    model: string | undefined,
+    mode: ComputationModes
   ): asserts model is string {
     if (!model) {
       throw new Error('Cannot start computation: Model is empty.');
@@ -254,7 +267,7 @@ class ComputationManager implements ComputationManagerInt {
       );
     }
 
-    if (this.computationMode === 'Control') {
+    if (mode === 'Control') {
       const [controlEnabled, inPhenotype] =
         this.getLiveModel()!.Control.getNumberOfSetControl();
 
@@ -271,13 +284,11 @@ class ComputationManager implements ComputationManagerInt {
       }
     }
 
-    this.resultsStatusStore.getState().clearResult(this.computationMode);
+    this.resultsStatusStore.getState().clearResult(mode);
     this.tabsStore
       .getState()
       .closeByTabType(
-        this.tabOperationsServ.getTabTypeFromComputationMode(
-          this.computationMode
-        )
+        this.tabOperationsServ.getTabTypeFromComputationMode(mode)
       );
 
     return;
@@ -355,6 +366,12 @@ class ComputationManager implements ComputationManagerInt {
         updateFunctionFragment,
         this.validateUpdateFunctionCallback.bind(this)
       );
+    } else {
+      this.updateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+        status:
+          'Cannot validate update function:\n Compute engine not connected',
+        isError: true,
+      });
     }
   }
 
@@ -435,7 +452,7 @@ class ComputationManager implements ComputationManagerInt {
     const model = this.getLiveModel()!.Export.exportAeon();
 
     try {
-      this.computationCanStart(model);
+      this.computationCanStart(model, 'Attractor Analysis');
     } catch (error: any) {
       this.messageServ.showError(error.message);
       return;
@@ -783,7 +800,7 @@ class ComputationManager implements ComputationManagerInt {
       this.getLiveModel()!.Control.getPhenotypeControlEnabledVars();
 
     try {
-      this.computationCanStart(model);
+      this.computationCanStart(model, 'Control');
     } catch (error: any) {
       this.messageServ.showError(error.message);
       return;
@@ -826,7 +843,8 @@ class ComputationManager implements ComputationManagerInt {
     const model = this.getLiveModel()!.Export.exportAeon();
 
     try {
-      this.computationCanStart(model);
+      // Todo - change the mode string to a specific one for TSSD when we have more computations using TSSD
+      this.computationCanStart(model, 'Attractor Analysis');
     } catch (error: unknown) {
       this.messageServ.showError((error as Error).message);
       return;

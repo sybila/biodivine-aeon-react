@@ -1,7 +1,9 @@
 import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../../../services/global/Loading/LoadingInt';
+import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
 import type { ControlEditorInt } from '../../../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
+import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../../stores/ModelEditor/ModelEditorStatus';
@@ -11,9 +13,11 @@ export type ControlEditorTabContentProps = {
   liveModelServ: LiveModelInt;
   controlEditorServ: ControlEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
+  stringProviderServ: StringProviderInt;
   loadingServ: LoadingInt;
 
   controlStore: ZustandStore<ControlStatus>;
   variablesStore: ZustandStore<VariablesStatus>;
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  helpHoverStore: ZustandStore<HelpHoverState>;
 };

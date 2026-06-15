@@ -48,6 +48,7 @@ class ObjectProviderClass implements ObjectProviderInt {
 
     this.ModelEditorServicesProvider = new ModelEditorServicesProvider(
       this.GlobalServicesProvider.liveModelServ,
+      this.GlobalServicesProvider.stringProviderServ,
       this.GlobalServicesProvider.messageServ,
       this.StoresProvider
     );
@@ -75,6 +76,10 @@ class ObjectProviderClass implements ObjectProviderInt {
         this.GlobalServicesProvider,
         this.UtilitiesServiceProvider.dataFormatersServ
       );
+
+    this.GlobalServicesProvider.initializeShortcutManager(
+      this.ModelEditorServicesProvider.modelEditorServ
+    );
   }
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { ExampleModels } from '../../../../ExampleModels';
 import type { fileType } from '../../../../types';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
@@ -16,19 +16,10 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
   const fileHandlerRef = useRef<
     ((fileInput: HTMLInputElement & { files: FileList }) => void) | null
   >(null);
-  const [acceptType, setAcceptType] = useState<fileType | ''>('');
-  const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
 
   const handleExampleImport = async (exampleModel: string) => {
     await liveModelServ.Import.importAeonWithWarnings(exampleModel);
   };
-
-  useEffect(() => {
-    if (pendingFileDialog) {
-      fileInputRef.current?.click();
-      setPendingFileDialog(false);
-    }
-  }, [acceptType, pendingFileDialog]);
 
   const startFileImport = async (
     importFunction: (
@@ -39,8 +30,10 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
     fileHandlerRef.current = async (
       fileInput: HTMLInputElement & { files: FileList }
     ) => await importFunction(fileInput);
-    setAcceptType(accept);
-    setPendingFileDialog(true);
+
+    fileInputRef.current?.setAttribute('accept', accept);
+
+    fileInputRef.current?.click();
   };
 
   const importButtons: Array<[string, string, () => void]> = [
@@ -177,7 +170,6 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept={acceptType}
         style={{ display: 'none' }}
         onChange={() => {
           if (fileHandlerRef.current) {

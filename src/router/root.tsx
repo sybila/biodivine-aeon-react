@@ -21,9 +21,16 @@ const baseLayout = () => (
     resultsOperationsServ={
       ObjectProvider.GlobalServicesProvider.resultsOperationsServ
     }
+    openCloseOperationsServ={
+      ObjectProvider.GlobalServicesProvider.openCloseOperationsServ
+    }
     tabOperationsServ={ObjectProvider.GlobalServicesProvider.tabOperationsServ}
     dataFormatersServ={
       ObjectProvider.UtilitiesServiceProvider.dataFormatersServ
+    }
+    warningServ={ObjectProvider.GlobalServicesProvider.warningServ}
+    stringProviderServ={
+      ObjectProvider.GlobalServicesProvider.stringProviderServ
     }
     computeEngineStatusStore={
       ObjectProvider.StoresProvider.computeEngineStatusStore

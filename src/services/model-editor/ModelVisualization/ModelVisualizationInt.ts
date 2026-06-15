@@ -1,3 +1,5 @@
+import type { Variable } from "../../../types";
+
 /**
  * Interface for model visualization in the ModelEditor page.
  */
@@ -23,6 +25,9 @@ export interface ModelVisualizationInt {
   /** Set the given node as selected. */
   selectNode(id: number): void;
 
+  /** Set the given node as not selected. */
+  unselectNode(id: number): void;
+
   /** Return an id of the selected node, or undefined if nothing is selected. */
   getSelectedNodeId(): string | undefined;
 
@@ -38,6 +43,13 @@ export interface ModelVisualizationInt {
 
   /** Allow to externally set which edge is hovered - just make sure to unset it later. */
   hoverEdge(regulatorId: number, targetId: number, isHover: boolean): void;
+
+  // #endregion
+
+  // #region --- Global Select ---
+
+  /** Unselects all items selected in the cytoscape editor. */
+  unselectAll(): void;
 
   // #endregion
 
@@ -62,8 +74,10 @@ export interface ModelVisualizationInt {
   /** Zoom and pan the editor to ensure that given node is visible. */
   showNode(id: number): void;
 
-  /** Pan and zoom the graph to show the whole model. */
-  fit(): void;
+  /** Pan and zoom the graph to show the whole model. 
+   *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
+  */
+  fit(variables?: Variable[]): void;
 
   // #endregion
 

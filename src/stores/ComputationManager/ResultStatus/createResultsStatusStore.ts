@@ -14,6 +14,7 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
       Control: undefined,
     },
     lastAddedResults: undefined,
+    selectedResults: undefined,
 
     setResults: (mode, results) => {
       if (results === undefined) {
@@ -27,6 +28,16 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
           [mode]: results,
         },
         lastAddedResults: { mode, timestamp: Date.now() },
+      }));
+    },
+
+    setSelectedResults: (mode) => {
+      if (mode !== undefined && get().results[mode] === undefined) {
+        return;
+      }
+
+      set(() => ({
+        selectedResults: mode,
       }));
     },
 

@@ -10,6 +10,10 @@ import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProp
 
 const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   attractorBifurcationExplorerServ,
+
+  stringProviderServ,
+
+  helpHoverStore,
 }) => {
   const [activeButtons, setActiveButtons] =
     useState<VisualOptionsSwitchableABE>(
@@ -23,10 +27,34 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   const resetLayout: VisualOptionsButtonSection = {
     headerText: 'Reset Layout',
     buttons: [
-      ['Fit', () => attractorBifurcationExplorerServ.fitTree(), false],
+      [
+        'Fit',
+        () => attractorBifurcationExplorerServ.fitTree(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.fit(),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
       [
         'Reset Layout',
         () => attractorBifurcationExplorerServ.resetTreeLayout(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.resetLayout(),
+              true,
+              -50,
+              150
+            ),
         false,
       ],
     ],
@@ -41,6 +69,16 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
           attractorBifurcationExplorerServ.toggleAnimateLayoutChanges();
           setActiveButtons((prev) => ({ ...prev, animate: !prev.animate }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.animateLayoutChanges(),
+              true,
+              -50,
+              150
+            ),
         activeButtons.animate ?? false,
       ],
       [
@@ -52,6 +90,16 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             snapLayers: !prev.snapLayers,
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.snapNodesToLayers(),
+              true,
+              -50,
+              150
+            ),
         activeButtons.snapLayers ?? false,
       ],
       [
@@ -63,6 +111,16 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             positiveOnLeft: !prev.positiveOnLeft,
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.positiveOnLeft(),
+              true,
+              -50,
+              150
+            ),
         activeButtons.positiveOnLeft ?? false,
       ],
     ],
@@ -86,24 +144,28 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
         />
         <section className="flex flex-row items-start justify-center w-full h-fit gap-1 mb-2 overflow-visible">
           <div className="flex flex-col justify-center items-center w-[47%] h-fit gap-2">
-            {firstHalf.map(([label, onClick, isActive]) => (
+            {firstHalf.map(([label, onClick, onMouseEnter, isActive]) => (
               <TextButtonReact
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>
           <div className="flex flex-col justify-center items-center w-[47%] h-fit gap-2">
-            {secondHalf.map(([label, onClick, isActive]) => (
+            {secondHalf.map(([label, onClick, onMouseEnter, isActive]) => (
               <TextButtonReact
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>
@@ -135,6 +197,18 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             step={0.01}
             minValue={50}
             maxValue={100}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.changePrecision(),
+                  true,
+                  -50,
+                  150
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </div>
       </section>

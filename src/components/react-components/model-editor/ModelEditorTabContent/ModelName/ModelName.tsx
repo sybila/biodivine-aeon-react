@@ -5,9 +5,11 @@ import type { ModelNameProps } from './ModelNameProps';
 const ModelName: React.FC<ModelNameProps> = ({
   modelEditorServ,
   messageServ,
+  stringProviderServ,
 
   tabStore,
   modelInfoStore,
+  helpHoverStore,
 }) => {
   const modelName = modelInfoStore((state) => state.modelName);
   const tabState = tabStore((state) => state);
@@ -20,10 +22,10 @@ const ModelName: React.FC<ModelNameProps> = ({
   return (
     <InvisibleInputReact
       compHeight="35px"
-      compWidth="99%"
-      singleFontSize="22px"
+      compWidth="488px"
+      fontSize="22px"
       placeholder="Model Name"
-      singleTextAlign="center"
+      textAlign="center"
       value={modelName ?? undefined}
       handleChange={(value) => {
         if (isActiveWitness) {
@@ -34,6 +36,19 @@ const ModelName: React.FC<ModelNameProps> = ({
           modelEditorServ.setModelName(value);
         }
       }}
+      onMouseEnter={(e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            modelName.length > 0
+              ? modelName
+              : stringProviderServ.ToolTips.ModelEditorTooltips.changeModelName(),
+            true,
+            40
+          )
+      }
+      onMouseLeave={() => helpHoverStore.getState().clear()}
     />
   );
 };

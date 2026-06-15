@@ -32,9 +32,20 @@ export interface ComputeEngineInt {
 
   // #region --- Connection Management ---
 
-  /** Open or close connection connection, depending on current status. */
+  /** Open or close connection connection, depending on current status.
+   *  @param succesfulConnectionCallback (() => void | undefined) function which runs after succesful connection to compute engine.
+   *  @param pingCallback ( ((
+      warning: string | undefined,
+      error: string | undefined,
+      engineStatus: string | undefined,
+      compStatus: ComputationStatus | undefined,
+      color: string | undefined
+    ) => void) | undefined ) function which runs after each succesful ping to the currently connected compute engine
+      @returns void
+   */
   toggleConnection(
-    callback?: (
+    succesfulConnectionCallback?: () => void,
+    pingCallback?: (
       warning: string | undefined,
       error: string | undefined,
       engineStatus: string | undefined,

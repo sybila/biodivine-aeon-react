@@ -1,6 +1,19 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+type StyleProperty =
+  | 'compHeight'
+  | 'compWidth'
+  | 'inputHeight'
+  | 'inputWidth'
+  | 'inputBorderColor'
+  | 'inputBorderRadius'
+  | 'inputColor'
+  | 'textColor'
+  | 'textFontSize'
+  | 'textFontWeight'
+  | 'textFontFamily';
+
 @customElement('text-input')
 export class TextInput extends LitElement {
   @property({ type: String }) declare compHeight?: string;
@@ -12,6 +25,7 @@ export class TextInput extends LitElement {
   @property({ type: String }) declare inputBorderRadius?: string;
   @property({ type: String }) declare inputColor?: string;
   @property({ type: Function }) declare onWrite?: (value: string) => void;
+  @property({ type: Function }) declare onSubmit?: (value: string) => void;
 
   @property({ type: String }) declare textColor?: string;
   @property({ type: String }) declare textFontSize?: string;
@@ -56,17 +70,23 @@ export class TextInput extends LitElement {
     }
   }
 
+  private submitHandler(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.onSubmit) {
+      this.onSubmit((event.target as HTMLInputElement).value);
+    }
+  }
+
   private updateStyleVariable(
-    propertyName: string,
+    propertyName: StyleProperty,
     cssVar: string,
     fallback: string
   ) {
-    const value = (this as any)[propertyName] ?? fallback;
+    const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
   }
 
-  updated(changed: Map<string, any>) {
-    const update = (prop: string, cssVar: string, fallback: string) =>
+  updated(changed: Map<string, StyleProperty>) {
+    const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--text-input-comp-height', '26px');
@@ -90,6 +110,7 @@ export class TextInput extends LitElement {
 
   render() {
     return html`<input
+      @keydown=${(e: KeyboardEvent) => this.submitHandler(e)}
       @keyup=${(e: KeyboardEvent) => this.writeHandler(e)}
       type="text"
       placeholder=${this.placeholder ?? ''}

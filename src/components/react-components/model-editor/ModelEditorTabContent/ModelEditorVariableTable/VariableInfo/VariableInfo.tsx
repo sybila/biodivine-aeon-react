@@ -1,11 +1,15 @@
+import React, { useMemo } from 'react';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
+import type { UpdateFunctionStatus } from '../../../../../../types';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
-import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
+import MultilineTextReact from '../../../../lit-wrappers/MultilineTextReact';
+import NonScrollableTextReact from '../../../../lit-wrappers/NonScrollableTextReact';
+import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
-import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
+import UpdateFunctionValidation from '../../../UpdateFunctionValidation/UpdateFunctionValidation';
 import type { VariableInfoProps } from './VariableInfoProps';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
@@ -14,34 +18,95 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverVariable,
   selectedVariable,
   hoverRegulation,
-  selectedRegulation,
+  selectedRegulatorIds,
+  exposeSetExtend,
+  setVariableInfoRef,
+
   modelEditorServ,
+  stringProviderServ,
+
   regulationsStore,
   variablesStore,
   updateFunctionsStore,
+  helpHoverStore,
 }) => {
+  const regulationsObj = regulationsStore((state) => state.regulations);
+  const updateFunction: string | undefined = updateFunctionsStore(
+    (state) => state.updateFunctions[id]?.functionString ?? undefined
+  );
+  const updateFunctionStatus: UpdateFunctionStatus = updateFunctionsStore(
+    (state) => state.updateFunctionStatus[id] ?? { status: '', isError: false }
+  );
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === id),
+    [regulationsObj, id]
+  );
+
   return (
     <ExtendableContentReact
-      compWidth="100%"
-      topOverflowX="visible"
-      topOverflowY="visible"
+      ref={(el) => setVariableInfoRef(id, el)}
+      contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
       hover={hoverVariable}
       active={selectedVariable}
       handleMouseEnter={() => modelEditorServ.hoverVariableCytoscape(id, true)}
       handleMouseLeave={() => modelEditorServ.hoverVariableCytoscape(id, false)}
+      exposeSetExtend={(func: (extend: boolean) => void) =>
+        exposeSetExtend(func)
+      }
     >
-      <section slot="top-content" className="h-full w-[60%]">
-        <VariableNameInput
-          height="100%"
-          width="100%"
-          singleFontSize="16px"
-          varId={id}
-          varName={name}
-          onUpdate={(id: number, newName: string) =>
-            modelEditorServ.changeVariableName(id, newName)
+      <section
+        slot="top-content"
+        className="h-full w-[80%] flex flex-row justify-between items-center  shrink-0"
+      >
+        <NonScrollableTextReact
+          compHeight="28px"
+          compWidth="200px"
+          textFontSize="16px"
+          textFontFamily="var(--font-family-fira-mono)"
+          textAlign="start"
+          textJustify="center"
+          text={name ? name : ''}
+          className="cursor-pointer"
+          onClick={() => modelEditorServ.openChangeVarNameWindow(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                name.length > 0
+                  ? name
+                  : stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableName(),
+                true,
+                -50
+              )
           }
+          onMouseLeave={helpHoverStore.getState().clear}
+        />
+
+        <SimpleHeaderReact
+          compHeight="28px"
+          compWidth="100px"
+          textFontSize="16px"
+          lineHeight="28px"
+          textFontWeight="normal"
+          textFontFamily="var(--font-family-fira-mono)"
+          headerText={`#↓ ${regulations.length}`}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.variableArity(
+                  regulations.length
+                ),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
 
@@ -56,6 +121,17 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSrc={SearchIcon}
           iconAlt="find"
           handleClick={() => modelEditorServ.zoomOnVariable(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.findVariableInVisualization(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
 
         <IconButtonReact
@@ -65,6 +141,17 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSrc={DeleteIcon}
           iconAlt="delete"
           handleClick={async () => await modelEditorServ.removeVariable(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.deleteVariable(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
       </section>
 
@@ -78,14 +165,15 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
       <section slot="extended-content" className="h-fit w-full">
         <RegulationInfoList
-          varId={id}
           height="77px"
           width="100%"
+          variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
-          selectedRegulation={selectedRegulation}
+          selectedRegulatorIds={selectedRegulatorIds}
           modelEditorServ={modelEditorServ}
-          regulationsStore={regulationsStore}
+          stringProviderServ={stringProviderServ}
           variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
@@ -98,18 +186,37 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></DotHeaderReact>
 
       <section slot="extended-content" className="h-fit w-full">
-        <ChangeUpdateFunctionInput
-          varId={id}
-          compHeight="fit-content"
+        <MultilineTextReact
+          compHeight="70px"
           compWidth="100%"
-          inputFontSize="16px"
-          inputHeight="28px"
-          inputWidth="100%"
-          validationMinHeight="20px"
-          validationMaxHeight="40px"
-          modelEditorServ={modelEditorServ}
-          variablesStore={variablesStore}
-          updateFunctionsStore={updateFunctionsStore}
+          textFontSize="18px"
+          textAlign="center"
+          overflowY="auto"
+          textFontFamily="var(--font-family-fira-mono)"
+          text={updateFunction}
+          placeholder={stringProviderServ.OtherStrings.ModelEditorOtherStrings.updateFunctionInputPlaceholder(
+            name ?? undefined
+          )}
+          handleClick={() => modelEditorServ.openChangeUpdateFunctionWindow(id)}
+          cursor="pointer"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
+                true,
+                -80
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+        />
+
+        <UpdateFunctionValidation
+          compMinHeight={'20px'}
+          compMaxHeight={'50px'}
+          compWidth={'90%'}
+          updateFunctionStatus={updateFunctionStatus}
         />
       </section>
     </ExtendableContentReact>
