@@ -12,10 +12,13 @@ import OpenCloseOperations from '../../services/global/OpenCloseOperations/OpenC
 import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import ResultsOperations from '../../services/global/ResultsOperations/ResultsOperations';
 import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
+import ShortcutManager from '../../services/global/ShortcutManager/ShortcutManager';
+import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
 import StringProvider from '../../services/global/StringProvider/StringProvider';
 import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import Warning from '../../services/global/Warning/Warning';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
+import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { UtilitiesServiceProviderInt } from '../UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 import type { GlobalServicesProviderInt } from './GlobalServicesProviderInt';
@@ -29,7 +32,9 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
   public warningServ: WarningInt;
   public messageServ: MessageInt;
   public loadingServ: LoadingInt;
+  public shortcutManagerServ?: ShortcutManagerInt;
   public stringProviderServ: StringProviderInt;
+
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
@@ -100,6 +105,10 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
       storesProvider.modelUndoRedoStore,
       storesProvider.variablePositionsStore
     );
+  }
+
+  public initializeShortcutManager(modelEditorServ: ModelEditorInt) {
+    this.shortcutManagerServ = new ShortcutManager(modelEditorServ);
   }
 }
 
