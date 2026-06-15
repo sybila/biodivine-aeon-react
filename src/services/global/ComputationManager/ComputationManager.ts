@@ -197,7 +197,10 @@ class ComputationManager implements ComputationManagerInt {
     return this.computeEngine.isConnected();
   }
 
-  private toggleConnectionCallback(
+  /** Callback for pinging of connected compute engine. Used as callback for the toggle connection function.
+   *  This callback is also used on every ping, if the connection to the compute engine is succesful.
+   */
+  private pingCallback(
     warning: string | undefined,
     error: string | undefined,
     engineStatus: string | undefined,
@@ -205,14 +208,16 @@ class ComputationManager implements ComputationManagerInt {
     color: string | undefined
   ): void {
     this.setComputationStatus(warning, error, engineStatus, compStatus, color);
+  }
 
-    if (this.isComputeEngineConnected()) {
-      this.getLiveModel()?.UpdateFunctions.validateAllUpdateFunctions();
-    }
+  /** Callback which should run after compute engine has succesfully connected. */
+  private succesfulConnectionCallback() {
+    this.getLiveModel()!.UpdateFunctions.validateUpdateFunctionsIfNeeded();
   }
 
   public toggleConnection(): void {
     this.computeEngine.toggleConnection(
+      () => this.succesfulConnectionCallback(),
       (
         warning: string | undefined,
         error: string | undefined,
@@ -220,13 +225,7 @@ class ComputationManager implements ComputationManagerInt {
         compStatus: ComputationStatus | undefined,
         color: string | undefined
       ) => {
-        this.toggleConnectionCallback(
-          warning,
-          error,
-          engineStatus,
-          compStatus,
-          color
-        );
+        this.pingCallback(warning, error, engineStatus, compStatus, color);
       }
     );
   }
