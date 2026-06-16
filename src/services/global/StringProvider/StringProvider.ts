@@ -15,6 +15,7 @@ class StringProvider
 {
   public ModelEditorPage: ModelEditorPageStringsInt;
   public AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt;
+  public AttractorVisualizerPage: AttractorBifurcationExplorerPageStringsInt;
   public ToolTips: ToolTipsInt;
   public HelpTexts: HelpTextsInt;
 
@@ -22,7 +23,10 @@ class StringProvider
     super();
 
     this.ModelEditorPage = new ModelEditorPageStrings();
-    this.AttractorBifurcationExplorerPage = new AttractorBifurcationExplorerPageStrings();
+    this.AttractorBifurcationExplorerPage =
+      new AttractorBifurcationExplorerPageStrings();
+    this.AttractorVisualizerPage =
+      new AttractorBifurcationExplorerPageStrings();
     this.ToolTips = new ToolTips();
     this.HelpTexts = new HelpTexts();
   }

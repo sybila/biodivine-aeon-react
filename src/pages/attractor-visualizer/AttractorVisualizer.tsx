@@ -19,7 +19,7 @@ type TabTypeAV = 'State Overview' | 'Witness Update Functions' | 'Help' | null;
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
   messageServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   attractorVisualizerStatusStore,
 }) => {
@@ -58,7 +58,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
       case 'Help':
         return (
           <HelpTabContent
-            text={stringProviderServ.HelpTexts.attractorVisualizer()}
+            text={pageStringProviderServ.helpText()}
           />
         );
       default:

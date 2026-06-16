@@ -10,4 +10,5 @@ export interface StringProviderInt extends SelectionButtonsTooltipsInt {
   HelpTexts: HelpTextsInt;
   ModelEditorPage: ModelEditorPageStringsInt;
   AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt;
+  AttractorVisualizerPage: AttractorBifurcationExplorerPageStringsInt;
 }

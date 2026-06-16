@@ -101,8 +101,9 @@ export const AttractorVisualizerRoute = createRoute({
           .attractorVisualizerServ
       }
       messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
-      stringProviderServ={
+      pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ
+          .AttractorVisualizerPage
       }
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
