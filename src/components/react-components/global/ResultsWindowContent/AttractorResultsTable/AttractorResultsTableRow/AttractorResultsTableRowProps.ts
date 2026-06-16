@@ -1,6 +1,6 @@
 import type { AttractorVisualizerInt } from '../../../../../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../../../../../services/global/ComputationManager/ComputationManagerInt';
-import type { StringProviderInt } from '../../../../../../services/global/StringProvider/StringProviderInt';
+import type { GlobalStringsInt } from '../../../../../../services/global/StringProvider/GlobalStrings/GlobalStringsInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
 import type { AttractorBehavior } from '../../../../../../types';
@@ -10,7 +10,7 @@ export type AttractorResultsTableRowProps = {
   behaviorClassList: Array<AttractorBehavior> | undefined;
   computationManagerServ: ComputationManagerInt;
   attractorVisualizerServ: AttractorVisualizerInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: GlobalStringsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

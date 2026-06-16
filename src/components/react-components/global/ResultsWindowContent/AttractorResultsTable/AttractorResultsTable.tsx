@@ -14,7 +14,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   computationManagerServ,
   attractorVisualizerServ,
   attractorBifurcationExplorerServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   tabsStore,
   helpHoverStore,
@@ -80,7 +80,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
                 behaviorClassList={result.phenotype}
                 computationManagerServ={computationManagerServ}
                 attractorVisualizerServ={attractorVisualizerServ}
-                stringProviderServ={stringProviderServ}
+                pageStringProviderServ={pageStringProviderServ}
                 helpHoverStore={helpHoverStore}
               />
             ))}
@@ -125,7 +125,7 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e.nativeEvent,
-                stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ResultsTooltips.AttractorAnalysisResults.openExploreBifurcationFunction(),
+                pageStringProviderServ.Tooltips.OverlayWindowTooltips.ResultsTooltips.AttractorAnalysisResults.openExploreBifurcationFunction(),
                 true,
                 -80
               )

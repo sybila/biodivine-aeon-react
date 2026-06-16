@@ -5,7 +5,7 @@ import type { ComputationManagerInt } from '../../../../services/global/Computat
 import type { TabOperationsInt } from '../../../../services/global/Navigation/TabOperationsInt';
 import type { OpenCloseOperationsInt } from '../../../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
 import type { ResultsOperationsInt } from '../../../../services/global/ResultsOperations/ResultsOperationsInt';
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { GlobalStringsInt } from '../../../../services/global/StringProvider/GlobalStrings/GlobalStringsInt';
 import type { WarningInt } from '../../../../services/global/Warning/WarningInt';
 import type { DataFormatersInt } from '../../../../services/utilities/DataFormaters/DataFormatersInt';
 import type { ComputeEngineStatusState } from '../../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
@@ -27,7 +27,7 @@ export type BaseLayoutProps = {
   tabOperationsServ: TabOperationsInt;
   dataFormatersServ: DataFormatersInt;
   warningServ: WarningInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: GlobalStringsInt;
 
   computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>;
   resultsStatusStore: ZustandStore<ResultsStatus>;

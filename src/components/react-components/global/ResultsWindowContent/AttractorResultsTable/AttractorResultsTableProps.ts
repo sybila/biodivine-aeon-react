@@ -1,7 +1,7 @@
 import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../../../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../../../../services/global/ComputationManager/ComputationManagerInt';
-import type { StringProviderInt } from '../../../../../services/global/StringProvider/StringProviderInt';
+import type { GlobalStringsInt } from '../../../../../services/global/StringProvider/GlobalStrings/GlobalStringsInt';
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
 import type { TabsState } from '../../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
@@ -13,7 +13,7 @@ export type AttractorResultsTableProps = {
   computationManagerServ: ComputationManagerInt;
   attractorVisualizerServ: AttractorVisualizerInt;
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: GlobalStringsInt;
 
   tabsStore: ZustandStore<TabsState>;
   helpHoverStore: ZustandStore<HelpHoverState>;

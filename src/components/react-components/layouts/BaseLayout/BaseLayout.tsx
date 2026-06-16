@@ -27,7 +27,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
   tabOperationsServ,
   dataFormatersServ,
   warningServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   computeEngineStatusStore,
   resultsStatusStore,
@@ -62,7 +62,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
         return (
           <ComputeEngineWindowContent
             computationManagerServ={computationManagerServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             helpHoverStore={helpHoverStore}
             computeEngineStatusStore={computeEngineStatusStore}
           />
@@ -76,7 +76,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
             controlPerturbationsTableServ={controlPerturbationsTableServ}
             resultsOperationsServ={resultsOperationsServ}
             dataFormatersServ={dataFormatersServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             modelInfoStore={modelInfoStore}
             tabsStore={tabsStore}
             resultsStatusStore={resultsStatusStore}
@@ -125,7 +125,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e,
-                stringProviderServ.ToolTips.GlobalTooltips.computeEngineStatus(),
+                pageStringProviderServ.Tooltips.computeEngineStatus(),
                 true,
                 50
               );

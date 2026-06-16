@@ -13,7 +13,7 @@ import type { ComputeEngineWindowContentProps } from './ComputeEngineWindowConte
 
 const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
   computationManagerServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   computeEngineStatusStore,
   helpHoverStore,
@@ -76,7 +76,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
                 .getState()
                 .setHelpHoverAtMouse(
                   e.nativeEvent,
-                  stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.connectComputeEngineButton(
+                  pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.connectComputeEngineButton(
                     isComputeEngineConnected
                   ),
                   true,
@@ -154,7 +154,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.changeComputeEngineAddress(),
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.changeComputeEngineAddress(),
               true,
               -50
             )
@@ -177,7 +177,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.downloadComputeEngine(),
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.downloadComputeEngine(),
               true,
               -50
             )

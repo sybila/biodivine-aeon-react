@@ -1,8 +1,8 @@
-import type { GlobalTooltipsInt } from './GlobalTooltipsInt';
+import type { TooltipsInt } from './TooltipsInt';
 import OverlayWindowTooltips from './OverlayWindowTooltips/OverlayWindowTooltips';
 import type { OverlayWindowTooltipsInt } from './OverlayWindowTooltips/OverlayWindowTooltipsInt';
 
-class GlobalTooltips implements GlobalTooltipsInt {
+class Tooltips implements TooltipsInt {
   // #region --- Sub-modules and Constructor ---
 
   public OverlayWindowTooltips: OverlayWindowTooltipsInt;
@@ -34,4 +34,4 @@ class GlobalTooltips implements GlobalTooltipsInt {
   // #endregion
 }
 
-export default GlobalTooltips;
+export default Tooltips;

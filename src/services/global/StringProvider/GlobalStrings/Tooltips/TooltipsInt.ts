@@ -1,7 +1,7 @@
 import type { OverlayWindowTooltipsInt } from './OverlayWindowTooltips/OverlayWindowTooltipsInt';
 
 /** Class which provides tooltip messages for global functionality */
-export interface GlobalTooltipsInt {
+export interface TooltipsInt {
   // #region --- Sub-modules and Constructor ---
   OverlayWindowTooltips: OverlayWindowTooltipsInt;
 

@@ -15,7 +15,7 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
   controlPerturbationsTableServ,
   resultsOperationsServ,
   dataFormatersServ,
-  stringProviderServ,
+  pageStringProviderServ,
   modelInfoStore,
 
   tabsStore,
@@ -54,7 +54,7 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
             computationManagerServ={computationManagerServ}
             attractorVisualizerServ={attractorVisualizerServ}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             tabsStore={tabsStore}
             helpHoverStore={helpHoverStore}
           />

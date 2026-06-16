@@ -6,7 +6,7 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   behaviorClassList,
   computationManagerServ,
   attractorVisualizerServ,
-  stringProviderServ,
+  pageStringProviderServ,
   helpHoverStore,
 }) => {
   const behaviourString: string | undefined = !behaviorClassList
@@ -32,13 +32,13 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
     [
       'Witness',
       () => openWitness(),
-      stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips
         .ResultsTooltips.AttractorAnalysisResults.openWitness,
     ],
     [
       'Attractor',
       () => openAttractor(),
-      stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips
         .ResultsTooltips.AttractorAnalysisResults.openAttractorVisualization,
     ],
   ];
