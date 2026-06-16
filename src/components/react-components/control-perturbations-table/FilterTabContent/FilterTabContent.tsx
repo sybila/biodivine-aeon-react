@@ -13,7 +13,7 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
   startFilter,
 
   searchAndFilterHelpersServ,
-  stringProviderServ,
+  pageStringProviderServ,
   loadingServ,
 
   resultsStatusStore,
@@ -123,7 +123,7 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         loadingServ={loadingServ}
         perturbationFilterSortStore={perturbationFilterSortStore}
-        stringProviderServ={stringProviderServ}
+        pageStringProviderServ={pageStringProviderServ}
         helpHoverStore={helpHoverStore}
       />
 

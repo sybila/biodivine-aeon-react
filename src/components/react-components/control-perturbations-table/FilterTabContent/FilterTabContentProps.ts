@@ -1,5 +1,5 @@
 import type { LoadingInt } from '../../../../services/global/Loading/LoadingInt';
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { ControlPerturbationTablePageStringsInt } from '../../../../services/global/StringProvider/ControlPerturbationTablePageStrings/ControlPerturbationTablePageStringsInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { PerturbationFiltersSortState } from '../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
@@ -11,7 +11,7 @@ export type FilterTabContentProps = {
   startFilter: boolean;
 
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ControlPerturbationTablePageStringsInt;
   loadingServ: LoadingInt;
 
   perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;

@@ -25,7 +25,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   dataFormatersServ,
   searchAndFilterHelpersServ,
   loadingServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   resultsStatusStore,
   perturbationFilterSortStore,
@@ -57,7 +57,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             setStartFilter={setStartFilter}
             startFilter={startFilter}
             loadingServ={loadingServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             resultsStatusStore={resultsStatusStore}
             perturbationFilterSortStore={perturbationFilterSortStore}
@@ -82,11 +82,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           />
         );
       case 'Help':
-        return (
-          <HelpTabContent
-            text={stringProviderServ.HelpTexts.controlPerturbationsTable()}
-          />
-        );
+        return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
         return null;
     }

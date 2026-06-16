@@ -135,8 +135,9 @@ export const ControlPerturbationsTableRoute = createRoute({
         ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
       }
       loadingServ={ObjectProvider.GlobalServicesProvider.loadingServ}
-      stringProviderServ={
+      pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ
+          .ControlPerturbationTablePage
       }
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
       perturbationFilterSortStore={

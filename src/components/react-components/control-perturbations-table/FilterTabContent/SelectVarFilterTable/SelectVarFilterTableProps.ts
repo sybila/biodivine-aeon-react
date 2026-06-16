@@ -1,6 +1,6 @@
 import type { LoadingInt } from '../../../../../services/global/Loading/LoadingInt';
 import type StringProvider from '../../../../../services/global/StringProvider/StringProvider';
-import type { StringProviderInt } from '../../../../../services/global/StringProvider/StringProviderInt';
+import type { ControlPerturbationTablePageStringsInt } from '../../../../../services/global/StringProvider/ControlPerturbationTablePageStrings/ControlPerturbationTablePageStringsInt';
 import type { SearchAndFilterHelpersInt } from '../../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { PerturbationFiltersSortState } from '../../../../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
@@ -10,7 +10,7 @@ export type SelectVarFilterTableProps = {
   variableNames: Array<string>;
 
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ControlPerturbationTablePageStringsInt;
   loadingServ: LoadingInt;
 
   perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;

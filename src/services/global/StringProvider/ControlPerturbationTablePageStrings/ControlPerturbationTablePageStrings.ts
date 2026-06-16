@@ -1,8 +1,15 @@
-import type { HelpTextsInt } from './HelpTextsInt';
+import type { ControlPerturbationTablePageStringsInt } from './ControlPerturbationTablePageStringsInt';
+import Tooltips from './Tooltips/Tooltips';
+import type { TooltipsInt } from './Tooltips/TooltipsInt';
 
-class HelpTexts implements HelpTextsInt {
+class ControlPerturbationTablePageStrings implements ControlPerturbationTablePageStringsInt {
+  public Tooltips: TooltipsInt;
 
-  controlPerturbationsTable(): string {
+  constructor() {
+    this.Tooltips = new Tooltips();
+  }
+
+  helpText(): string {
     return `
 # Control Perturbations Table Help
 
@@ -55,8 +62,6 @@ This menu allows you to navigate through different pages of control perturbation
 ---
 `.trim();
   }
-
-
 }
 
-export default HelpTexts;
+export default ControlPerturbationTablePageStrings;
