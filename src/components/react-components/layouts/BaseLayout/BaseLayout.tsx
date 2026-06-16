@@ -62,6 +62,8 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
         return (
           <ComputeEngineWindowContent
             computationManagerServ={computationManagerServ}
+            stringProviderServ={stringProviderServ}
+            helpHoverStore={helpHoverStore}
             computeEngineStatusStore={computeEngineStatusStore}
           />
         );

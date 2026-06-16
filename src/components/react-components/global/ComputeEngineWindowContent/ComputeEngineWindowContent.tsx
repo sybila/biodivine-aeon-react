@@ -13,7 +13,10 @@ import type { ComputeEngineWindowContentProps } from './ComputeEngineWindowConte
 
 const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
   computationManagerServ,
+  stringProviderServ,
+
   computeEngineStatusStore,
+  helpHoverStore,
 }) => {
   const computeEngineStatus: string = computeEngineStatusStore(
     (state) => state.computeEngineStatus
@@ -22,6 +25,8 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
   const computationStatus: ComputationStatus = computeEngineStatusStore(
     (state) => state.computationStatus
   );
+
+  const isComputeEngineConnected: boolean = computeEngineStatus === 'Connected';
 
   const renderStatus = () => {
     const compStatusInfo: Array<{
@@ -61,13 +66,24 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
             textFontWeight="bold"
           />
           <TextIconButtonReact
-            text={
-              computeEngineStatus === 'Connected' ? 'Disconnect' : 'Connect'
-            }
+            text={isComputeEngineConnected ? 'Disconnect' : 'Connect'}
             compHeight="100%"
             compWidth="150px"
             iconSrc={CloudIcon}
             handleClick={() => computationManagerServ.toggleConnection()}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.connectComputeEngineButton(
+                    isComputeEngineConnected
+                  ),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </section>
 
@@ -133,6 +149,17 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
         textAlign="center"
         handleChange={computationManagerServ.setComputeEngineAddress}
         value={computationManagerServ.getComputeEngineAddress()}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.changeComputeEngineAddress(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
 
       {renderStatus()}
@@ -145,6 +172,17 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
         compWidth="95%"
         text="Download Compute Engine"
         handleClick={openComputeEngineOverlay}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ComputeEngineTooltips.downloadComputeEngine(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );

@@ -1,6 +1,18 @@
 import type { GlobalTooltipsInt } from './GlobalTooltipsInt';
+import OverlayWindowTooltips from './OverlayWindowTooltips/OverlayWindowTooltips';
+import type { OverlayWindowTooltipsInt } from './OverlayWindowTooltips/OverlayWindowTooltipsInt';
 
 class GlobalTooltips implements GlobalTooltipsInt {
+  // #region --- Sub-modules and Constructor ---
+
+  public OverlayWindowTooltips: OverlayWindowTooltipsInt;
+
+  constructor() {
+    this.OverlayWindowTooltips = new OverlayWindowTooltips();
+  }
+
+  // #endregion
+
   computeEngineStatus(): string {
     return 'Compute Engine Status';
   }
