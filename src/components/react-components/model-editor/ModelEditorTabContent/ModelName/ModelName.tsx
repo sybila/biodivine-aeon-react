@@ -5,7 +5,7 @@ import type { ModelNameProps } from './ModelNameProps';
 const ModelName: React.FC<ModelNameProps> = ({
   modelEditorServ,
   messageServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   tabStore,
   modelInfoStore,
@@ -43,7 +43,7 @@ const ModelName: React.FC<ModelNameProps> = ({
             e.nativeEvent,
             modelName.length > 0
               ? modelName
-              : stringProviderServ.ToolTips.ModelEditorTooltips.changeModelName(),
+              : pageStringProviderServ.Tooltips.changeModelName(),
             true,
             40
           )

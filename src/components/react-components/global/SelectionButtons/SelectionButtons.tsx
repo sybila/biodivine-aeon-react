@@ -11,7 +11,7 @@ function SelectionButtons<T extends string | number>({
   setSelectedVariables,
   buttonBorderRadius = '10px',
   buttonSize = '29px',
-  stringProviderServ,
+  tooltips,
   helpHoverStore,
 }: SelectionButtonsProps<T>) {
   const selectAll = () => {
@@ -56,7 +56,7 @@ function SelectionButtons<T extends string | number>({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.GlobalTooltips.deselectAllVariables(),
+            tooltips.deselectAllVariables(),
             true,
             -50
           ),
@@ -70,7 +70,7 @@ function SelectionButtons<T extends string | number>({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.GlobalTooltips.toggleSelectedVariables(),
+            tooltips.toggleSelectedVariables(),
             true,
             -50
           ),
@@ -84,7 +84,7 @@ function SelectionButtons<T extends string | number>({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.GlobalTooltips.selectAllVariables(),
+            tooltips.selectAllVariables(),
             true,
             -50
           ),

@@ -14,7 +14,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
 
   modelEditorServ,
   searchAndFilterHelpersServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   regulationsStore,
   variablesStore,
@@ -104,7 +104,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
             variableInfoRefs.current[id] = element;
           }}
           modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
+          pageStringProviderServ={pageStringProviderServ}
           regulationsStore={regulationsStore}
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}

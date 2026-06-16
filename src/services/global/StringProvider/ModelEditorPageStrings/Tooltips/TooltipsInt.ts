@@ -1,7 +1,8 @@
 import type { Phenotype } from '../../../../../types';
+import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
 
 /** Tooltips for the Model Editor page */
-export interface ModelEditorTooltipsInt {
+export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   // #region Variable Info
 
   variableArity(arity: number): string;

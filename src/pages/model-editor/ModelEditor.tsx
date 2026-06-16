@@ -39,7 +39,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   messageServ,
   loadingServ,
   shortcutManagerServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   modelEditorStatusStore,
   tabStore,
@@ -115,7 +115,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             messageServ={messageServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             updateFunctionsStore={updateFunctionsStore}
@@ -131,7 +131,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             liveModelServ={liveModelServ}
             controlEditorServ={controlEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             loadingServ={loadingServ}
             controlStore={controlStore}
             variablesStore={variablesStore}
@@ -143,7 +143,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         return (
           <VisualOptionsTabContent
             modelVisualization={modelVisualization}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             helpHoverStore={helpHoverStore}
           />
         );
@@ -152,8 +152,8 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           <HelpTabContent
             text={
               isWitness
-                ? stringProviderServ.HelpTexts.witness()
-                : stringProviderServ.HelpTexts.modelEditor()
+                ? pageStringProviderServ.helpTextWitness()
+                : pageStringProviderServ.helpTextModelEditor()
             }
           />
         );
@@ -176,7 +176,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <UtilitiesMenu
         modelVisualization={modelVisualization}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
-        stringProviderServ={stringProviderServ}
+        pageStringProviderServ={pageStringProviderServ}
         variablesStore={variablesStore}
         helpHoverStore={helpHoverStore}
       />

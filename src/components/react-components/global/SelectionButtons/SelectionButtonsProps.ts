@@ -1,4 +1,4 @@
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { SelectionButtonsTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/SelectionButtonsTooltipsInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
@@ -11,7 +11,7 @@ export type SelectionButtonsProps<T extends string | number> = {
   /** Size of the buttons in the form of Css length (e.g. '29px', '1.5rem') */
   buttonSize?: string;
 
-  stringProviderServ: StringProviderInt;
+  tooltips: SelectionButtonsTooltipsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

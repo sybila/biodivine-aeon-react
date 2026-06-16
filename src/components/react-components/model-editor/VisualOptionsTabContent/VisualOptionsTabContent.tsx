@@ -7,7 +7,7 @@ import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProp
 const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   modelVisualization,
 
-  stringProviderServ,
+  pageStringProviderServ,
 
   helpHoverStore,
 }) => {
@@ -27,7 +27,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+              pageStringProviderServ.Tooltips.variableLayout(
                 'Cose'
               ),
               true,
@@ -44,7 +44,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+              pageStringProviderServ.Tooltips.variableLayout(
                 'Dagre'
               ),
               true,
@@ -61,7 +61,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+              pageStringProviderServ.Tooltips.variableLayout(
                 'Phenotype'
               ),
               true,
@@ -78,7 +78,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.variableLayout(
+              pageStringProviderServ.Tooltips.variableLayout(
                 'Control-Enabled'
               ),
               true,
@@ -107,7 +107,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.highlightVariable(
+              pageStringProviderServ.Tooltips.highlightVariable(
                 'Phenotype'
               ),
               true,
@@ -130,7 +130,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.highlightVariable(
+              pageStringProviderServ.Tooltips.highlightVariable(
                 'Control-Enabled'
               ),
               true,

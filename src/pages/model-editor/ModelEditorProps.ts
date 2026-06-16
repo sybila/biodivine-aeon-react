@@ -3,9 +3,8 @@ import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt'
 import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOperations/OpenCloseOperationsInt';
-import type { ResultsOperationsInt } from '../../services/global/ResultsOperations/ResultsOperationsInt';
 import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
-import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
@@ -40,7 +39,7 @@ export type ModelEditorProps = {
   messageServ: MessageInt;
   loadingServ: LoadingInt;
   shortcutManagerServ?: ShortcutManagerInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   // # endregion
 

@@ -9,7 +9,7 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
   setOscillationValue,
   compWidth,
 
-  stringProviderServ,
+  pageStringProviderServ,
 
   helpHoverStore,
 }) => {
@@ -30,7 +30,7 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
     helpHoverStore
       .getState()
       .setHelpHoverText(
-        stringProviderServ.ToolTips.ModelEditorTooltips.changeOscillation(
+        pageStringProviderServ.Tooltips.changeOscillation(
           getNextOscillation(nextOscillation)
         )
       );
@@ -47,7 +47,7 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.changeOscillation(
+            pageStringProviderServ.Tooltips.changeOscillation(
               getNextOscillation(oscillationValue)
             ),
             true,

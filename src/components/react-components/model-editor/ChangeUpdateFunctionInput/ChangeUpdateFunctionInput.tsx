@@ -13,7 +13,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   varId,
 
   modelEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   variablesStore,
   updateFunctionsStore,
@@ -41,7 +41,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
       .getState()
       .setHelpHoverAtMouse(
         e.nativeEvent,
-        stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
+        pageStringProviderServ.Tooltips.changeVariableUpdateFunction(),
         true,
         -150
       );
@@ -58,7 +58,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         compWidth={inputWidth}
         fontSize={inputFontSize}
         multiLine={true}
-        placeholder={stringProviderServ.OtherStrings.ModelEditorOtherStrings.updateFunctionInputPlaceholder(
+        placeholder={pageStringProviderServ.OtherStrings.updateFunctionInputPlaceholder(
           varName
         )}
         value={updateFunction}

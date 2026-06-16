@@ -1,6 +1,6 @@
 import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../../../services/global/Message/MessageInt';
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
@@ -17,7 +17,7 @@ export type ModelEditorTabContentProps = {
   modelEditorServ: ModelEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   messageServ: MessageInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;

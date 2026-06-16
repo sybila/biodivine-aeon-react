@@ -35,8 +35,8 @@ const ModelEditorComponent = () => (
     shortcutManagerServ={
       ObjectProvider.GlobalServicesProvider.shortcutManagerServ
     }
-    stringProviderServ={
-      ObjectProvider.GlobalServicesProvider.stringProviderServ
+    pageStringProviderServ={
+      ObjectProvider.GlobalServicesProvider.stringProviderServ.ModelEditorPage
     }
     modelEditorStatusStore={
       ObjectProvider.StoresProvider.modelEditorStatusStore

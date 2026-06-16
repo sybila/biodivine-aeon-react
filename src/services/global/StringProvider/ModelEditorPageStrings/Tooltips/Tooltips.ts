@@ -1,7 +1,8 @@
 import type { Phenotype } from '../../../../../types';
-import type { ModelEditorTooltipsInt } from './ModelEditorTooltipsInt';
+import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
+import type { TooltipsInt } from './TooltipsInt';
 
-class ModelEditorTooltips implements ModelEditorTooltipsInt {
+class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
   // #region Variable Info
 
   public variableArity(arity: number): string {
@@ -155,4 +156,4 @@ class ModelEditorTooltips implements ModelEditorTooltipsInt {
   // #endregion
 }
 
-export default ModelEditorTooltips;
+export default Tooltips;

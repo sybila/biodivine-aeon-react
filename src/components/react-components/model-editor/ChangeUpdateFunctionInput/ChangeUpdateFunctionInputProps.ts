@@ -1,4 +1,4 @@
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
@@ -16,7 +16,7 @@ export type ChangeUpdateFunctionInputProps = {
   varId: number;
 
   modelEditorServ: ModelEditorInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   variablesStore: ZustandStore<VariablesStatus>;
   updateFunctionsStore: ZustandStore<UpdateFunctionsState>;

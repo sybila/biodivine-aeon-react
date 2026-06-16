@@ -5,7 +5,7 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   modelVisualization,
   searchAndFilterHelpersServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   variablesStore,
   helpHoverStore,
@@ -22,7 +22,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e,
-            stringProviderServ.ToolTips.ModelEditorTooltips.utilitiesMenu(),
+            pageStringProviderServ.Tooltips.utilitiesMenu(),
             true,
             50,
             -110

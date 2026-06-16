@@ -1,4 +1,4 @@
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
@@ -14,7 +14,7 @@ export type RegulationInfoListProps = {
   selectedRegulatorIds: Set<number> | undefined;
 
   modelEditorServ: ModelEditorInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   variablesStore: ZustandStore<VariablesStatus>;
   helpHoverStore: ZustandStore<HelpHoverState>;

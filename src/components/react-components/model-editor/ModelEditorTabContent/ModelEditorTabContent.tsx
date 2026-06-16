@@ -16,7 +16,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
   modelEditorServ,
   searchAndFilterHelpersServ,
   messageServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   regulationsStore,
   variablesStore,
@@ -43,8 +43,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
 
   const getShowHideModelDescriptionTooltipText = (show: boolean) => {
     return show
-      ? stringProviderServ.ToolTips.ModelEditorTooltips.showModelDescription()
-      : stringProviderServ.ToolTips.ModelEditorTooltips.hideModelDescription();
+      ? pageStringProviderServ.Tooltips.showModelDescription()
+      : pageStringProviderServ.Tooltips.hideModelDescription();
   };
 
   const setShowHideModelDescriptionTooltipText = (show: boolean) => {
@@ -74,7 +74,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
       <ModelName
         modelEditorServ={modelEditorServ}
         messageServ={messageServ}
-        stringProviderServ={stringProviderServ}
+        pageStringProviderServ={pageStringProviderServ}
         tabStore={tabStore}
         modelInfoStore={modelInfoStore}
         helpHoverStore={helpHoverStore}
@@ -150,7 +150,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                       .getState()
                       .setHelpHoverAtMouse(
                         e.nativeEvent,
-                        stringProviderServ.ToolTips.ModelEditorTooltips.extendAllVariables(),
+                        pageStringProviderServ.Tooltips.extendAllVariables(),
                         true,
                         -50
                       )
@@ -170,7 +170,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                       .getState()
                       .setHelpHoverAtMouse(
                         e.nativeEvent,
-                        stringProviderServ.ToolTips.ModelEditorTooltips.collapseAllVariables(),
+                        pageStringProviderServ.Tooltips.collapseAllVariables(),
                         true,
                         -50
                       )
@@ -195,7 +195,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                     .getState()
                     .setHelpHoverAtMouse(
                       e.nativeEvent,
-                      stringProviderServ.ToolTips.ModelEditorTooltips.addNewVariable(),
+                      pageStringProviderServ.Tooltips.addNewVariable(),
                       true,
                       -50
                     )
@@ -219,7 +219,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             }
             modelEditorServ={modelEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             regulationsStore={regulationsStore}
             variablesStore={variablesStore}
             modelEditorStatusStore={modelEditorStatusStore}

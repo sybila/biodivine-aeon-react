@@ -283,7 +283,7 @@ class ModelEditor implements ModelEditorInt {
         <ChangeUpFunOverlayContent
           varId={varId}
           modelEditorServ={this}
-          stringProviderServ={this.stringProviderServ}
+          pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
           regulationsStore={this.regulationStore}
           variablesStore={this.variablesStore}
           updateFunctionsStore={this.updateFunctionsStore}

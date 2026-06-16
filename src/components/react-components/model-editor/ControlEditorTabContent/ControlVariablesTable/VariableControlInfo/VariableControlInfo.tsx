@@ -15,7 +15,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   toggleSelect,
 
   controlEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   controlStore,
   helpHoverStore,
@@ -109,7 +109,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
               helpHoverStore
                 .getState()
                 .setHelpHoverText(
-                  stringProviderServ.ToolTips.ModelEditorTooltips.currentControlEnabled(
+                  pageStringProviderServ.Tooltips.currentControlEnabled(
                     getNextControlStatus(controlInfo.controlEnabled)
                   )
                 );
@@ -119,7 +119,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
                 .getState()
                 .setHelpHoverAtMouse(
                   e.nativeEvent,
-                  stringProviderServ.ToolTips.ModelEditorTooltips.currentControlEnabled(
+                  pageStringProviderServ.Tooltips.currentControlEnabled(
                     controlInfo.controlEnabled
                   ),
                   true,
@@ -146,7 +146,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
               helpHoverStore
                 .getState()
                 .setHelpHoverText(
-                  stringProviderServ.ToolTips.ModelEditorTooltips.currentPhenotype(
+                  pageStringProviderServ.Tooltips.currentPhenotype(
                     getNextPhenotype(controlInfo.phenotype)
                   )
                 );
@@ -156,7 +156,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
                 .getState()
                 .setHelpHoverAtMouse(
                   e.nativeEvent,
-                  stringProviderServ.ToolTips.ModelEditorTooltips.currentPhenotype(
+                  pageStringProviderServ.Tooltips.currentPhenotype(
                     controlInfo.phenotype
                   ),
                   true,

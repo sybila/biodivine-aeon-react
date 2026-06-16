@@ -23,7 +23,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   setVariableInfoRef,
 
   modelEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   regulationsStore,
   variablesStore,
@@ -78,7 +78,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
                 e.nativeEvent,
                 name.length > 0
                   ? name
-                  : stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableName(),
+                  : pageStringProviderServ.Tooltips.changeVariableName(),
                 true,
                 -50
               )
@@ -99,7 +99,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e.nativeEvent,
-                stringProviderServ.ToolTips.ModelEditorTooltips.variableArity(
+                pageStringProviderServ.Tooltips.variableArity(
                   regulations.length
                 ),
                 true,
@@ -126,7 +126,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e.nativeEvent,
-                stringProviderServ.ToolTips.ModelEditorTooltips.findVariableInVisualization(),
+                pageStringProviderServ.Tooltips.findVariableInVisualization(),
                 true,
                 -50
               )
@@ -146,7 +146,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e.nativeEvent,
-                stringProviderServ.ToolTips.ModelEditorTooltips.deleteVariable(),
+                pageStringProviderServ.Tooltips.deleteVariable(),
                 true,
                 -50
               )
@@ -171,7 +171,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           hoverRegulation={hoverRegulation}
           selectedRegulatorIds={selectedRegulatorIds}
           modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
+          pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
         />
@@ -194,7 +194,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           overflowY="auto"
           textFontFamily="var(--font-family-fira-mono)"
           text={updateFunction}
-          placeholder={stringProviderServ.OtherStrings.ModelEditorOtherStrings.updateFunctionInputPlaceholder(
+          placeholder={pageStringProviderServ.OtherStrings.updateFunctionInputPlaceholder(
             name ?? undefined
           )}
           handleClick={() => modelEditorServ.openChangeUpdateFunctionWindow(id)}
@@ -204,7 +204,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e.nativeEvent,
-                stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableUpdateFunction(),
+                pageStringProviderServ.Tooltips.changeVariableUpdateFunction(),
                 true,
                 -80
               )

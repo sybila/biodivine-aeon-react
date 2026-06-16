@@ -14,7 +14,7 @@ import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
 const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   controlEditorServ,
   searchAndFilterHelpersServ,
-  stringProviderServ,
+  pageStringProviderServ,
   loadingServ,
 
   variablesStore,
@@ -116,7 +116,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+            pageStringProviderServ.Tooltips.changeVariableControlEnabled(
               false
             ),
             true,
@@ -134,7 +134,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariableControlEnabled(
+            pageStringProviderServ.Tooltips.changeVariableControlEnabled(
               true
             ),
             true,
@@ -151,7 +151,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.removeVariableFromPhenotype(),
+            pageStringProviderServ.Tooltips.removeVariableFromPhenotype(),
             true,
             -50,
             20
@@ -166,7 +166,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+            pageStringProviderServ.Tooltips.changeVariablePhenotype(
               'true'
             ),
             true,
@@ -182,7 +182,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            stringProviderServ.ToolTips.ModelEditorTooltips.changeVariablePhenotype(
+            pageStringProviderServ.Tooltips.changeVariablePhenotype(
               'false'
             ),
             true,
@@ -221,7 +221,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           setSelectedVariables={(newSelected) =>
             updateSelectedVariables(newSelected)
           }
-          stringProviderServ={stringProviderServ}
+          tooltips={pageStringProviderServ.Tooltips}
           helpHoverStore={helpHoverStore}
         />
       </section>
@@ -244,7 +244,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
               selected={selectedVariables.has(variable.id) ?? false}
               toggleSelect={toggleVariableSelect}
               controlEditorServ={controlEditorServ}
-              stringProviderServ={stringProviderServ}
+              pageStringProviderServ={pageStringProviderServ}
               controlStore={controlStore}
               helpHoverStore={helpHoverStore}
             />

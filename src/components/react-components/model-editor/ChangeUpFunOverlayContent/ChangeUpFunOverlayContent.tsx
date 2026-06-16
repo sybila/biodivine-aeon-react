@@ -9,7 +9,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   varId,
 
   modelEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   regulationsStore,
   variablesStore,
@@ -40,7 +40,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
         hoverRegulation={undefined}
         selectedRegulatorIds={undefined}
         modelEditorServ={modelEditorServ}
-        stringProviderServ={stringProviderServ}
+        pageStringProviderServ={pageStringProviderServ}
         variablesStore={variablesStore}
         helpHoverStore={helpHoverStore}
       />
@@ -64,7 +64,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           validationMinHeight="40px"
           validationMaxHeight="50px"
           modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
+          pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
           updateFunctionsStore={updateFunctionsStore}
           helpHoverStore={helpHoverStore}

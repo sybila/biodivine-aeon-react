@@ -12,7 +12,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
   selectedRegulatorIds,
 
   modelEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   variablesStore,
   helpHoverStore,
@@ -50,7 +50,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
             false
           }
           modelEditorServ={modelEditorServ}
-          stringProviderServ={stringProviderServ}
+          pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
           {...regulation}

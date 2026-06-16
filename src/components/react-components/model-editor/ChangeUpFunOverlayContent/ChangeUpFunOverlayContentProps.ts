@@ -1,4 +1,4 @@
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt} from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
@@ -10,7 +10,7 @@ export type ChangeUpFunOverlayContentProps = {
   varId: number;
 
   modelEditorServ: ModelEditorInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   regulationsStore: ZustandStore<RegulationsStatus>;
   variablesStore: ZustandStore<VariablesStatus>;

@@ -9,7 +9,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   selected,
 
   modelEditorServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   variablesStore,
   helpHoverStore,
@@ -43,7 +43,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.changeObservability(),
+              pageStringProviderServ.Tooltips.changeObservability(),
               true,
               -50
             );
@@ -81,7 +81,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.ModelEditorTooltips.changeMonotonicity(),
+              pageStringProviderServ.Tooltips.changeMonotonicity(),
               true,
               -50
             )

@@ -1,4 +1,4 @@
-import type { StringProviderInt } from '../../../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ControlEditorInt } from '../../../../../../services/model-editor/ControlEditor/ControlEditorInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../../../../../stores/LiveModel/ControlStore/ControlStatus';
@@ -12,7 +12,7 @@ export type VariableControlInfoProps = {
   toggleSelect: (variableId: number) => void;
 
   controlEditorServ: ControlEditorInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   controlStore: ZustandStore<ControlStatus>;
   helpHoverStore: ZustandStore<HelpHoverState>;

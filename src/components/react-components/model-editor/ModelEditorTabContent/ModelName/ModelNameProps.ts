@@ -1,5 +1,5 @@
 import type { MessageInt } from '../../../../../services/global/Message/MessageInt';
-import type { StringProviderInt } from '../../../../../services/global/StringProvider/StringProviderInt';
+import type { ModelEditorPageStringsInt } from '../../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
 import type { ModelInfoState } from '../../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
@@ -9,7 +9,7 @@ import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 export type ModelNameProps = {
   modelEditorServ: ModelEditorInt;
   messageServ: MessageInt;
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: ModelEditorPageStringsInt;
 
   tabStore: ZustandStore<TabsState>;
   modelInfoStore: ZustandStore<ModelInfoState>;

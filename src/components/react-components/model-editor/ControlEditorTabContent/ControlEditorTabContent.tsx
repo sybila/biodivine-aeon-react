@@ -10,7 +10,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   liveModelServ,
   controlEditorServ,
   searchAndFilterHelpersServ,
-  stringProviderServ,
+  pageStringProviderServ,
   loadingServ,
 
   controlStore,
@@ -49,7 +49,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
           oscillationValue={oscillationValue}
           setOscillationValue={setOscillationValue}
           compWidth="95%"
-          stringProviderServ={stringProviderServ}
+          pageStringProviderServ={pageStringProviderServ}
           helpHoverStore={helpHoverStore}
         />
       </section>
@@ -65,7 +65,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
       <ControlVariablesTable
         controlEditorServ={controlEditorServ}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
-        stringProviderServ={stringProviderServ}
+        pageStringProviderServ={pageStringProviderServ}
         loadingServ={loadingServ}
         variablesStore={variablesStore}
         controlStore={controlStore}
