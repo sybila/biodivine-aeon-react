@@ -1,3 +1,4 @@
+import type { AttractorBifurcationExplorerPageStringsInt } from './AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStringsInt';
 import type { SelectionButtonsTooltipsInt } from './common-tooltips/SelectionButtonsTooltipsInt';
 import type { HelpTextsInt } from './HelpTexts/HelpTextsInt';
 import type { ModelEditorPageStringsInt } from './ModelEditorPageStrings/ModelEditorPageStringsInt';
@@ -8,4 +9,5 @@ export interface StringProviderInt extends SelectionButtonsTooltipsInt {
   ToolTips: ToolTipsInt;
   HelpTexts: HelpTextsInt;
   ModelEditorPage: ModelEditorPageStringsInt;
+  AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt;
 }

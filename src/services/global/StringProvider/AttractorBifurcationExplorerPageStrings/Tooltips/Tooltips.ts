@@ -1,6 +1,6 @@
-import type { AttractorBifurcationExplorerTooltipsInt } from './AttractorBifurcationExplorerTooltipsInt';
+import type { TooltipsInt } from './TooltipsInt';
 
-class AttractorBifurcationExplorerTooltips implements AttractorBifurcationExplorerTooltipsInt {
+class Tooltips implements TooltipsInt {
   // #region Visual Options
 
   fit(): string {
@@ -30,4 +30,4 @@ class AttractorBifurcationExplorerTooltips implements AttractorBifurcationExplor
   // #endregion
 }
 
-export default AttractorBifurcationExplorerTooltips;
+export default Tooltips;

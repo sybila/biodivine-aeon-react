@@ -79,8 +79,9 @@ export const AttractorBifurcationExplorerRoute = createRoute({
       behaviorClassOperationsServ={
         ObjectProvider.UtilitiesServiceProvider.behaviorClassOperationsServ
       }
-      stringProviderServ={
+      pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ
+          .AttractorBifurcationExplorerPage
       }
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore

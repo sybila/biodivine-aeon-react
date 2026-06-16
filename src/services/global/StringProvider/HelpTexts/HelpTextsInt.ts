@@ -2,5 +2,4 @@
 export interface HelpTextsInt {
   attractorVisualizer(): string;
   controlPerturbationsTable(): string;
-  attractorBifurcationExplorer(): string;
 }

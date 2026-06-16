@@ -1,12 +1,12 @@
 import type { AttractorBifurcationExplorerInt } from '../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
-import type { StringProviderInt } from '../../../../services/global/StringProvider/StringProviderInt';
+import type { AttractorBifurcationExplorerPageStringsInt } from '../../../../services/global/StringProvider/AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStringsInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
 export type VisualOptionsTabContentProps = {
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
 
-  stringProviderServ: StringProviderInt;
+  pageStringProviderServ: AttractorBifurcationExplorerPageStringsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

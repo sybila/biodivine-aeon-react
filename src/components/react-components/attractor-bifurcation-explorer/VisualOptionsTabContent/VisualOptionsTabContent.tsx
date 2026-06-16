@@ -11,7 +11,7 @@ import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProp
 const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   attractorBifurcationExplorerServ,
 
-  stringProviderServ,
+  pageStringProviderServ,
 
   helpHoverStore,
 }) => {
@@ -35,7 +35,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.fit(),
+              pageStringProviderServ.Tooltips.fit(),
               true,
               -50,
               150
@@ -50,7 +50,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.resetLayout(),
+              pageStringProviderServ.Tooltips.resetLayout(),
               true,
               -50,
               150
@@ -74,7 +74,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.animateLayoutChanges(),
+              pageStringProviderServ.Tooltips.animateLayoutChanges(),
               true,
               -50,
               150
@@ -95,7 +95,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.snapNodesToLayers(),
+              pageStringProviderServ.Tooltips.snapNodesToLayers(),
               true,
               -50,
               150
@@ -116,7 +116,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.positiveOnLeft(),
+              pageStringProviderServ.Tooltips.positiveOnLeft(),
               true,
               -50,
               150
@@ -202,7 +202,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
                 .getState()
                 .setHelpHoverAtMouse(
                   e.nativeEvent,
-                  stringProviderServ.ToolTips.AttractorBifurcationExplorerTooltips.changePrecision(),
+                  pageStringProviderServ.Tooltips.changePrecision(),
                   true,
                   -50,
                   150

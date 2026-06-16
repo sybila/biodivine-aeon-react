@@ -1,4 +1,4 @@
-export interface AttractorBifurcationExplorerTooltipsInt {
+export interface TooltipsInt {
 
     // #region Visual Options
 

@@ -23,7 +23,7 @@ const AttractorBifurcationExplorer: React.FC<
 > = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
-  stringProviderServ,
+  pageStringProviderServ,
 
   bifurcationExplorerStatusStore,
   helpHoverStore,
@@ -70,14 +70,14 @@ const AttractorBifurcationExplorer: React.FC<
         return (
           <VisualOptionsTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
-            stringProviderServ={stringProviderServ}
+            pageStringProviderServ={pageStringProviderServ}
             helpHoverStore={helpHoverStore}
           />
         );
       case 'Help':
         return (
           <HelpTabContent
-            text={stringProviderServ.HelpTexts.attractorBifurcationExplorer()}
+            text={pageStringProviderServ.helpText()}
           />
         );
       default:
