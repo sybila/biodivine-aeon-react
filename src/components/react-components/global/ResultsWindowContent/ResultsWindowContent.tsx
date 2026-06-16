@@ -15,9 +15,12 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
   controlPerturbationsTableServ,
   resultsOperationsServ,
   dataFormatersServ,
+  stringProviderServ,
   modelInfoStore,
+
   tabsStore,
   resultsStatusStore,
+  helpHoverStore,
 }) => {
   const selectedResultsMode = resultsStatusStore(
     (state) => state.selectedResults
@@ -51,7 +54,9 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
             computationManagerServ={computationManagerServ}
             attractorVisualizerServ={attractorVisualizerServ}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            stringProviderServ={stringProviderServ}
             tabsStore={tabsStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Control':

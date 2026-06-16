@@ -14,7 +14,10 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
   computationManagerServ,
   attractorVisualizerServ,
   attractorBifurcationExplorerServ,
+  stringProviderServ,
+
   tabsStore,
+  helpHoverStore,
 }) => {
   const openAttractorBifurcationExplorer = () => {
     tabsStore.getState().addTab(
@@ -77,6 +80,8 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
                 behaviorClassList={result.phenotype}
                 computationManagerServ={computationManagerServ}
                 attractorVisualizerServ={attractorVisualizerServ}
+                stringProviderServ={stringProviderServ}
+                helpHoverStore={helpHoverStore}
               />
             ))}
         </section>
@@ -115,6 +120,17 @@ const AttractorResultsTable: React.FC<AttractorResultsTableProps> = ({
           iconAlt="Bifurcation"
           iconSrc={SplitIcon}
           handleClick={openAttractorBifurcationExplorer}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips.ResultsTooltips.AttractorAnalysisResults.openExploreBifurcationFunction(),
+                true,
+                -80
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </div>
     </section>

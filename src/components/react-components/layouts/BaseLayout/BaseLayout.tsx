@@ -76,9 +76,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
             controlPerturbationsTableServ={controlPerturbationsTableServ}
             resultsOperationsServ={resultsOperationsServ}
             dataFormatersServ={dataFormatersServ}
+            stringProviderServ={stringProviderServ}
             modelInfoStore={modelInfoStore}
             tabsStore={tabsStore}
             resultsStatusStore={resultsStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       default:

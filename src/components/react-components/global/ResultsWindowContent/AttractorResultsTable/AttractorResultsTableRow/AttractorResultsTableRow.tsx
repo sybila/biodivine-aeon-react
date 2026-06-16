@@ -6,6 +6,8 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   behaviorClassList,
   computationManagerServ,
   attractorVisualizerServ,
+  stringProviderServ,
+  helpHoverStore,
 }) => {
   const behaviourString: string | undefined = !behaviorClassList
     ? undefined
@@ -26,9 +28,19 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
     );
   };
 
-  const buttonsContent: Array<[string, () => void]> = [
-    ['Witness', () => openWitness()],
-    ['Attractor', () => openAttractor()],
+  const buttonsContent: Array<[string, () => void, () => string]> = [
+    [
+      'Witness',
+      () => openWitness(),
+      stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips
+        .ResultsTooltips.AttractorAnalysisResults.openWitness,
+    ],
+    [
+      'Attractor',
+      () => openAttractor(),
+      stringProviderServ.ToolTips.GlobalTooltips.OverlayWindowTooltips
+        .ResultsTooltips.AttractorAnalysisResults.openAttractorVisualization,
+    ],
   ];
 
   return (
@@ -54,11 +66,22 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
       </span>
 
       <div className="flex flex-row h-full w-[30%] items-center justify-end gap-2">
-        {buttonsContent.map(([text, onClick], index) => (
+        {buttonsContent.map(([text, onClick, tooltipTextFunction], index) => (
           <span
             key={index}
             className="decoration-solid underline cursor-pointer hover:text-gray-700"
             onClick={onClick}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  tooltipTextFunction(),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           >
             {text}
           </span>
