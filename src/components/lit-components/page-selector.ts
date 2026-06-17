@@ -71,10 +71,18 @@ export class PageSelector extends LitElement {
   @property({ type: String }) declare centerFontFamily?: string;
   @property({ type: String }) declare centerTextColor?: string;
 
-  @property({ type: Function }) declare leftButtonOnMouseEnter?: () => void;
-  @property({ type: Function }) declare leftButtonOnMouseLeave?: () => void;
-  @property({ type: Function }) declare rightButtonOnMouseEnter?: () => void;
-  @property({ type: Function }) declare rightButtonOnMouseLeave?: () => void;
+  @property({ type: Function }) declare leftButtonOnMouseEnter?: (
+    e: MouseEvent
+  ) => void;
+  @property({ type: Function }) declare leftButtonOnMouseLeave?: (
+    e: MouseEvent
+  ) => void;
+  @property({ type: Function }) declare rightButtonOnMouseEnter?: (
+    e: MouseEvent
+  ) => void;
+  @property({ type: Function }) declare rightButtonOnMouseLeave?: (
+    e: MouseEvent
+  ) => void;
   @property({ type: Function })
   declare centerIndicatorOnMouseEnter?: () => void;
   @property({ type: Function })
@@ -259,9 +267,12 @@ export class PageSelector extends LitElement {
     }
   }
 
-  private checkFunctionAndRun(fun: (() => void) | undefined) {
+  private checkFunctionAndRun(
+    fun: ((e: MouseEvent) => void) | undefined,
+    event: MouseEvent
+  ) {
     if (fun != undefined) {
-      fun();
+      fun(event);
     }
   }
 
@@ -285,10 +296,10 @@ export class PageSelector extends LitElement {
           id="left-button"
           part="left-button"
           @click=${() => this.changePage(-1)}
-          @mouseenter=${() =>
-            this.checkFunctionAndRun(this.leftButtonOnMouseEnter)}
-          @mouseleave=${() =>
-            this.checkFunctionAndRun(this.leftButtonOnMouseLeave)}
+          @mouseenter=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.leftButtonOnMouseEnter, e)}
+          @mouseleave=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.leftButtonOnMouseLeave, e)}
         >
           <img
             id="left-button-icon"
@@ -300,10 +311,10 @@ export class PageSelector extends LitElement {
         <div
           id="center-indicator"
           part="center-indicator"
-          @mouseenter=${() =>
-            this.checkFunctionAndRun(this.centerIndicatorOnMouseEnter)}
-          @mouseleave=${() =>
-            this.checkFunctionAndRun(this.centerIndicatorOnMouseLeave)}
+          @mouseenter=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.centerIndicatorOnMouseEnter, e)}
+          @mouseleave=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.centerIndicatorOnMouseLeave, e)}
         >
           ${this.currentPage ?? this.initialPage ?? 1}
         </div>
@@ -313,10 +324,10 @@ export class PageSelector extends LitElement {
           id="right-button"
           part="right-button"
           @click=${() => this.changePage(1)}
-          @mouseenter=${() =>
-            this.checkFunctionAndRun(this.rightButtonOnMouseEnter)}
-          @mouseleave=${() =>
-            this.checkFunctionAndRun(this.rightButtonOnMouseLeave)}
+          @mouseenter=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.rightButtonOnMouseEnter, e)}
+          @mouseleave=${(e: MouseEvent) =>
+            this.checkFunctionAndRun(this.rightButtonOnMouseLeave, e)}
         >
           <img
             id="right-button-icon"
