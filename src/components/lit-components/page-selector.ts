@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 type StyleProperty =
@@ -84,9 +84,9 @@ export class PageSelector extends LitElement {
     e: MouseEvent
   ) => void;
   @property({ type: Function })
-  declare centerIndicatorOnMouseEnter?: () => void;
+  declare centerIndicatorOnMouseEnter?: (e: MouseEvent) => void;
   @property({ type: Function })
-  declare centerIndicatorOnMouseLeave?: () => void;
+  declare centerIndicatorOnMouseLeave?: (e: MouseEvent) => void;
 
   @property({ type: Number }) declare initialPage?: number;
   @property({ type: Boolean }) declare nextPageExists?: boolean;
