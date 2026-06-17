@@ -49,11 +49,7 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   }, [sortedPerts, startFilter]);
 
   useEffect(() => {
-    if (!nextPageExists) {
-      return;
-    }
-
-    setNextPageExists(nextPageExists);
+    setNextPageExists(!!nextPageExists);
   }, [nextPageExists, setNextPageExists]);
 
   if (!perturbations) {
