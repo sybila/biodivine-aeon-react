@@ -12,8 +12,12 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
   decision,
   nodeId,
   nodeCardinality,
+
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  pageStringProviderServ,
+
+  helpHoverStore,
 }) => {
   const renderTopSection = () => {
     return (
@@ -53,6 +57,17 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
           handleClick={() =>
             attractorBifurcationExplorerServ.makeDecision(nodeId, decision.id)
           }
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.selectDecisionButton(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
     );

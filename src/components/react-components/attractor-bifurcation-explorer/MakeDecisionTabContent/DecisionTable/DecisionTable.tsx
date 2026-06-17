@@ -8,9 +8,13 @@ import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 const DecisionTable: React.FC<DecisionTableProps> = ({
   nodeId,
   nodeCardinality,
+
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   // TODO - remove when paging for decisions implemented (now causes lag on reenter)
   const [decisionsOpened, setDecisionsOpened] = useState(false);
@@ -32,6 +36,17 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
           }
           setDecisionsOpened(true);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.getDecisionsButton(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     );
   }
@@ -47,6 +62,8 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
             nodeCardinality={nodeCardinality}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
           />
         ))}
       </>

@@ -10,7 +10,10 @@ import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   const selectedNode: LeafNode | DecisionMixedNode | null =
     bifurcationExplorerStatusStore((state) => state.selectedNode);
@@ -49,6 +52,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
           <WitnessAttractorRow
             leafNodeId={selectedNode.id}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
           />
         ) : null}
 

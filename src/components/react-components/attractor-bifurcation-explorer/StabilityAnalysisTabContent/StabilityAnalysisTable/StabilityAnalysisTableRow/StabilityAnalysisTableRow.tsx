@@ -8,8 +8,12 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
   variable,
   computedBehavior,
   data,
+
   attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   const selectedNode = bifurcationExplorerStatusStore(
     (state) => state.selectedNode
@@ -86,7 +90,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
   };
 
   const renderButtons = (vector: Array<string>) => {
-    const buttonsContent: Array<[string, () => void]> = [
+    const buttonsContent: Array<[string, () => void, () => string]> = [
       [
         'Witness',
         () =>
@@ -96,6 +100,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
             computedBehavior,
             vector
           ),
+        pageStringProviderServ.Tooltips.openStabilityAnalysisWitness,
       ],
       [
         'Attractor',
@@ -106,20 +111,34 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
             computedBehavior,
             vector
           ),
+        pageStringProviderServ.Tooltips.openStabilityAnalysisAttractor,
       ],
     ];
 
     return (
       <div className="flex flex-row h-full w-[28%] items-center justify-center gap-2">
-        {buttonsContent.map(([text, onClick], index) => (
-          <span
-            key={index}
-            className="decoration-solid underline cursor-pointer hover:text-gray-700"
-            onClick={onClick}
-          >
-            {text}
-          </span>
-        ))}
+        {buttonsContent.map(
+          ([text, onClick, tooltipTextProviderFunction], index) => (
+            <span
+              key={index}
+              className="decoration-solid underline cursor-pointer hover:text-gray-700"
+              onClick={onClick}
+              onMouseEnter={(e: React.MouseEvent) =>
+                helpHoverStore
+                  .getState()
+                  .setHelpHoverAtMouse(
+                    e.nativeEvent,
+                    tooltipTextProviderFunction(),
+                    true,
+                    -50
+                  )
+              }
+              onMouseLeave={() => helpHoverStore.getState().clear()}
+            >
+              {text}
+            </span>
+          )
+        )}
       </div>
     );
   };

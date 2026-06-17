@@ -5,7 +5,10 @@ import StabilityAnalysisTableRow from './StabilityAnalysisTableRow/StabilityAnal
 
 const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
   attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   const stabilityResults = bifurcationExplorerStatusStore(
     (state) => state.stabilityData
@@ -34,7 +37,9 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
               attractorBifurcationExplorerServ={
                 attractorBifurcationExplorerServ
               }
+              pageStringProviderServ={pageStringProviderServ}
               bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+              helpHoverStore={helpHoverStore}
             />
           )
         )}

@@ -4,7 +4,11 @@ import type { WitnessAttractorRowProps } from './WitnessAttractorRowProps';
 
 const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
   leafNodeId,
+
   attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
+  helpHoverStore,
 }) => {
   return (
     <>
@@ -17,6 +21,18 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
           handleClick={() =>
             attractorBifurcationExplorerServ.openLeafNodeWitness(leafNodeId)
           }
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.openNodeWitness(),
+                true,
+                -50,
+                200
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
         <TextButtonReact
           text="Attractor"
@@ -25,6 +41,17 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
           handleClick={() =>
             attractorBifurcationExplorerServ.openLeafNodeAttractor(leafNodeId)
           }
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.openNodeAttractor(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
     </>

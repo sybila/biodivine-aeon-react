@@ -5,7 +5,13 @@ import StabilityAnalysisTable from './StabilityAnalysisTable/StabilityAnalysisTa
 
 const StabilityAnalysisTabContent: React.FC<
   StabilityAnalysisTabContentProps
-> = ({ attractorBifurcationExplorerServ, bifurcationExplorerStatusStore }) => {
+> = ({
+  attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
+}) => {
   const selectedNode = bifurcationExplorerStatusStore(
     (state) => state.selectedNode
   );
@@ -19,11 +25,15 @@ const StabilityAnalysisTabContent: React.FC<
       <StabilityAnalysisSelector
         nodeId={selectedNode.id}
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        pageStringProviderServ={pageStringProviderServ}
         bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+        helpHoverStore={helpHoverStore}
       />
       <StabilityAnalysisTable
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        pageStringProviderServ={pageStringProviderServ}
         bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+        helpHoverStore={helpHoverStore}
       />
     </div>
   );

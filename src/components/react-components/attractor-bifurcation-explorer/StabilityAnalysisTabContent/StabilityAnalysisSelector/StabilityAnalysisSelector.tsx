@@ -10,8 +10,12 @@ import type { StabilityAnalysisSelectorProps } from './StabilityAnalysisSelector
 
 const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
   nodeId,
+
   attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   const stabilityMode: FullStabilityAnalysisMode =
     bifurcationExplorerStatusStore((state) => state.stabilityAnalysisMode);
@@ -33,6 +37,17 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
             .getState()
             .setStabilityAnalysisMode(mode)
         }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeStabilityAnalysisMode(mode),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     );
     return (
@@ -79,6 +94,17 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
               : (stabilityMode[0] as StabilityAnalysisModes)
           )
         }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.startStabilityAnalysis(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </section>
   );

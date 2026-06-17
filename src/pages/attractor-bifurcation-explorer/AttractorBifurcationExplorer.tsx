@@ -48,14 +48,18 @@ const AttractorBifurcationExplorer: React.FC<
           <OverviewTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
+            pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Stability Analysis':
         return (
           <StabilityAnalysisTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Make Decision':
@@ -63,7 +67,9 @@ const AttractorBifurcationExplorer: React.FC<
           <MakeDecisionTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
+            pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Visual Options':
@@ -75,11 +81,7 @@ const AttractorBifurcationExplorer: React.FC<
           />
         );
       case 'Help':
-        return (
-          <HelpTabContent
-            text={pageStringProviderServ.helpText()}
-          />
-        );
+        return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
         return null;
     }

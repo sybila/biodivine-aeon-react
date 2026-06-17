@@ -10,7 +10,10 @@ import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps'
 const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  pageStringProviderServ,
+
   bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
   const selectedNode: DecisionMixedNode | LeafNode | null =
     bifurcationExplorerStatusStore((state) => state.selectedNode);
@@ -35,6 +38,8 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
 
         <AutoExpandSection
           attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          pageStringProviderServ={pageStringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
@@ -52,7 +57,9 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
           nodeCardinality={selectedNode.cardinality}
           attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
           behaviorClassOperationsServ={behaviorClassOperationsServ}
+          pageStringProviderServ={pageStringProviderServ}
           bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          helpHoverStore={helpHoverStore}
         />
       </section>
     </div>
