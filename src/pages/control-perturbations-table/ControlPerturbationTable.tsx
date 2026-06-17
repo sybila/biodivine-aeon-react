@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
@@ -26,6 +26,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   searchAndFilterHelpersServ,
   loadingServ,
   pageStringProviderServ,
+  shortcutManagerServ,
 
   resultsStatusStore,
   perturbationFilterSortStore,
@@ -39,6 +40,14 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   const [startSort, setStartSort] = useState<boolean>(true);
 
   const [nextPageExists, setNextPageExists] = useState<boolean>(false);
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Control Perturbations Table');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
 
   const renderTabContent = () => {
     switch (activeTab) {

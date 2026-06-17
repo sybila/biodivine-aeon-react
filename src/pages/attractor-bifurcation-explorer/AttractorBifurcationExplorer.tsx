@@ -24,6 +24,7 @@ const AttractorBifurcationExplorer: React.FC<
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
   pageStringProviderServ,
+  shortcutManagerServ,
 
   bifurcationExplorerStatusStore,
   helpHoverStore,
@@ -34,6 +35,14 @@ const AttractorBifurcationExplorer: React.FC<
   const activeTab: MenuTabTypeABE = bifurcationExplorerStatusStore(
     (state) => state.activeMenuTab
   );
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Attractor Bifurcation Explorer');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
 
   useEffect(() => {
     if (initialized) {

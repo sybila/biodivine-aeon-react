@@ -1,5 +1,7 @@
 import type { TabType } from '../../../types';
 import type { ModelEditorInt } from '../../model-editor/ModelEditor/ModelEditorInt';
+import AttractorBifurcationExplorerShortcuts from './PageShortcuts/AttractorBifurcationExplorerShortcuts';
+import ControlPerturbationTableShortcuts from './PageShortcuts/ControlPerturbationTableShortcuts';
 import ModelEditorShortcuts from './PageShortcuts/ModelEditorShortcuts';
 import type { PageShortcutsInt } from './PageShortcuts/PageShortcutsInt';
 import type { ShortcutManagerInt } from './ShortcutManagerInt';
@@ -11,6 +13,9 @@ class ShortcutManager implements ShortcutManagerInt {
   constructor(modelEditorServ: ModelEditorInt) {
     this.pageShortcuts = {
       'Model Editor': new ModelEditorShortcuts(modelEditorServ),
+      'Attractor Bifurcation Explorer':
+        new AttractorBifurcationExplorerShortcuts(),
+      'Control Perturbations Table': new ControlPerturbationTableShortcuts(),
     };
   }
 

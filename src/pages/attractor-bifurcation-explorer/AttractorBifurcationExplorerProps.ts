@@ -1,4 +1,5 @@
 import type { AttractorBifurcationExplorerInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
 import type { AttractorBifurcationExplorerPageStringsInt } from '../../services/global/StringProvider/AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStringsInt';
 import type { BehaviorClassOperationsInt } from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { BifurcationExplorerStatusState } from '../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
@@ -9,6 +10,7 @@ export type AttractorBifurcationExplorerProps = {
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
   pageStringProviderServ: AttractorBifurcationExplorerPageStringsInt;
+  shortcutManagerServ?: ShortcutManagerInt;
 
   bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
   helpHoverStore: ZustandStore<HelpHoverState>;
