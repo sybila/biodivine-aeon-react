@@ -1,6 +1,36 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+type StyleProperty =
+  | 'compHeight'
+  | 'compWidth'
+  | 'contHeight'
+  | 'contWidth'
+  | 'contOverflowX'
+  | 'contOverflowY'
+  | 'buttonsCenterGap'
+  | 'buttonHeight'
+  | 'buttonWidth'
+  | 'buttonColor'
+  | 'buttonHoverColor'
+  | 'buttonDisabledColor'
+  | 'buttonRadius'
+  | 'buttonShadow'
+  | 'leftButtonIconHeight'
+  | 'leftButtonIconWidth'
+  | 'rightButtonIconHeight'
+  | 'rightButtonIconWidth'
+  | 'centerHeight'
+  | 'centerMinWidth'
+  | 'centerMaxWidth'
+  | 'centerColor'
+  | 'centerRadius'
+  | 'centerShadow'
+  | 'centerFontSize'
+  | 'centerFontWeight'
+  | 'centerFontFamily'
+  | 'centerTextColor';
+
 @customElement('page-selector')
 export class PageSelector extends LitElement {
   @property({ type: String }) declare compHeight?: string;
@@ -40,6 +70,15 @@ export class PageSelector extends LitElement {
   @property({ type: String }) declare centerFontWeight?: string;
   @property({ type: String }) declare centerFontFamily?: string;
   @property({ type: String }) declare centerTextColor?: string;
+
+  @property({ type: Function }) declare leftButtonOnMouseEnter?: () => void;
+  @property({ type: Function }) declare leftButtonOnMouseLeave?: () => void;
+  @property({ type: Function }) declare rightButtonOnMouseEnter?: () => void;
+  @property({ type: Function }) declare rightButtonOnMouseLeave?: () => void;
+  @property({ type: Function })
+  declare centerIndicatorOnMouseEnter?: () => void;
+  @property({ type: Function })
+  declare centerIndicatorOnMouseLeave?: () => void;
 
   @property({ type: Number }) declare initialPage?: number;
   @property({ type: Boolean }) declare nextPageExists?: boolean;
@@ -128,16 +167,16 @@ export class PageSelector extends LitElement {
   `;
 
   private updateStyleVariable(
-    propertyName: string,
+    propertyName: StyleProperty,
     cssVar: string,
     fallback: string
   ) {
-    const value = (this as any)[propertyName] ?? fallback;
+    const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
   }
 
-  updated(changed: Map<string, any>) {
-    const update = (prop: string, cssVar: string, fallback: string) =>
+  updated(changed: Map<string, StyleProperty>) {
+    const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--page-selector-comp-height', '50px');
@@ -220,6 +259,12 @@ export class PageSelector extends LitElement {
     }
   }
 
+  private checkFunctionAndRun(fun: (() => void) | undefined) {
+    if (fun != undefined) {
+      fun();
+    }
+  }
+
   private leftButtonArrow =
     'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBVcGxvYWRlZCB0bzogU1ZHIFJlcG8sIHd3dy5zdmdyZXBvLmNvbSwgR2VuZXJhdG9yOiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4NCjxzdmcgZmlsbD0iIzAwMDAwMCIgaGVpZ2h0PSI4MDBweCIgd2lkdGg9IjgwMHB4IiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiANCgkgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0xNjguODM3LDI1NkwzODguNDE4LDM2LjQxOGM4LjMzMS04LjMzMSw4LjMzMS0yMS44MzksMC0zMC4xN2MtOC4zMzEtOC4zMzEtMjEuODM5LTguMzMxLTMwLjE3LDBMMTIzLjU4MiwyNDAuOTE1DQoJCQljLTguMzMxLDguMzMxLTguMzMxLDIxLjgzOSwwLDMwLjE3bDIzNC42NjcsMjM0LjY2N2M4LjMzMSw4LjMzMSwyMS44MzksOC4zMzEsMzAuMTcsMGM4LjMzMS04LjMzMSw4LjMzMS0yMS44MzksMC0zMC4xNw0KCQkJTDE2OC44MzcsMjU2eiIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg==';
   private rightButtonArrow =
@@ -240,6 +285,10 @@ export class PageSelector extends LitElement {
           id="left-button"
           part="left-button"
           @click=${() => this.changePage(-1)}
+          @mouseenter=${() =>
+            this.checkFunctionAndRun(this.leftButtonOnMouseEnter)}
+          @mouseleave=${() =>
+            this.checkFunctionAndRun(this.leftButtonOnMouseLeave)}
         >
           <img
             id="left-button-icon"
@@ -248,7 +297,14 @@ export class PageSelector extends LitElement {
           />
         </button>
 
-        <div id="center-indicator" part="center-indicator">
+        <div
+          id="center-indicator"
+          part="center-indicator"
+          @mouseenter=${() =>
+            this.checkFunctionAndRun(this.centerIndicatorOnMouseEnter)}
+          @mouseleave=${() =>
+            this.checkFunctionAndRun(this.centerIndicatorOnMouseLeave)}
+        >
           ${this.currentPage ?? this.initialPage ?? 1}
         </div>
 
@@ -257,6 +313,10 @@ export class PageSelector extends LitElement {
           id="right-button"
           part="right-button"
           @click=${() => this.changePage(1)}
+          @mouseenter=${() =>
+            this.checkFunctionAndRun(this.rightButtonOnMouseEnter)}
+          @mouseleave=${() =>
+            this.checkFunctionAndRun(this.rightButtonOnMouseLeave)}
         >
           <img
             id="right-button-icon"

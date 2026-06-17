@@ -158,7 +158,7 @@ export class MultilineText extends LitElement {
   }
 
   render() {
-    const placeholderClass: String = this.text ? '' : 'placeholder';
+    const placeholderClass: string = this.text ? '' : 'placeholder';
 
     return html`<span class=${placeholderClass} @click=${this.handleClick}
       >${this.text || this.placeholder}</span
