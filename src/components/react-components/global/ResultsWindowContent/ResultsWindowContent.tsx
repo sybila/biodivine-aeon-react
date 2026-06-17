@@ -66,8 +66,13 @@ const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
             controlPerturbationsTableServ={controlPerturbationsTableServ}
             resultsOperationsServ={resultsOperationsServ}
             dataFormatersServ={dataFormatersServ}
+            tooltips={
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips
+                .ResultsTooltips.ControlResults
+            }
             modelInfoStore={modelInfoStore}
             tabsStore={tabsStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       default:

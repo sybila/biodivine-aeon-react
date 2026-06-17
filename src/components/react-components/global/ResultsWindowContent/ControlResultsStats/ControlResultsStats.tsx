@@ -11,8 +11,10 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
   controlPerturbationsTableServ,
   resultsOperationsServ,
   dataFormatersServ,
+  tooltips,
   modelInfoStore,
   tabsStore,
+  helpHoverStore,
 }) => {
   const renderStats = () => {
     return (
@@ -102,6 +104,17 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
                   () => controlPerturbationsTableServ.clear()
                 )
             }
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  tooltips.openTableVisualization(),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </div>
 
@@ -126,6 +139,17 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
                   .getModelName()}_control_perturbations_${Time.getCurrentTime()}`
               )
             }
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  tooltips.exportAsCsv(),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </div>
       </div>
