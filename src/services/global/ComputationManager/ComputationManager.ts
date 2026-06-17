@@ -212,7 +212,7 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Callback which should run after compute engine has succesfully connected. */
   private succesfulConnectionCallback() {
-    this.getLiveModel()!.UpdateFunctions.validateUpdateFunctionsIfNeeded();
+    this.getLiveModel()!.UpdateFunctions.validateAllUpdateFunctions();
   }
 
   public toggleConnection(): void {
