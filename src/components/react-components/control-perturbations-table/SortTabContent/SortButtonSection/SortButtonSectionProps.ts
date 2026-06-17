@@ -1,3 +1,6 @@
+import type { ControlPerturbationTablePageStringsInt } from '../../../../../services/global/StringProvider/ControlPerturbationTablePageStrings/ControlPerturbationTablePageStringsInt';
+import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
+import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 import type {
   PertTableSort,
   PerturbationSortFields,
@@ -9,4 +12,8 @@ export type SortButtonSectionProps = {
   sortField: PerturbationSortFields;
   setFunction: (value: PertTableSort | undefined) => void;
   disable: boolean;
+
+  pageStringProviderServ: ControlPerturbationTablePageStringsInt;
+
+  helpHoverStore: ZustandStore<HelpHoverState>;
 };

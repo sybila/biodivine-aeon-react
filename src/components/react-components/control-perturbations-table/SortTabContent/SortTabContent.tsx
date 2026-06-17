@@ -7,7 +7,9 @@ import type { SortTabContentProps } from './SortTabContentProps';
 const SortTabContent: React.FC<SortTabContentProps> = ({
   startSort,
   setStartSort,
+  pageStringProviderServ,
   perturbationFilterSortStore,
+  helpHoverStore,
 }) => {
   const filtersAndSorts = perturbationFilterSortStore((state) => state);
   return (
@@ -26,6 +28,8 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
           filtersAndSorts.setPrimarySort(value);
         }}
         disable={false}
+        pageStringProviderServ={pageStringProviderServ}
+        helpHoverStore={helpHoverStore}
       />
 
       <SeparatorLine />
@@ -47,6 +51,8 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
           filtersAndSorts.secondarySort?.field ===
             filtersAndSorts.primarySort?.field
         }
+        pageStringProviderServ={pageStringProviderServ}
+        helpHoverStore={helpHoverStore}
       />
 
       <SeparatorLine />
@@ -58,6 +64,17 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
         onClick={() => {
           setStartSort(!startSort);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.applySorts(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );

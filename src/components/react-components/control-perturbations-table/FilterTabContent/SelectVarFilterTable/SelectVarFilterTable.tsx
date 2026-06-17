@@ -68,13 +68,25 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
    * - The button color (string)
    * - The onClick handler function (() => void)
    */
-  const statusButtons: Array<[string, string, () => void]> = [
-    ['N', 'var(--color-grey)', () => changeSelectedFilterStat(null)],
+  const statusButtons: Array<[string, string, () => void, () => string]> = [
+    [
+      'N',
+      'var(--color-grey)',
+      () => changeSelectedFilterStat(null),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Not In Filter'
+        ),
+    ],
     [
       'P',
       'var(--color-violet)',
       () =>
         changeSelectedFilterStat(PertVariableFilterStatus.IN_FILTER_PERTURBED),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Perturbed (Positively or Negatively)'
+        ),
     ],
     [
       'T',
@@ -83,6 +95,10 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_POSITIVELY_PERTURBED
         ),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Positively Perturbed'
+        ),
     ],
     [
       'F',
@@ -90,6 +106,10 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
       () =>
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_NEGATIVELY_PERTURBED
+        ),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Negatively Perturbed'
         ),
     ],
   ];
@@ -105,16 +125,30 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     <div className="h-fit w-[95%] flex flex-col justify-start items-center gap-2">
       <section className="h-[30px] w-full flex flex-row justify-between items-center px-2">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, onClick], index) => (
-            <TextButtonReact
-              key={index}
-              compHeight="29px"
-              compWidth="29px"
-              text={label}
-              handleClick={onClick}
-              buttonColor={color}
-            />
-          ))}
+          {statusButtons.map(
+            ([label, color, onClick, tooltipTextProviderFunction], index) => (
+              <TextButtonReact
+                key={index}
+                compHeight="29px"
+                compWidth="29px"
+                text={label}
+                handleClick={onClick}
+                buttonColor={color}
+                onMouseEnter={(e: React.MouseEvent) =>
+                  helpHoverStore
+                    .getState()
+                    .setHelpHoverAtMouse(
+                      e.nativeEvent,
+                      tooltipTextProviderFunction(),
+                      true,
+                      -50,
+                      300
+                    )
+                }
+                onMouseLeave={() => helpHoverStore.getState().clear()}
+              />
+            )
+          )}
         </div>
 
         <SelectionButtons<string>

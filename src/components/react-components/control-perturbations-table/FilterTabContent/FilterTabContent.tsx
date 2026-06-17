@@ -138,6 +138,17 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
           perturbationFilterSortStore.getState().setPageNumber(1);
           setStartFilter(!startFilter);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.applyFilters(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );

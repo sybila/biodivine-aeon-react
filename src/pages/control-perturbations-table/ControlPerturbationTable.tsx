@@ -69,7 +69,9 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           <SortTabContent
             startSort={startSort}
             setStartSort={setStartSort}
+            pageStringProviderServ={pageStringProviderServ}
             perturbationFilterSortStore={perturbationFilterSortStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Pages':
@@ -78,6 +80,8 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             setStartFilter={setStartFilter}
             startFilter={startFilter}
             nextPageExists={nextPageExists}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
             perturbationFilterSortStore={perturbationFilterSortStore}
           />
         );
@@ -167,9 +171,11 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           startSort={startSort}
           setNextPageExists={setNextPageExists}
           controlPerturbationsTableServ={controlPerturbationsTableServ}
+          pageStringProviderServ={pageStringProviderServ}
+          dataFormatersServ={dataFormatersServ}
           loadingServ={loadingServ}
           resultsStatusStore={resultsStatusStore}
-          dataFormatersServ={dataFormatersServ}
+          helpHoverStore={helpHoverStore}
         />
       </div>
     </>

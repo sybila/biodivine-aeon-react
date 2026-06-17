@@ -10,6 +10,9 @@ const SortButtonSection: React.FC<SortButtonSectionProps> = ({
   sortField,
   setFunction,
   disable,
+
+  pageStringProviderServ,
+  helpHoverStore,
 }) => {
   const toggleSortDirection = () => {
     const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -44,6 +47,18 @@ const SortButtonSection: React.FC<SortButtonSectionProps> = ({
         iconAlt={sortDirection === 'asc' ? 'Asc' : 'Desc'}
         handleClick={() => toggleSortDirection()}
         buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeSortDirection(),
+              true,
+              -50,
+              150
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
       <TextButtonReact
         compHeight="40px"
@@ -51,6 +66,17 @@ const SortButtonSection: React.FC<SortButtonSectionProps> = ({
         text={sortField}
         handleClick={() => toggleSortField()}
         buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeSortingAttribute(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </section>
   );
