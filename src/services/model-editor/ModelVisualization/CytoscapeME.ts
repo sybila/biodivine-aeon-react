@@ -1,4 +1,6 @@
-import { type CytoscapeOptions } from 'cytoscape';
+import cytoscape, { type CytoscapeOptions } from 'cytoscape';
+import dagre from 'cytoscape-dagre';
+import edgehandles from 'cytoscape-edgehandles';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
@@ -19,8 +21,6 @@ import type { MessageInt } from '../../global/Message/MessageInt';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';
 
 const DOUBLE_CLICK_DELAY = 400;
-
-declare const cytoscape: any;
 
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
 const _add_box_svg =
@@ -83,6 +83,9 @@ class CytoscapeME implements ModelVisualizationInt {
     }
 
     this.container = container;
+
+    cytoscape.use(edgehandles);
+    cytoscape.use(dagre);
 
     this.cytoscape = cytoscape(this.initOptions());
     this.edgehandles = this.cytoscape.edgehandles(this.edgeOptions());
@@ -473,6 +476,9 @@ class CytoscapeME implements ModelVisualizationInt {
         .getState()
         .setVariablePosition(id, newPosition);
     });
+
+    this.cytoscape.resize();
+    this.cytoscape.fit();
   }
 
   /** Remove the node with the given ID from the graph. */

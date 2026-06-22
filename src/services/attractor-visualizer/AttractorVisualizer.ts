@@ -1,3 +1,4 @@
+import * as vis from 'vis-network';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -10,8 +11,6 @@ import type {
 import type { ComputationManagerInt } from '../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../global/Message/MessageInt';
 import type { AttractorVisualizerInt } from './AttractorVisualizerInt';
-
-declare const vis: any;
 
 class AttractorVisualizer implements AttractorVisualizerInt {
   // #region --- Properties + Constructor ---
