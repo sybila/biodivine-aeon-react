@@ -76,11 +76,13 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Initialization ---
 
-  init(container: HTMLElement) {
+  async init(container: HTMLElement) {
     // Avoid re-initialization
     if (this.container === container) {
       return;
     }
+
+    await document.fonts.load('12px FiraMono');
 
     this.container = container;
 

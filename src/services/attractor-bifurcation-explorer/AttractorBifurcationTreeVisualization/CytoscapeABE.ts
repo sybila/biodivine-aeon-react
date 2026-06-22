@@ -1,5 +1,5 @@
 import cytoscape, { type CytoscapeOptions, type EventObject } from 'cytoscape';
-import tidytree from "cytoscape-tidytree";
+import tidytree from 'cytoscape-tidytree';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
@@ -77,7 +77,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     if (this.container === container) {
       return;
     }
-    
+
     cytoscape.use(tidytree);
 
     this.container = container;
@@ -101,6 +101,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             //
             label: 'data(label)',
             // put label in the middle of the node (vertically)
+            'text-halign': 'center',
             'text-valign': 'center',
             width: 'label',
             height: 'label',
@@ -113,7 +114,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             'background-color': '#dddddd',
             //'background-opacity': '0',
             'font-family': 'FiraMono',
-            'font-size': '12pt',
+            'font-size': '12px',
             'border-width': '1px',
             'border-color': '#bbbbbb',
             'border-style': 'solid',
@@ -165,9 +166,12 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
         {
           selector: 'node[type = "leaf"]',
           style: {
+            'line-height': 1,
+            'text-margin-y': 14,
+            padding: '16px',
             'border-color': '#546E7A',
             'font-family': 'symbols',
-            'font-size': '16pt',
+            'font-size': '18px',
           },
         },
         {
