@@ -1,5 +1,9 @@
+import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
+import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { TabType } from '../../../types';
 import type { ModelEditorInt } from '../../model-editor/ModelEditor/ModelEditorInt';
+import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import AttractorBifurcationExplorerShortcuts from './PageShortcuts/AttractorBifurcationExplorerShortcuts';
 import ControlPerturbationTableShortcuts from './PageShortcuts/ControlPerturbationTableShortcuts';
 import ModelEditorShortcuts from './PageShortcuts/ModelEditorShortcuts';
@@ -10,9 +14,21 @@ class ShortcutManager implements ShortcutManagerInt {
   private currentKeydownHandler: ((event: KeyboardEvent) => void) | null = null;
   private pageShortcuts: Partial<Record<TabType, PageShortcutsInt>>;
 
-  constructor(modelEditorServ: ModelEditorInt) {
+  constructor(
+    liveModelServ: LiveModelInt,
+    modelEditorServ: ModelEditorInt,
+
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
+  ) {
     this.pageShortcuts = {
-      'Model Editor': new ModelEditorShortcuts(modelEditorServ),
+      'Model Editor': new ModelEditorShortcuts(
+        liveModelServ,
+        modelEditorServ,
+
+        modelEditorStatusStore,
+        modelUndoRedoStore
+      ),
       'Attractor Bifurcation Explorer':
         new AttractorBifurcationExplorerShortcuts(),
       'Control Perturbations Table': new ControlPerturbationTableShortcuts(),

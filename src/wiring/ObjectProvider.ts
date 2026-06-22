@@ -78,7 +78,9 @@ class ObjectProviderClass implements ObjectProviderInt {
       );
 
     this.GlobalServicesProvider.initializeShortcutManager(
-      this.ModelEditorServicesProvider.modelEditorServ
+      this.ModelEditorServicesProvider.modelEditorServ,
+      this.StoresProvider.modelEditorStatusStore,
+      this.StoresProvider.modelUndoRedoStore
     );
   }
 }

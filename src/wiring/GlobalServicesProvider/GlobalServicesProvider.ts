@@ -19,6 +19,9 @@ import type { StringProviderInt } from '../../services/global/StringProvider/Str
 import Warning from '../../services/global/Warning/Warning';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
+import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
+import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { UtilitiesServiceProviderInt } from '../UtilitiesServiceProvider/UtilitiesServiceProviderInt';
 import type { GlobalServicesProviderInt } from './GlobalServicesProviderInt';
@@ -34,7 +37,6 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
   public loadingServ: LoadingInt;
   public shortcutManagerServ?: ShortcutManagerInt;
   public stringProviderServ: StringProviderInt;
-
 
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
@@ -107,8 +109,18 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
     );
   }
 
-  public initializeShortcutManager(modelEditorServ: ModelEditorInt) {
-    this.shortcutManagerServ = new ShortcutManager(modelEditorServ);
+  public initializeShortcutManager(
+    modelEditorServ: ModelEditorInt,
+
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
+  ) {
+    this.shortcutManagerServ = new ShortcutManager(
+      this.liveModelServ,
+      modelEditorServ,
+      modelEditorStatusStore,
+      modelUndoRedoStore
+    );
   }
 }
 

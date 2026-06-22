@@ -9,6 +9,9 @@ import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/S
 import type { StringProviderInt } from '../../services/global/StringProvider/StringProviderInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
+import type { ModelEditorStatus } from '../../stores/ModelEditor/ModelEditorStatus';
+import type { UndoRedoState } from '../../stores/UndoRedo/UndoRedoState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
 
 /** Interfaces which defines the provider of global services. */
 export interface GlobalServicesProviderInt {
@@ -23,5 +26,10 @@ export interface GlobalServicesProviderInt {
   shortcutManagerServ?: ShortcutManagerInt;
   stringProviderServ: StringProviderInt;
 
-  initializeShortcutManager: (modelEditorServ: ModelEditorInt) => void;
+  initializeShortcutManager: (
+    modelEditorServ: ModelEditorInt,
+
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    modelUndoRedoStore: ZustandStore<UndoRedoState>
+  ) => void;
 }
