@@ -10,8 +10,6 @@ import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import HelpIcon from '../../assets/icons/help.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
-import RedoIcon from '../../assets/icons/redo.svg';
-import UndoIcon from '../../assets/icons/undo.svg';
 
 import KeepAlive from 'react-activation';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
@@ -179,6 +177,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         pageStringProviderServ={pageStringProviderServ}
         variablesStore={variablesStore}
         helpHoverStore={helpHoverStore}
+        modelUndoRedoStore={modelUndoRedoStore}
       />
 
       <SideButtonMenu>
@@ -278,26 +277,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           showTag={true}
           tagText="Help"
         />
-        {modelType !== 'witness' ? (
-          <>
-            <IconButtonReact
-              isActive={false}
-              onClick={() => modelUndoRedoStore.getState().undo()}
-              iconSrc={UndoIcon}
-              iconAlt="U"
-              showTag={true}
-              tagText="Undo"
-            />
-            <IconButtonReact
-              isActive={false}
-              onClick={() => modelUndoRedoStore.getState().redo()}
-              iconSrc={RedoIcon}
-              iconAlt="R"
-              showTag={true}
-              tagText="Redo"
-            />
-          </>
-        ) : null}
+        {/* {modelType !== 'witness' ? (
+
+        ) : null} */}
       </SideButtonMenu>
 
       <ContentTab

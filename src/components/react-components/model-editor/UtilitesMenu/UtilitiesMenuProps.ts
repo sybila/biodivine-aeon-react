@@ -3,6 +3,7 @@ import type { ModelVisualizationInt } from '../../../../services/model-editor/Mo
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
 export type UtilitiesMenuProps = {
@@ -12,4 +13,5 @@ export type UtilitiesMenuProps = {
 
   variablesStore: ZustandStore<VariablesStatus>;
   helpHoverStore: ZustandStore<HelpHoverState>;
+  modelUndoRedoStore: ZustandStore<UndoRedoState>;
 };

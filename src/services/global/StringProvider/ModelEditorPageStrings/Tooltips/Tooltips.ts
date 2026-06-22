@@ -153,6 +153,18 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'Show/Hide Utilities Menu';
   }
 
+  public variableSearch(): string {
+    return "Zoom on variables in model visualization."
+  }
+
+  public undoButton(): string {
+    return 'Revert last modification.';
+  }
+
+  redoButton(): string {
+    return 'Reapply previously reverted modification.';
+  }
+
   // #endregion
 }
 
