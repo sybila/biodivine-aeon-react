@@ -54,9 +54,10 @@ const DecisionTableRow: React.FC<DecisionTableRowProps> = ({
           text="Select Decision"
           compHeight="30px"
           compWidth="97%"
-          handleClick={() =>
-            attractorBifurcationExplorerServ.makeDecision(nodeId, decision.id)
-          }
+          handleClick={() => {
+            helpHoverStore.getState().clear();
+            attractorBifurcationExplorerServ.makeDecision(nodeId, decision.id);
+          }}
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
               .getState()
