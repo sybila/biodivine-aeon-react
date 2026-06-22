@@ -559,7 +559,7 @@ class ComputationManager implements ComputationManagerInt {
         `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
       );
     } else {
-      attractorBifurcationExplorerRef.insertBifurcationTree(nodes, true, true);
+      attractorBifurcationExplorerRef.loadBifurcationTree(true, false);
     }
 
     attractorBifurcationExplorerRef.refreshSelection();
@@ -709,7 +709,7 @@ class ComputationManager implements ComputationManagerInt {
         `Error making decision: ${error ?? 'Internal error'}`
       );
     } else {
-      attractorBifurcationExplorerRef.insertBifurcationTree(node, true, false);
+      attractorBifurcationExplorerRef.loadBifurcationTree(true, false);
       attractorBifurcationExplorerRef.refreshSelection();
     }
 
