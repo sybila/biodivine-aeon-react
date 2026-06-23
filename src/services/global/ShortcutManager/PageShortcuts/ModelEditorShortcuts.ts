@@ -109,6 +109,15 @@ class ModelEditorShortcuts implements PageShortcutsInt {
       return;
     }
 
+    /** Scroll to selected variable in Model Editor */
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault();
+      this.doForSelectedVariable((varId: number) =>
+        this.modelEditorServ.scrollVariableIntoView(varId)
+      );
+      return;
+    }
+
     /** Undo */
     if (event.ctrlKey && event.key === 'z') {
       event.preventDefault();
