@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { InvisibleInput } from '../../../lit-components/invisible-input';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import type { VariableNameInputProps } from './VariableNameInputProps';
 
@@ -8,8 +9,11 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
   fontSize,
   varId,
   varName,
+  exposeInputRef,
   onUpdate,
 }) => {
+  const inputRef = useRef<InvisibleInput | null>(null);
+
   const [nameError, setNameError] = useState<boolean>(
     !varName || varName === ''
   );
@@ -23,8 +27,13 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
     setNameError(!success);
   };
 
+  useEffect(() => {
+    exposeInputRef(inputRef.current as HTMLElement);
+  }, [inputRef]);
+
   return (
     <InvisibleInputReact
+      ref={inputRef}
       compHeight={height}
       compWidth={width}
       contBgColor="var(--color-secondary)"
