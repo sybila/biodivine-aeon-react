@@ -52,6 +52,41 @@ Use this menu to run computations on your model, including:
 
 ---
 
+## Keyboard Shortcuts
+
+The Model Editor supports keyboard shortcuts to quickly access menus and perform common editing actions.
+
+### Menu Navigation
+
+- Ctrl + Shift + S → Open Start Computation menu  
+- Ctrl + Shift + E → Open Import/Export menu  
+- Ctrl + Shift + M → Open Model Editor menu  
+- Ctrl + Shift + C → Open Control Editor menu  
+- Ctrl + Shift + V → Open Visual Options menu  
+- Ctrl + Shift + U → Open Utilities menu
+
+### Navigation & Search
+
+- Ctrl + F → Focus global search input  
+
+### Variable Actions
+
+- Ctrl + E → Edit update function of selected variable  
+- Ctrl + R → Rename selected variable  
+- Ctrl + S → Scroll selected variable into view  
+- Ctrl + F → Focus global search input  
+
+### Regulation Actions
+
+- Ctrl + M → Toggle monotonicity of selected regulation  
+- Ctrl + O → Toggle observability of selected regulation  
+
+### Editing Actions
+
+- Ctrl + D → Remove all selected elements  
+- Ctrl + Z → Undo last action  
+- Ctrl + Y → Redo last undone action  
+
 `.trim();
   }
 
