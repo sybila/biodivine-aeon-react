@@ -59,6 +59,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   const isWitness = modelType === 'witness';
 
   useEffect(() => {
+    if (isWitness) {
+      return;
+    }
+
     shortcutManagerServ?.setShortcuts('Model Editor');
 
     return () => {
