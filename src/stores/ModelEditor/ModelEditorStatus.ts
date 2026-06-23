@@ -61,6 +61,12 @@ export type ModelEditorStatus = {
   /** Setter for the reference to the utilities menu component. */
   setUtilitiesMenuRef: (ref: ContentVisibleComponent) => void;
 
+  /** Reference to the global search text input. */
+  globalSearchRef: HTMLElement | null;
+
+  /** Set reference to the global search text input. */
+  setGlobalSearchRef: (ref: HTMLElement) => void;
+
   /** Information about the floating menu's position and zoom level.
    *  If null, the floating menu is hidden.
    *  @param info - The position and zoom level of the floating menu, or null to hide it.

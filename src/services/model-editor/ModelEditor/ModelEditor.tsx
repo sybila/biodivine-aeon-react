@@ -269,6 +269,23 @@ class ModelEditor implements ModelEditorInt {
     reference.contentVisible = true;
   }
 
+  public focusOnGlobalSearch() {
+    const searchReference =
+      this.modelEditorStatusStore.getState().globalSearchRef;
+
+    if (!searchReference) {
+      console.warn(
+        'Error: Could not focus on the global search text input. Missing reference.'
+      );
+
+      return;
+    }
+
+    this.openUtilitiesMenu();
+
+    searchReference.focus();
+  }
+
   // #endregion
 
   // #region --- Open Content Overlay Windows ---

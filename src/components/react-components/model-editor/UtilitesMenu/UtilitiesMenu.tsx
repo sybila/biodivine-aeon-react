@@ -29,6 +29,11 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
         <DotHeaderReact headerText="Variable Search" compHeight="20px" />
 
         <TextInputReact
+          ref={(el) =>
+            modelEditorStatusStore
+              .getState()
+              .setGlobalSearchRef(el as HTMLElement)
+          }
           placeholder="Search variables... (press enter to submit)"
           compHeight="30px"
           compWidth="100%"

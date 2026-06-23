@@ -124,6 +124,13 @@ class ModelEditorShortcuts implements PageShortcutsInt {
       return;
     }
 
+    /** Focus on the global search. */
+    if (event.ctrlKey && event.key === 'f') {
+      event.preventDefault();
+      this.modelEditorServ.focusOnGlobalSearch();
+      return;
+    }
+
     /** Undo */
     if (event.ctrlKey && event.key === 'z') {
       event.preventDefault();

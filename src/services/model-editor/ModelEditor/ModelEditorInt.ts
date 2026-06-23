@@ -99,6 +99,9 @@ export interface ModelEditorInt {
   /** Opens utilities menu of the Model Editor page. */
   openUtilitiesMenu(): void;
 
+  /** Opens utilities menu and put focus on the global search text input. */
+  focusOnGlobalSearch(): void;
+
   // #endregion
 
   // #region --- Open Content Overlay Windows ---

@@ -106,6 +106,8 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
       })),
     utilitiesMenuRef: null,
     setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
+    globalSearchRef: null,
+    setGlobalSearchRef: (ref) => set({ globalSearchRef: ref }),
     floatingMenuInfo: null,
     setFloatingMenuInfo: (info) => set({ floatingMenuInfo: info }),
     clear: () => {
