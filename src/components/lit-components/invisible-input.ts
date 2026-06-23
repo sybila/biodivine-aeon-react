@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 type StyleProperty =
   | 'compHeight'
@@ -225,6 +225,14 @@ export class InvisibleInput extends LitElement {
   ) {
     const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
+  }
+
+  public async focus() {
+    await this.updateComplete;
+    const input = this.renderRoot?.querySelector(
+      this.multiLine ? '#multiline-text-input' : '#text-input'
+    ) as HTMLInputElement | null;
+    input?.focus();
   }
 
   updated(changed: Map<string, StyleProperty>) {
