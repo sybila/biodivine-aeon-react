@@ -14,6 +14,7 @@ export type ChangeUpdateFunctionInputProps = {
   validationMinHeight: string;
   validationMaxHeight: string;
   varId: number;
+  exposeInputRef: (reference: HTMLElement) => void;
 
   modelEditorServ: ModelEditorInt;
   pageStringProviderServ: ModelEditorPageStringsInt;

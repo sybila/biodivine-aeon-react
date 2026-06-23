@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import type { InvisibleInput } from '../../../lit-components/invisible-input';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import UpdateFunctionValidation from '../UpdateFunctionValidation/UpdateFunctionValidation';
 import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
@@ -11,6 +13,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   validationMinHeight,
   validationMaxHeight,
   varId,
+  exposeInputRef,
 
   modelEditorServ,
   pageStringProviderServ,
@@ -19,6 +22,8 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   updateFunctionsStore,
   helpHoverStore,
 }) => {
+  const inputReference = useRef<InvisibleInput | null>(null);
+
   const varName = variablesStore(
     (state) => state.variables[varId].name ?? 'Unknown'
   );
@@ -48,12 +53,17 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   const handleUpdateFunctionMouseLeave = () =>
     helpHoverStore.getState().clear();
 
+  useEffect(() => {
+    exposeInputRef(inputReference.current as HTMLElement);
+  }, [inputReference]);
+
   return (
     <div
       style={{ height: compHeight, width: compWidth }}
       className="flex flex-col justify-center items-center"
     >
       <InvisibleInputReact
+        ref={inputReference}
         compHeight={inputHeight}
         compWidth={inputWidth}
         fontSize={inputFontSize}

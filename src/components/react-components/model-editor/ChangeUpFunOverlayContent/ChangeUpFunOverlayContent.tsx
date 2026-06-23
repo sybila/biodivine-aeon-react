@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
@@ -16,12 +16,20 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   updateFunctionsStore,
   helpHoverStore,
 }) => {
+  const [inputReference, setInputReference] = useState<HTMLElement | null>(
+    null
+  );
+
   const regulationsObj = regulationsStore((state) => state.regulations);
 
   const regulations = useMemo(
     () => Object.values(regulationsObj).filter((r) => r.target === varId),
     [regulationsObj, varId]
   );
+
+  useEffect(() => {
+    inputReference?.focus();
+  }, [inputReference]);
 
   return (
     <div className="flex flex-col gap-1 justify-center items-center max-h-[40vh] w-[50vw]">
@@ -63,6 +71,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           inputWidth="100%"
           validationMinHeight="40px"
           validationMaxHeight="50px"
+          exposeInputRef={(ref) => setInputReference(ref)}
           modelEditorServ={modelEditorServ}
           pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
