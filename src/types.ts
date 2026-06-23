@@ -534,4 +534,7 @@ export type VisualizationStatus = {
 /** Type for button which opens tab menu. */
 export type MenuTabButton = HTMLElement & { isActive: boolean };
 
+/** Type for components which have content visible attribute for changing visibility. */
+export type ContentVisibleComponent = HTMLElement & { contentVisible: boolean };
+
 // #endregion

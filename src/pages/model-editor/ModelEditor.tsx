@@ -178,6 +178,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         variablesStore={variablesStore}
         helpHoverStore={helpHoverStore}
         modelUndoRedoStore={modelUndoRedoStore}
+        modelEditorStatusStore={modelEditorStatusStore}
       />
 
       <SideButtonMenu>

@@ -63,6 +63,12 @@ class ModelEditorShortcuts implements PageShortcutsInt {
       return;
     }
 
+    /** Open utilities menu */
+    if (event.ctrlKey && event.shiftKey && event.key === 'U') {
+      event.preventDefault();
+      this.modelEditorServ.openUtilitiesMenu();
+    }
+
     /** Edit update function of variable. */
     if (event.ctrlKey && event.key === 'e') {
       event.preventDefault();

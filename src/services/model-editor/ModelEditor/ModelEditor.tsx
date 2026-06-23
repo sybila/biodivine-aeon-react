@@ -8,6 +8,7 @@ import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/V
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
+  ContentVisibleComponent,
   MenuTabButton,
   MenuTabTypeMENotNull,
   ModelStats,
@@ -247,6 +248,25 @@ class ModelEditor implements ModelEditorInt {
       await new Promise((resolve) => setTimeout(resolve, 15));
       this.modelEditorStatusStore.getState().setScrollToVariable(variableId);
     }
+  }
+
+  // #endregion
+
+  // #region --- Utilities Menu Actions ----
+
+  public openUtilitiesMenu() {
+    const reference: ContentVisibleComponent | null =
+      this.modelEditorStatusStore.getState().utilitiesMenuRef;
+
+    if (reference === null) {
+      console.warn(
+        'Error: Could not open the Model Editor Utilities Menu. Missing reference.'
+      );
+
+      return;
+    }
+
+    reference.contentVisible = true;
   }
 
   // #endregion

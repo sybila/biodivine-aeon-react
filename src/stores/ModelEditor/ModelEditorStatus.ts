@@ -1,4 +1,5 @@
 import type {
+  ContentVisibleComponent,
   MenuTabButton,
   MenuTabTypeMENotNull,
   ModelEditorItem,
@@ -53,6 +54,12 @@ export type ModelEditorStatus = {
     tab: MenuTabTypeMENotNull,
     el: MenuTabButton | null
   ) => void;
+
+  /** Reference to the utilities menu component. */
+  utilitiesMenuRef: ContentVisibleComponent | null;
+
+  /** Setter for the reference to the utilities menu component. */
+  setUtilitiesMenuRef: (ref: ContentVisibleComponent) => void;
 
   /** Information about the floating menu's position and zoom level.
    *  If null, the floating menu is hidden.

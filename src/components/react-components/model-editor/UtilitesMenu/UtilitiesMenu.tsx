@@ -5,6 +5,7 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 
 import RedoIcon from '../../../../assets/icons/redo.svg';
 import UndoIcon from '../../../../assets/icons/undo.svg';
+import type { ContentVisibleComponent } from '../../../../types';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
@@ -15,6 +16,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   variablesStore,
   helpHoverStore,
   modelUndoRedoStore,
+  modelEditorStatusStore,
 }) => {
   const gapInsideSection: string = '15px';
 
@@ -111,6 +113,11 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 
   return (
     <HorizontalHidableContentReact
+      ref={(el) =>
+        modelEditorStatusStore
+          .getState()
+          .setUtilitiesMenuRef(el as ContentVisibleComponent)
+      }
       className="absolute top-[55px] right-[12px] z-1"
       buttonRight={true}
       compHeight="180px"

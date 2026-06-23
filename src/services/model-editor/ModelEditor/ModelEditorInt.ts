@@ -94,6 +94,13 @@ export interface ModelEditorInt {
 
   // #endregion
 
+  // #region --- Utilities Menu Actions ----
+
+  /** Opens utilities menu of the Model Editor page. */
+  openUtilitiesMenu(): void;
+
+  // #endregion
+
   // #region --- Open Content Overlay Windows ---
 
   /** Opens the "Change Variable Name" overlay window.

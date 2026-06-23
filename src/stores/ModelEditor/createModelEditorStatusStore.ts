@@ -104,6 +104,8 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
           [tab]: el,
         },
       })),
+    utilitiesMenuRef: null,
+    setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
     floatingMenuInfo: null,
     setFloatingMenuInfo: (info) => set({ floatingMenuInfo: info }),
     clear: () => {
