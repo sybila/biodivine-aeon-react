@@ -34,9 +34,14 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   const updateFunction: string | undefined = updateFunctionsStore(
     (state) => state.updateFunctions[id]?.functionString ?? undefined
   );
-  const updateFunctionStatus: UpdateFunctionStatus = updateFunctionsStore(
-    (state) => state.updateFunctionStatus[id] ?? { status: '', isError: false }
-  );
+  const updateFunctionStatusNotSafe: UpdateFunctionStatus =
+    updateFunctionsStore((state) => state.updateFunctionStatus[id]);
+
+  const updateFunctionStatus = updateFunctionStatusNotSafe ?? {
+    status:
+      'Unvalidated function: Try to reset the update funtion to force revalidation.',
+    isError: true,
+  };
 
   const regulations = useMemo(
     () => Object.values(regulationsObj).filter((r) => r.target === id),
@@ -59,7 +64,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
     >
       <section
         slot="top-content"
-        className="h-full w-[80%] flex flex-row justify-between items-center  shrink-0"
+        className="h-full w-[80%] flex flex-row justify-between items-center shrink-0"
       >
         <NonScrollableTextReact
           compHeight="28px"
