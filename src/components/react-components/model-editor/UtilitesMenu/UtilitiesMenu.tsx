@@ -1,12 +1,13 @@
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import HorizontalHidableContentReact from '../../lit-wrappers/HorizontalHidableContentReact';
-import TextInputReact from '../../lit-wrappers/TextInputReact';
 import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 
+import { useMemo } from 'react';
 import RedoIcon from '../../../../assets/icons/redo.svg';
 import UndoIcon from '../../../../assets/icons/undo.svg';
-import type { ContentVisibleComponent } from '../../../../types';
+import type { ContentVisibleComponent, Variable } from '../../../../types';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
+import TextInputSuggestionsReact from '../../lit-wrappers/TextInputSuggestionsReact';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   modelVisualization,
@@ -20,6 +21,12 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 }) => {
   const gapInsideSection: string = '15px';
 
+  const variables = variablesStore((state) => state.variables);
+
+  const variableNames = useMemo(() => {
+    return Object.values(variables).map((variable: Variable) => variable.name);
+  }, [variables]);
+
   const renderVariableSearch = () => {
     return (
       <section
@@ -28,15 +35,26 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       >
         <DotHeaderReact headerText="Variable Search" compHeight="20px" />
 
-        <TextInputReact
+        <TextInputSuggestionsReact
           ref={(el) =>
             modelEditorStatusStore
               .getState()
               .setGlobalSearchRef(el as HTMLElement)
           }
+          componentZIndex="200"
           placeholder="Search variables... (press enter to submit)"
-          compHeight="30px"
-          compWidth="100%"
+          inputHeight="30px"
+          inputWidth="320px"
+          suggListMinHeight="20px"
+          suggListMaxHeight="80px"
+          suggListWidth="315px"
+          suggLineHeight="18px"
+          suggFontSize="17px"
+          suggListBgColor="var(--color-tertiary)"
+          suggHoverBgColor="var(--color-tertiary-light-highlight)"
+          isSeparator={(char) => {
+            return char === ',';
+          }}
           onSubmit={(value) =>
             modelVisualization.fit(
               searchAndFilterHelpersServ.filterVariablesBySearchTerms(
@@ -45,18 +63,19 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
               )
             )
           }
-          onMouseEnter={(e) =>
+          onInputMouseEnter={(e) =>
             helpHoverStore
               .getState()
               .setHelpHoverAtMouse(
-                e.nativeEvent,
+                e,
                 pageStringProviderServ.Tooltips.variableSearch(),
                 true,
                 50,
                 -115
               )
           }
-          onMouseLeave={() => helpHoverStore.getState().clear()}
+          onInputMouseLeave={() => helpHoverStore.getState().clear()}
+          suggestionStrings={variableNames}
         />
       </section>
     );
