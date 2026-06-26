@@ -36,6 +36,20 @@ export class TextInputSuggestions extends LitElement {
   @property({ type: String }) declare inputColor?: string;
   @property({ type: Function }) declare onWrite?: (value: string) => void;
   @property({ type: Function }) declare onSubmit?: (value: string) => void;
+  @property({ type: Function }) declare onInputMouseEnter?: (
+    event: MouseEvent
+  ) => void;
+  @property({ type: Function }) declare onInputMouseLeave?: (
+    event: MouseEvent
+  ) => void;
+  @property({ type: Function }) declare onSuggestionMouseEnter?: (
+    event: MouseEvent,
+    suggestion: string
+  ) => void;
+  @property({ type: Function }) declare onSuggestionMouseLeave?: (
+    event: MouseEvent,
+    suggestion: string
+  ) => void;
 
   @property({ type: String }) declare textColor?: string;
   @property({ type: String }) declare textFontSize?: string;
@@ -139,6 +153,9 @@ export class TextInputSuggestions extends LitElement {
     #suggestions-list li {
       height: fit-content;
       width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       box-sizing: border-box;
       line-height: var(--text-input-suggestions-sugg-line-height, 28px);
       font-size: var(--text-input-suggestions-sugg-font-size, 18px);
@@ -428,6 +445,12 @@ export class TextInputSuggestions extends LitElement {
         <input
           @focus=${() => this.handleFocus()}
           @blur=${() => this.handleBlur()}
+          @mouseenter=${(e: MouseEvent) => {
+            if (this.onInputMouseEnter) this.onInputMouseEnter(e);
+          }}
+          @mouseleave=${(e: MouseEvent) => {
+            if (this.onInputMouseLeave) this.onInputMouseLeave(e);
+          }}
           @keyup=${(e: KeyboardEvent) => this.writeHandler(e)}
           @keydown=${(e: KeyboardEvent) => this.submitHandler(e)}
           type="text"
@@ -442,7 +465,19 @@ export class TextInputSuggestions extends LitElement {
               <ul id="suggestions-list" part="suggestions-list">
                 ${this.filteredSuggestions.map(
                   (s) => html`
-                    <li @click=${() => this.selectSuggestion(s)}>${s}</li>
+                    <li
+                      @click=${() => this.selectSuggestion(s)}
+                      @mouseenter=${(e: MouseEvent) => {
+                        if (this.onSuggestionMouseEnter)
+                          this.onSuggestionMouseEnter(e, s);
+                      }}
+                      @mouseleave=${(e: MouseEvent) => {
+                        if (this.onSuggestionMouseLeave)
+                          this.onSuggestionMouseLeave(e, s);
+                      }}
+                    >
+                      ${s}
+                    </li>
                   `
                 )}
               </ul>
