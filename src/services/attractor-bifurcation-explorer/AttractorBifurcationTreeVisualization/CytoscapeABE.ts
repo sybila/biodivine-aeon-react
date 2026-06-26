@@ -612,8 +612,8 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   // #region --- Tree Layout Management ---
 
   /** Fit the whole Bifurcation Tree into view */
-  public fit() {
-    this.cytoscape.fit(undefined, this.layoutSettings.fitPadding);
+  public fit(customPadding?: number) {
+    this.cytoscape.fit(undefined, customPadding ?? this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
@@ -622,6 +622,12 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     fit: boolean = false,
     animate: boolean = this.layoutSettings.animate
   ) {
+    if (this.cytoscape.nodes().length < 2) {
+      this.fit(400);
+
+      return;
+    }
+
     const settings = this.layoutSettings;
     const options = settings.useTidytree
       ? {

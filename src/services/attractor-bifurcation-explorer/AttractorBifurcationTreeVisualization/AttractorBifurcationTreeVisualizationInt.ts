@@ -97,8 +97,10 @@ export interface AttractorBifurcationTreeVisualizationInt {
 
   // #region --- Tree Layout Management ---
 
-  /** Fit the whole Bifurcation Tree into view */
-  fit(): void;
+  /** Fit the whole Bifurcation Tree into view.
+   *  @param customPadding (number | undefined) - optional parameter which overrides the padding preset by the fit function with custom padding. It is represented as number of pixels added by padding.
+   */
+  fit(customPadding?: number): void;
 
   /**  Applies the tree layout to the Cytoscape instance */
   applyTreeLayout(fit?: boolean, animate?: boolean): void;
