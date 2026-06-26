@@ -108,8 +108,12 @@ export interface AttractorBifurcationExplorerInt {
   /** Saves the current status of the bifurcation tree visualization */
   saveVisualizationStatus(): void;
 
-  /** Restores state of the bifurcation tree visualization (pan, zoom, selected node ...) */
-  restoreVisualizationState(): void;
+  /**
+   * Restores the state of the bifurcation tree visualization (pan, zoom, selected node, etc.).
+   *
+   * @param selectRootNodeFallback (boolean | undefined) When set to `true`, the visualization will automatically select the root node of the bifurcation tree, if no previously selected node can be restored from the saved state.
+   */
+  restoreVisualizationState(selectRootNodeFallback?: boolean): void;
 
   // #endregion
 

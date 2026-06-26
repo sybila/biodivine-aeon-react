@@ -265,7 +265,9 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       this.isEmpty = false;
     }
 
-    this.restoreVisualizationState();
+    this.restoreVisualizationState(
+      nodeList !== undefined && nodeList.length == 1
+    );
   }
 
   /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
@@ -424,7 +426,9 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   /** Restores state of the bifurcation tree visualization (pan, zoom, selected node ...) */
-  public restoreVisualizationState(): void {
+  public restoreVisualizationState(
+    selectRootNodeFallback: boolean = false
+  ): void {
     const status =
       this.bifurcationExplorerStatusStore.getState().visualizationStatus;
     const selectedNode =
@@ -436,6 +440,8 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
     if (selectedNode) {
       this.cytoscape.refreshSelection(selectedNode.id.toString());
+    } else if (selectRootNodeFallback) {
+      this.cytoscape.selectRootNode();
     }
   }
 
