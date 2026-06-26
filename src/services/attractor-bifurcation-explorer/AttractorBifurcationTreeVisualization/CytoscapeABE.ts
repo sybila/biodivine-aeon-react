@@ -38,7 +38,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     horizontalSpacing: 20,
     verticalSpacing: 40,
     animate: true,
-    fitPadding: 20,
+    fitPadding: 60,
     layerHeight: 120,
   };
 
