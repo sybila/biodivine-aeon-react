@@ -32,7 +32,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   }, [inputReference]);
 
   return (
-    <div className="flex flex-col gap-1 justify-center items-center max-h-[40vh] w-[50vw]">
+    <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
       <DotHeaderReact
         headerText="Regulators"
         compHeight="15px"
