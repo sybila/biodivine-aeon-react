@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
@@ -15,7 +15,7 @@ import StabilityIcon from '../../assets/icons/stability_analysis.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
 
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import type { MenuTabTypeABE } from '../../types';
+import type { DecisionMixedNode, LeafNode, MenuTabTypeABE } from '../../types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
 const AttractorBifurcationExplorer: React.FC<
@@ -32,9 +32,28 @@ const AttractorBifurcationExplorer: React.FC<
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
 
+  const prevSelectedNodeRef = useRef<LeafNode | DecisionMixedNode | null>(null);
+
   const activeTab: MenuTabTypeABE = bifurcationExplorerStatusStore(
     (state) => state.activeMenuTab
   );
+
+  const selectedNode = bifurcationExplorerStatusStore(
+    (state) => state.selectedNode
+  );
+
+  useEffect(() => {
+    const prev = prevSelectedNodeRef.current;
+    const justSelectedNode = selectedNode != null && prev == null;
+
+    const noTabOpen = !activeTab;
+
+    if (justSelectedNode && noTabOpen) {
+      bifurcationExplorerStatusStore.getState().setActiveMenuTab('Overview');
+    }
+
+    prevSelectedNodeRef.current = selectedNode;
+  }, [selectedNode, activeTab]);
 
   useEffect(() => {
     shortcutManagerServ?.setShortcuts('Attractor Bifurcation Explorer');
