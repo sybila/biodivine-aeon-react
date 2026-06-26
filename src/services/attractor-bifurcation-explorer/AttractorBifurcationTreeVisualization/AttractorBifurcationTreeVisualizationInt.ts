@@ -47,6 +47,11 @@ export interface AttractorBifurcationTreeVisualizationInt {
   selectNode(nodeId: string): void;
 
   /**
+   * Selects root node of the bifurcation tree if exists.
+   */
+  selectRootNode(): void;
+
+  /**
    * Triggers all necessary events to update UI after graph update.
    * Selects/Unselects nodes as needed.
    * If targetId is provided, it will be selected.

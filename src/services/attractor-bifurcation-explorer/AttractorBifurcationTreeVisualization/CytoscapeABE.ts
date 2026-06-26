@@ -1,4 +1,8 @@
-import cytoscape, { type CytoscapeOptions, type EventObject } from 'cytoscape';
+import cytoscape, {
+  type CytoscapeOptions,
+  type EventObject,
+  type NodeSingular,
+} from 'cytoscape';
 import tidytree from 'cytoscape-tidytree';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
@@ -342,9 +346,20 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   }
 
   public selectNode(nodeId: string) {
-    let current = this.cytoscape.nodes(':selected');
+    const current = this.cytoscape.nodes(':selected');
     current.unselect();
     this.cytoscape.getElementById(nodeId).select();
+  }
+
+  public selectRootNode() {
+    const root: NodeSingular | undefined = this.cytoscape
+      .nodes()
+      .filter((node: NodeSingular) => node.incomers('edge').length === 0)
+      .first();
+
+    if (root) {
+      this.selectNode(root.id());
+    }
   }
 
   /** Triggers all necessary events to update UI after graph update.
@@ -613,7 +628,10 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   /** Fit the whole Bifurcation Tree into view */
   public fit(customPadding?: number) {
-    this.cytoscape.fit(undefined, customPadding ?? this.layoutSettings.fitPadding);
+    this.cytoscape.fit(
+      undefined,
+      customPadding ?? this.layoutSettings.fitPadding
+    );
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
