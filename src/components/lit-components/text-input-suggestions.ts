@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 type StyleProperty =
@@ -80,8 +80,9 @@ export class TextInputSuggestions extends LitElement {
   static styles = css`
     :host {
       display: block;
-      height: fit-content;
-      width: fit-content;
+      height: var(--text-input-suggestions-height, 26px);
+      width: var(--text-input-suggestions-width, 500px);
+      overflow: visible;
       z-index: var(--text-input-suggestions-z-index, 100);
     }
 
@@ -199,6 +200,7 @@ export class TextInputSuggestions extends LitElement {
     return undefined;
   }
 
+  /** Select suggestion and use it to replace text written in text-input after the last separator. */
   private selectSuggestion(selectedSuggestion: string) {
     if (!this.isSeparator) {
       this.value = selectedSuggestion;
@@ -214,7 +216,9 @@ export class TextInputSuggestions extends LitElement {
         this.value = selectedSuggestion;
       } else {
         this.value =
-          currentVal.slice(0, lastSeparatorIndex) + ' ' + selectedSuggestion;
+          currentVal.slice(0, lastSeparatorIndex + 1) +
+          ' ' +
+          selectedSuggestion;
       }
     }
 
@@ -223,32 +227,41 @@ export class TextInputSuggestions extends LitElement {
     }
   }
 
+  /** Helper function which is used for separating text-input text by separator. */
   private splitByPredicate(
     text: string,
     isSeparator: (char: string) => boolean
   ): string[] {
+    if (!text || text.length === 0) {
+      return [''];
+    }
+
     const result: string[] = [];
+    let previouslySeparator: boolean = false;
     let current = '';
 
     for (const char of text) {
       if (isSeparator(char)) {
+        previouslySeparator = true;
         if (current) result.push(current);
         current = '';
       } else {
+        previouslySeparator = false;
         current += char;
       }
     }
 
-    if (current) result.push(current);
+    if (current || previouslySeparator) result.push(current);
 
     return result;
   }
 
+  /** Getter which returns suggestions filtered by the current input of the text-input. */
   private get filteredSuggestions(): string[] {
     if (!this.isFocused || !this.suggestionStrings) return [];
 
     const textTransform =
-      this.filterSuggTextTransform ?? ((s) => s.toLowerCase());
+      this.filterSuggTextTransform ?? ((s) => s.toLowerCase().trim());
 
     const text = this.value ?? '';
 
@@ -258,22 +271,26 @@ export class TextInputSuggestions extends LitElement {
         )
       : [textTransform(text)];
 
-    if (!v) return this.suggestionStrings;
+    if (!v || v.length < 1) return this.suggestionStrings;
+
+    const suggSelectedSuggSet = new Set(v.slice(0, v.length - 1));
 
     const filterFunction = this.filterSuggPredicate
       ? this.filterSuggPredicate
-      : (s: string) => {
-          for (const inputedString of v) {
-            if (s.includes(inputedString)) {
-              return true;
-            }
-          }
-
-          return false;
+      : (
+          suggestion: string,
+          inputedTextArray: Array<string>,
+          alreadySearchedStrings: Set<string>
+        ) => {
+          // Do not include the suggestion if the suggestion is already in search or doesnt match text after the last separator.
+          return (
+            !alreadySearchedStrings.has(suggestion) &&
+            suggestion.includes(inputedTextArray[inputedTextArray.length - 1])
+          );
         };
 
     return this.suggestionStrings.filter((s) =>
-      filterFunction(textTransform(s), v)
+      filterFunction(textTransform(s), v, suggSelectedSuggSet)
     );
   }
 
