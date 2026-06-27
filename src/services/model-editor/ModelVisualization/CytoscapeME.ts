@@ -195,6 +195,9 @@ class CytoscapeME implements ModelVisualizationInt {
         },
         nodeDimensionsIncludeLabels: true,
       },
+      wheelSensitivity: 1,
+      maxZoom: 18,
+      minZoom: 0.5,
       boxSelectionEnabled: false,
       selectionType: 'single',
       style: [
