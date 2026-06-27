@@ -90,6 +90,7 @@ export class TextInputSuggestions extends LitElement {
   @property({ type: Array }) declare suggestionStrings?: Array<string>;
 
   private isFocused = false;
+  private isMouseDownOnSuggestion = false;
 
   static styles = css`
     :host {
@@ -219,29 +220,29 @@ export class TextInputSuggestions extends LitElement {
 
   /** Select suggestion and use it to replace text written in text-input after the last separator. */
   private selectSuggestion(selectedSuggestion: string) {
-    if (!this.isSeparator) {
-      this.value = selectedSuggestion;
-    } else {
-      /** Find the first separator and after it insert the suggestion. */
+    let newValue = selectedSuggestion;
+
+    if (this.isSeparator) {
       const currentVal = this.value ?? '';
       const lastSeparatorIndex = this.findLastChar(
         currentVal,
         this.isSeparator
       );
 
-      if (lastSeparatorIndex === undefined) {
-        this.value = selectedSuggestion;
-      } else {
-        this.value =
+      if (lastSeparatorIndex !== undefined) {
+        newValue =
           currentVal.slice(0, lastSeparatorIndex + 1) +
           ' ' +
           selectedSuggestion;
       }
     }
 
-    if (this.onWrite) {
-      this.onWrite(this.value ?? '');
-    }
+    this.value = newValue;
+
+    this.isFocused = false;
+
+    this.requestUpdate();
+    this.onWrite?.(this.value ?? '');
   }
 
   /** Helper function which is used for separating text-input text by separator. */
@@ -327,6 +328,10 @@ export class TextInputSuggestions extends LitElement {
   private handleBlur() {
     // small delay prevents click on suggestion from being blocked
     setTimeout(() => {
+      if (this.isMouseDownOnSuggestion) {
+        return;
+      }
+
       this.isFocused = false;
       this.requestUpdate();
     }, 100);
@@ -467,6 +472,8 @@ export class TextInputSuggestions extends LitElement {
                   (s) => html`
                     <li
                       @click=${() => this.selectSuggestion(s)}
+                      @mousedown=${() => (this.isMouseDownOnSuggestion = true)}
+                      @mouseup=${() => (this.isMouseDownOnSuggestion = false)}
                       @mouseenter=${(e: MouseEvent) => {
                         if (this.onSuggestionMouseEnter)
                           this.onSuggestionMouseEnter(e, s);
