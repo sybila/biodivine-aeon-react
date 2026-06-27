@@ -527,6 +527,12 @@ export type VisualizationStatus = {
   zoom: number;
 };
 
+export type VisualizationZoomStatus = {
+  minZoom: number;
+  maxZoom: number;
+  currentZoom: number;
+};
+
 // #endregion
 
 // #region --- Global Components ---

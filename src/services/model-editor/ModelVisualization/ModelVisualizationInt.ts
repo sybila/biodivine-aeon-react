@@ -1,4 +1,4 @@
-import type { Variable } from "../../../types";
+import type { Variable } from '../../../types';
 
 /**
  * Interface for model visualization in the ModelEditor page.
@@ -74,10 +74,15 @@ export interface ModelVisualizationInt {
   /** Zoom and pan the editor to ensure that given node is visible. */
   showNode(id: number): void;
 
-  /** Pan and zoom the graph to show the whole model. 
+  /** Pan and zoom the graph to show the whole model.
    *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
-  */
+   */
   fit(variables?: Variable[]): void;
+
+  /** Set zoom level of the model visualization
+   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
+   */
+  setZoom(zoomLevel: number): void;
 
   // #endregion
 

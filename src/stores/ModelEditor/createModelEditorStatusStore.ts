@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { VisualizationZoomStatus } from '../../types';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { ModelEditorStatus } from './ModelEditorStatus';
 
@@ -110,6 +111,21 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
     setGlobalSearchRef: (ref) => set({ globalSearchRef: ref }),
     floatingMenuInfo: null,
     setFloatingMenuInfo: (info) => set({ floatingMenuInfo: info }),
+    visualizationZoomStatus: null,
+    setVisualizationZoomStatus: (zoomStatus: VisualizationZoomStatus) => {
+      set({
+        visualizationZoomStatus: {
+          minZoom: zoomStatus.minZoom,
+          maxZoom: zoomStatus.maxZoom,
+          currentZoom:
+            zoomStatus.currentZoom < zoomStatus.minZoom
+              ? zoomStatus.minZoom
+              : zoomStatus.currentZoom > zoomStatus.maxZoom
+                ? zoomStatus.maxZoom
+                : zoomStatus.currentZoom,
+        },
+      });
+    },
     clear: () => {
       set({
         selectedItemsInfo: { variables: new Set<number>(), regulations: {} },

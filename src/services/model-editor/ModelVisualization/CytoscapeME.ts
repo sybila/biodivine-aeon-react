@@ -96,6 +96,12 @@ class CytoscapeME implements ModelVisualizationInt {
     this.cytoscape.on('zoom', (e: any) => {
       if (e.target !== this.cytoscape) return;
 
+      this.modelEditorStatusStore.getState().setVisualizationZoomStatus({
+        minZoom: this.cytoscape.minZoom(),
+        maxZoom: this.cytoscape.maxZoom(),
+        currentZoom: this.cytoscape.zoom(),
+      });
+
       this.hideMenu();
     });
     this.cytoscape.on('pan', (e: any) => {
@@ -778,6 +784,20 @@ class CytoscapeME implements ModelVisualizationInt {
     }, 2000);
   }
 
+  public setZoom(zoomLevel: number): void {
+    const zoom = Math.min(
+      this.cytoscape.maxZoom(),
+      Math.max(this.cytoscape.minZoom(), zoomLevel)
+    );
+
+    this.cytoscape.zoom({
+      level: zoom,
+      renderedPosition: {
+        x: this.cytoscape.width() / 2,
+        y: this.cytoscape.height() / 2,
+      },
+    });
+  }
   // #endregion
 
   // #region --- Menu Rendering ---

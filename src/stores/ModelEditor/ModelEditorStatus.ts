@@ -5,6 +5,7 @@ import type {
   ModelEditorItem,
   ModelEditorItems,
   Position,
+  VisualizationZoomStatus,
 } from '../../types';
 
 /* Zustand store for managing the model editor state */
@@ -84,6 +85,14 @@ export type ModelEditorStatus = {
   setFloatingMenuInfo: (
     info: { position: Position; zoom: number; itemInfo: ModelEditorItem } | null
   ) => void;
+
+  /** Information about current visualization zoom (minZoom, maxZoom, currentZoom) */
+  visualizationZoomStatus: VisualizationZoomStatus | null;
+
+  /** Set information about zoom of the model visualization.
+   *  @param zoomInfo (VisualizationZoomStatus) - object containing infromation about visualization zoom (minZoom, maxZoom, currentZoom)
+   */
+  setVisualizationZoomStatus: (zoomInfo: VisualizationZoomStatus) => void;
 
   /** Clears all the information. */
   clear: () => void;
