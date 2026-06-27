@@ -4,6 +4,7 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 import { useMemo } from 'react';
 
 import type { ContentVisibleComponent, Variable } from '../../../../types';
+import OneButtonSection from './OneButtonSection/OneButtonSection';
 import UndoRedoSection from './UndoRedoSection/UndoRedoSection';
 import VariableSearchSection from './VariableSearchSection/VariableSearchSection';
 import ZoomSection from './ZoomSection/ZoomSection';
@@ -39,7 +40,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       buttonRight={true}
-      compHeight="290px"
+      compHeight="400px"
       buttonWidth="25px"
       contentWidth="350px"
       buttonOnMouseEnter={(e) =>
@@ -124,6 +125,15 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           minValue={zoomStatus?.minZoom ?? 0}
           maxValue={zoomStatus?.maxZoom ?? 100}
           currentValue={zoomStatus?.currentZoom ?? 0}
+        />
+
+        <OneButtonSection
+          gapInsideSection={gapInsideSection}
+          headerText="Fit Into View"
+          buttonText="Fit"
+          onClick={() => {
+            modelVisualization.fit();
+          }}
         />
       </div>
     </HorizontalHidableContentReact>
