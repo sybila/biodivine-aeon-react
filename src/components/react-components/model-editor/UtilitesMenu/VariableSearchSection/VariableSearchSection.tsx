@@ -14,7 +14,7 @@ const VariableSearchSection: React.FC<VariableSearchSectionProps> = ({
 }) => {
   return (
     <section
-      className="flex flex-col h-fit w-full"
+      className="flex flex-col h-fit w-full z-200"
       style={{ gap: `${gapInsideSection}` }}
     >
       <DotHeaderReact headerText="Variable Search" compHeight="20px" />
