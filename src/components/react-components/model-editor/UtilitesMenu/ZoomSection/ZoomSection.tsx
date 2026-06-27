@@ -19,6 +19,7 @@ const ZoomSection: React.FC<ZoomSectionProps> = ({
       <ValueSliderReact
         handleInput={(zoomLevel: number) => setZoomFunction(zoomLevel)}
         compWidth="100%"
+        step={0.1}
         minValue={minValue}
         maxValue={maxValue}
         value={currentValue}
