@@ -93,7 +93,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.variableLayout('Dagre'),
+              pageStringProviderServ.Tooltips.variableSelectedLayout('Dagre'),
               true,
               -50,
               150

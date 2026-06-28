@@ -49,6 +49,7 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   // #region Visual Options
 
   variableLayout(layoutName: string): string;
+  variableSelectedLayout(layoutName: string): string;
   highlightVariable(highlightType: string): string;
 
   // #endregion
