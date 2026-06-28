@@ -1,4 +1,8 @@
-import cytoscape, { type CytoscapeOptions } from 'cytoscape';
+import cytoscape, {
+  type Collection,
+  type CytoscapeOptions,
+  type NodeCollection,
+} from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import edgehandles from 'cytoscape-edgehandles';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
@@ -914,24 +918,34 @@ class CytoscapeME implements ModelVisualizationInt {
       .start();
   }
 
-  /** Layout the nodes in a hierarchical manner, using the `dagre` algorithm. */
-  layoutDagre() {
-    this.cytoscape
-      .layout({
-        name: 'dagre',
-        acyclicer: 'greedy',
-        ranker: 'network-simplex',
-        padding: 50,
-        animate: true,
-        animationDuration: 300,
-        fit: true,
-        nodeDimensionsIncludeLabels: true,
+  /** Layout the nodes in a hierarchical manner, using the `dagre` algorithm.
+   *  @param layoutOnlySelected (boolean) = optional parameter which if is set to true runs the layout algorithm only over the subset of the model, else runs it over the whole model.
+   *                                        If not specified set to false (layout the whole model).
+   */
+  layoutDagre(layoutOnlySelected: boolean = false) {
+    const layoutOptions: any = {
+      name: 'dagre',
+      acyclicer: 'greedy',
+      ranker: 'network-simplex',
+      padding: 50,
+      animate: true,
+      animationDuration: 300,
+      fit: true,
+      nodeDimensionsIncludeLabels: true,
 
-        stop: () => {
-          this.layoutCallback();
-        },
-      })
-      .start();
+      stop: () => {
+        this.layoutCallback();
+      },
+    };
+
+    if (!layoutOnlySelected) {
+      this.cytoscape.layout(layoutOptions).start();
+      return;
+    }
+
+    this.runOnSelectedNodes((modelSubset: Collection) =>
+      modelSubset.layout(layoutOptions).start()
+    );
   }
 
   /** Applies concentric layout to sort data by phenotype or by control-enabled values.
@@ -1085,6 +1099,33 @@ class CytoscapeME implements ModelVisualizationInt {
   /** Returns true if the phenotype highlighting is currently active. */
   public isPhenotypeHighlighted(): boolean {
     return this.phenotypeShown ?? false;
+  }
+
+  // #endregion
+
+  // #region --- Utilities ---
+
+  /**
+   * Gets selected nodes and edges connected to them and runs function over them.
+   * @param fun ((modelSubset: Collection) => void) -> function which runs over the selected nodes and connected edges collection
+   * @param minNumberOfSelected (number) -> optional parameter which defines minimal number of selected nodes for which the function should be run.
+   *                                        If is less than specified amount, execution of fun function is skipped. If not specified is defaultly set to 1.
+   */
+  private runOnSelectedNodes(
+    fun: (modelSubset: Collection) => void,
+    minNumberOfSelected: number = 1
+  ) {
+    const selectedNodes: NodeCollection = this.cytoscape.nodes(':selected');
+
+    if (selectedNodes.length < minNumberOfSelected) {
+      return;
+    }
+
+    const connectedEdges = selectedNodes.connectedEdges();
+
+    const neighborhood = selectedNodes.union(connectedEdges);
+
+    fun(neighborhood);
   }
 
   // #endregion

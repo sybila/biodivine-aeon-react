@@ -91,8 +91,11 @@ export interface ModelVisualizationInt {
   /** Layout the nodes in a organic manner, using the `cose` algorithm. */
   layoutCose(): void;
 
-  /** Layout the nodes in a hierarchical manner, using the `dagre` algorithm. */
-  layoutDagre(): void;
+  /** Layout the nodes in a hierarchical manner, using the `dagre` algorithm.
+   *  @param layoutOnlySelected (boolean) = optional parameter which if is set to true runs the layout algorithm only over the subset of the model, else runs it over the whole model.
+   *                                        If not specified set to false (layout the whole model).
+   */
+  layoutDagre(runOnSelected?: boolean): void;
 
   /** Layout the nodes in a phenotype-aware manner. */
   layoutPhenotype(): void;

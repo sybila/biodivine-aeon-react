@@ -27,9 +27,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.variableLayout(
-                'Cose'
-              ),
+              pageStringProviderServ.Tooltips.variableLayout('Cose'),
               true,
               -50,
               150
@@ -44,9 +42,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.variableLayout(
-                'Dagre'
-              ),
+              pageStringProviderServ.Tooltips.variableLayout('Dagre'),
               true,
               -50,
               150
@@ -61,9 +57,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.variableLayout(
-                'Phenotype'
-              ),
+              pageStringProviderServ.Tooltips.variableLayout('Phenotype'),
               true,
               -50,
               150
@@ -78,9 +72,28 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.variableLayout(
-                'Control-Enabled'
-              ),
+              pageStringProviderServ.Tooltips.variableLayout('Control-Enabled'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+    ],
+  };
+
+  const selectedLayouts: VisualOptionsButtonSection = {
+    headerText: 'Selected Variable Layouts',
+    buttons: [
+      [
+        'Hierarchical',
+        () => modelVisualization.layoutDagre(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableLayout('Dagre'),
               true,
               -50,
               150
@@ -107,9 +120,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             .getState()
             .setHelpHoverAtMouse(
               e.nativeEvent,
-              pageStringProviderServ.Tooltips.highlightVariable(
-                'Phenotype'
-              ),
+              pageStringProviderServ.Tooltips.highlightVariable('Phenotype'),
               true,
               -50,
               150
@@ -193,6 +204,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
   return (
     <div className="flex flex-col items-center w-full h-fit max-h-[400px] overflow-auto gap-3">
       {renderButtonSection(layouts)}
+      {renderButtonSection(selectedLayouts)}
       {renderButtonSection(highlight)}
     </div>
   );
