@@ -950,16 +950,38 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Applies concentric layout to sort data by phenotype or by control-enabled values.
    * If phenotype parameter is true, then sorts by phenotype, else by control-enabled. */
-  private applyConcentricLayout(phenotype: boolean) {
-    const nodes: Array<[Number, ControlInfo]> = [];
+  private applyConcentricLayout(
+    phenotype: boolean,
+    layoutOnlySelected: boolean
+  ) {
     const variables: Record<string, number> = {};
+
+    const layoutOptions = {
+      name: 'concentric',
+      concentric: function (node: any) {
+        return variables[node.id()];
+      },
+      levelWidth: function () {
+        return 1;
+      },
+      minNodeSpacing: 5,
+      padding: 5,
+      startAngle: (3 / 2) * Math.PI,
+      clockwise: true,
+      animate: true,
+      animationDuration: 300,
+      nodeDimensionsIncludeLabels: true,
+      fit: true,
+
+      stop: () => {
+        this.layoutCallback();
+      },
+    };
 
     this.controlStore
       .getState()
       .getAllInfoIds()
       .forEach(([id, info]) => {
-        nodes.push(this.cytoscape.getElementById(id));
-
         if (phenotype == true) {
           variables[id] = info.phenotype == null ? 0 : info.phenotype ? 1 : 2;
         } else {
@@ -967,41 +989,24 @@ class CytoscapeME implements ModelVisualizationInt {
         }
       });
 
-    const nodesCol = this.cytoscape.collection(nodes);
+    if (!layoutOnlySelected) {
+      this.cytoscape.nodes().layout(layoutOptions).run();
+      return;
+    }
 
-    nodesCol
-      .layout({
-        name: 'concentric',
-        concentric: function (node: any) {
-          return variables[node.id()];
-        },
-        levelWidth: function () {
-          return 1;
-        },
-        minNodeSpacing: 5,
-        padding: 5,
-        startAngle: (3 / 2) * Math.PI,
-        clockwise: true,
-        animate: true,
-        animationDuration: 300,
-        nodeDimensionsIncludeLabels: true,
-        fit: true,
-
-        stop: () => {
-          this.layoutCallback();
-        },
-      })
-      .run();
+    this.runOnSelectedNodes((modelSubset: Collection) =>
+      modelSubset.layout(layoutOptions).start()
+    );
   }
 
   /** Layout the nodes in a phenotype-aware manner. */
-  public layoutPhenotype() {
-    this.applyConcentricLayout(true);
+  public layoutPhenotype(layoutOnlySelected: boolean = false) {
+    this.applyConcentricLayout(true, layoutOnlySelected);
   }
 
   /** Layout the nodes in a control-enabled manner. */
-  public layoutControlEnabled() {
-    this.applyConcentricLayout(false);
+  public layoutControlEnabled(layoutOnlySelected: boolean = false) {
+    this.applyConcentricLayout(false, layoutOnlySelected);
   }
 
   /** Callback function for layout changes.

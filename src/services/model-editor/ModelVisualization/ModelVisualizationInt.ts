@@ -95,13 +95,19 @@ export interface ModelVisualizationInt {
    *  @param layoutOnlySelected (boolean) = optional parameter which if is set to true runs the layout algorithm only over the subset of the model, else runs it over the whole model.
    *                                        If not specified set to false (layout the whole model).
    */
-  layoutDagre(runOnSelected?: boolean): void;
+  layoutDagre(layoutOnlySelected?: boolean): void;
 
-  /** Layout the nodes in a phenotype-aware manner. */
-  layoutPhenotype(): void;
+  /** Layout the nodes in a phenotype-aware manner.
+   *  @param layoutOnlySelected (boolean) = optional parameter which if is set to true runs the layout algorithm only over the subset of the model, else runs it over the whole model.
+   *                                        If not specified set to false (layout the whole model).
+   */
+  layoutPhenotype(layoutOnlySelected?: boolean): void;
 
-  /** Layout the nodes in a control-enabled manner. */
-  layoutControlEnabled(): void;
+  /** Layout the nodes in a control-enabled manner.
+   *  @param layoutOnlySelected (boolean) = optional parameter which if is set to true runs the layout algorithm only over the subset of the model, else runs it over the whole model.
+   *                                        If not specified set to false (layout the whole model).
+   */
+  layoutControlEnabled(layoutOnlySelected?: boolean): void;
 
   // #endregion
 

@@ -100,6 +100,40 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             ),
         false,
       ],
+      [
+        'Phenotype',
+        () => modelVisualization.layoutPhenotype(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableSelectedLayout(
+                'Phenotype'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Control-Enabled',
+        () => modelVisualization.layoutControlEnabled(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableSelectedLayout(
+                'Control-Enabled'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
     ],
   };
 
