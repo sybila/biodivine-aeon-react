@@ -1,33 +1,95 @@
 import { useEffect, useState } from 'react';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
 import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
 
 const ChangeVarNameOverlayContent: React.FC<
   ChangeVariableNameOverlayContentProps
-> = ({ varId, modelEditorServ, variablesStore }) => {
+> = ({ varId, originalName, closeFunction, modelEditorServ }) => {
   const [inputReference, setInputReference] = useState<HTMLElement | null>(
     null
   );
 
-  const varName = variablesStore.getState().variables[varId]?.name ?? '';
+  const [currentName, setCurrentName] = useState(originalName);
+
+  const [nameError, setNameError] = useState<boolean>(
+    !currentName || currentName === ''
+  );
+
+  const revertFunction = () => {
+    modelEditorServ.changeVariableName(varId, originalName, true);
+    closeFunction();
+  };
+
+  const applyFunction = () => {
+    if (currentName === originalName) {
+      closeFunction();
+      return;
+    }
+
+    const result: boolean = modelEditorServ.changeVariableName(
+      varId,
+      currentName,
+      false
+    );
+
+    if (result) {
+      closeFunction();
+    } else {
+      setNameError(true);
+    }
+  };
 
   useEffect(() => {
     inputReference?.focus();
   }, [inputReference]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        revertFunction();
+      }
+
+      if (event.key === 'Enter') {
+        applyFunction();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentName]);
+
   return (
-    <div className="flex justify-center items-center h-[20vh] w-[50vw]">
+    <div className="flex flex-col justify-around items-center h-[20vh] w-[50vw] gap-2">
       <VariableNameInput
-        height="20vh"
-        width="50vw"
+        height="80%"
+        width="99%"
         fontSize="25px"
-        varId={varId}
-        varName={varName}
+        varName={currentName}
+        nameError={nameError}
         exposeInputRef={(ref) => setInputReference(ref)}
-        onUpdate={(id: number, newName: string) =>
-          modelEditorServ.changeVariableName(id, newName)
-        }
+        onKeyUp={(newName: string) => setCurrentName(newName)}
       />
+
+      <section className="flex flex-row justify-around items-center w-full h-[12%]">
+        <TextButtonReact
+          compHeight="90%"
+          compWidth="40%"
+          text="Revert"
+          onClick={() => {
+            revertFunction();
+          }}
+        />
+        <TextButtonReact
+          compHeight="90%"
+          compWidth="40%"
+          text="Apply"
+          onClick={() => applyFunction()}
+        />
+      </section>
     </div>
   );
 };

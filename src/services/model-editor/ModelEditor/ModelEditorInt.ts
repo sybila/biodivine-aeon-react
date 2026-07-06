@@ -24,7 +24,7 @@ export interface ModelEditorInt {
   addVariable(): void;
 
   /** Changes the name of a variable */
-  changeVariableName(id: number, newName: string): boolean;
+  changeVariableName(id: number, newName: string, force?: boolean): boolean;
 
   /** Removes a variable */
   removeVariable(id: number): Promise<void>;

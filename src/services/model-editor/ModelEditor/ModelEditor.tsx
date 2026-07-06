@@ -95,16 +95,20 @@ class ModelEditor implements ModelEditorInt {
   }
 
   /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string): boolean {
-    if (newName != '') {
+  public changeVariableName(
+    id: number,
+    newName: string,
+    force: boolean = false
+  ): boolean {
+    if (force || newName != '') {
       const error = this.liveModelServ.Variables.renameVariable(
         id,
         newName,
         true,
-        false
+        force
       );
 
-      if (error) {
+      if (!force && error) {
         this.messageServ.showError('Variable name not changed: ' + error);
         return false;
       }
@@ -296,15 +300,23 @@ class ModelEditor implements ModelEditorInt {
   public openChangeVarNameWindow(varId: number) {
     if (varId === undefined) return;
 
+    const originalName: string =
+      this.variablesStore.getState().variables[varId]?.name ?? '';
+
     this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
       content: (
         <ChangeVarNameOverlayContent
           varId={varId}
+          originalName={originalName}
+          closeFunction={() =>
+            this.overlayWindowStore.getState().setCurrentContent(null)
+          }
           modelEditorServ={this}
-          variablesStore={this.variablesStore}
         />
       ),
+      showCloseButton: false,
+      closeOnBgClick: false,
     });
   }
 
@@ -327,6 +339,8 @@ class ModelEditor implements ModelEditorInt {
           helpHoverStore={this.helpHoverStore}
         />
       ),
+      showCloseButton: true,
+      closeOnBgClick: true,
     });
   }
 

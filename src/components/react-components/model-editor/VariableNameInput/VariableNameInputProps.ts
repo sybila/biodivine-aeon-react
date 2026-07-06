@@ -2,8 +2,8 @@ export type VariableNameInputProps = {
   height: string;
   width: string;
   fontSize: string;
-  varId: number;
   varName: string;
+  nameError: boolean;
   exposeInputRef: (reference: HTMLElement) => void;
-  onUpdate: (id: number, newName: string) => boolean;
+  onKeyUp: (newName: string) => void;
 };

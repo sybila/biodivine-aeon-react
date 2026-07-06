@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { InvisibleInput } from '../../../lit-components/invisible-input';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import type { VariableNameInputProps } from './VariableNameInputProps';
@@ -7,25 +7,12 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
   height,
   width,
   fontSize,
-  varId,
   varName,
+  nameError,
   exposeInputRef,
-  onUpdate,
+  onKeyUp,
 }) => {
   const inputRef = useRef<InvisibleInput | null>(null);
-
-  const [nameError, setNameError] = useState<boolean>(
-    !varName || varName === ''
-  );
-
-  const updateVariableName = (newName: string) => {
-    if (!newName || newName === '') {
-      setNameError(true);
-      return;
-    }
-    const success = onUpdate(varId, newName);
-    setNameError(!success);
-  };
 
   useEffect(() => {
     exposeInputRef(inputRef.current as HTMLElement);
@@ -47,8 +34,7 @@ const VariableNameInput: React.FC<VariableNameInputProps> = ({
       value={varName}
       placeholder="(variable name)"
       error={nameError}
-      handleSubmit={updateVariableName}
-      handleChange={updateVariableName}
+      handleKeyUp={(newName: string) => onKeyUp(newName)}
     />
   );
 };
