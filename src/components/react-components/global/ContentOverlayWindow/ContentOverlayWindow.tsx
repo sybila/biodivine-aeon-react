@@ -7,28 +7,26 @@ const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
 }) => {
   const currentContent = overlayWindowStore((state) => state.currentContent);
 
-  if (!currentContent) {
-    return null;
-  }
-
   const closeOverlay = () => {
     overlayWindowStore.getState().setCurrentContent(null);
   };
 
+  if (!currentContent) {
+    return null;
+  }
+
   return (
     <OverlayWindowReact
-      showCloseButton={true}
+      showCloseButton={currentContent.showCloseButton}
       showHeader={true}
       headerText={currentContent.header}
-      handleBackgroundClick={() => closeOverlay()}
+      handleBackgroundClick={() =>
+        currentContent.closeOnBgClick ? closeOverlay() : null
+      }
       handleCloseClick={() => closeOverlay()}
       compZIndex={zIndex}
-      windWidth="auto"
       windMaxWidth="90vw"
-      windHeight="auto"
       windMaxHeight="90vh"
-      windOverflowX="auto"
-      windOverflowY="auto"
     >
       {currentContent.content}
     </OverlayWindowReact>
