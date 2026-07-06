@@ -143,7 +143,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           compZIndex="999999990"
           compWidth="100%"
           compHeight="100%"
-          windWidth="fit-content"
           windMaxWidth="80%"
           showHeader={true}
           showCloseButton={true}
