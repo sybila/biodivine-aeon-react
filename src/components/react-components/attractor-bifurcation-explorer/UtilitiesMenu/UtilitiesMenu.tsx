@@ -31,7 +31,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       buttonRight={true}
-      compHeight="185px"
+      compHeight="250px"
       buttonWidth="25px"
       contentWidth="350px"
       buttonOnMouseEnter={(e) =>
@@ -67,6 +67,16 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           buttonText="Fit"
           onClick={() => {
             attractorBifurcationExplorerServ.fitTree();
+          }}
+        />
+
+
+        <OneButtonSection
+          gapInsideSection={gapInsideSection}
+          headerText="Reset Layout"
+          buttonText="Reset"
+          onClick={() => {
+            attractorBifurcationExplorerServ.resetTreeLayout();
           }}
         />
       </div>

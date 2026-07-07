@@ -24,42 +24,6 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
     attractorBifurcationExplorerServ.getLastPrecision()
   );
 
-  const resetLayout: VisualOptionsButtonSection = {
-    headerText: 'Reset Layout',
-    buttons: [
-      [
-        'Fit',
-        () => attractorBifurcationExplorerServ.fitTree(),
-        (e: React.MouseEvent) =>
-          helpHoverStore
-            .getState()
-            .setHelpHoverAtMouse(
-              e.nativeEvent,
-              pageStringProviderServ.Tooltips.fit(),
-              true,
-              -50,
-              150
-            ),
-        false,
-      ],
-      [
-        'Reset Layout',
-        () => attractorBifurcationExplorerServ.resetTreeLayout(),
-        (e: React.MouseEvent) =>
-          helpHoverStore
-            .getState()
-            .setHelpHoverAtMouse(
-              e.nativeEvent,
-              pageStringProviderServ.Tooltips.resetLayout(),
-              true,
-              -50,
-              150
-            ),
-        false,
-      ],
-    ],
-  };
-
   const layoutOptions: VisualOptionsButtonSection = {
     headerText: 'Layout Options',
     buttons: [
@@ -217,7 +181,6 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
 
   return (
     <div className="flex flex-col items-center w-full h-fit max-h-[400px] overflow-auto gap-3">
-      {renderButtonSection(resetLayout)}
       {renderButtonSection(layoutOptions)}
       {renderPrecisionSlider()}
     </div>
