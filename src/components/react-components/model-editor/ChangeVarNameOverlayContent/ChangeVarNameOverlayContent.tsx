@@ -47,10 +47,12 @@ const ChangeVarNameOverlayContent: React.FC<
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         revertFunction();
       }
 
       if (event.key === 'Enter') {
+        event.preventDefault();
         applyFunction();
       }
     };
