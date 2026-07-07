@@ -128,12 +128,6 @@ export interface AttractorBifurcationExplorerInt {
   /** Set precision for the bifurcation tree. */
   setPrecision(precision: number): void;
 
-  /** Fits the bifurcation tree to the viewport. */
-  fitTree(): void;
-
-  /** Resets the layout of the bifurcation tree. */
-  resetTreeLayout(): void;
-
   /** Sets the nodes to snap to their respective layers. */
   toggleSnapNodesToLayers(): void;
 
@@ -168,6 +162,21 @@ export interface AttractorBifurcationExplorerInt {
     behavior: StabilityAnalysisModes,
     vector: string[]
   ): void;
+
+  // #endregion
+
+  // #region --- Visualization Operations ---
+
+  /** Set zoom level of the model visualization
+   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
+   */
+  setZoom(zoomLevel: number): void;
+
+  /** Fits the bifurcation tree to the viewport. */
+  fitTree(): void;
+
+  /** Resets the layout of the bifurcation tree. */
+  resetTreeLayout(): void;
 
   // #endregion
 

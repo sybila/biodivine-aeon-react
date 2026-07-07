@@ -635,6 +635,21 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
+  public setZoom(zoomLevel: number): void {
+    const zoom = Math.min(
+      this.cytoscape.maxZoom(),
+      Math.max(this.cytoscape.minZoom(), zoomLevel)
+    );
+
+    this.cytoscape.zoom({
+      level: zoom,
+      renderedPosition: {
+        x: this.cytoscape.width() / 2,
+        y: this.cytoscape.height() / 2,
+      },
+    });
+  }
+
   /**  Applies the tree layout to the Cytoscape instance */
   public applyTreeLayout(
     fit: boolean = false,
@@ -846,7 +861,11 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   /** Gets the current visualization status. */
   public getVisualizationStatus(): VisualizationStatus {
     return {
-      zoom: this.cytoscape.zoom(),
+      zoom: {
+        minZoom: this.cytoscape.minZoom(),
+        maxZoom: this.cytoscape.maxZoom(),
+        currentZoom: this.cytoscape.zoom(),
+      },
       pan: this.cytoscape.pan(),
     };
   }

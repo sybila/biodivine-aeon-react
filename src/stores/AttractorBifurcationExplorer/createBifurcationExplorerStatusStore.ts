@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { BifurcationExplorerStatusState } from './BifurcationExplorerStatusState';
+import type { VisualizationZoomStatus } from '../../types';
 
 function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplorerStatusState> {
   return create<BifurcationExplorerStatusState>()((set) => ({
@@ -11,6 +12,25 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
     selectedNode: null,
     stabilityData: null,
     availableDecisions: null,
+
+    utilitiesMenuRef: null,
+    setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
+
+    visualizationZoomStatus: null,
+    setVisualizationZoomStatus: (zoomStatus: VisualizationZoomStatus) => {
+      set({
+        visualizationZoomStatus: {
+          minZoom: zoomStatus.minZoom,
+          maxZoom: zoomStatus.maxZoom,
+          currentZoom:
+            zoomStatus.currentZoom < zoomStatus.minZoom
+              ? zoomStatus.minZoom
+              : zoomStatus.currentZoom > zoomStatus.maxZoom
+                ? zoomStatus.maxZoom
+                : zoomStatus.currentZoom,
+        },
+      });
+    },
 
     setVisualizationStatus: (status) => {
       set({ visualizationStatus: status });

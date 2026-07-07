@@ -524,7 +524,7 @@ export type UndoRedoFunctions = {
 
 export type VisualizationStatus = {
   pan: { x: number; y: number };
-  zoom: number;
+  zoom: VisualizationZoomStatus;
 };
 
 export type VisualizationZoomStatus = {

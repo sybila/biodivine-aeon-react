@@ -1,4 +1,5 @@
 import type {
+  ContentVisibleComponent,
   DecisionMixedNode,
   Decisions,
   FullStabilityAnalysisMode,
@@ -25,6 +26,11 @@ export type BifurcationExplorerStatusState = {
   stabilityData: NodeStabilityData | null;
   /** Decisions available for the selected node */
   availableDecisions: Decisions | null;
+
+  /** Reference to the utilities menu component. */
+  utilitiesMenuRef: ContentVisibleComponent | null;
+  /** Setter for the reference to the utilities menu component. */
+  setUtilitiesMenuRef: (ref: ContentVisibleComponent) => void;
 
   setVisualizationStatus: (status: VisualizationStatus) => void;
   setActiveMenuTab: (tab: MenuTabTypeABE) => void;

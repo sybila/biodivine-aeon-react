@@ -107,6 +107,11 @@ export interface AttractorBifurcationTreeVisualizationInt {
    */
   fit(customPadding?: number): void;
 
+  /** Set zoom level of the model visualization
+   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
+   */
+  setZoom(zoomLevel: number): void;
+
   /**  Applies the tree layout to the Cytoscape instance */
   applyTreeLayout(fit?: boolean, animate?: boolean): void;
 

@@ -465,16 +465,6 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     this.computationManagerServ.setBifurcationTreePrecision(precision, this);
   }
 
-  /** Fits the bifurcation tree to the viewport. */
-  public fitTree(): void {
-    this.cytoscape.fit();
-  }
-
-  /** Resets the layout of the bifurcation tree. */
-  public resetTreeLayout(): void {
-    this.cytoscape.resetTreeLayout();
-  }
-
   /** Sets the nodes to snap to their respective layers. */
   public toggleSnapNodesToLayers(): void {
     this.cytoscape.toggleSnapNodesToLayers();
@@ -583,6 +573,29 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       behavior,
       vector,
     });
+  }
+
+  // #endregion
+
+  // #region --- Visualization Operations ---
+
+  /** Set zoom level of the model visualization
+   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
+   */
+  setZoom(zoomLevel: number): void {
+    this.cytoscape.setZoom(zoomLevel);
+
+    this.saveVisualizationStatus();
+  }
+
+  /** Fits the bifurcation tree to the viewport. */
+  public fitTree(): void {
+    this.cytoscape.fit();
+  }
+
+  /** Resets the layout of the bifurcation tree. */
+  public resetTreeLayout(): void {
+    this.cytoscape.resetTreeLayout();
   }
 
   // #endregion
