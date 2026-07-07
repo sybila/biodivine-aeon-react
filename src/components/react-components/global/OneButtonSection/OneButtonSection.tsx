@@ -1,5 +1,5 @@
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
-import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { OneButtonSectionProps } from './OneButtonSectionProps';
 
 const OneButtonSection: React.FC<OneButtonSectionProps> = ({

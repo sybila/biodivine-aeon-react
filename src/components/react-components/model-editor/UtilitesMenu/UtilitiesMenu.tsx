@@ -4,10 +4,10 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 import { useMemo } from 'react';
 
 import type { ContentVisibleComponent, Variable } from '../../../../types';
-import OneButtonSection from './OneButtonSection/OneButtonSection';
+import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
 import UndoRedoSection from './UndoRedoSection/UndoRedoSection';
 import VariableSearchSection from './VariableSearchSection/VariableSearchSection';
-import ZoomSection from './ZoomSection/ZoomSection';
+import ZoomSection from '../../global/ZoomSection/ZoomSection';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   modelVisualization,

@@ -1,5 +1,5 @@
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
-import ValueSliderReact from '../../../lit-wrappers/ValueSliderReact';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import ValueSliderReact from '../../lit-wrappers/ValueSliderReact';
 import type { ZoomSectionProps } from './ZoomSectionProps';
 
 const ZoomSection: React.FC<ZoomSectionProps> = ({
