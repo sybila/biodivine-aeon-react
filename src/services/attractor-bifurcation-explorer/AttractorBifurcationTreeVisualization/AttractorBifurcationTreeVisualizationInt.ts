@@ -30,6 +30,9 @@ export interface AttractorBifurcationTreeVisualizationInt {
   /** Setter for function which removes node from the tree visualization. */
   setRemoveNodeFunction(func: (nodeId: number) => void): void;
 
+  /** Setter for function which triggers save of the current visualization status of the tree visualization. */
+  setSaveVisualizationStatusFunction(func: () => void): void;
+
   // #endregion
 
   // #region --- Cardinality ---

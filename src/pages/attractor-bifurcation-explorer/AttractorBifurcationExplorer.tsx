@@ -14,6 +14,7 @@ import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StabilityIcon from '../../assets/icons/stability_analysis.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
 
+import UtilitiesMenu from '../../components/react-components/attractor-bifurcation-explorer/UtilitiesMenu/UtilitiesMenu';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import type { DecisionMixedNode, LeafNode, MenuTabTypeABE } from '../../types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
@@ -126,6 +127,13 @@ const AttractorBifurcationExplorer: React.FC<
 
   return (
     <>
+      <UtilitiesMenu
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        pageStringProviderServ={pageStringProviderServ}
+        helpHoverStore={helpHoverStore}
+        bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+      />
+
       <SideButtonMenu>
         <IconButtonReact
           isActive={activeTab === 'Overview'}

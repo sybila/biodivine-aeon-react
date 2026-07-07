@@ -54,6 +54,7 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     totalSize: number
   ) => number;
   private removeNodeFunction: (nodeId: number) => void;
+  private saveVisualizationStatusFunction: () => void;
 
   constructor(
     behaviorClassOperationsServ: BehaviorClassOperationsInt,
@@ -70,6 +71,10 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     };
     this.removeNodeFunction = (_: number) => {
       console.warn('CytoscapeABE: RemoveNodeFunction not set');
+    };
+    this.saveVisualizationStatusFunction = () => {
+      console.warn('CytoscapeABE: saveVisualizationStatusFunctions not set');
+      return -1;
     };
   }
 
@@ -90,6 +95,11 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
     this.cytoscape.on('grabon', this.handleDragStart.bind(this));
     this.cytoscape.on('dragfreeon', this.handleDragEnd.bind(this));
+    this.cytoscape.on('zoom', (e: any) => {
+      if (e.target !== this.cytoscape) return;
+
+      this.saveVisualizationStatusFunction();
+    });
   }
 
   private initOptions(): CytoscapeOptions {
@@ -97,6 +107,10 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
       container: this.container,
       boxSelectionEnabled: false,
       selectionType: 'single',
+
+      wheelSensitivity: 1,
+      maxZoom: 18,
+      minZoom: 0.5,
       style: [
         {
           // Style of the graph nodes
@@ -244,6 +258,11 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     if (func != undefined) {
       this.removeNodeFunction = func;
     }
+  }
+
+  /** Setter for function which triggers save of the current visualization status of the tree visualization. */
+  setSaveVisualizationStatusFunction(func: () => void): void {
+    this.saveVisualizationStatusFunction = func;
   }
 
   // #endregion

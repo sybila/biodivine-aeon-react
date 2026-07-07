@@ -48,14 +48,6 @@ class Tooltips implements TooltipsInt {
 
   // #region Visual Options
 
-  fit(): string {
-    return 'Fit the bifurcation tree to the canvas';
-  }
-
-  resetLayout(): string {
-    return 'Reset the layout of the bifurcation tree to the default';
-  }
-
   animateLayoutChanges(): string {
     return 'Toggle animation of layout changes';
   }
@@ -70,6 +62,22 @@ class Tooltips implements TooltipsInt {
 
   changePrecision(): string {
     return 'Change the precision of the bifuration tree.';
+  }
+
+  // #endregion
+
+  // #region Utilities Menu
+
+  public utilitiesMenu(): string {
+    return 'Show/Hide Utilities Menu';
+  }
+
+  public fit(): string {
+    return 'Fit the bifurcation tree to the canvas';
+  }
+
+  public resetLayout(): string {
+    return 'Reset the layout of the bifurcation tree to the default';
   }
 
   // #endregion

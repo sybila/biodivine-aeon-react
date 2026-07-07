@@ -27,12 +27,18 @@ export interface TooltipsInt {
 
   // #region Visual Options
 
-  fit(): string;
-  resetLayout(): string;
   animateLayoutChanges(): string;
   snapNodesToLayers(): string;
   positiveOnLeft(): string;
   changePrecision(): string;
+
+  // #endregion
+
+  // #region Utilities Menu
+
+  utilitiesMenu(): string;
+  fit(): string;
+  resetLayout(): string;
 
   // #endregion
 }

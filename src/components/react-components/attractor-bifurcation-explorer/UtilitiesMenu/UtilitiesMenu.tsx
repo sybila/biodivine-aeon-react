@@ -20,6 +20,8 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 
   const zoomStatus = visualizationStatus?.zoom;
 
+  console.log(zoomStatus);
+
   return (
     <HorizontalHidableContentReact
       ref={(el) =>
@@ -29,7 +31,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       buttonRight={true}
-      compHeight="400px"
+      compHeight="185px"
       buttonWidth="25px"
       contentWidth="350px"
       buttonOnMouseEnter={(e) =>

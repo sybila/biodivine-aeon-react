@@ -73,6 +73,9 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     this.cytoscape.setRemoveNodeFunction((nodeId: number) => {
       return this.removeNode(nodeId);
     });
+    this.cytoscape.setSaveVisualizationStatusFunction(() =>
+      this.saveVisualizationStatus()
+    );
   }
 
   // #endregion
