@@ -1,9 +1,8 @@
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
-import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
-import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import type { UpdateFunctionStatus } from '../../../../types';
 
 export type ChangeUpdateFunctionInputProps = {
   compHeight: string;
@@ -13,13 +12,14 @@ export type ChangeUpdateFunctionInputProps = {
   inputFontSize: string;
   validationMinHeight: string;
   validationMaxHeight: string;
-  varId: number;
+  varName: string;
+  updateFunction: string;
+  updateFunctionStatus: UpdateFunctionStatus;
+  setUpdateFunction: (fun: string) => void;
   exposeInputRef: (reference: HTMLElement) => void;
 
   modelEditorServ: ModelEditorInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
 
-  variablesStore: ZustandStore<VariablesStatus>;
-  updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

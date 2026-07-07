@@ -13,6 +13,7 @@ import type {
   MenuTabTypeMENotNull,
   ModelStats,
   RegulationVariables,
+  UpdateFunctionStatus,
 } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
@@ -326,11 +327,40 @@ class ModelEditor implements ModelEditorInt {
   public openChangeUpdateFunctionWindow(varId: number) {
     if (varId === undefined) return;
 
+    const varName =
+      this.variablesStore.getState().getVariableName(varId) ?? 'Unknown';
+
+    const originalUpdateFunction =
+      this.updateFunctionsStore.getState().getUpdateFunctionId(varId)
+        ?.functionString ?? '';
+
+    const originalUpdateFunctionStatus = this.updateFunctionsStore.getState()
+      .updateFunctionStatus[varId] ?? {
+      status: 'Missing Update Function Status: Validate the update function.',
+      isError: true,
+    };
+
     this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
       content: (
         <ChangeUpFunOverlayContent
           varId={varId}
+          varName={varName}
+          originalUpdateFunction={originalUpdateFunction}
+          originalUpdateFunctionStatus={originalUpdateFunctionStatus}
+          validateUpdateFunctionFun={(
+            setStatus: (status: UpdateFunctionStatus) => void,
+            updateFunction: string
+          ) =>
+            this.liveModelServ.UpdateFunctions.validateUpdateFunction(
+              varId,
+              (status: UpdateFunctionStatus) => setStatus(status),
+              updateFunction
+            )
+          }
+          closeFunction={() =>
+            this.overlayWindowStore.getState().setCurrentContent(null)
+          }
           modelEditorServ={this}
           pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
           regulationsStore={this.regulationStore}
@@ -339,8 +369,8 @@ class ModelEditor implements ModelEditorInt {
           helpHoverStore={this.helpHoverStore}
         />
       ),
-      showCloseButton: true,
-      closeOnBgClick: true,
+      showCloseButton: false,
+      closeOnBgClick: false,
     });
   }
 

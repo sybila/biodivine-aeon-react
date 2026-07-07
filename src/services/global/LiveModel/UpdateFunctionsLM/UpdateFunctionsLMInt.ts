@@ -1,4 +1,7 @@
-import type { UpdateFunctionMetadata } from '../../../../types';
+import type {
+  UpdateFunctionMetadata,
+  UpdateFunctionStatus,
+} from '../../../../types';
 
 /**
  * Interface for managing update functions of variables in model.
@@ -34,8 +37,16 @@ export interface UpdateFunctionsLMInt {
   /** Validates all update functions and sets state of each update function in the ModelEditor tab. */
   validateAllUpdateFunctions(): void;
 
-  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab. */
-  validateUpdateFunction(id: number): void;
+  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab.
+   *   @param id (number) id of variable whichs update function we want to validate
+   *   @param setStatusFunction ( (status: UpdateFunctionStatus) => void? ) optional setter which is used for setting the new update function status (if not set defautlu sets update function status into the update function store)
+   *   @param updateFunction (string?) optional parameter which overwrites the current update function of variable specified by the id parameter (used for validation of update function before it was set)
+   */
+  validateUpdateFunction(
+    id: number,
+    setStatusFunction?: (status: UpdateFunctionStatus) => void,
+    updateFunction?: string
+  ): void;
 
   // #endregion
 

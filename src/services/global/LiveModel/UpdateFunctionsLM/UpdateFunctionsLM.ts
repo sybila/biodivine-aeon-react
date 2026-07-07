@@ -6,6 +6,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
   type UpdateFunctionMetadata,
+  type UpdateFunctionStatus,
 } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { WarningInt } from '../../Warning/WarningInt';
@@ -153,20 +154,36 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     }
   }
 
-  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab. */
-  public validateUpdateFunction(id: number): void {
+  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab.
+   *   @param id (number) id of variable whichs update function we want to validate
+   *   @param setStatusFunction ( (status: UpdateFunctionStatus) => void ) optional setter which is used for setting the new update function status (if not set defautlu sets update function status into the update function store)
+   *   @param updateFunction (string?) optional parameter which overwrites the current update function of variable specified by the id parameter (used for validation of update function before it was set)
+   */
+  public validateUpdateFunction(
+    id: number,
+    setStatusFunction: (status: UpdateFunctionStatus) => void = (
+      status: UpdateFunctionStatus
+    ) => {
+      this.updateFunctionsStore.getState().setUpdateFunctionStatus(id, status);
+    },
+    updateFunction?: string
+  ): void {
     if (this.liveModel.disable_dynamic_validation) return;
 
-    const modelFragment = this.updateFunctionModelFragment(id);
+    const modelFragment = this.updateFunctionModelFragment(id, updateFunction);
     if (!modelFragment) {
-      this.updateFunctionsStore.getState().setUpdateFunctionStatus(id, {
+      setStatusFunction({
         isError: false,
         status: 'No regulators',
       });
       return;
     }
 
-    this.computationManagerServ.validateUpdateFunction(id, modelFragment);
+    this.computationManagerServ.validateUpdateFunction(
+      id,
+      modelFragment,
+      setStatusFunction
+    );
   }
 
   // #endregion
@@ -272,9 +289,13 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
 
   /** Constructs a model fragment containing the update function and its regulators for validation purposes.
    *  @param id ID of the variable whose update function is to be validated.
+   *  @param updateFunction (string?) optional parameter which overwrites the current update function of variable specified by the id parameter (used for example for validation of update function which wasn't yet set)
    *  @returns A string representing the model fragment, or undefined if there are no regulators.
    */
-  private updateFunctionModelFragment(id: number): string | undefined {
+  private updateFunctionModelFragment(
+    id: number,
+    updateFunction?: string
+  ): string | undefined {
     const name = this.variablesStore.getState().getVariableName(id);
     let fragment = '';
     const regulations = this.regulationsStore.getState().regulationsOf(id);
@@ -295,9 +316,13 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
       fragment += `$${name}: false\n`;
     }
 
-    const fun = this.updateFunctionsStore.getState().getUpdateFunctionId(id);
+    const fun =
+      updateFunction ??
+      this.updateFunctionsStore.getState().getUpdateFunctionId(id)
+        ?.functionString;
+
     if (fun) {
-      fragment += `$${name}: ${fun.functionString}\n`;
+      fragment += `$${name}: ${fun}\n`;
     }
 
     return fragment;

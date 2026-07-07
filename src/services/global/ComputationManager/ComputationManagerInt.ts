@@ -6,6 +6,7 @@ import type {
   DecisionsTSSD,
   NodeDataTSSD,
   StabilityAnalysisModes,
+  UpdateFunctionStatus,
 } from '../../../types';
 import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
@@ -84,10 +85,18 @@ export interface ComputationManagerInt {
 
   // #region --- Update Functions ---
 
-  /** Validates the update function for a specific variable and sets the status in the store */
+  /** Validates the update function fragment for the specified variable and updates
+   * the validation status using the provided callback.
+   *
+   * @param variableId The unique identifier of the variable whose update function
+   * is being validated.
+   * @param updateFunctionFragment The fragment of the model which contains all the data required for the validation of the function.
+   * @param setUpdateFunctionStatus Callback which sets the status of update function (for example this.updateFunctionStore.getState().setUpdateFunctionStatus())
+   */
   validateUpdateFunction(
     variableId: number,
-    updateFunctionFragment: string
+    updateFunctionFragment: string,
+    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
   ): void;
 
   // #endregion

@@ -328,7 +328,8 @@ class ComputationManager implements ComputationManagerInt {
 
   private validateUpdateFunctionCallback(
     variableId: number,
-    response: UpdateFunctionStatus | undefined
+    response: UpdateFunctionStatus | undefined,
+    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
   ): void {
     if (!response) {
       this.messageServ.showError(
@@ -336,14 +337,12 @@ class ComputationManager implements ComputationManagerInt {
           .getState()
           .getVariableName(variableId)}`
       );
-      this.updateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+      setUpdateFunctionStatus({
         status: 'Error validating update function',
         isError: true,
       });
     } else {
-      this.updateFunctionsStore
-        .getState()
-        .setUpdateFunctionStatus(variableId, response);
+      setUpdateFunctionStatus(response);
     }
 
     delete this.computationBlockingOperations[
@@ -354,7 +353,8 @@ class ComputationManager implements ComputationManagerInt {
   /** Validates the update function for a specific variable and sets the status in the store */
   public validateUpdateFunction(
     variableId: number,
-    updateFunctionFragment: string
+    updateFunctionFragment: string,
+    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
   ): void {
     if (this.isComputeEngineConnected()) {
       this.computationBlockingOperations[
@@ -364,10 +364,15 @@ class ComputationManager implements ComputationManagerInt {
       this.computeEngine.validateUpdateFunction(
         variableId,
         updateFunctionFragment,
-        this.validateUpdateFunctionCallback.bind(this)
+        (variableId, response) =>
+          this.validateUpdateFunctionCallback(
+            variableId,
+            response,
+            setUpdateFunctionStatus
+          )
       );
     } else {
-      this.updateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
+      setUpdateFunctionStatus({
         status:
           'Cannot validate update function:\n Compute engine not connected',
         isError: true,

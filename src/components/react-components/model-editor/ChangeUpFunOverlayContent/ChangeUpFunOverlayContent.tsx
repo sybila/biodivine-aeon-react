@@ -1,23 +1,33 @@
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
 import type { ChangeUpFunOverlayContentProps } from './ChangeUpFunOverlayContentProps';
 
 const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   varId,
+  varName,
+  originalUpdateFunction,
+  originalUpdateFunctionStatus,
+  validateUpdateFunctionFun,
+  closeFunction,
 
   modelEditorServ,
   pageStringProviderServ,
 
   regulationsStore,
   variablesStore,
-  updateFunctionsStore,
   helpHoverStore,
 }) => {
   const [inputReference, setInputReference] = useState<HTMLElement | null>(
     null
+  );
+
+  const [updateFunction, setUpdateFunction] = useState(originalUpdateFunction);
+  const [updateFunctionStatus, setUpdateFunctionStatus] = useState(
+    originalUpdateFunctionStatus
   );
 
   const regulationsObj = regulationsStore((state) => state.regulations);
@@ -27,9 +37,52 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
     [regulationsObj, varId]
   );
 
+  const revertFunction = () => {
+    closeFunction();
+  };
+
+  const validateFunction = () =>
+    validateUpdateFunctionFun(setUpdateFunctionStatus, updateFunction);
+
+  const applyFunction = () => {
+    if (originalUpdateFunction != updateFunction) {
+      modelEditorServ.setUpdateFunction(varId, updateFunction);
+    }
+
+    closeFunction();
+  };
+
   useEffect(() => {
     inputReference?.focus();
   }, [inputReference]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        revertFunction();
+        return;
+      }
+
+      if (event.ctrlKey && event.key === 'Enter') {
+        event.preventDefault();
+        validateFunction();
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applyFunction();
+        return;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [updateFunction]);
 
   return (
     <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
@@ -63,7 +116,9 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
 
       <div className="h-fit w-full bg-gray-200 rounded-[15px] p-2">
         <ChangeUpdateFunctionInput
-          varId={varId}
+          varName={varName}
+          updateFunction={updateFunction}
+          updateFunctionStatus={updateFunctionStatus}
           compHeight="fit-content"
           compWidth="95%"
           inputFontSize="20px"
@@ -71,14 +126,36 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           inputWidth="100%"
           validationMinHeight="40px"
           validationMaxHeight="50px"
+          setUpdateFunction={(fun: string) => setUpdateFunction(fun)}
           exposeInputRef={(ref) => setInputReference(ref)}
           modelEditorServ={modelEditorServ}
           pageStringProviderServ={pageStringProviderServ}
-          variablesStore={variablesStore}
-          updateFunctionsStore={updateFunctionsStore}
           helpHoverStore={helpHoverStore}
         />
       </div>
+
+      <section className="flex flex-row justify-around items-center w-full h-[12%]">
+        <TextButtonReact
+          compHeight="90%"
+          compWidth="20%"
+          text="Revert"
+          onClick={() => {
+            revertFunction();
+          }}
+        />
+        <TextButtonReact
+          compHeight="90%"
+          compWidth="20%"
+          text="Validate"
+          onClick={() => validateFunction()}
+        />
+        <TextButtonReact
+          compHeight="90%"
+          compWidth="20%"
+          text="Apply"
+          onClick={() => applyFunction()}
+        />
+      </section>
     </div>
   );
 };

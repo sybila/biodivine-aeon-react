@@ -12,34 +12,17 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   inputFontSize,
   validationMinHeight,
   validationMaxHeight,
-  varId,
+  varName,
+  updateFunction,
+  updateFunctionStatus,
+  setUpdateFunction,
   exposeInputRef,
 
-  modelEditorServ,
   pageStringProviderServ,
 
-  variablesStore,
-  updateFunctionsStore,
   helpHoverStore,
 }) => {
   const inputReference = useRef<InvisibleInput | null>(null);
-
-  const varName = variablesStore(
-    (state) => state.variables[varId].name ?? 'Unknown'
-  );
-
-  const updateFunction = updateFunctionsStore(
-    (state) => state.getUpdateFunctionId(varId)?.functionString ?? ''
-  );
-  const updateFunctionStatus = updateFunctionsStore(
-    (state) => state.updateFunctionStatus[varId] ?? ''
-  );
-
-  const changeUpdateFunction = (newFunction: string) => {
-    const updateFunction: string = newFunction ?? '';
-
-    modelEditorServ.setUpdateFunction(varId, updateFunction);
-  };
 
   const handleUpdateFunctionMouseEnter = (e: React.MouseEvent) =>
     helpHoverStore
@@ -72,8 +55,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
           varName
         )}
         value={updateFunction}
-        handleChange={changeUpdateFunction}
-        handleSubmit={changeUpdateFunction}
+        handleKeyUp={(fun) => setUpdateFunction(fun)}
         textColor="var(--base-text-color)"
         placeholderColor="var(--placeholder-text-color)"
         onMouseEnter={handleUpdateFunctionMouseEnter}
