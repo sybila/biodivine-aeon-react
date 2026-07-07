@@ -29,7 +29,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       buttonRight={true}
-      compHeight="250px"
+      compHeight="280px"
       buttonWidth="25px"
       contentWidth="350px"
       buttonOnMouseEnter={(e) =>
