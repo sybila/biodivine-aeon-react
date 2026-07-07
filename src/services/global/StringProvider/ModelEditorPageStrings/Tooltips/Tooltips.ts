@@ -155,6 +155,34 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #endregion
 
+  // #region Variable Name Overlay
+
+  public ApplyNewName(): string {
+    return 'Apply new name of variable. (Enter)';
+  }
+
+  public RevertToOldName(): string {
+    return 'Keep the original name of variable. (Esc)';
+  }
+
+  // #endregion
+
+  // #region Change Update Function Overlay
+
+  public ApplyUpdateFunction(): string {
+    return 'Apply new update function for  variable. (Enter)';
+  }
+
+  public ValidateUpdateFunction(): string {
+    return 'Validate the new update function. (Ctrl + Enter)';
+  }
+
+  public RevertUpdateFunction(): string {
+    return 'Keep the original update function of variable. (Esc)';
+  }
+
+  // #endregion
+
   // #region Utilities Menu
 
   public utilitiesMenu(): string {

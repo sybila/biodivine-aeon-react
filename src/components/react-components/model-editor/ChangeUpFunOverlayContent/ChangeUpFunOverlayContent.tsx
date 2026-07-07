@@ -84,6 +84,10 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
     };
   }, [updateFunction]);
 
+  useEffect(() => {
+    return () => helpHoverStore.getState().clear();
+  });
+
   return (
     <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
       <DotHeaderReact
@@ -139,6 +143,17 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           compHeight="90%"
           compWidth="20%"
           text="Revert"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.RevertToOldName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
           onClick={() => {
             revertFunction();
           }}
@@ -147,12 +162,33 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           compHeight="90%"
           compWidth="20%"
           text="Validate"
+          onMouseEnter={(event: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                event.nativeEvent,
+                pageStringProviderServ.Tooltips.ValidateUpdateFunction(),
+                true,
+                -50
+              )
+          }
           onClick={() => validateFunction()}
         />
         <TextButtonReact
           compHeight="90%"
           compWidth="20%"
           text="Apply"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.ApplyUpdateFunction(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
           onClick={() => applyFunction()}
         />
       </section>

@@ -314,6 +314,8 @@ class ModelEditor implements ModelEditorInt {
             this.overlayWindowStore.getState().setCurrentContent(null)
           }
           modelEditorServ={this}
+          pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
+          helpHoverStore={this.helpHoverStore}
         />
       ),
       showCloseButton: false,

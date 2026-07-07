@@ -63,6 +63,23 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
 
   // #endregion
 
+  // #region Variable Name Overlay
+
+  ApplyNewName(): string;
+
+  RevertToOldName(): string;
+  // #endregion
+
+  // #region Change Update Function Overlay
+
+  ApplyUpdateFunction(): string;
+
+  ValidateUpdateFunction(): string;
+
+  RevertUpdateFunction(): string;
+
+  // #endregion
+
   // #region Utilities Menu
 
   utilitiesMenu(): string;

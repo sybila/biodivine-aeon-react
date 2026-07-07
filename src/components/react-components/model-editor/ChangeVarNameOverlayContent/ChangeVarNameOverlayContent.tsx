@@ -5,7 +5,14 @@ import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableName
 
 const ChangeVarNameOverlayContent: React.FC<
   ChangeVariableNameOverlayContentProps
-> = ({ varId, originalName, closeFunction, modelEditorServ }) => {
+> = ({
+  varId,
+  originalName,
+  closeFunction,
+  modelEditorServ,
+  pageStringProviderServ,
+  helpHoverStore,
+}) => {
   const [inputReference, setInputReference] = useState<HTMLElement | null>(
     null
   );
@@ -64,6 +71,10 @@ const ChangeVarNameOverlayContent: React.FC<
     };
   }, [currentName]);
 
+  useEffect(() => {
+    return () => helpHoverStore.getState().clear();
+  });
+
   return (
     <div className="flex flex-col justify-around items-center h-[20vh] w-[50vw] gap-2">
       <VariableNameInput
@@ -81,6 +92,17 @@ const ChangeVarNameOverlayContent: React.FC<
           compHeight="90%"
           compWidth="40%"
           text="Revert"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.RevertToOldName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
           onClick={() => {
             revertFunction();
           }}
@@ -89,6 +111,17 @@ const ChangeVarNameOverlayContent: React.FC<
           compHeight="90%"
           compWidth="40%"
           text="Apply"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.ApplyNewName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
           onClick={() => applyFunction()}
         />
       </section>
