@@ -20,8 +20,6 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 
   const zoomStatus = visualizationStatus?.zoom;
 
-  console.log(zoomStatus);
-
   return (
     <HorizontalHidableContentReact
       ref={(el) =>
@@ -65,16 +63,37 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Fit Into View"
           buttonText="Fit"
+          buttonTooltipFunction={(e: MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.fit(),
+                true,
+                -50
+              )
+          }
+          hideTooltipFunction={() => helpHoverStore.getState().clear()}
           onClick={() => {
             attractorBifurcationExplorerServ.fitTree();
           }}
         />
 
-
         <OneButtonSection
           gapInsideSection={gapInsideSection}
           headerText="Reset Layout"
           buttonText="Reset"
+          buttonTooltipFunction={(e: MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.resetLayout(),
+                true,
+                -50
+              )
+          }
+          hideTooltipFunction={() => helpHoverStore.getState().clear()}
           onClick={() => {
             attractorBifurcationExplorerServ.resetTreeLayout();
           }}

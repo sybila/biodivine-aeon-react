@@ -6,6 +6,8 @@ const OneButtonSection: React.FC<OneButtonSectionProps> = ({
   headerText,
   buttonText,
   onClick,
+  buttonTooltipFunction,
+  hideTooltipFunction,
   gapInsideSection,
 }) => {
   return (
@@ -18,6 +20,8 @@ const OneButtonSection: React.FC<OneButtonSectionProps> = ({
       <TextButtonReact
         compWidth="100%"
         handleClick={() => onClick()}
+        onMouseEnter={(e: React.MouseEvent) => buttonTooltipFunction(e.nativeEvent)}
+        onMouseLeave={() => hideTooltipFunction()}
         text={buttonText}
       />
     </section>

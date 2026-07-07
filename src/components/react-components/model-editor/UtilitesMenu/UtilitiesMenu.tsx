@@ -5,9 +5,9 @@ import { useMemo } from 'react';
 
 import type { ContentVisibleComponent, Variable } from '../../../../types';
 import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
+import ZoomSection from '../../global/ZoomSection/ZoomSection';
 import UndoRedoSection from './UndoRedoSection/UndoRedoSection';
 import VariableSearchSection from './VariableSearchSection/VariableSearchSection';
-import ZoomSection from '../../global/ZoomSection/ZoomSection';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   modelVisualization,
@@ -131,6 +131,17 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Fit Into View"
           buttonText="Fit"
+          buttonTooltipFunction={(e: MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.fit(),
+                true,
+                -50
+              )
+          }
+          hideTooltipFunction={() => helpHoverStore.getState().clear()}
           onClick={() => {
             modelVisualization.fit();
           }}

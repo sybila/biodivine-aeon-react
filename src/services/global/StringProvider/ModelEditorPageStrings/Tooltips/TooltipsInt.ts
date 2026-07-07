@@ -86,6 +86,7 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   variableSearch(): string;
   undoButton(): string;
   redoButton(): string;
+  fit(): string;
 
   // #endregion
 }

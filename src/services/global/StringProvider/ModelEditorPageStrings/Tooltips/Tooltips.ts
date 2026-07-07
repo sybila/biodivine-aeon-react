@@ -201,6 +201,10 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'Reapply previously reverted modification.';
   }
 
+  public fit(): string {
+    return 'Fit model into the canvas.';
+  }
+
   // #endregion
 }
 
