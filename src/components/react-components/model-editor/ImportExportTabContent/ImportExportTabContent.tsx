@@ -157,6 +157,12 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
   ) => {
     return buttonArray.map(([leftText, rightText, onClick], index) => (
       <DoubleTextButtonReact
+        leftTextColor="var(--color-secondary-text)"
+        rightTextColor="var(--color-secondary-text)"
+        leftColor="var(--color-secondary-buttons)"
+        leftHoverColor="var(--color-secondary-buttons-hover)"
+        rightColor="var(--color-secondary-buttons-darker)"
+        rightHoverColor="var(--color-secondary-buttons-darker-hover)"
         key={index + buttonType}
         leftText={leftText}
         rightText={rightText}
@@ -190,7 +196,11 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
             id="import"
             className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
           >
-            <SimpleHeaderReact className="m-2" headerText="Import" />
+            <SimpleHeaderReact
+              textColor="var(--color-primary-text)"
+              className="m-2"
+              headerText="Import"
+            />
             {renderButtons('import', importButtons)}
           </section>
 
@@ -198,14 +208,21 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
             id="export"
             className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
           >
-            <SimpleHeaderReact className="m-2" headerText="Export" />
+            <SimpleHeaderReact
+              textColor="var(--color-primary-text)"
+              className="m-2"
+              headerText="Export"
+            />
             {renderButtons('export', exportButtons)}
           </section>
         </div>
       </div>
 
       <div className="flex flex-col justify-center items-center w-full h-fit gap-4">
-        <SimpleHeaderReact headerText="Example Models" />
+        <SimpleHeaderReact
+          textColor="var(--color-primary-text)"
+          headerText="Example Models"
+        />
 
         <div className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
           <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">

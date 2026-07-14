@@ -32,14 +32,130 @@
 
 :root {
   --color-bg-base: #fff;
+
   --color-primary: #f5f5f5;
+
+  --color-primary-text: black;
+  --color-primary-placeholder-text: gray;
+  --color-primary-interactive-text: blue;
+  --color-primary-separator: ;
+
   --color-secondary: #e7ecee;
+  --color-secondary-light: #fafafa;
+  --color-secondary-active: #add8e6;
+  --color-secondary-border: #6a7ea5;
+  --color-secondary-buttons: #eceff1;
+  --color-secondary-buttons-hover: #cfd8dc;
+  --color-secondary-buttons-active: #b0bec5;
+  --color-secondary-buttons-darker: #cfd8dc;
+  --color-secondary-buttons-darker-hover: #b0bec5;
+  --color-secondary-text-inputs: #fafafa;
+  --color-secondary-text-inputs-border: #cfd8dc;
+  --color-secondary-highlight: #b0bec5;
   --color-secondary-light-highlight: #e7ecee94;
   --color-highlight: #cfd8dc;
-  --color-tertiary: #bfcfd0;
+
+  --color-secondary-text: black;
+  --color-secondary-placeholder-text: gray;
+
+  --color-tertiary: #cfd8dc;
+  --color-tertiary-buttons: #f5f5f5;
+  --color-tertiary-buttons-hover: #cbcbcb;
   --color-tertiary-light-highlight: #d9e6e7;
 
+  --color-tertiary-text: black;
+
   --color-tooltip-bg: #c2d3dae9;
+
+  --color-negative: #d05d5d;
+  --color-positive: #4abd73;
+
+  --color-regulation-inhibition: #d05d5d;
+  --color-regulation-activation: #4abd73;
+  --color-regulation-unspecified: #bebebe;
+  --color-regulation-observable: black;
+  --color-regulation-non-observable: #bebebe;
+
+  --color-control-enabled: #f3d491;
+  --color-control-enabled-highlight: #f3ddaf;
+  --color-not-control-enabled: #bebebe;
+  --color-not-control-enabled-highlight: #d0d0d0;
+  --color-control-enabled-status-text: black;
+
+  --color-in-phenotype-true: #4abd73;
+  --color-in-phenotype-true-highlight: #82d8a0;
+  --color-in-phenotype-false: #d05d5d;
+  --color-in-phenotype-false-highlight: #d87e7e;
+  --color-not-in-phenotype: #bebebe;
+  --color-not-in-phenotype-highlight: #d0d0d0;
+  --color-phenotype-status-text: black;
+
+  --color-model-node: #dddddd;
+  --color-model-node-text: black;
+  --color-model-node-border: #bbbbbb;
+  --color-model-node-border-hover: #6a7ea5;
+  --color-model-node-border-fit: #797979;
+  --color-model-node-border-selected: #6a7ea5;
+  --color-model-edge-preview: #797979;
+  --color-model-edge-handle-box-color: #6a7ea5;
+  --color-model-edge-handle-icon-color: #ffffff;
+
+  /* --color-bg-base: #9c27b0;
+
+  --color-primary: #9c27b0;
+
+  --color-primary-text: #9c27b0;
+  --color-primary-placeholder-text: #9c27b0;
+  --color-primary-interactive-text: #9c27b0;
+
+  --color-secondary: #9c27b0;
+  --color-secondary-light: #9c27b0;
+  --color-secondary-active: #9c27b0;
+  --color-secondary-border: #9c27b0;
+  --color-secondary-buttons: #9c27b0;
+  --color-secondary-buttons-hover: #9c27b0;
+  --color-secondary-buttons-active: #9c27b0;
+  --color-secondary-buttons-darker: #9c27b0;
+  --color-secondary-buttons-darker-hover: #9c27b0;
+  --color-secondary-text-inputs: #9c27b0;
+  --color-secondary-text-inputs-border: #9c27b0;
+  --color-secondary-highlight: #9c27b0;
+  --color-secondary-light-highlight: #9c27b0;
+
+  --color-secondary-text: #9c27b0;
+  --color-secondary-placeholder-text: #9c27b0;
+
+  --color-highlight: #9c27b0;
+
+  --color-tertiary: #9c27b0;
+  --color-tertiary-buttons: #9c27b0;
+  --color-tertiary-buttons-hover: #9c27b0;
+  --color-tertiary-text: #9c27b0;
+  --color-tertiary-light-highlight: #9c27b0;
+
+  --color-tooltip-bg: #9c27b0;
+
+  --color-negative: #9c27b0;
+  --color-positive: #9c27b0;
+
+  --color-regulation-inhibition: #9c27b0;
+  --color-regulation-activation: #9c27b0;
+  --color-regulation-unspecified: #9c27b0;
+  --color-regulation-observable: #9c27b0;
+  --color-regulation-non-observable: #9c27b0;
+
+  --color-control-enabled: #9c27b0;
+  --color-control-enabled-highlight: #9c27b0;
+  --color-not-control-enabled: #9c27b0;
+  --color-not-control-enabled-highlight: #9c27b0;
+  --color-control-enabled-status-text: #9c27b0;
+
+  --color-in-phenotype-true: #9c27b0;
+  --color-in-phenotype-true-highlight: #9c27b0;
+  --color-in-phenotype-false: #9c27b0;
+  --color-in-phenotype-false-highlight: #9c27b0;
+  --color-not-in-phenotype: #9c27b0;
+  --color-phenotype-status-text: #9c27b0; */
 
   --color-grey: #bebebe;
   --color-darker-grey: #b1b1b1ff;

@@ -7,4 +7,7 @@ export type OneButtonSectionProps = {
 
   /** Css property defining the size of gap between header and other content. */
   gapInsideSection: string;
+  headerTextColor: string;
+  buttonTextColor: string;
+  buttonColor: string;
 };

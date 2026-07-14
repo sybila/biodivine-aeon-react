@@ -40,6 +40,7 @@ const ComputationExtendableContent: React.FC<
         slot="top-content"
       >
         <SimpleHeaderReact
+          textColor="var(--color-secondary-text)"
           headerText={computationName ?? 'unknown'}
           compHeight="100%"
           compWidth="fit-content"
@@ -59,8 +60,10 @@ const ComputationExtendableContent: React.FC<
         {children}
 
         <TextButtonReact
+          textColor="var(--color-secondary-text)"
           text="Start Computation"
-          buttonColor='var(--color-primary)'
+          buttonColor="var(--color-tertiary-buttons)"
+          buttonHoverColor="var(--color-tertiary-buttons-hover)"
           onClick={() => startComputationFunction()}
           compHeight="40px"
           compWidth="95%"

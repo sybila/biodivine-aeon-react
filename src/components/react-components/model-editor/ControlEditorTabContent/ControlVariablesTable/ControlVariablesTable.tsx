@@ -101,11 +101,12 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
    * - The onMouseEnter handler function ((e: React.MouseEvent) => void)
    */
   const statusButtons: Array<
-    [string, string, () => void, (e: React.MouseEvent) => void]
+    [string, string, string, () => void, (e: React.MouseEvent) => void]
   > = [
     [
       'N',
-      'var(--color-grey)',
+      'var(--color-not-control-enabled)',
+      'var(--color-not-control-enabled-highlight)',
       () =>
         controlEditorServ.changeControlEnabledSelected(
           selectedVariables,
@@ -116,9 +117,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariableControlEnabled(
-              false
-            ),
+            pageStringProviderServ.Tooltips.changeVariableControlEnabled(false),
             true,
             -50,
             200
@@ -126,7 +125,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     ],
     [
       'E',
-      'var(--color-yellow)',
+      'var(--color-control-enabled)',
+      'var(--color-control-enabled-highlight)',
       () =>
         controlEditorServ.changeControlEnabledSelected(selectedVariables, true),
       (e: React.MouseEvent) =>
@@ -134,9 +134,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariableControlEnabled(
-              true
-            ),
+            pageStringProviderServ.Tooltips.changeVariableControlEnabled(true),
             true,
             -50,
             150
@@ -144,7 +142,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     ],
     [
       'N',
-      'var(--color-grey)',
+      'var(--color-not-in-phenotype)',
+      'var(--color-not-in-phenotype-highlight)',
       () => controlEditorServ.changePhenotypeSelected(selectedVariables, null),
       (e: React.MouseEvent) =>
         helpHoverStore
@@ -159,32 +158,30 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     ],
     [
       'T',
-      'var(--color-green)',
+      'var(--color-in-phenotype-true)',
+      'var(--color-in-phenotype-true-highlight)',
       () => controlEditorServ.changePhenotypeSelected(selectedVariables, true),
       (e: React.MouseEvent) =>
         helpHoverStore
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariablePhenotype(
-              'true'
-            ),
+            pageStringProviderServ.Tooltips.changeVariablePhenotype('true'),
             true,
             -50
           ),
     ],
     [
       'F',
-      'var(--color-red)',
+      'var(--color-in-phenotype-false)',
+      'var(--color-in-phenotype-false-highlight)',
       () => controlEditorServ.changePhenotypeSelected(selectedVariables, false),
       (e: React.MouseEvent) =>
         helpHoverStore
           .getState()
           .setHelpHoverAtMouse(
             e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariablePhenotype(
-              'false'
-            ),
+            pageStringProviderServ.Tooltips.changeVariablePhenotype('false'),
             true,
             -50
           ),
@@ -194,6 +191,9 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   return (
     <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
       <TextInputReact
+        textColor="var(--color-secondary-text)"
+        inputColor="var(--color-secondary-text-inputs)"
+        inputBorderColor='var(--color-secondary-text-inputs-border)'
         compWidth="95%"
         placeholder="Search variables..."
         onWrite={setVariableSearch}
@@ -202,14 +202,16 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, onClick, onMouseEnter], index) => (
+          {statusButtons.map(([label, color, hoverColor, onClick, onMouseEnter], index) => (
             <TextButtonReact
+              textColor="var(--color-secondary-text)"
               key={index}
               compHeight="29px"
               compWidth="29px"
               text={label}
               handleClick={onClick}
               buttonColor={color}
+              buttonHoverColor={hoverColor}
               onMouseEnter={onMouseEnter}
               onMouseLeave={() => helpHoverStore.getState().clear()}
             />
@@ -228,7 +230,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       {!filteredVariables || filteredVariables.length === 0 ? (
         <section className="flex h-[200px] w-[98%] justify-center items-center">
-          <SimpleHeaderReact
+          <SimpleHeaderReact textColor='var(--color-primary-text)'
             headerText="No Variables"
             textFontWeight="normal"
           />

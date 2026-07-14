@@ -11,6 +11,8 @@ function SelectionButtons<T extends string | number>({
   setSelectedVariables,
   buttonBorderRadius = '10px',
   buttonSize = '29px',
+  buttonColor = 'var(--color-secondary-buttons)',
+  buttonHoverColor = 'var(--color-secondary-buttons-hover)',
   tooltips,
   helpHoverStore,
 }: SelectionButtonsProps<T>) {
@@ -98,6 +100,8 @@ function SelectionButtons<T extends string | number>({
           key={index}
           compHeight={buttonSize}
           compWidth={buttonSize}
+          buttonColor={buttonColor}
+          buttonHoverColor={buttonHoverColor}
           buttonBorderRadius={buttonBorderRadius}
           iconSrc={icon}
           iconAlt={alt}

@@ -91,6 +91,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   return (
     <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
       <DotHeaderReact
+        textColor="var(--color-primary-text)"
         headerText="Regulators"
         compHeight="15px"
         compWidth="100%"
@@ -111,6 +112,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
       />
 
       <DotHeaderReact
+        textColor="var(--color-primary-text)"
         headerText="Update Function"
         compHeight="15px"
         compWidth="100%"
@@ -118,7 +120,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
         textFontSize="12px"
       />
 
-      <div className="h-fit w-full bg-gray-200 rounded-[15px] p-2">
+      <div className="h-fit w-full bg-[var(--color-secondary)] rounded-[15px] p-2">
         <ChangeUpdateFunctionInput
           varName={varName}
           updateFunction={updateFunction}
@@ -140,6 +142,8 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
 
       <section className="flex flex-row justify-around items-center w-full h-[12%]">
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           compHeight="90%"
           compWidth="20%"
           text="Revert"
@@ -159,6 +163,8 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           }}
         />
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           compHeight="90%"
           compWidth="20%"
           text="Validate"
@@ -175,6 +181,8 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
           onClick={() => validateFunction()}
         />
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           compHeight="90%"
           compWidth="20%"
           text="Apply"

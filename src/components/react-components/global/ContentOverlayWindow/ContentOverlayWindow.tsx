@@ -17,6 +17,9 @@ const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
 
   return (
     <OverlayWindowReact
+      headerTextColor="var(--color-primary-text)"
+      windColor="var(--color-primary)"
+      closeHoverColor="var(--color-secondary-buttons-hover)"
       showCloseButton={currentContent.showCloseButton}
       showHeader={true}
       headerText={currentContent.header}

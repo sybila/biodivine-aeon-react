@@ -31,12 +31,15 @@ const ModelDescription: React.FC<ModelDescriptionProps> = ({
     <section className="h-fit w-full flex flex-col items-center gap-3">
       <section className="flex flex-row items-center justify-between w-full h-fit gap-1">
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           compWidth="60%"
           headerText="Model Description"
           justifyHeader="start"
         />
 
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           className="mr-1"
           compWidth="35%"
           textFontSize="13px"

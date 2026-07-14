@@ -63,6 +63,9 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Fit Into View"
           buttonText="Fit"
+          headerTextColor="var(--color-primary-text)"
+          buttonTextColor="var(--color-secondary-text)"
+          buttonColor="var(--color-secondary-buttons)"
           buttonTooltipFunction={(e: MouseEvent) =>
             helpHoverStore
               .getState()
@@ -83,6 +86,9 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Reset Layout"
           buttonText="Reset"
+          headerTextColor="var(--color-primary-text)"
+          buttonTextColor="var(--color-secondary-text)"
+          buttonColor="var(--color-secondary-buttons)"
           buttonTooltipFunction={(e: MouseEvent) =>
             helpHoverStore
               .getState()

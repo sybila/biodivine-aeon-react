@@ -54,6 +54,14 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
+      contColor="var(--color-secondary-light)"
+      contHoverColor="var(--color-secondary-light-highlight)"
+      contActiveColor="var(--color-secondary-active)"
+      contActiveBorder="2px var(--color-secondary-border) solid"
+      contHoverBorder="2px var(--color-secondary-border) dashed"
+      contBorder="2px var(--color-secondary-light) solid"
+      buttonColor='var(--color-tertiary-buttons)'
+      buttonHoverColor='var(--color-tertiary-buttons-hover)'
       hover={hoverVariable}
       active={selectedVariable}
       handleMouseEnter={() => modelEditorServ.hoverVariableCytoscape(id, true)}
@@ -73,6 +81,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           textFontFamily="var(--font-family-fira-mono)"
           textAlign="start"
           textJustify="center"
+          textColor="var(--color-secondary-text)"
           text={name ? name : ''}
           className="cursor-pointer"
           onClick={() => modelEditorServ.openChangeVarNameWindow(id)}
@@ -98,6 +107,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           lineHeight="28px"
           textFontWeight="normal"
           textFontFamily="var(--font-family-fira-mono)"
+          textColor="var(--color-secondary-text)"
           headerText={`#↓ ${regulations.length}`}
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
@@ -125,6 +135,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={SearchIcon}
           iconAlt="find"
+          buttonColor="var(--color-tertiary-buttons)"
+          buttonHoverColor="var(--color-tertiary-buttons-hover)"
           handleClick={() => modelEditorServ.zoomOnVariable(id)}
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
@@ -146,6 +158,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSrc={DeleteIcon}
           iconAlt="delete"
           handleClick={async () => await modelEditorServ.removeVariable(id)}
+          buttonColor="var(--color-tertiary-buttons)"
+          buttonHoverColor="var(--color-tertiary-buttons-hover)"
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
               .getState()
@@ -161,12 +175,13 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       </section>
 
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
         slot="extended-content"
         headerText="Regulators"
         compWidth="100%"
         justifyHeader="start"
         textFontSize="12px"
-      ></DotHeaderReact>
+      />
 
       <section slot="extended-content" className="h-fit w-full">
         <RegulationInfoList
@@ -183,6 +198,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       </section>
 
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
         slot="extended-content"
         headerText="Update Function"
         compWidth="100%"
@@ -198,6 +214,8 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           textAlign="center"
           overflowY="auto"
           textFontFamily="var(--font-family-fira-mono)"
+          textColor="var(--color-secondary-text)"
+          placeholderColor="var(--color-secondary-placeholder-text)"
           text={updateFunction}
           placeholder={pageStringProviderServ.OtherStrings.updateFunctionInputPlaceholder(
             name ?? undefined
@@ -221,6 +239,7 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           compMinHeight={'20px'}
           compMaxHeight={'50px'}
           compWidth={'90%'}
+          textColor="var(--color-secondary-text)"
           updateFunctionStatus={updateFunctionStatus}
         />
       </section>

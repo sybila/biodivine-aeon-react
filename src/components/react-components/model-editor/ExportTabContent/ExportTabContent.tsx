@@ -57,6 +57,12 @@ const ExportTabContent: React.FC<ExportTabContentProps> = ({
   ) => {
     return buttonArray.map(([leftText, rightText, onClick], index) => (
       <DoubleTextButtonReact
+        leftTextColor="var(--color-secondary-text)"
+        rightTextColor="var(--color-secondary-text)"
+        leftColor="var(--color-secondary-buttons)"
+        leftHoverColor="var(--color-secondary-buttons-hover)"
+        rightColor="var(--color-secondary-buttons-darker)"
+        rightHoverColor="var(--color-secondary-buttons-darker-hover)"
         key={index + column}
         leftText={leftText}
         rightText={rightText}

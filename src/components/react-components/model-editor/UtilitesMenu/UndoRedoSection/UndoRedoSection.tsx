@@ -20,12 +20,18 @@ const UndoRedoSection: React.FC<UndoRedoSectionProps> = ({
       className="flex flex-col h-fit w-full"
       style={{ gap: `${gapInsideSection}` }}
     >
-      <DotHeaderReact headerText="Undo/Redo" compHeight="20px" />
+      <DotHeaderReact
+        textColor="var(--color-primary-text)"
+        headerText="Undo/Redo"
+        compHeight="20px"
+      />
 
       <div className="flex flex-row justify-around h-[30px] w-full">
         <TextIconButtonReact
           compHeight="100%"
           compWidth="49%"
+          textColor="var(--color-secondary-text)"
+          buttonColor="var(--color-secondary-buttons)"
           text="Undo"
           onClick={() => undoFunction()}
           iconSrc={UndoIcon}
@@ -38,6 +44,8 @@ const UndoRedoSection: React.FC<UndoRedoSectionProps> = ({
         <TextIconButtonReact
           compHeight="100%"
           compWidth="49%"
+          textColor="var(--color-secondary-text)"
+          buttonColor="var(--color-secondary-buttons)"
           onClick={() => redoFunction()}
           iconSrc={RedoIcon}
           iconAlt="R"

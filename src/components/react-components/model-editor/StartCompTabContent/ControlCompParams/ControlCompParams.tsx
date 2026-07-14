@@ -57,6 +57,7 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
   return (
     <section className="flex flex-col w-full gap-3">
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
         style={{ userSelect: 'none' }}
         headerText="Control Computation Parameters"
         compWidth="100%"

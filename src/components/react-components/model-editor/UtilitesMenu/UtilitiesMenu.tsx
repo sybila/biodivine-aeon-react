@@ -39,6 +39,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           .setUtilitiesMenuRef(el as ContentVisibleComponent)
       }
       className="absolute top-[55px] right-[12px] z-1"
+      compBgColor="var(--color-primary)"
       buttonRight={true}
       compHeight="400px"
       buttonWidth="25px"
@@ -131,6 +132,9 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Fit Into View"
           buttonText="Fit"
+          headerTextColor='var(--color-primary-text)'
+          buttonTextColor='var(--color-secondary-text)'
+          buttonColor="var(--color-secondary-buttons)"
           buttonTooltipFunction={(e: MouseEvent) =>
             helpHoverStore
               .getState()

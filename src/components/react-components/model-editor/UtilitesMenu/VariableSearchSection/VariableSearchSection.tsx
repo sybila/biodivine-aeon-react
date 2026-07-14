@@ -17,7 +17,11 @@ const VariableSearchSection: React.FC<VariableSearchSectionProps> = ({
       className="flex flex-col h-fit w-full z-200"
       style={{ gap: `${gapInsideSection}` }}
     >
-      <DotHeaderReact headerText="Variable Search" compHeight="20px" />
+      <DotHeaderReact
+        textColor="var(--color-primary-text)"
+        headerText="Variable Search"
+        compHeight="20px"
+      />
 
       <TextInputSuggestionsReact
         ref={(el) => setSearchBarRef(el as HTMLElement)}
@@ -30,6 +34,8 @@ const VariableSearchSection: React.FC<VariableSearchSectionProps> = ({
         suggListWidth="315px"
         suggLineHeight="18px"
         suggFontSize="17px"
+        textColor="var(--color-secondary-text)"
+        inputColor="var(--color-secondary-text-inputs)"
         suggListBgColor="var(--color-tertiary)"
         suggHoverBgColor="var(--color-tertiary-light-highlight)"
         isSeparator={(char) => {

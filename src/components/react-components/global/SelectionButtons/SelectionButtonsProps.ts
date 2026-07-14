@@ -11,6 +11,10 @@ export type SelectionButtonsProps<T extends string | number> = {
   /** Size of the buttons in the form of Css length (e.g. '29px', '1.5rem') */
   buttonSize?: string;
 
+  buttonColor?: string;
+
+  buttonHoverColor?: string;
+
   tooltips: SelectionButtonsTooltipsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;

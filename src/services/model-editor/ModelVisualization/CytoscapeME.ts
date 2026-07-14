@@ -27,8 +27,13 @@ import type { ModelVisualizationInt } from './ModelVisualizationInt';
 const DOUBLE_CLICK_DELAY = 400;
 
 // Modified version of the add_box-24px.svg with color explicitly set to blue and an additional background element which makes sure the plus sign is filled.
-const _add_box_svg =
-  '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 4h16v16H4z"/><path fill="#6a7ea5" d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
+const addBoxSvg = (boxColor: string, iconColor: string) =>
+  `<?xml version="1.0" encoding="UTF-8"?>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <path fill="${iconColor}" d="M4 4h16v16H4z"/>
+    <path fill="${boxColor}" d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+  </svg>`;
 
 /** Responsible for managing the cytoscape editor object. It has its own representation of the graph,
  * but it should never be updated directly. Instead, always use LiveModel to specify updates.
@@ -189,6 +194,40 @@ class CytoscapeME implements ModelVisualizationInt {
   }
 
   private initOptions(): CytoscapeOptions {
+    const nodeColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node')
+      .trim();
+    const borderColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-border')
+      .trim();
+    const hoverBorderColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-border-hover')
+      .trim();
+    const selectedBorderColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-border-selected')
+      .trim();
+    const fitBorderColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-border-fit')
+      .trim();
+    const textColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-text')
+      .trim();
+
+    const regulationActivationColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-regulation-activation')
+      .trim();
+    const regulationInhibitionColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-regulation-inhibition')
+      .trim();
+    const regulationUnspecifiedColor = getComputedStyle(
+      document.documentElement
+    )
+      .getPropertyValue('--color-regulation-unspecified')
+      .trim();
+    const edgePreviewColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-edge-preview')
+      .trim();
+
     return {
       container: this.container,
       // Some sensible default auto-layout algorithm
@@ -229,11 +268,12 @@ class CytoscapeME implements ModelVisualizationInt {
             'overlay-opacity': 0,
             // other visual styles
             padding: '12',
-            'background-color': '#dddddd',
+            'background-color': nodeColor,
+            color: textColor,
             'font-family': 'FiraMono',
             'font-size': '12pt',
             'border-width': '1px',
-            'border-color': '#bbbbbb',
+            'border-color': borderColor,
             'border-style': 'solid',
           },
         },
@@ -242,7 +282,7 @@ class CytoscapeME implements ModelVisualizationInt {
           selector: 'node.hover',
           style: {
             'border-width': '2.0px',
-            'border-color': '#6a7ea5',
+            'border-color': hoverBorderColor,
             'border-style': 'dashed',
           },
         },
@@ -251,7 +291,7 @@ class CytoscapeME implements ModelVisualizationInt {
           selector: 'node.fit',
           style: {
             'border-width': '2.0px',
-            'border-color': '#797979',
+            'border-color': fitBorderColor,
             'border-style': 'dashed',
           },
         },
@@ -260,7 +300,7 @@ class CytoscapeME implements ModelVisualizationInt {
           selector: 'node:selected',
           style: {
             'border-width': '2.0px',
-            'border-color': '#6a7ea5',
+            'border-color': selectedBorderColor,
             'border-style': 'solid',
           },
         },
@@ -299,8 +339,8 @@ class CytoscapeME implements ModelVisualizationInt {
           // When the edge is an activation, show it as green with normal arrow
           selector: 'edge[monotonicity="activation"]',
           style: {
-            'line-color': '#4abd73',
-            'target-arrow-color': '#4abd73',
+            'line-color': regulationActivationColor,
+            'target-arrow-color': regulationActivationColor,
             'target-arrow-shape': 'triangle',
           },
         },
@@ -308,8 +348,8 @@ class CytoscapeME implements ModelVisualizationInt {
           // When the edge is an inhibition, show it as red with a `tee` arrow
           selector: 'edge[monotonicity="inhibition"]',
           style: {
-            'line-color': '#d05d5d',
-            'target-arrow-color': '#d05d5d',
+            'line-color': regulationInhibitionColor,
+            'target-arrow-color': regulationInhibitionColor,
             'target-arrow-shape': 'tee',
           },
         },
@@ -317,9 +357,30 @@ class CytoscapeME implements ModelVisualizationInt {
           // When the edge has unspecified monotonicity, show it as grey with normal arrow
           selector: 'edge[monotonicity="unspecified"]',
           style: {
-            'line-color': '#797979',
-            'target-arrow-color': '#797979',
+            'line-color': regulationUnspecifiedColor,
+            'target-arrow-color': regulationUnspecifiedColor,
             'target-arrow-shape': 'triangle',
+          },
+        },
+        {
+          selector: 'edge[monotonicity="activation"]:selected',
+          style: {
+            'line-color': regulationActivationColor,
+            'target-arrow-color': regulationActivationColor,
+          },
+        },
+        {
+          selector: 'edge[monotonicity="inhibition"]:selected',
+          style: {
+            'line-color': regulationInhibitionColor,
+            'target-arrow-color': regulationInhibitionColor,
+          },
+        },
+        {
+          selector: 'edge[monotonicity="unspecified"]:selected',
+          style: {
+            'line-color': regulationUnspecifiedColor,
+            'target-arrow-color': regulationUnspecifiedColor,
           },
         },
         {
@@ -338,9 +399,16 @@ class CytoscapeME implements ModelVisualizationInt {
             shape: 'rectangle',
             'background-opacity': 0,
             'background-image': function (e: any) {
-              return (
-                'data:image/svg+xml;utf8,' + encodeURIComponent(_add_box_svg)
-              );
+              const edgeHandleColor = getComputedStyle(document.documentElement)
+                .getPropertyValue('--color-model-edge-handle-box-color')
+                .trim();
+              const iconColor = getComputedStyle(document.documentElement)
+                .getPropertyValue('--color-model-edge-handle-icon-color')
+                .trim();
+
+              const icon = addBoxSvg(edgeHandleColor, iconColor);
+
+              return 'data:image/svg+xml;utf8,' + encodeURIComponent(icon);
             },
             'background-width': '32px',
             'background-height': '32px',
@@ -354,9 +422,9 @@ class CytoscapeME implements ModelVisualizationInt {
           // Change ghost edge preview colors
           selector: '.eh-preview, .eh-ghost-edge',
           style: {
-            'background-color': '#797979',
-            'line-color': '#797979',
-            'target-arrow-color': '#797979',
+            'background-color': edgePreviewColor,
+            'line-color': edgePreviewColor,
+            'target-arrow-color': edgePreviewColor,
             'target-arrow-shape': 'triangle',
           },
         },
@@ -1056,10 +1124,14 @@ class CytoscapeME implements ModelVisualizationInt {
       nodes = inputNodes;
     }
 
+    const color = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-control-enabled')
+      .trim();
+
     nodes.forEach(([id, controlInfo]) => {
       const node = this.cytoscape.getElementById(id);
       if (this.controlEnabledShown && controlInfo.controlEnabled) {
-        node.style('background-color', '#FFFF66');
+        node.style('background-color', color);
       } else {
         node.removeStyle('background-color');
       }
@@ -1084,18 +1156,31 @@ class CytoscapeME implements ModelVisualizationInt {
       nodes = inputNodes;
     }
 
+    const trueColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-in-phenotype-true')
+      .trim();
+    const falseColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-in-phenotype-false')
+      .trim();
+    const notInText = getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-model-node-text')
+      .trim();
+    const notInBorder = getComputedStyle(document.documentElement)
+      .getPropertyValue('---color-model-node-border')
+      .trim();
+
     nodes.forEach(([id, controlInfo]) => {
       if (this.phenotypeShown && controlInfo.phenotype == true) {
-        this.cytoscape.getElementById(id).style('border-color', 'green');
-        this.cytoscape.getElementById(id).style('color', 'green');
+        this.cytoscape.getElementById(id).style('border-color', trueColor);
+        this.cytoscape.getElementById(id).style('color', trueColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');
       } else if (this.phenotypeShown && controlInfo.phenotype == false) {
-        this.cytoscape.getElementById(id).style('border-color', 'red');
-        this.cytoscape.getElementById(id).style('color', 'red');
+        this.cytoscape.getElementById(id).style('border-color', falseColor);
+        this.cytoscape.getElementById(id).style('color', falseColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');
       } else {
-        this.cytoscape.getElementById(id).style('border-color', '');
-        this.cytoscape.getElementById(id).style('color', 'black');
+        this.cytoscape.getElementById(id).style('border-color', notInBorder);
+        this.cytoscape.getElementById(id).style('color', notInText);
         this.cytoscape.getElementById(id).style('border-width', '1px');
       }
     });

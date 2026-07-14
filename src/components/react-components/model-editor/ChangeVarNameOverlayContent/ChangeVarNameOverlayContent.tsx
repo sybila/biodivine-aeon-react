@@ -89,6 +89,8 @@ const ChangeVarNameOverlayContent: React.FC<
 
       <section className="flex flex-row justify-around items-center w-full h-[12%]">
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           compHeight="90%"
           compWidth="40%"
           text="Revert"
@@ -108,6 +110,8 @@ const ChangeVarNameOverlayContent: React.FC<
           }}
         />
         <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
           compHeight="90%"
           compWidth="40%"
           text="Apply"

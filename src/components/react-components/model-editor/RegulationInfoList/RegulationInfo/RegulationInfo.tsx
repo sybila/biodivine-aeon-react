@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { RegulationInfoProps } from './RegulationInfoProps';
 
 const RegulationInfo: React.FC<RegulationInfoProps> = ({
@@ -8,15 +9,22 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   hover,
   selected,
 
+  normalTextColor,
+  hoverColor,
+  selectedColor,
+
   modelEditorServ,
   pageStringProviderServ,
 
   variablesStore,
   helpHoverStore,
 }) => {
+  const [localHovered, setLocalHovered] = useState(hover);
   const regulatorVar = variablesStore((state) =>
     state.variableFromId(regulator)
   );
+
+  const isHovered = hover || localHovered;
 
   const getRegulationIcon = () => {
     switch (monotonicity) {
@@ -30,11 +38,14 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   };
 
   const getObservable = () => {
-    const color: string = observable ? 'text-black' : 'text-gray-400';
+    const color: string = observable
+      ? 'var(--color-regulation-observable)'
+      : 'var(--color-regulation-non-observable)';
 
     return (
       <span
-        className={`h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden ${color} text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        className="h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer"
+        style={{ color: color }}
         onClick={() => {
           modelEditorServ.toggleRegulationObservability(regulator, target);
         }}
@@ -56,23 +67,24 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   };
 
   const getMonotonicity = () => {
-    let color: string = 'text-black';
+    let color: string = 'black';
 
     switch (monotonicity) {
       case 'activation':
-        color = 'text-green-400';
+        color = 'var(--color-regulation-activation)';
         break;
       case 'inhibition':
-        color = 'text-red-500';
+        color = 'var(--color-regulation-inhibition)';
         break;
       case 'unspecified':
-        color = 'text-gray-400';
+        color = 'var(--color-regulation-unspecified)';
         break;
     }
 
     return (
       <span
-        className={`h-fit w-[30%] max-w-[30%] overflow-x-auto ${color} overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer`}
+        className="h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer"
+        style={{ color: color }}
         onClick={() => {
           modelEditorServ.toggleRegulationMonocity(regulator, target);
         }}
@@ -93,40 +105,42 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
     );
   };
 
-  const getRegulationBgColor = () => {
-    switch (hover) {
-      case true:
-        return selected
-          ? 'bg-[var(--color-grey-blue-light)]'
-          : 'bg-[var(--color-grey-blue-ultra-light)]';
-      default:
-        return selected
-          ? 'bg-[var(--color-grey-blue-light)]'
-          : 'bg-transparent';
+  const getRegulationBgColor: () => string = () => {
+    if (selected) {
+      return selectedColor;
+    } else if (isHovered) {
+      return hoverColor;
     }
+
+    return 'transparent';
   };
 
   if (!regulatorVar) return;
 
   return (
     <div
-      className={`min-h-[24px] max-h-[40px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) ${
-        !selected ? 'hover:bg-[var(--color-grey-blue-ultra-light)]' : ''
-      } ${getRegulationBgColor()} leading-[100%] text-[98%] select-none`}
+      className="min-h-[24px] max-h-[40px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) 
+        leading-[100%] text-[98%] select-none"
+      style={{ backgroundColor: getRegulationBgColor() }}
       onMouseEnter={() => {
         modelEditorServ.hoverRegulationCytoscape({ regulator, target }, true);
+        setLocalHovered(true);
       }}
       onMouseLeave={() => {
         modelEditorServ.hoverRegulationCytoscape({ regulator, target }, false);
+        setLocalHovered(false);
       }}
     >
       <span
         className="h-auto w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[16px]"
-        style={{ scrollbarWidth: 'thin' }}
+        style={{ scrollbarWidth: 'thin', color: normalTextColor }}
       >
         {regulatorVar.name ?? 'Unknown'}
       </span>
-      <span className="h-auto w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center">
+      <span
+        className="h-auto w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center"
+        style={{ color: normalTextColor }}
+      >
         {getRegulationIcon()}
       </span>
 

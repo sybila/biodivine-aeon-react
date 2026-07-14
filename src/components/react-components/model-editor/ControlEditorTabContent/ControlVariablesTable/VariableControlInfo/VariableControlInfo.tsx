@@ -42,11 +42,17 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   const getPhenButtonColor = (hover: boolean) => {
     switch (controlInfo.phenotype) {
       case true:
-        return hover ? 'var(--color-green-light)' : 'var(--color-green)';
+        return hover
+          ? 'var(--color-in-phenotype-true-highlight)'
+          : 'var(--color-in-phenotype-true)';
       case false:
-        return hover ? 'var(--color-red-light)' : 'var(--color-red)';
+        return hover
+          ? 'var(--color-in-phenotype-false-highlight)'
+          : 'var(--color-in-phenotype-false)';
       default:
-        return hover ? 'var(--color-grey-light)' : 'var(--color-grey)';
+        return hover
+          ? 'var(--color-not-in-phenotype-highlight)'
+          : 'var(--color-not-in-phenotype)';
     }
   };
 
@@ -57,9 +63,13 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   const getControlButtonColor = (hover: boolean) => {
     switch (controlInfo.controlEnabled) {
       case false:
-        return hover ? 'var(--color-grey-light)' : 'var(--color-grey)';
+        return hover
+          ? 'var(--color-not-control-enabled-highlight)'
+          : 'var(--color-not-control-enabled)';
       default:
-        return hover ? 'var(--color-yellow-light)' : 'var(--color-yellow)';
+        return hover
+          ? 'var(--color-control-enabled-highlight)'
+          : 'var(--color-control-enabled)';
     }
   };
 
@@ -68,6 +78,12 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       className="cursor-pointer"
       compHeight="auto"
       compWidth="100%"
+      contColor="var(--color-secondary-light)"
+      contHoverColor="var(--color-secondary-light-highlight)"
+      contActiveColor="var(--color-secondary-active)"
+      contActiveBorder="2px var(--color-secondary-border) solid"
+      contHoverBorder="2px var(--color-secondary-border) dashed"
+      contBorder="2px var(--color-secondary-light) solid"
       contentOverflowX="visible"
       contentOverflowY="visible"
       hover={hover}
@@ -81,7 +97,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
       onClick={() => toggleSelect(id)}
     >
       <span
-        className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-[100%] font-(family-name:--font-family-fira-mono)"
+        className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-(--color-secondary-text) text-[100%] font-(family-name:--font-family-fira-mono)"
         onMouseEnter={(e: React.MouseEvent) =>
           helpHoverStore
             .getState()
@@ -102,6 +118,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             text="CE"
             iconSrc={ContrIcon}
             iconAlt="Control-Enabled Icon"
+            textColor="var(--color-control-enabled-status-text)"
             buttonColor={getControlButtonColor(false)}
             buttonHoverColor={getControlButtonColor(true)}
             handleClick={() => {
@@ -139,6 +156,7 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
             text="Ph"
             iconSrc={PhenIcon}
             iconAlt="Phenotype Icon"
+            textColor="var(--color-phenotype-status-text)"
             buttonColor={getPhenButtonColor(false)}
             buttonHoverColor={getPhenButtonColor(true)}
             handleClick={() => {

@@ -56,8 +56,10 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         )}
         value={updateFunction}
         handleKeyUp={(fun) => setUpdateFunction(fun)}
-        textColor="var(--base-text-color)"
-        placeholderColor="var(--placeholder-text-color)"
+        contBgColor='transparent'
+        textColor="var(--color-secondary-text)"
+        contFocusBgColor="transparent"
+        placeholderColor="var(--color-secondary-placeholder-text)"
         onMouseEnter={handleUpdateFunctionMouseEnter}
         onMouseLeave={handleUpdateFunctionMouseLeave}
       />
@@ -65,6 +67,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         compMinHeight={validationMinHeight}
         compMaxHeight={validationMaxHeight}
         compWidth={'95%'}
+        textColor='var(--color-secondary-text)'
         updateFunctionStatus={updateFunctionStatus}
       />
     </div>

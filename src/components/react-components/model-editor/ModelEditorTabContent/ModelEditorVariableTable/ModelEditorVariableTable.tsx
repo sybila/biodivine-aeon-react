@@ -78,7 +78,7 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
 
   return !filteredVariables || filteredVariables.length === 0 ? (
     <section className="flex h-[200px] w-[98%] justify-center items-center">
-      <SimpleHeaderReact headerText="No Variables" textFontWeight="normal" />
+      <SimpleHeaderReact textColor='var(--color-primary-text)' headerText="No Variables" textFontWeight="normal" />
     </section>
   ) : (
     <section

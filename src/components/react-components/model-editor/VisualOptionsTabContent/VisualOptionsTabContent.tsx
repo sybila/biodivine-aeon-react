@@ -199,6 +199,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
     return (
       <>
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           headerText={section.headerText}
           compWidth="100%"
           justifyHeader="start"
@@ -206,7 +207,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
         <section className="flex flex-row items-center justify-between w-full h-fit gap-1 mb-2 overflow-visible">
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
             {firstHalf.map(([label, onClick, onMouseEnter, isActive]) => (
-              <TextButtonReact
+              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
                 key={label}
                 text={label}
                 handleClick={onClick}
@@ -219,7 +220,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
           </div>
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
             {secondHalf.map(([label, onClick, onMouseEnter, isActive]) => (
-              <TextButtonReact
+              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
                 key={label}
                 text={label}
                 handleClick={onClick}

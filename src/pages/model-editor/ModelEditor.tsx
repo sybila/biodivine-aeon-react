@@ -188,6 +188,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <SideButtonMenu>
         {modelType !== 'witness' ? (
           <IconButtonReact
+            buttonColor="var(--color-secondary-buttons)"
+            buttonHoverColor="var(--color-secondary-buttons-hover)"
+            buttonActiveColor="var(--color-secondary-buttons-active)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -203,6 +206,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         ) : null}
         {modelType !== 'witness' ? (
           <IconButtonReact
+            buttonColor="var(--color-secondary-buttons)"
+            buttonHoverColor="var(--color-secondary-buttons-hover)"
+            buttonActiveColor="var(--color-secondary-buttons-active)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -217,6 +223,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         ) : (
           <IconButtonReact
+            buttonColor="var(--color-secondary-buttons)"
+            buttonHoverColor="var(--color-secondary-buttons-hover)"
+            buttonActiveColor="var(--color-secondary-buttons-active)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -231,6 +240,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           ></IconButtonReact>
         )}
         <IconButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          buttonActiveColor="var(--color-secondary-buttons-active)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -244,6 +256,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Model Editor"
         ></IconButtonReact>
         <IconButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          buttonActiveColor="var(--color-secondary-buttons-active)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -257,6 +272,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Control Editor"
         ></IconButtonReact>
         <IconButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          buttonActiveColor="var(--color-secondary-buttons-active)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -270,6 +288,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           tagText="Visual Options"
         ></IconButtonReact>
         <IconButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          buttonActiveColor="var(--color-secondary-buttons-active)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()

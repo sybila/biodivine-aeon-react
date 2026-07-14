@@ -26,6 +26,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
     <div className="flex flex-col items-center w-full h-fit gap-3">
       <section className="flex flex-col items-center w-full h-fit gap-3">
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           headerText="Control Statistics"
           compWidth="100%"
           justifyHeader="start"
@@ -39,6 +40,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
 
       <section className="flex flex-col items-center w-full h-fit gap-3">
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           headerText="Phenotype Oscillation"
           compWidth="100%"
           justifyHeader="start"
@@ -56,6 +58,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
 
       <section className="flex flex-row items-around w-full h-fit gap-1">
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           compWidth="50%"
           headerText="Variables"
           justifyHeader="start"

@@ -53,6 +53,9 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
           pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
+          normalTextColor='var(--color-primary-text)'
+          hoverColor='var(--color-secondary-light-highlight)'
+          selectedColor='var(--color-secondary-highlight)'
           {...regulation}
         ></RegulationInfo>
       ))}

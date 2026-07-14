@@ -23,6 +23,8 @@ const ModelName: React.FC<ModelNameProps> = ({
     <InvisibleInputReact
       compHeight="35px"
       compWidth="488px"
+      textColor='var(--color-primary-text)'
+      placeholderColor='var(--color-primary-placeholder-text)'
       fontSize="22px"
       placeholder="Model Name"
       textAlign="center"

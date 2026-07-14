@@ -93,12 +93,15 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           <section className="flex flex-col items-center w-full h-fit gap-3">
             <section className="flex flex-row items-center justify-between w-full h-fit gap-1">
               <DotHeaderReact
+                textColor="var(--color-primary-text)"
                 compWidth="60%"
                 headerText="Model Statistics"
                 justifyHeader="start"
               />
 
               <TextButtonReact
+                buttonColor="var(--color-secondary-buttons)"
+                textColor="var(--color-secondary-text)"
                 className="mr-1"
                 compWidth="35%"
                 textFontSize="13px"
@@ -127,6 +130,7 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
 
           <section className="flex flex-col items-center justify-between w-full h-[60px] gap-1">
             <DotHeaderReact
+              textColor="var(--color-primary-text)"
               compHeight="49%"
               compWidth="100%"
               headerText="Variables"
@@ -136,6 +140,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
             <section className="flex flex-row justify-between w-[95%] h-[50%] gap-1">
               <div className="flex flex-row items-center justify-between w-[50%] h-full">
                 <TextButtonReact
+                  buttonColor="var(--color-secondary-buttons)"
+                  textColor="var(--color-secondary-text)"
                   className="mr-1"
                   compHeight="90%"
                   compWidth="47%"
@@ -156,6 +162,8 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                   onMouseLeave={() => helpHoverStore.getState().clear()}
                 />
                 <TextButtonReact
+                  buttonColor="var(--color-secondary-buttons)"
+                  textColor="var(--color-secondary-text)"
                   className="mr-1"
                   compHeight="90%"
                   compWidth="47%"
@@ -185,6 +193,9 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
                 iconAlt="Add"
                 iconHeight="19px"
                 text="Add Variable"
+                buttonColor="var(--color-secondary-buttons)"
+                buttonHoverColor="var(--color-secondary-buttons-hover)"
+                textColor="var(--color-secondary-text)"
                 handleClick={() => {
                   modelEditorServ.addVariable();
                 }}
@@ -204,6 +215,9 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           </section>
 
           <TextInputReact
+            textColor="var(--color-secondary-text)"
+            inputColor="var(--color-secondary-text-inputs)"
+            inputBorderColor="var(--color-secondary-text-inputs-border)"
             compWidth="95%"
             placeholder="Search variables..."
             onWrite={setVariableSearch}

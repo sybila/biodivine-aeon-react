@@ -9,16 +9,25 @@ const OneButtonSection: React.FC<OneButtonSectionProps> = ({
   buttonTooltipFunction,
   hideTooltipFunction,
   gapInsideSection,
+  headerTextColor,
+  buttonTextColor,
+  buttonColor,
 }) => {
   return (
     <section
       className="flex flex-col h-fit w-full"
       style={{ gap: `${gapInsideSection}` }}
     >
-      <DotHeaderReact headerText={headerText} compHeight="20px" />
+      <DotHeaderReact
+        headerText={headerText}
+        compHeight="20px"
+        textColor={headerTextColor}
+      />
 
       <TextButtonReact
         compWidth="100%"
+        textColor={buttonTextColor}
+        buttonColor={buttonColor}
         handleClick={() => onClick()}
         onMouseEnter={(e: React.MouseEvent) =>
           buttonTooltipFunction(e.nativeEvent)
