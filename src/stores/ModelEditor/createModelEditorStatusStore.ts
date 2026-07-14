@@ -40,7 +40,7 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
           return {
             selectedItemsInfo: {
               ...state.selectedItemsInfo,
-              regulation: {
+              regulations: {
                 ...state.selectedItemsInfo.regulations,
                 [itemInfo.regulationIds.target]: updatedRegulationRecord,
               },
@@ -82,7 +82,7 @@ function createModelEditorStatusStore(): ZustandStore<ModelEditorStatus> {
           return {
             selectedItemsInfo: {
               ...state.selectedItemsInfo,
-              regulation: newRegulationInfo,
+              regulations: newRegulationInfo,
             },
           };
         });
