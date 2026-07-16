@@ -33,7 +33,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   const formatedPhenotype = useMemo(
     () =>
       controlPerturbationsTableServ.formatPerturbation(
-        Object.entries(controlEnabledPhenotypeVars.phenotypeVars)
+        Object.entries(controlEnabledPhenotypeVars.phenotypeVars),
+        "var(--color-secondary-text)"
       ),
     [controlEnabledPhenotypeVars]
   );
@@ -52,6 +53,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         valueMaxWidth="45%"
         valNameGap="1%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Number of Interpretations"
@@ -61,6 +64,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         valueMaxWidth="40%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Maximal Robustness (%)"
@@ -72,6 +77,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         valueMaxWidth="47%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Minimal Size"
@@ -81,6 +88,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         valueMaxWidth="68%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Phenotype Oscillation"
@@ -90,6 +99,8 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         valueMaxWidth="48%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
 
       <SeparatorLine width="99%" />
@@ -98,6 +109,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Control-Enabled Variables"
+        textColor="var(--color-primary-text)"
       />
 
       <ContentWindowReact
@@ -106,8 +118,9 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         contentAlignI="safe center"
         contentJustifyC="center"
         windOverflowY="hidden"
+        windColor="var(--color-secondary-light)"
       >
-        <div className="flex flex-row h-full w-auto font-[var(--base-font-family)] text-black select-none px-2">
+        <div className="flex flex-row h-full w-auto font-(--base-font-family) text-(--color-secondary-text) select-none px-2">
           {controlEnabledPhenotypeVars.controlEnabledVars.map(
             (varName, index) => (
               <span key={index} className="mx-1">
@@ -128,6 +141,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Phenotype"
+        textColor="var(--color-primary-text)"
       />
 
       <ContentWindowReact
@@ -137,6 +151,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         contentAlignI="safe center"
         contentJustifyC="center"
         windOverflowY="hidden"
+        windColor="var(--color-secondary-light)"
         onClick={() => setPhenotypeAsText(!phenAsText)}
       >
         <div className="flex flex-row h-full w-auto px-2">

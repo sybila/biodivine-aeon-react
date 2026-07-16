@@ -46,7 +46,12 @@ const SortButtonSection: React.FC<SortButtonSectionProps> = ({
         iconSrc={sortDirection === 'asc' ? ArrowUpIcon : ArrowDownIcon}
         iconAlt={sortDirection === 'asc' ? 'Asc' : 'Desc'}
         handleClick={() => toggleSortDirection()}
-        buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        buttonColor={
+          disable
+            ? 'var(--color-secondary-buttons-disabled)'
+            : 'var(--color-secondary-buttons)'
+        }
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         onMouseEnter={(e: React.MouseEvent) =>
           helpHoverStore
             .getState()
@@ -65,7 +70,12 @@ const SortButtonSection: React.FC<SortButtonSectionProps> = ({
         compWidth="300px"
         text={sortField}
         handleClick={() => toggleSortField()}
-        buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        buttonColor={
+          disable
+            ? 'var(--color-secondary-buttons-disabled)'
+            : 'var(--color-secondary-buttons)'
+        }
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         onMouseEnter={(e: React.MouseEvent) =>
           helpHoverStore
             .getState()

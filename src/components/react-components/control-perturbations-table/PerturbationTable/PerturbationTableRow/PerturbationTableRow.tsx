@@ -22,7 +22,8 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     /** Memoized formatted perturbation in the form of JSX elements [coloredFormat, textFormat] */
     const formatedPerturbation = useMemo(() => {
       return controlPerturbationsTableServ.formatPerturbation(
-        perturbationArray
+        perturbationArray,
+        "var(--color-primary-text)"
       );
     }, [perturbationArray]);
 

@@ -68,10 +68,13 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
    * - The button color (string)
    * - The onClick handler function (() => void)
    */
-  const statusButtons: Array<[string, string, () => void, () => string]> = [
+  const statusButtons: Array<
+    [string, string, string, () => void, () => string]
+  > = [
     [
       'N',
-      'var(--color-grey)',
+      'var(--color-not-in-phenotype)',
+      'var(--color-not-in-phenotype-highlight)',
       () => changeSelectedFilterStat(null),
       () =>
         pageStringProviderServ.Tooltips.changeVariableFilterStatus(
@@ -80,7 +83,8 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     ],
     [
       'P',
-      'var(--color-violet)',
+      'var(--color-present-in-perturbation)',
+      'var(--color-present-in-perturbation-highlight)',
       () =>
         changeSelectedFilterStat(PertVariableFilterStatus.IN_FILTER_PERTURBED),
       () =>
@@ -90,7 +94,8 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     ],
     [
       'T',
-      'var(--color-green)',
+      'var(--color-in-phenotype-true)',
+      'var(--color-in-phenotype-true-highlight)',
       () =>
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_POSITIVELY_PERTURBED
@@ -102,7 +107,8 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
     ],
     [
       'F',
-      'var(--color-red)',
+      'var(--color-in-phenotype-false)',
+      'var(--color-in-phenotype-true-false)',
       () =>
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_NEGATIVELY_PERTURBED
@@ -126,7 +132,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
       <section className="h-[30px] w-full flex flex-row justify-between items-center px-2">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
           {statusButtons.map(
-            ([label, color, onClick, tooltipTextProviderFunction], index) => (
+            ([label, color, hoverColor, onClick, tooltipTextProviderFunction], index) => (
               <TextButtonReact
                 key={index}
                 compHeight="29px"
@@ -134,6 +140,7 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
                 text={label}
                 handleClick={onClick}
                 buttonColor={color}
+                buttonHoverColor={hoverColor}
                 onMouseEnter={(e: React.MouseEvent) =>
                   helpHoverStore
                     .getState()
@@ -164,9 +171,12 @@ const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
         compWidth="100%"
         placeholder="Search Control Enabled variables..."
         onWrite={(value) => setSearchText(value)}
+        textColor="var(--color-secondary-text)"
+        inputColor="var(--color-secondary-text-inputs)"
+        inputBorderColor="var(--color-secondary-text-inputs-border)"
       />
 
-      <section className="h-[150px] w-full overflow-y-auto overflow-x-hidden">
+      <section className="h-[150px] w-full overflow-y-auto overflow-x-hidden rounded-md bg-(--color-secondary-light) border-(--color-secondary-ultra-light-border) border">
         {filteredVariableNames.map((name) => (
           <SelectVarFilterTableRow
             key={name}

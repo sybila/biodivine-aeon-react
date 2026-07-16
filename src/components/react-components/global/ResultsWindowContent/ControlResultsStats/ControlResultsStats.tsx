@@ -111,7 +111,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             text="Table"
             buttonColor="var(--color-secondary-buttons)"
             buttonHoverColor="var(--color-secondary-buttons-hover)"
-            textColor="var(--color-secondary)"
+            textColor="var(--color-secondary-text)"
             handleClick={() =>
               tabsStore
                 .getState()
@@ -153,7 +153,7 @@ const ControlResultsStats: React.FC<ControlResultsStatsProps> = ({
             text="CSV"
             buttonColor="var(--color-secondary-buttons)"
             buttonHoverColor="var(--color-secondary-buttons-hover)"
-            textColor="var(--color-secondary)"
+            textColor="var(--color-secondary-text)"
             handleClick={() =>
               resultsOperationsServ.exportControlPerturbationsAsCsv(
                 results.perturbations,

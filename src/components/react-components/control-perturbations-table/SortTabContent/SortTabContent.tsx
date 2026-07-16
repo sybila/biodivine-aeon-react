@@ -19,6 +19,7 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Primary Sort"
+        textColor="var(--color-primary-text)"
       />
 
       <SortButtonSection
@@ -37,6 +38,7 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Secondary Sort"
+        textColor="var(--color-primary-text)"
       />
 
       <SortButtonSection
@@ -61,6 +63,9 @@ const SortTabContent: React.FC<SortTabContentProps> = ({
         compHeight="40px"
         textFontWeight="bold"
         text="Apply Sorts"
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         onClick={() => {
           setStartSort(!startSort);
         }}

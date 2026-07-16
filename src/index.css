@@ -49,15 +49,18 @@
   --color-secondary-darker: #cfd8dc;
   --color-secondary-light: #fafafa;
   --color-secondary-active: #add8e6;
+  --color-secondary-ultra-light-border: #95969853;
   --color-secondary-border: #6a7ea5;
   --color-secondary-buttons: #eceff1;
   --color-secondary-buttons-hover: #cfd8dc;
   --color-secondary-buttons-active: #cfd8dc;
+  --color-secondary-buttons-disabled: #d6d4d4;
   --color-secondary-buttons-darker: #cfd8dc;
   --color-secondary-buttons-darker-hover: #b0bec5;
   --color-secondary-text-inputs: #fafafa;
   --color-secondary-text-inputs-border: #cfd8dc;
   --color-secondary-highlight: #b0bec5;
+  --color-secondary-medium-highlight: #bfcfd7;
   --color-secondary-light-highlight: #e7ecee94;
   --color-highlight: #cfd8dc;
 
@@ -100,6 +103,9 @@
   --color-not-in-phenotype: #bebebe;
   --color-not-in-phenotype-highlight: #d0d0d0;
   --color-phenotype-status-text: black;
+
+  --color-present-in-perturbation:#9c6ade;
+  --color-present-in-perturbation-highlight: #a773eb;
 
   --color-model-node: #dddddd;
   --color-model-node-text: black;
