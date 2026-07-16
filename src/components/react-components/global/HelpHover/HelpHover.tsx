@@ -29,9 +29,10 @@ const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
   }
 
   const tooltipClasses =
-    'h-[30px] text-[16px] px-3 py-2 bg-[var(--color-tooltip-bg)] text-[var(--lighter-text-color)]';
+    'h-[30px] text-[16px] px-3 py-2 bg-[var(--color-tooltip)] text-[var(--color-tooltip-text)]';
 
-  const defaultClasses = 'h-[50px] text-[20px] p-5 bg-[var(--color-secondary)]';
+  const defaultClasses =
+    'h-[50px] text-[20px] p-5 bg-[var(--color-secondary)] text-[var(--color-secondary-text)]';
 
   return createPortal(
     <div
