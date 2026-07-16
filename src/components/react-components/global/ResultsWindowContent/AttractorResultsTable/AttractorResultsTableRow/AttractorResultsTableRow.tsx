@@ -4,9 +4,13 @@ import type { AttractorResultsTableRowProps } from './AttractorResultsTableRowPr
 const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   interpretationCount,
   behaviorClassList,
+  textColor = 'var(--color-primary-text)',
+  textHoverColor = 'var(--color-primary-interactive-text)',
+
   computationManagerServ,
   attractorVisualizerServ,
   pageStringProviderServ,
+
   helpHoverStore,
 }) => {
   const behaviourString: string | undefined = !behaviorClassList
@@ -32,14 +36,14 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
     [
       'Witness',
       () => openWitness(),
-      pageStringProviderServ.Tooltips.OverlayWindowTooltips
-        .ResultsTooltips.AttractorAnalysisResults.openWitness,
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips.ResultsTooltips
+        .AttractorAnalysisResults.openWitness,
     ],
     [
       'Attractor',
       () => openAttractor(),
-      pageStringProviderServ.Tooltips.OverlayWindowTooltips
-        .ResultsTooltips.AttractorAnalysisResults.openAttractorVisualization,
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips.ResultsTooltips
+        .AttractorAnalysisResults.openAttractorVisualization,
     ],
   ];
 
@@ -52,6 +56,7 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
           compWidth="fit-content"
           lineHeight="30px"
           textFontSize="18px"
+          textColor={textColor}
           headerText={
             !behaviourString || behaviourString.length === 0
               ? 'unclassified'
@@ -61,7 +66,7 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
         />
       </div>
 
-      <span className="flex flex-row items-center justify-center-safe h-full mx-[5%] w-[30%] overflow-x-auto overflow-y-hidden font-[var(--base-font-family)] text-black text-[18px] select-none">
+      <span className="flex flex-row items-center justify-center-safe h-full mx-[5%] w-[30%] overflow-x-auto overflow-y-hidden font-(--base-font-family) text-(--color-primary-text) text-[18px] select-none">
         {!interpretationCount ? 'unknown' : interpretationCount.toString()}
       </span>
 
@@ -69,19 +74,27 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
         {buttonsContent.map(([text, onClick, tooltipTextFunction], index) => (
           <span
             key={index}
-            className="decoration-solid underline cursor-pointer hover:text-gray-700"
+            className="decoration-solid underline cursor-pointer"
+            style={{ color: textColor }}
             onClick={onClick}
-            onMouseEnter={(e: React.MouseEvent) =>
-              helpHoverStore
-                .getState()
-                .setHelpHoverAtMouse(
-                  e.nativeEvent,
-                  tooltipTextFunction(),
-                  true,
-                  -50
-                )
-            }
-            onMouseLeave={() => helpHoverStore.getState().clear()}
+            onMouseEnter={(e: React.MouseEvent) => {
+              {
+                helpHoverStore
+                  .getState()
+                  .setHelpHoverAtMouse(
+                    e.nativeEvent,
+                    tooltipTextFunction(),
+                    true,
+                    -50
+                  );
+                (e.currentTarget as HTMLSpanElement).style.color =
+                  textHoverColor;
+              }
+            }}
+            onMouseLeave={(e: React.MouseEvent) => {
+              helpHoverStore.getState().clear();
+              (e.currentTarget as HTMLSpanElement).style.color = textColor;
+            }}
           >
             {text}
           </span>

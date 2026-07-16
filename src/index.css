@@ -31,11 +31,12 @@
 }
 
 :root {
-  /* --color-bg-base: #fff;
+  --color-bg-base: #fff;
 
   --color-primary: #f5f5f5;
   --color-primary-buttons: #eceff1;
   --color-primary-buttons-hover: #cfd8dc;
+  --color-primary-buttons-active: #cfd8dc;
 
   --color-primary-text: black;
   --color-primary-placeholder-text: gray;
@@ -44,6 +45,7 @@
   --color-primary-separator-dark: black;
 
   --color-secondary: #e7ecee;
+  --color-secondary-darker: #cfd8dc;
   --color-secondary-light: #fafafa;
   --color-secondary-active: #add8e6;
   --color-secondary-border: #6a7ea5;
@@ -73,6 +75,7 @@
 
   --color-negative: #d05d5d;
   --color-positive: #4abd73;
+  --color-neutral: #bebebe;
 
   --color-regulation-inhibition: #d05d5d;
   --color-regulation-activation: #4abd73;
@@ -104,86 +107,102 @@
   --color-model-edge-handle-box-color: #6a7ea5;
   --color-model-edge-handle-icon-color: #ffffff;
 
+    --color-attractor-visualizer-node: #ffffff;
+  --color-attractor-visualizer-node-border: #3a568c;
+      --color-attractor-visualizer-highlighted-node: #e5eeff;
+  --color-attractor-visualizer-node-highlighted-border: #3a568c;
+  --color-attractor-visualizer-edge: #3a568c;
+  --color-attractor-visualizer-node-text: ;
+
   --color-delete: #f8b4b4;
   --color-delete-hover: #d05d5d;
-  --color-delete-active: #b94a4a; */
+  --color-delete-active: #b94a4a;
 
-  --color-bg-base: #9c27b0;
+  /* --color-bg-base: #9c27b0;
 
---color-primary: #9c27b0;
---color-primary-buttons: #9c27b0;
---color-primary-buttons-hover: #9c27b0;
+  --color-primary: #9c27b0;
+  --color-primary-buttons: #9c27b0;
+  --color-primary-buttons-hover: #9c27b0;
+  --color-primary-buttons-active: #9c27b0;
 
---color-primary-text: #9c27b0;
---color-primary-placeholder-text: #9c27b0;
---color-primary-interactive-text: #9c27b0;
---color-primary-separator: #9c27b0;
---color-primary-separator-dark: #9c27b0;
+  --color-primary-text: #9c27b0;
+  --color-primary-placeholder-text: #9c27b0;
+  --color-primary-interactive-text: #9c27b0;
+  --color-primary-separator: #9c27b0;
+  --color-primary-separator-dark: #9c27b0;
 
---color-secondary: #9c27b0;
---color-secondary-light: #9c27b0;
---color-secondary-active: #9c27b0;
---color-secondary-border: #9c27b0;
---color-secondary-buttons: #9c27b0;
---color-secondary-buttons-hover: #9c27b0;
---color-secondary-buttons-active: #9c27b0;
---color-secondary-buttons-darker: #9c27b0;
---color-secondary-buttons-darker-hover: #9c27b0;
---color-secondary-text-inputs: #9c27b0;
---color-secondary-text-inputs-border: #9c27b0;
---color-secondary-highlight: #9c27b0;
---color-secondary-light-highlight: #9c27b0;
---color-highlight: #9c27b0;
+  --color-secondary: #9c27b0;
+  --color-secondary-darker: #9c27b0;
+  --color-secondary-light: #9c27b0;
+  --color-secondary-active: #9c27b0;
+  --color-secondary-border: #9c27b0;
+  --color-secondary-buttons: #9c27b0;
+  --color-secondary-buttons-hover: #9c27b0;
+  --color-secondary-buttons-active: #9c27b0;
+  --color-secondary-buttons-darker: #9c27b0;
+  --color-secondary-buttons-darker-hover: #9c27b0;
+  --color-secondary-text-inputs: #9c27b0;
+  --color-secondary-text-inputs-border: #9c27b0;
+  --color-secondary-highlight: #9c27b0;
+  --color-secondary-light-highlight: #9c27b0;
+  --color-highlight: #9c27b0;
 
---color-secondary-text: #9c27b0;
---color-secondary-placeholder-text: #9c27b0;
+  --color-secondary-text: #9c27b0;
+  --color-secondary-placeholder-text: #9c27b0;
 
---color-tertiary: #9c27b0;
---color-tertiary-buttons: #9c27b0;
---color-tertiary-buttons-hover: #9c27b0;
---color-tertiary-light-highlight: #9c27b0;
+  --color-tertiary: #9c27b0;
+  --color-tertiary-buttons: #9c27b0;
+  --color-tertiary-buttons-hover: #9c27b0;
+  --color-tertiary-light-highlight: #9c27b0;
 
---color-tertiary-text: #9c27b0;
+  --color-tertiary-text: #9c27b0;
 
---color-tooltip: #9c27b0;
---color-tooltip-text: #9c27b0;
+  --color-tooltip: #9c27b0;
+  --color-tooltip-text: #9c27b0;
 
---color-negative: #9c27b0;
---color-positive: #9c27b0;
+  --color-negative: #9c27b0;
+  --color-positive: #9c27b0;
+  --color-neutral: #9c27b0;
 
---color-regulation-inhibition: #9c27b0;
---color-regulation-activation: #9c27b0;
---color-regulation-unspecified: #9c27b0;
---color-regulation-observable: #9c27b0;
---color-regulation-non-observable: #9c27b0;
+  --color-regulation-inhibition: #9c27b0;
+  --color-regulation-activation: #9c27b0;
+  --color-regulation-unspecified: #9c27b0;
+  --color-regulation-observable: #9c27b0;
+  --color-regulation-non-observable: #9c27b0;
 
---color-control-enabled: #9c27b0;
---color-control-enabled-highlight: #9c27b0;
---color-not-control-enabled: #9c27b0;
---color-not-control-enabled-highlight: #9c27b0;
---color-control-enabled-status-text: #9c27b0;
+  --color-control-enabled: #9c27b0;
+  --color-control-enabled-highlight: #9c27b0;
+  --color-not-control-enabled: #9c27b0;
+  --color-not-control-enabled-highlight: #9c27b0;
+  --color-control-enabled-status-text: #9c27b0;
 
---color-in-phenotype-true: #9c27b0;
---color-in-phenotype-true-highlight: #9c27b0;
---color-in-phenotype-false: #9c27b0;
---color-in-phenotype-false-highlight: #9c27b0;
---color-not-in-phenotype: #9c27b0;
---color-not-in-phenotype-highlight: #9c27b0;
---color-phenotype-status-text: #9c27b0;
+  --color-in-phenotype-true: #9c27b0;
+  --color-in-phenotype-true-highlight: #9c27b0;
+  --color-in-phenotype-false: #9c27b0;
+  --color-in-phenotype-false-highlight: #9c27b0;
+  --color-not-in-phenotype: #9c27b0;
+  --color-not-in-phenotype-highlight: #9c27b0;
+  --color-phenotype-status-text: #9c27b0;
 
---color-model-node: #9c27b0;
---color-model-node-text: #9c27b0;
---color-model-node-border: #9c27b0;
---color-model-node-border-hover: #9c27b0;
---color-model-node-border-fit: #9c27b0;
---color-model-node-border-selected: #9c27b0;
---color-model-edge-preview: #9c27b0;
---color-model-edge-handle-box-color: #9c27b0;
---color-model-edge-handle-icon-color: #9c27b0;
+  --color-model-node: #9c27b0;
+  --color-model-node-text: #9c27b0;
+  --color-model-node-border: #9c27b0;
+  --color-model-node-border-hover: #9c27b0;
+  --color-model-node-border-fit: #9c27b0;
+  --color-model-node-border-selected: #9c27b0;
+  --color-model-edge-preview: #9c27b0;
+  --color-model-edge-handle-box-color: #9c27b0;
+  --color-model-edge-handle-icon-color: #9c27b0;
 
---color-delete: #9c27b0;
---color-delete-hover: #9c27b0;
---color-delete-active: #9c27b0;
+  --color-attractor-visualizer-node: #9c27b0;
+  --color-attractor-visualizer-node-border: #9c27b0;
+  --color-attractor-visualizer-highlighted-node: #9c27b0;
+  --color-attractor-visualizer-node-highlighted-border: #9c27b0;
+  --color-attractor-visualizer-node-text: #9c27b0;
+
+  --color-delete: #9c27b0;
+  --color-delete-hover: #9c27b0;
+  --color-delete-active: #9c27b0; */
 
   --color-grey: #bebebe;
   --color-darker-grey: #b1b1b1ff;

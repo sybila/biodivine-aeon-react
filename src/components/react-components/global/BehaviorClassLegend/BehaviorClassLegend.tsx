@@ -1,18 +1,22 @@
-const BehaviorClassLegend: React.FC<{ height?: string; width?: string }> = ({
-  height,
-  width,
+const BehaviorClassLegend: React.FC<{
+  height?: string;
+  width?: string;
+  textColor?: string;
+}> = ({
+  height = '30px',
+  width = '100%',
+  textColor = 'var(--color-primary-text)',
 }) => {
   return (
     <div
-      className={`flex flex-row justify-center items-center w-[${
-        width ?? '100%'
-      }] h-[${
-        height ?? '30px'
-      }] font-[var(--base-font-family] text-sm gap-2 select-none`}
+      className="flex flex-row justify-center items-center font-(--base-font-family) text-sm gap-2 select-none"
+      style={{ color: textColor, height: height, width: width }}
     >
-      <span className="font-[Symbols] mb-[-10px]">D</span> disorder |{' '}
-      <span className="font-[Symbols] mb-[-10px]">O</span> oscillation |{' '}
-      <span className="font-[Symbols] mb-[-10px]">S</span> stability
+      <span className="font-[Symbols] mb-[-10px] text-inherit">D</span> disorder
+      | <span className="font-[Symbols] mb-[-10px] text-inherit">O</span>{' '}
+      oscillation |{' '}
+      <span className="font-[Symbols] mb-[-10px] text-inherit">S</span>{' '}
+      stability
     </div>
   );
 };
