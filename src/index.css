@@ -31,7 +31,7 @@
 }
 
 :root {
-  --color-bg-base: #fff;
+  /* --color-bg-base: #fff;
 
   --color-primary: #f5f5f5;
   --color-primary-buttons: #eceff1;
@@ -68,7 +68,8 @@
 
   --color-tertiary-text: black;
 
-  --color-tooltip-bg: #c2d3dae9;
+  --color-tooltip: #c2d3dae9;
+  --color-tooltip-text: #464545;
 
   --color-negative: #d05d5d;
   --color-positive: #4abd73;
@@ -103,62 +104,86 @@
   --color-model-edge-handle-box-color: #6a7ea5;
   --color-model-edge-handle-icon-color: #ffffff;
 
-  /* --color-bg-base: #9c27b0;
+  --color-delete: #f8b4b4;
+  --color-delete-hover: #d05d5d;
+  --color-delete-active: #b94a4a; */
 
-  --color-primary: #9c27b0;
+  --color-bg-base: #9c27b0;
 
-  --color-primary-text: #9c27b0;
-  --color-primary-placeholder-text: #9c27b0;
-  --color-primary-interactive-text: #9c27b0;
+--color-primary: #9c27b0;
+--color-primary-buttons: #9c27b0;
+--color-primary-buttons-hover: #9c27b0;
 
-  --color-secondary: #9c27b0;
-  --color-secondary-light: #9c27b0;
-  --color-secondary-active: #9c27b0;
-  --color-secondary-border: #9c27b0;
-  --color-secondary-buttons: #9c27b0;
-  --color-secondary-buttons-hover: #9c27b0;
-  --color-secondary-buttons-active: #9c27b0;
-  --color-secondary-buttons-darker: #9c27b0;
-  --color-secondary-buttons-darker-hover: #9c27b0;
-  --color-secondary-text-inputs: #9c27b0;
-  --color-secondary-text-inputs-border: #9c27b0;
-  --color-secondary-highlight: #9c27b0;
-  --color-secondary-light-highlight: #9c27b0;
+--color-primary-text: #9c27b0;
+--color-primary-placeholder-text: #9c27b0;
+--color-primary-interactive-text: #9c27b0;
+--color-primary-separator: #9c27b0;
+--color-primary-separator-dark: #9c27b0;
 
-  --color-secondary-text: #9c27b0;
-  --color-secondary-placeholder-text: #9c27b0;
+--color-secondary: #9c27b0;
+--color-secondary-light: #9c27b0;
+--color-secondary-active: #9c27b0;
+--color-secondary-border: #9c27b0;
+--color-secondary-buttons: #9c27b0;
+--color-secondary-buttons-hover: #9c27b0;
+--color-secondary-buttons-active: #9c27b0;
+--color-secondary-buttons-darker: #9c27b0;
+--color-secondary-buttons-darker-hover: #9c27b0;
+--color-secondary-text-inputs: #9c27b0;
+--color-secondary-text-inputs-border: #9c27b0;
+--color-secondary-highlight: #9c27b0;
+--color-secondary-light-highlight: #9c27b0;
+--color-highlight: #9c27b0;
 
-  --color-highlight: #9c27b0;
+--color-secondary-text: #9c27b0;
+--color-secondary-placeholder-text: #9c27b0;
 
-  --color-tertiary: #9c27b0;
-  --color-tertiary-buttons: #9c27b0;
-  --color-tertiary-buttons-hover: #9c27b0;
-  --color-tertiary-text: #9c27b0;
-  --color-tertiary-light-highlight: #9c27b0;
+--color-tertiary: #9c27b0;
+--color-tertiary-buttons: #9c27b0;
+--color-tertiary-buttons-hover: #9c27b0;
+--color-tertiary-light-highlight: #9c27b0;
 
-  --color-tooltip-bg: #9c27b0;
+--color-tertiary-text: #9c27b0;
 
-  --color-negative: #9c27b0;
-  --color-positive: #9c27b0;
+--color-tooltip: #9c27b0;
+--color-tooltip-text: #9c27b0;
 
-  --color-regulation-inhibition: #9c27b0;
-  --color-regulation-activation: #9c27b0;
-  --color-regulation-unspecified: #9c27b0;
-  --color-regulation-observable: #9c27b0;
-  --color-regulation-non-observable: #9c27b0;
+--color-negative: #9c27b0;
+--color-positive: #9c27b0;
 
-  --color-control-enabled: #9c27b0;
-  --color-control-enabled-highlight: #9c27b0;
-  --color-not-control-enabled: #9c27b0;
-  --color-not-control-enabled-highlight: #9c27b0;
-  --color-control-enabled-status-text: #9c27b0;
+--color-regulation-inhibition: #9c27b0;
+--color-regulation-activation: #9c27b0;
+--color-regulation-unspecified: #9c27b0;
+--color-regulation-observable: #9c27b0;
+--color-regulation-non-observable: #9c27b0;
 
-  --color-in-phenotype-true: #9c27b0;
-  --color-in-phenotype-true-highlight: #9c27b0;
-  --color-in-phenotype-false: #9c27b0;
-  --color-in-phenotype-false-highlight: #9c27b0;
-  --color-not-in-phenotype: #9c27b0;
-  --color-phenotype-status-text: #9c27b0; */
+--color-control-enabled: #9c27b0;
+--color-control-enabled-highlight: #9c27b0;
+--color-not-control-enabled: #9c27b0;
+--color-not-control-enabled-highlight: #9c27b0;
+--color-control-enabled-status-text: #9c27b0;
+
+--color-in-phenotype-true: #9c27b0;
+--color-in-phenotype-true-highlight: #9c27b0;
+--color-in-phenotype-false: #9c27b0;
+--color-in-phenotype-false-highlight: #9c27b0;
+--color-not-in-phenotype: #9c27b0;
+--color-not-in-phenotype-highlight: #9c27b0;
+--color-phenotype-status-text: #9c27b0;
+
+--color-model-node: #9c27b0;
+--color-model-node-text: #9c27b0;
+--color-model-node-border: #9c27b0;
+--color-model-node-border-hover: #9c27b0;
+--color-model-node-border-fit: #9c27b0;
+--color-model-node-border-selected: #9c27b0;
+--color-model-edge-preview: #9c27b0;
+--color-model-edge-handle-box-color: #9c27b0;
+--color-model-edge-handle-icon-color: #9c27b0;
+
+--color-delete: #9c27b0;
+--color-delete-hover: #9c27b0;
+--color-delete-active: #9c27b0;
 
   --color-grey: #bebebe;
   --color-darker-grey: #b1b1b1ff;

@@ -27,10 +27,18 @@ const TabBar: React.FC<TabBarProps> = ({
           iconSrc={DeleteIcon}
           iconAlt="Delete"
           isActive={deleteModeOn}
-          buttonColor={deleteModeOn ? 'var(--color-red-light)' : undefined}
-          buttonHoverColor={deleteModeOn ? 'var(--color-red)' : undefined}
+          buttonColor={
+            deleteModeOn
+              ? 'var(--color-delete)'
+              : 'var(--color-secondary-buttons)'
+          }
+          buttonHoverColor={
+            deleteModeOn
+              ? 'var(--color-delete-hover)'
+              : 'var(--color-secondary-buttons-hover)'
+          }
           buttonActiveColor={
-            deleteModeOn ? 'var(--color-darker-red)' : undefined
+            deleteModeOn ? 'var(--color-delete-active)' : 'var(--color-secondary-buttons-active)'
           }
           onClick={() => setDeleteModeOn(!deleteModeOn)}
           onMouseOver={(e) =>
@@ -40,7 +48,7 @@ const TabBar: React.FC<TabBarProps> = ({
         />
       </section>
 
-      <div className="h-[90%] w-1 bg-black" />
+      <div className="h-[90%] w-1 bg-(--color-primary-separator-dark)" />
 
       <ResultTabs
         deleteModeOn={deleteModeOn}
@@ -53,7 +61,7 @@ const TabBar: React.FC<TabBarProps> = ({
         resultsStatusStore={resultsStatusStore}
       />
 
-      <div className="h-[90%] w-1 bg-black" />
+      <div className="h-[90%] w-1 bg-(--color-primary-separator-dark)" />
 
       <PageTabs
         deleteModeOn={deleteModeOn}

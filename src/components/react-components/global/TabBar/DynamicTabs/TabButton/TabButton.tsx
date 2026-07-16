@@ -15,9 +15,19 @@ const TabButton: React.FC<TabButtonProps> = ({
       compHeight="80%"
       handleClick={handleClick}
       isActive={active}
-      buttonColor={deleteMode ? 'var(--color-red-light)' : undefined}
-      buttonHoverColor={deleteMode ? 'var(--color-red)' : undefined}
-      buttonActiveColor={deleteMode ? 'var(--color-darker-red)' : undefined}
+      buttonColor={
+        deleteMode ? 'var(--color-delete)' : 'var(--color-secondary-buttons)'
+      }
+      buttonHoverColor={
+        deleteMode
+          ? 'var(--color-delete-hover)'
+          : 'var(--color-secondary-buttons-hover)'
+      }
+      buttonActiveColor={
+        deleteMode
+          ? 'var(--color-delete-active)'
+          : 'var(--color-secondary-buttons-active)'
+      }
       iconSrc={icon}
       iconAlt={iconAlt}
       iconSize="67%"

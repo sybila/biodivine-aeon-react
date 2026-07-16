@@ -171,6 +171,9 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
         iconSrc={DockIcon}
         iconAlt="Dock"
+        butColor="var(--color-primary-buttons)"
+        butHoverColor="var(--color-primary-buttons-hover)"
+        barColor="var(--color-primary)"
       >
         <NavigationDockContent
           helpHoverStore={helpHoverStore}

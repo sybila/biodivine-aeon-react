@@ -10,10 +10,12 @@ const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
   setNavBarHelpHover,
 }) => {
   return (
-    <div className="flex flex-row max-h-full h-full w-fit gap-3 p-1.5 overflow-y-hidden overflow-x-hidden justify-center items-center">
+    <div className="flex flex-row max-h-full h-full w-fit gap-3 p-1.5 overflow-y-hidden overflow-x-hidden justify-center items-center bg-transparent">
       <section className="flex flex-row h-full w-fit gap-2 justify-center items-center">
         <IconButtonReact
           compHeight="80%"
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
           iconSrc={EngineIcon}
           handleClick={handleComputeEngineClick}
           iconAlt="Engine"
@@ -24,7 +26,7 @@ const NavigationDockContent: React.FC<NavigationDockContentProps> = ({
         />
       </section>
 
-      <div className="h-[90%] w-1 bg-black"></div>
+      <div className="h-[90%] w-1 bg-(--color-primary-separator-dark)" />
 
       {children}
     </div>
