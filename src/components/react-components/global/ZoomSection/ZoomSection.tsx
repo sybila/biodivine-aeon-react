@@ -8,13 +8,18 @@ const ZoomSection: React.FC<ZoomSectionProps> = ({
   maxValue,
   currentValue,
   gapInsideSection,
+  textColor = 'var(--color-primary-text)',
 }) => {
   return (
     <section
       className="flex flex-col h-fit w-full"
       style={{ gap: `${gapInsideSection}` }}
     >
-      <DotHeaderReact headerText="Zoom" compHeight="20px" />
+      <DotHeaderReact
+        headerText="Zoom"
+        compHeight="20px"
+        textColor={textColor}
+      />
 
       <ValueSliderReact
         handleInput={(zoomLevel: number) => setZoomFunction(zoomLevel)}

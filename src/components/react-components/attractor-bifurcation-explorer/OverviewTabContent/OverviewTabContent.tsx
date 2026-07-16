@@ -29,6 +29,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
           <SimpleHeaderReact
             compHeight="fit-content"
             compWidth="100%"
+            textColor='var(--color-primary-text)'
             headerText={selectedNode.label ?? 'Unknown'}
             justifyHeader="center"
             textFontSize="26px"
@@ -36,7 +37,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
             textFontFamily="var(--base-font-family)"
           />
         ) : (
-          <span className="flex flex-row justify-center h-[30px] w-full text-[30px] font-normal font-[Symbols] overflow-hidden mb-[-10px]">
+          <span className="flex flex-row justify-center h-[30px] w-full text-[30px] font-normal font-[Symbols] text-(--color-primary-text) overflow-hidden mb-[-10px]">
             {selectedNode.label ?? 'Unknown'}
           </span>
         )}

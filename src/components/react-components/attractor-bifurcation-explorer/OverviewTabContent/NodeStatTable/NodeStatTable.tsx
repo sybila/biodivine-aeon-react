@@ -14,12 +14,15 @@ const NodeStatTable: React.FC<NodeStatTableProps> = ({
       <DotHeaderReact
         compHeight="30px"
         compWidth="100%"
+        textColor="var(--color-primary-text)"
         justifyHeader="start"
         headerText="Statistics"
       />
       <div className="flex flex-col justify-between items-center w-[95%] min-h-[22px] max-h-[90px] gap-1">
         <StatEntryReact
           compWidth="100%"
+          contBgColor="var(--color-secondary-darker)"
+          textColor="var(--color-secondary-text)"
           statName="Node Type"
           statValue={
             nodeData.type === 'unprocessed'
@@ -32,6 +35,8 @@ const NodeStatTable: React.FC<NodeStatTableProps> = ({
         {nodeData.classes ? (
           <StatEntryReact
             compWidth="100%"
+            contBgColor="var(--color-secondary-darker)"
+            textColor="var(--color-secondary-text)"
             statName="Number of Classes"
             statValue={nodeData.classes.length.toString() ?? 'unknown'}
           />
@@ -49,12 +54,16 @@ const NodeStatTable: React.FC<NodeStatTableProps> = ({
               valueMaxWidth="40%"
               valueJustify="end"
               valNameGap="2%"
+              contBgColor="var(--color-secondary-darker)"
+              textColor="var(--color-secondary-text)"
               statValue={nodeData.cardinality.toString() ?? 'unknown'}
             />
 
             <StatEntryReact
               compWidth="100%"
               statName="Distribution"
+              contBgColor="var(--color-secondary-darker)"
+              textColor="var(--color-secondary-text)"
               statValue={
                 !totalCardinality || !nodeData.cardinality
                   ? 'unknown'

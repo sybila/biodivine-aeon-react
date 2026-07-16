@@ -4,6 +4,7 @@ import type {
   StabilityAnalysisModes,
 } from '../../../../../types';
 import ArrowSelectButton from '../../../global/ArrowsSelectButton/ArrowsSelectButton';
+import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 import type { StabilityAnalysisSelectorProps } from './StabilityAnalysisSelectorProps';
@@ -32,6 +33,10 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
         key={mode}
         active={stabilityMode === mode}
         text={mode}
+        buttonColor="var(--color-secondary-buttons)"
+        buttonActiveColor='var(--color-secondary-buttons-active)'
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        textColor="var(--color-secondary-text)"
         onClick={() =>
           bifurcationExplorerStatusStore
             .getState()
@@ -72,6 +77,7 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
       <div className="h-fit w-full flex flex-col justify-start items-center gap-3">
         <DotHeaderReact
           headerText="Select Analysis Mode"
+          textColor="var(--color-primary-text)"
           compHeight="30px"
           compWidth="100%"
           justifyHeader="start"
@@ -79,10 +85,14 @@ const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
         {renderButtons()}
       </div>
 
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+      <SeparatorLine />
+
       <TextIconButtonReact
         compHeight="40px"
         compWidth="95%"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        textColor="var(--color-secondary-text)"
         text="Start Stability Analysis"
         iconAlt="Stability"
         iconSrc={StabilityIcon}

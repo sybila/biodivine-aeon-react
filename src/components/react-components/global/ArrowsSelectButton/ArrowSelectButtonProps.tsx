@@ -4,4 +4,8 @@ export type ArrowSelectButtonProps = {
   onMouseEnter?: (e: React.MouseEvent) => void;
   onMouseLeave?: (e: React.MouseEvent) => void;
   text: string;
+  buttonColor: string;
+  buttonHoverColor: string;
+  buttonActiveColor: string;
+  textColor: string;
 };

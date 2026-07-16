@@ -19,8 +19,13 @@ import type { MessageInt } from '../../global/Message/MessageInt';
 import type { BehaviorClassOperationsInt } from '../../utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { AttractorBifurcationTreeVisualizationInt } from './AttractorBifurcationTreeVisualizationInt';
 
-const remove_svg =
-  '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
+const removeBoxSvg = (boxColor: string, iconColor: string) =>
+  `<?xml version="1.0" encoding="UTF-8"?>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <path fill="${iconColor}" d="M4 6h14v14H6z"/>
+    <path fill="${boxColor}" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+  </svg>`;
 
 class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   // #region --- Properties + Constructor ---
@@ -103,6 +108,9 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   }
 
   private initOptions(): CytoscapeOptions {
+    const $ = (v: string) =>
+      getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
     return {
       container: this.container,
       boxSelectionEnabled: false,
@@ -116,7 +124,6 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
           // Style of the graph nodes
           selector: 'node[label]',
           style: {
-            //
             label: 'data(label)',
             // put label in the middle of the node (vertically)
             'text-halign': 'center',
@@ -127,14 +134,16 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             // when selecting, do not display any overlay
             'overlay-opacity': 0,
             opacity: (ele: any) => ele.data('opacity'),
-            // other visual styles
             padding: '12',
-            'background-color': '#dddddd',
-            //'background-opacity': '0',
+            'background-color': $(
+              '--color-attractor-bifurcation-explorer-node-background'
+            ),
             'font-family': 'FiraMono',
             'font-size': '12px',
             'border-width': '1px',
-            'border-color': '#bbbbbb',
+            'border-color': $(
+              '--color-attractor-bifurcation-explorer-node-border'
+            ),
             'border-style': 'solid',
             'text-max-width': '150',
             'text-wrap': 'wrap',
@@ -149,7 +158,17 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             'background-opacity': 0,
             'background-image': function () {
               return (
-                'data:image/svg+xml;utf8,' + encodeURIComponent(remove_svg)
+                'data:image/svg+xml;utf8,' +
+                encodeURIComponent(
+                  removeBoxSvg(
+                    $(
+                      '--color-attractor-bifurcation-explorer-remove-button-background'
+                    ),
+                    $(
+                      '--color-attractor-bifurcation-explorer-remove-button-icon'
+                    )
+                  )
+                )
               );
             },
             'background-width': '24px',
@@ -165,20 +184,26 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             'background-height': '32px',
           },
         },
+        // When a node is selected, show it with a thick blue border.
         {
-          // When a node is selected, show it with a thick blue border.
           selector: 'node:selected',
           style: {
             'border-width': '4.0px',
-            'border-color': '#6a7ea5',
+            'border-color': $(
+              '--color-attractor-bifurcation-explorer-node-selected-border'
+            ),
             'border-style': 'solid',
           },
         },
         {
           selector: 'node[type = "unprocessed"]',
           style: {
-            'background-color': '#EFEFEF',
-            'border-color': '#616161',
+            'background-color': $(
+              '--color-attractor-bifurcation-explorer-node-unprocessed-background'
+            ),
+            'border-color': $(
+              '--color-attractor-bifurcation-explorer-node-unprocessed-border'
+            ),
           },
         },
         {
@@ -187,7 +212,9 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
             'line-height': 1,
             'text-margin-y': 14,
             padding: '16px',
-            'border-color': '#546E7A',
+            'border-color': $(
+              '--color-attractor-bifurcation-explorer-node-leaf-border'
+            ),
             'font-family': 'symbols',
             'font-size': '18px',
           },
@@ -195,19 +222,25 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
         {
           selector: 'node[subtype = "disorder"]',
           style: {
-            'background-color': '#FFE0B2',
+            'background-color': $(
+              '--color-attractor-bifurcation-explorer-node-disorder-background'
+            ),
           },
         },
         {
           selector: 'node[subtype = "oscillation"]',
           style: {
-            'background-color': '#F0F4C3',
+            'background-color': $(
+              '--color-attractor-bifurcation-explorer-node-oscillation-background'
+            ),
           },
         },
         {
           selector: 'node[subtype = "stability"]',
           style: {
-            'background-color': '#B2DFDB',
+            'background-color': $(
+              '--color-attractor-bifurcation-explorer-node-stability-background'
+            ),
           },
         },
         {
@@ -222,20 +255,25 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
         {
           selector: 'edge[positive = "true"]',
           style: {
-            'line-color': '#4abd73',
-            'target-arrow-color': '#4abd73',
+            'line-color': $(
+              '--color-attractor-bifurcation-explorer-edge-positive'
+            ),
+            'target-arrow-color': $(
+              '--color-attractor-bifurcation-explorer-edge-positive'
+            ),
           },
         },
         {
           selector: 'edge[positive = "false"]',
           style: {
-            'line-color': '#d05d5d',
-            'target-arrow-color': '#d05d5d',
+            'line-color': $(
+              '--color-attractor-bifurcation-explorer-edge-negative'
+            ),
+            'target-arrow-color': $(
+              '--color-attractor-bifurcation-explorer-edge-negative'
+            ),
           },
         },
-        /*{
-          'selector': 'node[type="decision"]'
-        } */
       ],
     };
   }

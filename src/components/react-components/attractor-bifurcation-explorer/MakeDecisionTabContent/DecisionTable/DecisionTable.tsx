@@ -28,6 +28,9 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
         className="mb-2"
         compWidth="95%"
         text="Get Decisions"
+        textColor='var(--color-secondary-text)'
+        buttonColor='var(--color-secondary-buttons)'
+        buttonHoverColor='var(--color-secondary-buttons-hover)'
         iconAlt="Plus Icon"
         iconSrc={PlusIcon}
         handleClick={() => {

@@ -9,6 +9,10 @@ const ArrowSelectButton: React.FC<ArrowSelectButtonProps> = ({
   onClick,
   onMouseEnter = () => {},
   onMouseLeave = () => {},
+  buttonColor,
+  buttonHoverColor,
+  buttonActiveColor,
+  textColor,
   text,
 }) => {
   return (
@@ -23,6 +27,10 @@ const ArrowSelectButton: React.FC<ArrowSelectButtonProps> = ({
       <TextButtonReact
         compHeight="100%"
         compWidth="70%"
+        buttonColor={buttonColor}
+        buttonHoverColor={buttonHoverColor}
+        buttonActiveColor={buttonActiveColor}
+        textColor={textColor}
         text={text}
         handleClick={onClick}
         active={active}

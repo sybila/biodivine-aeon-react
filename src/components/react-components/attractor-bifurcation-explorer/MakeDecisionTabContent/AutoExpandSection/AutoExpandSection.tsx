@@ -21,6 +21,9 @@ const AutoExpandSection: React.FC<AutoExpandSectionProps> = ({
         text={`Auto-Expand (${depth} level${depth === 1 ? '' : 's'})`}
         iconAlt="Graph Icon"
         iconSrc={GraphIcon}
+        textColor='var(--color-secondary-text)'
+        buttonColor='var(--color-secondary-buttons)'
+        buttonHoverColor='var(--color-secondary-buttons-hover)'
         handleClick={() =>
           attractorBifurcationExplorerServ.autoExpandBifurcationTreeFromSelected(
             depth

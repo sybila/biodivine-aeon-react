@@ -19,6 +19,7 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
       <div className="max-h-[100px] h-[100px] md:max-h-[150px] md:h-[150px] w-full flex justify-center items-center">
         <SimpleHeaderReact
           headerText="No Computed Data"
+          textColor="var(--color-primary-text)"
           textFontWeight="normal"
         />
       </div>
@@ -51,6 +52,7 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
     <div className="h-fit w-full flex flex-col justify-center items-start gap-1">
       <DotHeaderReact
         headerText="Stability Analysis Results"
+        textColor="var(--color-primary-text)"
         compHeight="30px"
         compWidth="100%"
         justifyHeader="start"

@@ -16,17 +16,32 @@ const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
       <section className="flex flex-col w-full h-fit items-center justify-center gap-2">
         <div className="flex flex-row justify-start items-center w-full h-[50px]">
           <div className="flex flex-col justify-center items-center w-[30%] h-full">
-            <SimpleHeaderReact headerText="Behavior" />
-            <SimpleHeaderReact headerText="Class" />
+            <SimpleHeaderReact
+              headerText="Behavior"
+              textColor="var(--color-primary-text)"
+            />
+            <SimpleHeaderReact
+              headerText="Class"
+              textColor="var(--color-primary-text)"
+            />
           </div>
 
           <div className="flex flex-col justify-center items-center mx-[5%] w-[30%] h-full">
-            <SimpleHeaderReact headerText="Interpretation" />
-            <SimpleHeaderReact headerText="Count" />
+            <SimpleHeaderReact
+              headerText="Interpretation"
+              textColor="var(--color-primary-text)"
+            />
+            <SimpleHeaderReact
+              headerText="Count"
+              textColor="var(--color-primary-text)"
+            />
           </div>
 
           <div className="flex flex-col justify-center items-center w-[30%] h-full">
-            <SimpleHeaderReact headerText="Distribution" />
+            <SimpleHeaderReact
+              headerText="Distribution"
+              textColor="var(--color-primary-text)"
+            />
           </div>
         </div>
 

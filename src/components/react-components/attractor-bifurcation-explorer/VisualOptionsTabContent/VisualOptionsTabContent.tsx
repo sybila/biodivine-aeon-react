@@ -115,6 +115,10 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                buttonColor="var(--color-secondary-buttons)"
+                buttonHoverColor="var(--color-secondary-buttons-hover)"
+                buttonActiveColor="var(--color-secondary-buttons-active)"
+                textColor="var(--color-secondary-text)"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={() => helpHoverStore.getState().clear()}
               />
@@ -126,6 +130,10 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
                 key={label}
                 text={label}
                 handleClick={onClick}
+                buttonColor="var(--color-secondary-buttons)"
+                buttonHoverColor="var(--color-secondary-buttons-hover)"
+                buttonActiveColor="var(--color-secondary-buttons-active)"
+                textColor="var(--color-secondary-text)"
                 compWidth="100%"
                 active={isActive}
                 onMouseEnter={onMouseEnter}
@@ -146,6 +154,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
           compWidth="50%"
           headerText={`Precision ${precision}%`}
           justifyHeader="start"
+          textColor="var(--color-primary-text)"
         />
         <div className="h-full w-1/2 flex flex-row justify-center items-center">
           <ValueSliderReact

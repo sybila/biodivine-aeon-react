@@ -32,6 +32,8 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       compHeight="280px"
       buttonWidth="25px"
       contentWidth="350px"
+      compBgColor="var(--color-primary)"
+      buttonHoverColor="var(--color-primary-buttons-hover)"
       buttonOnMouseEnter={(e) =>
         helpHoverStore
           .getState()

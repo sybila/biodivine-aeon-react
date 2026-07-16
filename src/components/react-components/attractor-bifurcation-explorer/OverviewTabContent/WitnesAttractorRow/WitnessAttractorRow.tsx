@@ -16,6 +16,9 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
       <section className="h-[25px] w-full flex flex-row justify-around items-center px-2 gap-2">
         <TextButtonReact
           text="Witness"
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          textColor="var(--color-secondary-text)"
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
@@ -36,6 +39,9 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
         />
         <TextButtonReact
           text="Attractor"
+          buttonColor="var(--color-secondary-buttons)"
+          buttonHoverColor="var(--color-secondary-buttons-hover)"
+          textColor="var(--color-secondary-text)"
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>

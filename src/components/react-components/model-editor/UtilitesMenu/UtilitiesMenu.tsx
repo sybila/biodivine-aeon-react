@@ -40,6 +40,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       compBgColor="var(--color-primary)"
+      buttonHoverColor='var(--color-primary-buttons-hover)'
       buttonRight={true}
       compHeight="400px"
       buttonWidth="25px"

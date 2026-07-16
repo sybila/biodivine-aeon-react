@@ -138,6 +138,9 @@ const AttractorBifurcationExplorer: React.FC<
         <IconButtonReact
           isActive={activeTab === 'Overview'}
           onClick={() => showHideTab('Overview')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={StateIcon}
           iconAlt="State"
           showTag={true}
@@ -146,6 +149,9 @@ const AttractorBifurcationExplorer: React.FC<
         <IconButtonReact
           isActive={activeTab === 'Stability Analysis'}
           onClick={() => showHideTab('Stability Analysis')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={StabilityIcon}
           iconAlt="Stability"
           showTag={true}
@@ -154,6 +160,9 @@ const AttractorBifurcationExplorer: React.FC<
         <IconButtonReact
           isActive={activeTab === 'Make Decision'}
           onClick={() => showHideTab('Make Decision')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={DecisionIcon}
           iconAlt="Decision"
           iconSize="88%"
@@ -163,6 +172,9 @@ const AttractorBifurcationExplorer: React.FC<
         <IconButtonReact
           isActive={activeTab === 'Visual Options'}
           onClick={() => showHideTab('Visual Options')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={EyeIcon}
           iconAlt="Visual"
           showTag={true}
@@ -171,6 +183,9 @@ const AttractorBifurcationExplorer: React.FC<
         <IconButtonReact
           isActive={activeTab === 'Help'}
           onClick={() => showHideTab('Help')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={HelpIcon}
           iconAlt="Help"
           showTag={true}

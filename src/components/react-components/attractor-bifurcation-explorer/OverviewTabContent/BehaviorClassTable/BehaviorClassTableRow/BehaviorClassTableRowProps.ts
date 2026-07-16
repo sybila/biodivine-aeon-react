@@ -5,4 +5,5 @@ export type BehaviorClassTableRowProps = {
   interpretationCount: number;
   behaviorClassJSON: string;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
+  textColor?: string;
 };
