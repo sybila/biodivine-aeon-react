@@ -62,13 +62,16 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
           <DotHeaderReact
             textColor={color}
             headerText={computeEngineStatus}
-            textFontFamily="Helvetica, Arial, sans-serif"
+            textFontFamily="var(--base-font-family)"
             textFontWeight="bold"
           />
           <TextIconButtonReact
             text={isComputeEngineConnected ? 'Disconnect' : 'Connect'}
             compHeight="100%"
             compWidth="150px"
+            buttonColor="var(--color-secondary-buttons)"
+            buttonHoverColor="var(--color-secondary-buttons-hover)"
+            textColor="var(--color-secondary-text)"
             iconSrc={CloudIcon}
             handleClick={() => computationManagerServ.toggleConnection()}
             onMouseEnter={(e: React.MouseEvent) =>
@@ -87,7 +90,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
           />
         </section>
 
-        <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+        <SeparatorLine />
         <section className="h-fit w-[96%] flex flex-col items-start justify-center gap-1">
           {compStatusInfo.map((info) => (
             <section
@@ -99,15 +102,16 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
                 compHeight="100%"
                 textFontSize="19px"
                 textFontWeight="normal"
-                textFontFamily="FiraMono, monospace"
+                textFontFamily="var(--font-family-fira-mono)"
+                textColor="var(--color-primary-text)"
               />
               <SimpleHeaderReact
                 headerText={info.value}
                 compHeight="100%"
                 textFontSize="19px"
                 textFontWeight="normal"
-                textFontFamily="FiraMono, monospace"
-                textColor={info.color ?? 'black'}
+                textFontFamily="var(--font-family-fira-mono)"
+                textColor={info.color ?? 'var(--color-primary-text)'}
               />
             </section>
           ))}
@@ -122,7 +126,8 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
                   lineHeight="22px"
                   textFontSize="19px"
                   textFontWeight="normal"
-                  textFontFamily="FiraMono, monospace"
+                  textFontFamily="var(--font-family-fira-mono)"
+                  textColor="var(--color-primary-text)"
                   textAlign="start"
                 />
               ))
@@ -147,6 +152,7 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
         compWidth="100%"
         placeholder="Compute Engine URL"
         textAlign="center"
+        textColor="var(--color-primary-text)"
         handleChange={computationManagerServ.setComputeEngineAddress}
         value={computationManagerServ.getComputeEngineAddress()}
         onMouseEnter={(e: React.MouseEvent) =>
@@ -171,6 +177,9 @@ const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
         compHeight="30px"
         compWidth="95%"
         text="Download Compute Engine"
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         handleClick={openComputeEngineOverlay}
         onMouseEnter={(e: React.MouseEvent) =>
           helpHoverStore
