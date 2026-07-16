@@ -17,6 +17,8 @@ const WitnessUpdateFunctionsTabContent: React.FC<
       {witnessUpdateFunctions.map(([variableName, updateFunction], index) => (
         <StatEntryReact
           key={index}
+          contBgColor='var(--color-secondary-darker)'
+          textColor='var(--color-secondary-text)'
           compWidth="98%"
           addColon={true}
           nameWidth="15%"

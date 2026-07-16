@@ -22,33 +22,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
   /** Container for the vis graph. */
   private container: HTMLElement | null = null;
   /** Options for the vis graph. */
-  private options: any = {
-    edges: {
-      arrows: {
-        to: { enabled: true, type: 'triangle' },
-      },
-      width: 0.7,
-    },
-    nodes: {
-      color: {
-        border: '#3a568c',
-        background: '#ffffff',
-        highlight: {
-          background: '#e5eeff',
-          border: '#3a568c',
-        },
-      },
-      font: {
-        face: 'Fira Mono',
-      },
-      shape: 'box',
-      labelHighlightBold: false,
-      borderWidth: 1,
-    },
-    layout: {
-      improvedLayout: false,
-    },
-  };
+  private options: any = this.buildOptions();
 
   private computationManagerServ: ComputationManagerInt;
   private messageServ: MessageInt;
@@ -78,6 +52,52 @@ class AttractorVisualizer implements AttractorVisualizerInt {
       this.container = container;
       this.reloadVisualizer();
     }
+  }
+
+  /** Builds options for the vis network visualization.*/
+  private buildOptions(): any {
+    const styles = getComputedStyle(document.documentElement);
+
+    return {
+      edges: {
+        arrows: {
+          to: { enabled: true, type: 'triangle' },
+        },
+        width: 0.7,
+      },
+      nodes: {
+        color: {
+          border: styles
+            .getPropertyValue('--color-attractor-visualizer-node-border')
+            .trim(),
+          background: styles
+            .getPropertyValue('--color-attractor-visualizer-node')
+            .trim(),
+          highlight: {
+            background: styles
+              .getPropertyValue('--color-attractor-visualizer-highlighted-node')
+              .trim(),
+            border: styles
+              .getPropertyValue(
+                '--color-attractor-visualizer-node-highlighted-border'
+              )
+              .trim(),
+          },
+        },
+        font: {
+          face: styles.getPropertyValue('--font-family-fira-mono').trim(),
+          color: styles
+            .getPropertyValue('--color-attractor-visualizer-node-text')
+            .trim(),
+        },
+        shape: 'box',
+        labelHighlightBold: false,
+        borderWidth: 1,
+      },
+      layout: {
+        improvedLayout: false,
+      },
+    };
   }
 
   // #endregion

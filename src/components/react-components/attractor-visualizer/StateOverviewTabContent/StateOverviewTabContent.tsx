@@ -30,9 +30,9 @@ const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
         textColor={
           isDynamic
             ? isFalse
-              ? 'var(--color-red)'
-              : 'var(--color-green)'
-            : 'var(--color-grey)'
+              ? 'var(--color-negative)'
+              : 'var(--color-positive)'
+            : 'var(--color-neutral)'
         }
         textFontWeight={isDynamic ? 'bold' : 'normal'}
       />

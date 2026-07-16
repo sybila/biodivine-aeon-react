@@ -56,11 +56,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
           />
         );
       case 'Help':
-        return (
-          <HelpTabContent
-            text={pageStringProviderServ.helpText()}
-          />
-        );
+        return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
         return null;
     }
@@ -81,6 +77,9 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
         <IconButtonReact
           isActive={activeTab === 'State Overview'}
           onClick={() => showHideTab('State Overview')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={StateIcon}
           iconAlt="State"
           showTag={true}
@@ -89,6 +88,9 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
         <IconButtonReact
           isActive={activeTab === 'Witness Update Functions'}
           onClick={() => showHideTab('Witness Update Functions')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={UpdateFunctionsIcon}
           iconAlt="Update Functions"
           showTag={true}
@@ -97,6 +99,9 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
         <IconButtonReact
           isActive={activeTab === 'Help'}
           onClick={() => showHideTab('Help')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
           iconSrc={HelpIcon}
           iconAlt="Help"
           showTag={true}
