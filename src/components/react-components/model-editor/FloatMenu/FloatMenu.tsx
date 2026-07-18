@@ -31,7 +31,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
         transformOrigin: 'top top',
       }}
     >
-      <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-[var(--color-grey-blue-ultra-light)] pointer-events-auto">
+      <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-(--color-model-float-menu) pointer-events-auto">
         {floatingMenuInfo.itemInfo.type === 'regulation' ? (
           <RegulationMenuButtons
             setHint={setCurrentHint}
@@ -48,7 +48,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
           />
         )}
       </div>
-      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-[--var(--base-font-family)] text-center font-bold select-none pointer-none text-black">
+      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-(--base-font-family) text-center font-bold select-none pointer-none text-(--color-model-float-menu-hint-text)">
         {currentHint}
       </span>
     </div>

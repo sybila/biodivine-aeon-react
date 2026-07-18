@@ -68,7 +68,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   const words: { text: string; color: string; weight: string }[] =
     Object.entries(selectedNode.variableValues).map(([key, value]) => ({
       text: stateAsText ? `${key}: ${value ?? '*'}` : `${key}`,
-      color: `${value === 0 ? 'var(--color-red)' : value === 1 ? 'var(--color-green)' : 'var(--color-grey)'}`,
+      color: `${value === 0 ? 'var(--color-negative)' : value === 1 ? 'var(--color-positive)' : 'var(--color-neutral)'}`,
       weight: `${value === 0 || value === 1 ? 'bold' : 'normal'}`,
     }));
 

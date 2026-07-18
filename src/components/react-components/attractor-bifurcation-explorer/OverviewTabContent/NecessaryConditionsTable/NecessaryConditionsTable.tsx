@@ -17,7 +17,7 @@ const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
         justifyHeader="start"
         headerText="Necessary Conditions"
       />
-      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-[var(--color-grey-blue-ultra-light)] rounded-md p-2">
+      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-(--color-secondary) rounded-md p-2">
         {necessaryConditions.map((condition, index) => (
           <div
             key={index}
@@ -32,7 +32,7 @@ const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
                   ? 'var(--color-positive)'
                   : condition.positive === false
                     ? 'var(--color-negative)'
-                    : 'black'
+                    : 'var(--color-secondary-text)'
               }
               className="text-nowrap"
             />
