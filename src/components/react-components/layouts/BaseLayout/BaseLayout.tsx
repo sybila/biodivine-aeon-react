@@ -135,7 +135,12 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({
           }}
           computeEngineStatusStore={computeEngineStatusStore}
         />
-        <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
+        <TwoSidedTextReact
+          rightText="Aeon/"
+          leftText="BIODIVINE"
+          rightColor="var(--color-aeon-logo-right-part)"
+          leftColor="var(--color-aeon-logo-left-part)"
+        />
       </section>
 
       {activeOverlayWindow !== null ? (

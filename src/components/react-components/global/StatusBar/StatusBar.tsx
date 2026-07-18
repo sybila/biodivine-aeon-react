@@ -31,7 +31,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
 
   return (
     <span
-      className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-[var(--color-secondary)] rounded-md px-3 truncate font-[var(--base-font-family)] text-[21px] select-none pointer-events-auto cursor-pointer"
+      className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-(--color-primary) rounded-md px-3 truncate font-(--base-font-family) text-[21px] select-none pointer-events-auto cursor-pointer"
       style={{ color: color, fontWeight: 'bold' }}
       onClick={onClick}
       onMouseEnter={(e: React.MouseEvent<HTMLSpanElement>) =>

@@ -29,8 +29,8 @@ const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
       <section className="flex flex-col justify-center items-start w-[94%] h-fit gap-0.5">
         {statCells.map(([name, value]) => (
           <StatEntryReact
-            contBgColor="var(--color-tertiary"
-            textColor="var(--color-tertiary-text)"
+            contBgColor="var(--color-secondary-darker)"
+            textColor="var(--color-secondary-text)"
             key={name}
             compHeight="100%"
             compWidth="100%"

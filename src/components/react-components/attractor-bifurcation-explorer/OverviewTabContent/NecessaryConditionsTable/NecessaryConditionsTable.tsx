@@ -29,9 +29,9 @@ const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
               compWidth="fit-content"
               textColor={
                 condition.positive === true
-                  ? 'var(--color-green)'
+                  ? 'var(--color-positive)'
                   : condition.positive === false
-                    ? 'var(--color-red)'
+                    ? 'var(--color-negative)'
                     : 'black'
               }
               className="text-nowrap"

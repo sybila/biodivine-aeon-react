@@ -141,6 +141,7 @@ const AttractorBifurcationExplorer: React.FC<
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={StateIcon}
           iconAlt="State"
           showTag={true}
@@ -152,6 +153,7 @@ const AttractorBifurcationExplorer: React.FC<
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={StabilityIcon}
           iconAlt="Stability"
           showTag={true}
@@ -163,6 +165,7 @@ const AttractorBifurcationExplorer: React.FC<
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={DecisionIcon}
           iconAlt="Decision"
           iconSize="88%"
@@ -175,6 +178,7 @@ const AttractorBifurcationExplorer: React.FC<
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={EyeIcon}
           iconAlt="Visual"
           showTag={true}
@@ -186,6 +190,7 @@ const AttractorBifurcationExplorer: React.FC<
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={HelpIcon}
           iconAlt="Help"
           showTag={true}

@@ -18,10 +18,10 @@ const PagesTabContent: React.FC<PagesTabContentProps> = ({
         contWidth="100%"
         centerMinWidth="50%"
         initialPage={perturbationFilterSortStore.getState().pageNumber}
-        buttonColor='var(--color-secondary-buttons)'
-        buttonHoverColor='var(--color-secondary-buttons-hover)'
-        buttonDisabledColor='var(--color-secondary-buttons-disabled)'
-        centerColor='var(--color-secondary-light)'
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        buttonDisabledColor="var(--color-secondary-buttons-disabled)"
+        centerColor="var(--color-secondary-light)"
         nextPageExists={nextPageExists}
         handlePageChange={(newPage: number) => {
           perturbationFilterSortStore.getState().setPageNumber(newPage);

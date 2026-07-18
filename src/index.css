@@ -34,6 +34,10 @@
   --color-bg-base: #fff;
 
   --color-primary: #f5f5f5;
+  --color-primary-light: #f5f5f5a1;
+  --color-primary-light-highlight: #eff6ff;
+  --color-primary-highlight: #bebebe;
+  --color-primary-light-border: #e5e7eb;
   --color-primary-hover-border: #6a7ea5;
   --color-primary-buttons: #eceff1;
   --color-primary-buttons-hover: #cfd8dc;
@@ -59,6 +63,8 @@
   --color-secondary-buttons-darker-hover: #b0bec5;
   --color-secondary-text-inputs: #fafafa;
   --color-secondary-text-inputs-border: #cfd8dc;
+  --color-secondary-slider-thumb: #3a568c;
+  --color-secondary-slider: #d3d3d3;
   --color-secondary-highlight: #b0bec5;
   --color-secondary-medium-highlight: #bfcfd7;
   --color-secondary-light-highlight: #e7ecee94;
@@ -69,11 +75,14 @@
   --color-secondary-placeholder-text: gray;
 
   --color-tertiary: #cfd8dc;
+  --color-tertiary-darker: rgb(178, 189, 194);
   --color-tertiary-light: #dfe8ec;
   --color-tertiary-buttons: #f5f5f5;
   --color-tertiary-buttons-hover: #cbcbcb;
   --color-tertiary-buttons-hover-darker: #8a8a8a;
   --color-tertiary-light-highlight: #d9e6e7;
+  --color-tertiary-text-inputs: #fafafa;
+  --color-tertiary-text-inputs-border: #cfd8dc;
 
   --color-tertiary-text: black;
 
@@ -83,6 +92,19 @@
   --color-negative: #d05d5d;
   --color-positive: #4abd73;
   --color-neutral: #bebebe;
+
+  --color-notification-message: #eceff1;
+  --color-notification-message-base-text: black;
+
+  --color-loading-indicator: #eceff1;
+  --color-loading-indicator-text: black;
+
+  --color-aeon-logo-right-part: #3a568c;
+  --color-aeon-logo-left-part: #d05d5d;
+
+  --color-compute-engine-status-running: orange;
+  --color-compute-engine-status-error: red;
+  --color-compute-engine-status-success: green;
 
   --color-regulation-inhibition: #d05d5d;
   --color-regulation-activation: #4abd73;
@@ -104,7 +126,7 @@
   --color-not-in-phenotype-highlight: #d0d0d0;
   --color-phenotype-status-text: black;
 
-  --color-present-in-perturbation:#9c6ade;
+  --color-present-in-perturbation: #9c6ade;
   --color-present-in-perturbation-highlight: #a773eb;
 
   --color-model-node: #dddddd;
@@ -145,6 +167,10 @@
   /* --color-bg-base: #9c27b0;
 
   --color-primary: #9c27b0;
+  --color-primary-light: #9c27b0;
+  --color-primary-light-highlight: #9c27b0;
+  --color-primary-highlight: #9c27b0;
+  --color-primary-light-border: #9c27b0;
   --color-primary-buttons: #9c27b0;
   --color-primary-buttons-hover: #9c27b0;
   --color-primary-buttons-active: #9c27b0;
@@ -163,10 +189,13 @@
   --color-secondary-buttons: #9c27b0;
   --color-secondary-buttons-hover: #9c27b0;
   --color-secondary-buttons-active: #9c27b0;
+  --color-secondary-buttons-disabled: #9c27b0;
   --color-secondary-buttons-darker: #9c27b0;
   --color-secondary-buttons-darker-hover: #9c27b0;
   --color-secondary-text-inputs: #9c27b0;
   --color-secondary-text-inputs-border: #9c27b0;
+    --color-secondary-slider-thumb: #9c27b0;
+  --color-secondary-slider: #9c27b0;
   --color-secondary-highlight: #9c27b0;
   --color-secondary-light-highlight: #9c27b0;
   --color-highlight: #9c27b0;
@@ -179,6 +208,8 @@
   --color-tertiary-buttons: #9c27b0;
   --color-tertiary-buttons-hover: #9c27b0;
   --color-tertiary-light-highlight: #9c27b0;
+  --color-tertiary-text-inputs: #9c27b0;
+  --color-tertiary-text-inputs-border: #9c27b0;
 
   --color-tertiary-text: #9c27b0;
 
@@ -188,6 +219,19 @@
   --color-negative: #9c27b0;
   --color-positive: #9c27b0;
   --color-neutral: #9c27b0;
+
+  --color-notification-message: #9c27b0;
+  --color-notification-message-base-text: #9c27b0;
+
+  --color-loading-indicator: #9c27b0;
+  --color-loading-indicator-text: #9c27b0;
+
+  --color-aeon-logo-right-part: #9c27b0;
+  --color-aeon-logo-left-part: #9c27b0;
+
+  --color-compute-enigne-status-running: #9c27b0;
+  --color-compute-engine-status-error: #9c27b0;
+  --color-compute-engine-status-success: #9c27b0;
 
   --color-regulation-inhibition: #9c27b0;
   --color-regulation-activation: #9c27b0;
@@ -209,6 +253,8 @@
   --color-not-in-phenotype-highlight: #9c27b0;
   --color-phenotype-status-text: #9c27b0;
 
+  --color-present-in-perturbation: #9c27b0;
+  --color-present-in-perturbation-highlight: #9c27b0;
   --color-model-node: #9c27b0;
   --color-model-node-text: #9c27b0;
   --color-model-node-border: #9c27b0;

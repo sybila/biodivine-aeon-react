@@ -121,6 +121,10 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             iconAlt="Overview"
             showTag={true}
             tagText="Overview"
+            buttonColor="var(--color-primary-buttons)"
+            buttonHoverColor="var(--color-primary-buttons-hover)"
+            buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
           />
         </div>
 
@@ -132,6 +136,10 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             iconAlt="Filters"
             showTag={true}
             tagText="Filters"
+            buttonColor="var(--color-primary-buttons)"
+            buttonHoverColor="var(--color-primary-buttons-hover)"
+            buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
           />
         </div>
 
@@ -143,6 +151,10 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             iconAlt="Sorting"
             showTag={true}
             tagText="Sorting"
+            buttonColor="var(--color-primary-buttons)"
+            buttonHoverColor="var(--color-primary-buttons-hover)"
+            buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
           />
         </div>
 
@@ -153,6 +165,10 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           iconAlt="Pages"
           showTag={true}
           tagText="Pages"
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
         />
 
         <IconButtonReact
@@ -162,6 +178,10 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
           iconAlt="Help"
           showTag={true}
           tagText="Help"
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
         />
       </TopButtonMenu>
 

@@ -85,7 +85,7 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Number Filters"
-        textColor='var(--color-primary-text)'
+        textColor="var(--color-primary-text)"
       />
       {numberInputs.map((input, index) => (
         <div
@@ -97,7 +97,7 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
             compHeight="80%"
             compWidth="40%"
             textFontSize="18px"
-            textColor='var(--color-primary-text)'
+            textColor="var(--color-primary-text)"
           />
           <NumberInputReact
             compHeight="70%"
@@ -109,8 +109,8 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
             }
             step={input.step}
             handleChange={input.handleUpdate}
-            textColor='var(--color-secondary-text)'
-            inputColor='var(--color-secondary-text-inputs)'
+            textColor="var(--color-secondary-text)"
+            inputColor="var(--color-secondary-text-inputs)"
             inputBorderColor="var(--color-secondary-text-inputs-border)"
           />
         </div>
@@ -122,7 +122,7 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText="Perturbed Variable Filter"
-        textColor='var(--color-primary-text)'
+        textColor="var(--color-primary-text)"
       />
       <SelectVarFilterTable
         variableNames={controlInfo.preComputationInfo.controlEnabledVars}
@@ -140,9 +140,9 @@ const FilterTabContent: React.FC<FilterTabContentProps> = ({
         compHeight="40px"
         textFontWeight="bold"
         text="Apply Filters"
-        textColor='var(--color-secondary-text)'
-        buttonColor='var(--color-secondary-buttons)'
-        buttonHoverColor='var(--color-secondary-buttons-hover)'
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         onClick={() => {
           perturbationFilterSortStore.getState().setPageNumber(1);
           setStartFilter(!startFilter);

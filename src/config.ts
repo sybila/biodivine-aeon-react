@@ -7,7 +7,7 @@ const config = {
     /** Initial status of the compute engine. */
     initialStatus: 'Disconnected',
     /** Initial color of the compute engine status. */
-    initialStatusColor: 'red',
+    initialStatusColor: 'var(--color-compute-engine-status-error)',
     /** This is default url for the compute engine. */
     defaultURL: 'http://localhost:8000',
     /** URL with instructions for downloading and running the compute engine. **/

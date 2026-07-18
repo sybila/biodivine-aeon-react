@@ -72,6 +72,7 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
               headerText={`${header}:`}
               textFontSize="18px"
               textFontWeight="normal"
+              textColor="var(--color-secondary-text)"
             />
           ))}
         </div>
@@ -87,6 +88,9 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
               compHeight="22px"
               value={getFunc().toString()}
               handleChange={setFunc}
+              inputColor="var(--color-tertiary-text-inputs)"
+              inputBorderColor="var(--color-tertiary-text-inputs-border)"
+              textColor="var(--color-tertiary-text)"
             />
           ))}
         </div>

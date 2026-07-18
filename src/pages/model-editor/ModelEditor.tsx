@@ -191,6 +191,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             buttonColor="var(--color-primary-buttons)"
             buttonHoverColor="var(--color-primary-buttons-hover)"
             buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -209,6 +210,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             buttonColor="var(--color-primary-buttons)"
             buttonHoverColor="var(--color-primary-buttons-hover)"
             buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -226,6 +228,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             buttonColor="var(--color-primary-buttons)"
             buttonHoverColor="var(--color-primary-buttons-hover)"
             buttonActiveColor="var(--color-primary-buttons-active)"
+            tagTextColor="var(--color-primary-text)"
             ref={(el) =>
               modelEditorStatusStore
                 .getState()
@@ -243,6 +246,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -259,6 +263,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -275,6 +280,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()
@@ -291,6 +297,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
           buttonColor="var(--color-primary-buttons)"
           buttonHoverColor="var(--color-primary-buttons-hover)"
           buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           ref={(el) =>
             modelEditorStatusStore
               .getState()

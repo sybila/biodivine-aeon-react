@@ -170,6 +170,8 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
             step={0.01}
             minValue={50}
             maxValue={100}
+            sliderThumbBackgroundColor="var(--color-secondary-slider-thumb)"
+            bodyBackgroundColor="var(--color-secondary-slider)"
             onMouseEnter={(e: React.MouseEvent) =>
               helpHoverStore
                 .getState()

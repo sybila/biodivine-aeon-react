@@ -96,8 +96,8 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
   ];
 
   return (
-    <section className="flex flex-col justify-center w-[99%] h-fit gap-1 pt-2 pb-2 font-[var(--base-font-family)]">
-      <section className="flex flex-row w-full h-[32px] items-center rounded-md bg-gray-100 shadow-sm border-b border-gray-300">
+    <section className="flex flex-col justify-center w-[99%] h-fit gap-1 pt-2 pb-2 font-(--base-font-family)">
+      <section className="flex flex-row w-full h-[32px] items-center rounded-md bg-(--color-primary) text-(--color-primary-text) shadow-sm">
         {tableHeaders.map(
           (
             [
@@ -112,10 +112,10 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
               key={index}
               onClick={handleClick}
               style={{ width: cellSizes[index] }}
-              className={`flex h-fit justify-center-safe px-2 py-1 select-none text-sm font-bold text-gray-800 whitespace-nowrap
+              className={`flex h-fit justify-center-safe px-2 py-1 select-none text-sm font-bold whitespace-nowrap
               ${
                 index === 1
-                  ? 'cursor-pointer hover:bg-[var(--color-grey-blue-light)]'
+                  ? 'cursor-pointer hover:bg-(--color-primary-highlight)'
                   : ''
               }`}
               onMouseEnter={(e: React.MouseEvent) =>
@@ -133,7 +133,9 @@ const PerturbationTable: React.FC<PerturbationTableProps> = ({
             >
               {header}
               {index === 1 && (
-                <span className="ml-1 text-[var(--color-grey)]">&#x25BC;</span>
+                <span className="ml-1 text-(--color-secondary-darker)">
+                  &#x25BC;
+                </span>
               )}
             </div>
           )

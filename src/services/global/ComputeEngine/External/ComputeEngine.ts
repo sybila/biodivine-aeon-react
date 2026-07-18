@@ -146,7 +146,7 @@ class ComputeEngine implements ComputeEngineInt {
           'Compute Engine Adress not set',
           'Disconnected',
           { status: 'No computation', running: false },
-          'red'
+          'var(--color-compute-engine-status-error)'
         );
 
       return;
@@ -179,7 +179,7 @@ class ComputeEngine implements ComputeEngineInt {
         undefined,
         'Disconnected',
         { status: 'No computation', running: false },
-        'red'
+        'var(--color-compute-engine-status-error)'
       );
     }
   }
@@ -208,7 +208,7 @@ class ComputeEngine implements ComputeEngineInt {
           error ?? 'Connection error',
           'Disconnected',
           { status: `Error: ${error ?? 'Connection error'}`, running: false },
-          'red'
+          'var(--color-compute-engine-status-error)'
         );
       this.closeConnection(undefined);
       return;
@@ -324,25 +324,25 @@ class ComputeEngine implements ComputeEngineInt {
         computationMode: 'Control',
         running: false,
       },
-      statusColor: 'green',
+      statusColor: 'var(--color-compute-engine-status-success)',
     };
 
     if (response.error) {
       compStatus.computationStatus.status = `Error: ${response.error}`;
-      compStatus.statusColor = 'red';
+      compStatus.statusColor = 'var(--color-compute-engine-status-error)';
       return compStatus;
     }
 
     if (response.isRunning) {
       compStatus.computationStatus.status = 'Running';
-      compStatus.statusColor = 'orange';
+      compStatus.statusColor = 'var(--color-compute-engine-status-running)';
       compStatus.computationStatus.timestamp = response.elapsed ?? -1;
       compStatus.computationStatus.running = true;
     } else {
       compStatus.computationStatus.status = response.computationCancelled
         ? 'Cancelled'
         : 'Done';
-      compStatus.statusColor = 'green';
+      compStatus.statusColor = 'var(--color-compute-engine-status-success)';
       compStatus.computationStatus.timestamp =
         response.computationStarted && response.elapsed
           ? response.computationStarted + response.elapsed
@@ -363,18 +363,18 @@ class ComputeEngine implements ComputeEngineInt {
         computationMode: 'Attractor Analysis',
         running: false,
       },
-      statusColor: 'green',
+      statusColor: 'var(--color-compute-engine-status-success)',
     };
 
     if (response.error) {
       compStatus.computationStatus.status = `Error: ${response.error}`;
-      compStatus.statusColor = 'red';
+      compStatus.statusColor = 'var(--color-compute-engine-status-error)';
       return compStatus;
     }
 
     if (response.is_running) {
       compStatus.computationStatus.status = 'Running';
-      compStatus.statusColor = 'orange';
+      compStatus.statusColor = 'var(--color-compute-engine-status-running)';
       compStatus.computationStatus.timestamp = response.timestamp
         ? Date.now() - response.timestamp
         : -1;
@@ -387,7 +387,7 @@ class ComputeEngine implements ComputeEngineInt {
       compStatus.computationStatus.status = response.is_canceled
         ? 'Cancelled'
         : 'Done';
-      compStatus.statusColor = 'green';
+      compStatus.statusColor = 'var(--color-compute-engine-status-success)';
       compStatus.computationStatus.timestamp = response.timestamp ?? -1;
     }
 
@@ -402,7 +402,7 @@ class ComputeEngine implements ComputeEngineInt {
       return {
         computeEngineStatus: 'Disconnected',
         computationStatus: { status: 'No computation' },
-        statusColor: 'red',
+        statusColor: 'var(--color-compute-engine-status-error)',
       } as ComputationInfo;
     }
 
@@ -417,7 +417,7 @@ class ComputeEngine implements ComputeEngineInt {
     return {
       computeEngineStatus: 'Connected',
       computationStatus: { status: 'No computation', running: false },
-      statusColor: 'green',
+      statusColor: 'var(--color-compute-engine-status-success)',
     };
   }
 
@@ -521,13 +521,13 @@ class ComputeEngine implements ComputeEngineInt {
         status: 'No computation',
         running: false,
       },
-      statusColor: 'green',
+      statusColor: 'var(--color-compute-engine-status-success)',
     };
 
     if (!response || !response.timestamp) {
       compStatus.computationStatus.status =
         'Error: Internal Compute Engine error';
-      compStatus.statusColor = 'red';
+      compStatus.statusColor = 'var(--color-compute-engine-status-error)';
       return compStatus;
     }
 
@@ -535,7 +535,7 @@ class ComputeEngine implements ComputeEngineInt {
     compStatus.computationStatus.status = 'Running';
     compStatus.computationStatus.running = true;
     compStatus.computationStatus.computationMode = computationMode;
-    compStatus.statusColor = 'orange';
+    compStatus.statusColor = 'var(--color-compute-engine-status-running)';
 
     return compStatus;
   }
@@ -566,7 +566,7 @@ class ComputeEngine implements ComputeEngineInt {
             computationMode: computationMode,
             running: false,
           },
-          'green'
+          'var(--color-compute-engine-status-success)'
         );
       }
       return;

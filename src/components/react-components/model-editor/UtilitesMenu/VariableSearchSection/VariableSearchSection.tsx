@@ -36,6 +36,7 @@ const VariableSearchSection: React.FC<VariableSearchSectionProps> = ({
         suggFontSize="17px"
         textColor="var(--color-secondary-text)"
         inputColor="var(--color-secondary-text-inputs)"
+        inputBorderColor="var(--color-secondary-text-inputs-border)"
         suggListBgColor="var(--color-tertiary)"
         suggHoverBgColor="var(--color-tertiary-light-highlight)"
         isSeparator={(char) => {

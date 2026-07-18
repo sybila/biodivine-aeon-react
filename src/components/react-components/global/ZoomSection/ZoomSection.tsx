@@ -9,6 +9,8 @@ const ZoomSection: React.FC<ZoomSectionProps> = ({
   currentValue,
   gapInsideSection,
   textColor = 'var(--color-primary-text)',
+  thumbColor = 'var(--color-secondary-slider-thumb)',
+  bgColor = 'var(--color-secondary-slider)',
 }) => {
   return (
     <section
@@ -28,6 +30,8 @@ const ZoomSection: React.FC<ZoomSectionProps> = ({
         minValue={minValue}
         maxValue={maxValue}
         value={currentValue}
+        sliderThumbBackgroundColor={thumbColor}
+        bodyBackgroundColor={bgColor}
       />
     </section>
   );
