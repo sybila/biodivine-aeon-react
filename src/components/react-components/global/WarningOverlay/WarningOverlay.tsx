@@ -15,10 +15,8 @@ const WarningOverlay: React.FC<WarningOverlayProps> = ({
   return (
     <OverlayWindowReact
       compZIndex={zIndex}
-      windHeight="auto"
-      windMaxHeight="80%"
-      windWidth="auto"
-      windMaxWidth="40%"
+      windMaxWidth="90vw"
+      windMaxHeight="90vh"
       contentJustifyC="center"
       contentAlignI="center"
       contentGap="50px"
