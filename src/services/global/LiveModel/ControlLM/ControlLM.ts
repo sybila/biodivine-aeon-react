@@ -4,7 +4,6 @@ import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   ControlEnabledVars,
-  ControlInfo,
   ControlStats,
   Oscillation,
   Phenotype,
@@ -31,10 +30,12 @@ class ControlLM implements ControlLMInt {
   private oscillation: Oscillation = 'allowed';
 
   private onPhenotypeChange: Array<
-    (inputNodes?: [number, ControlInfo][] | null) => void
+    (inputNodes?: [number, Phenotype][] | null) => void
   >;
 
-  private onControlChange: Array<() => void>;
+  private onControlChange: Array<
+    (inputNodes?: [number, boolean][] | null) => void
+  >;
 
   constructor(
     liveModel: LiveModelInt,
@@ -63,25 +64,30 @@ class ControlLM implements ControlLMInt {
    * and the second element being the count of variables in Phenotype.
    */
   public getNumberOfSetControl(): [number, number] {
-    const controlInfo: ControlInfo[] = this.controlStore
-      .getState()
-      .getAllInfo();
-    const [controlEnabled, inPhenotype] = controlInfo.reduce(
-      (acc: [number, number], info: ControlInfo) => {
-        if (info.controlEnabled) acc[0]++;
-        if (info.phenotype != null) acc[1]++;
+    const controlEnabled = this.controlStore.getState().getAllControlEnabled();
+    const phenotype = this.controlStore.getState().getAllCurrentPhenotype();
+    const controlEnabledCount = controlEnabled.reduce(
+      (acc: number, controlEnabled: boolean) => {
+        if (controlEnabled) acc++;
         return acc;
       },
-      [0, 0]
+      0
     );
-    return [controlEnabled, inPhenotype];
+    const inPhenotypeCount = phenotype.reduce(
+      (acc: number, phenotype: Phenotype) => {
+        if (phenotype != null) acc++;
+        return acc;
+      },
+      0
+    );
+    return [controlEnabledCount, inPhenotypeCount];
   }
 
   /** Returns control statistics for the live model */
   public getControlStats(): ControlStats {
-    const controlInfo: ControlInfo[] = this.controlStore
-      .getState()
-      .getAllInfo();
+    const controlEnabled = this.controlStore.getState().getAllControlEnabled();
+    const phenotype = this.controlStore.getState().getAllCurrentPhenotype();
+
     const stats: ControlStats = {
       controlEnabled: 0,
       notControlEnabled: 0,
@@ -90,12 +96,14 @@ class ControlLM implements ControlLMInt {
       notInPhenotype: 0,
     };
 
-    controlInfo.forEach((info) => {
-      if (info.controlEnabled) stats.controlEnabled++;
+    controlEnabled.forEach((variableControlEnabled) => {
+      if (variableControlEnabled) stats.controlEnabled++;
       else stats.notControlEnabled++;
+    });
 
-      if (info.phenotype === true) stats.inPhenotypeTrue++;
-      else if (info.phenotype === false) stats.inPhenotypeFalse++;
+    phenotype.forEach((variablePhenotype) => {
+      if (variablePhenotype === true) stats.inPhenotypeTrue++;
+      else if (variablePhenotype === false) stats.inPhenotypeFalse++;
       else stats.notInPhenotype++;
     });
 
@@ -107,12 +115,16 @@ class ControlLM implements ControlLMInt {
   // #region --- Phenotype and Control-Enabled callbacks ---
 
   /** Add a callback to be executed when phenotype changes */
-  public addOnPhenotypeChangeCallback(callback: () => void): void {
+  public addOnPhenotypeChangeCallback(
+    callback: (inputNodes?: [number, Phenotype][] | null) => void
+  ): void {
     this.onPhenotypeChange.push(callback);
   }
 
   /** Add a callback to be executed when control enabled changes */
-  public addOnControlChangeCallback(callback: () => void): void {
+  public addOnControlChangeCallback(
+    callback: (inputNodes?: [number, boolean][] | null) => void
+  ): void {
     this.onControlChange.push(callback);
   }
 
@@ -135,9 +147,9 @@ class ControlLM implements ControlLMInt {
   // #region --- Change Control Info ---
 
   /** Runs callbacks for selected operation (change phenotype/control-enabled) and inputNodes */
-  private runCallbacks(
-    callbacks: Array<(inputNodes?: [number, ControlInfo][] | null) => void>,
-    inputNodes?: [number, ControlInfo][] | null
+  private runCallbacks<E>(
+    callbacks: Array<(inputNodes?: [number, E][] | null) => void>,
+    inputNodes?: [number, E][] | null
   ): void {
     try {
       callbacks.forEach((callback) => callback(inputNodes));
@@ -155,31 +167,28 @@ class ControlLM implements ControlLMInt {
     addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
-    if (!force && !this.liveModel.modelCanBeModified("Control")) {
+    if (!force && !this.liveModel.modelCanBeModified('Control')) {
       return;
     }
 
-    const oldControlInfo = this.controlStore
+    const oldPhenotype = this.controlStore
       .getState()
-      .getVariableControlInfo(id);
+      .getVariableCurrentPhenotype(id);
 
     this.controlStore.getState().setPhenotype(id, phenotype);
 
-    const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
+    const newPhenotype = this.controlStore
+      .getState()
+      .getVariableCurrentPhenotype(id);
 
-    if (controlInfo) {
-      this.runCallbacks(this.onPhenotypeChange, [[id, controlInfo]]);
+    if (newPhenotype !== undefined) {
+      this.runCallbacks(this.onPhenotypeChange, [[id, newPhenotype]]);
     }
 
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.changePhenotypeById(
-            id,
-            oldControlInfo?.phenotype ?? null,
-            false,
-            false
-          );
+          this.changePhenotypeById(id, oldPhenotype ?? null, false, false);
         },
         redo: () => {
           this.changePhenotypeById(id, phenotype ?? null, false, false);
@@ -195,7 +204,7 @@ class ControlLM implements ControlLMInt {
     addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {
-    if (!force && !this.liveModel.modelCanBeModified("Control")) {
+    if (!force && !this.liveModel.modelCanBeModified('Control')) {
       console.log(
         'Model cannot be modified at the moment change control enabled.'
       );
@@ -204,10 +213,12 @@ class ControlLM implements ControlLMInt {
 
     this.controlStore.getState().setControlEnabled(id, controlEnabled);
 
-    const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
+    const newControlEnabled = this.controlStore
+      .getState()
+      .getVariableControlEnabled(id);
 
-    if (controlInfo) {
-      this.runCallbacks(this.onControlChange, [[id, controlInfo]]);
+    if (newControlEnabled != undefined) {
+      this.runCallbacks(this.onControlChange, [[id, newControlEnabled]]);
     }
 
     this.computationManager.resetMaxSize();
@@ -226,7 +237,7 @@ class ControlLM implements ControlLMInt {
 
   /** Remove control information for a variable by its ID */
   public removeControlInfo(id: number, force = false): void {
-    if (!force && !this.liveModel.modelCanBeModified("Control")) {
+    if (!force && !this.liveModel.modelCanBeModified('Control')) {
       return;
     }
 
@@ -239,19 +250,22 @@ class ControlLM implements ControlLMInt {
 
   /** Get Phenotype and Control-Enabled variables formated into object { phenotypeVars: Record<VarName, Phenotype>, controlEnabledVars: Record<VarName, boolean> } */
   public getPhenotypeControlEnabledVars(): PhenotypeControlEnabledVars {
-    const controlInfo = this.controlStore.getState().getAllInfoIds();
+    const variables = this.variablesStore.getState().getAllVariables();
 
     const phenotypeVarsObj: PhenotypeVars = {};
     const controlEnabledVarsList: ControlEnabledVars = [];
 
-    controlInfo.forEach(([id, info]) => {
-      const varName =
-        this.variablesStore.getState().variableFromId(id)?.name ?? 'Unknown';
-
-      if (varName) {
-        if (info.phenotype !== null) phenotypeVarsObj[varName] = info.phenotype;
-        if (info.controlEnabled) controlEnabledVarsList.push(varName);
-      }
+    variables.forEach((variable) => {
+      const phenotype = this.controlStore
+        .getState()
+        .getVariableCurrentPhenotype(variable.id);
+      const controlEnabled = this.controlStore
+        .getState()
+        .getVariableControlEnabled(variable.id);
+      if (phenotype !== null && phenotype !== undefined)
+        phenotypeVarsObj[variable.name ?? 'Unknown'] = phenotype;
+      if (controlEnabled)
+        controlEnabledVarsList.push(variable.name ?? 'Unknown');
     });
 
     return {

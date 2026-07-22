@@ -1,9 +1,10 @@
-import type { ControlInfo, Phenotype } from '../../../../../../types';
+import type { Phenotype } from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
 import type { VariableControlInfoProps } from './VariableControlInfoProps';
 
+import { useMemo } from 'react';
 import ContrIcon from '../../../../../../assets/icons/control-enabled-button.svg';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';
 
@@ -20,13 +21,20 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
   controlStore,
   helpHoverStore,
 }) => {
-  const controlInfo: ControlInfo | undefined = controlStore((state) =>
-    state.getVariableControlInfo(id)
+  const controlEnabledStatuses: Record<number, boolean> = controlStore(
+    (state) => state.controlEnabled
   );
+  const currentPhenotype = controlStore((state) => state.currentPhenotype);
 
-  if (!controlInfo) {
-    return null;
-  }
+  const controlInfo = useMemo(() => {
+    const variableControlEnabled = controlEnabledStatuses[id];
+    const variablePhenotype = currentPhenotype.variables[id];
+
+    return {
+      controlEnabled: variableControlEnabled ?? true,
+      phenotype: variablePhenotype ?? null,
+    };
+  }, [controlEnabledStatuses, currentPhenotype]);
 
   const getNextPhenotype = (current: Phenotype): Phenotype => {
     switch (current) {

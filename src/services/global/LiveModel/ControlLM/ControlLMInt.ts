@@ -23,11 +23,19 @@ export interface ControlLMInt {
 
   // #region --- Phenotype and Control-Enabled callbacks ---
 
-  /** Add a callback to be executed when phenotype changes */
-  addOnPhenotypeChangeCallback(callback: () => void): void;
+  /** Add a callback to be executed when phenotype changes.
+   *  @param inputNodes ([number, Phenotype] | null) - optional parameter defining if the callback should run only on subset of variables, if is not specified runs on all the variables
+   */
+  addOnPhenotypeChangeCallback(
+    callback: (inputNodes?: [number, Phenotype][] | null) => void
+  ): void;
 
-  /** Add a callback to be executed when control enabled changes */
-  addOnControlChangeCallback(callback: () => void): void;
+  /** Add a callback to be executed when control enabled changes
+   * *  @param inputNodes ([number, boolean] | null) - optional parameter defining if the callback should run only on subset of variables, if is not specified runs on all the variables
+   */
+  addOnControlChangeCallback(
+    callback: (inputNodes?: [number, boolean][] | null) => void
+  ): void;
 
   // #endregion
 

@@ -2,7 +2,7 @@ import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/Contr
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { ControlInfo, Oscillation, Phenotype } from '../../../types';
+import type { Oscillation, Phenotype } from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ControlEditorInt } from './ControlEditorInt';
@@ -78,14 +78,14 @@ class ControlEditor implements ControlEditorInt {
 
   /** Toggles the control enabled state of a variable by its ID */
   public toggleControlEnabled(id: number) {
-    const controlInfo: ControlInfo | undefined = this.controlStore
+    const varControlEnabled: boolean | undefined = this.controlStore
       .getState()
-      .getVariableControlInfo(id);
+      .getVariableControlEnabled(id);
 
-    if (controlInfo) {
+    if (varControlEnabled != undefined) {
       this.liveModelServ.Control.changeControlEnabledById(
         id,
-        !controlInfo.controlEnabled,
+        !varControlEnabled,
         true,
         false
       );
@@ -124,13 +124,13 @@ class ControlEditor implements ControlEditorInt {
 
   /** Toggles the phenotype state of a variable by its ID */
   public togglePhenotype(id: number) {
-    const controlInfo: ControlInfo | undefined = this.controlStore
+    const variablePhenotype: Phenotype | undefined = this.controlStore
       .getState()
-      .getVariableControlInfo(id);
+      .getVariableCurrentPhenotype(id);
 
-    if (!controlInfo) return;
+    if (variablePhenotype === undefined) return;
 
-    switch (controlInfo.phenotype) {
+    switch (variablePhenotype) {
       case true:
         this.liveModelServ.Control.changePhenotypeById(id, false, true, false);
         break;

@@ -12,9 +12,9 @@ import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
-  type ControlInfo,
   type ModelEditorRegulation,
   type ModelEditorVariable,
+  type Phenotype,
   type Position,
   type Regulation,
   type RegulationVariables,
@@ -145,12 +145,12 @@ class CytoscapeME implements ModelVisualizationInt {
     });
 
     this.liveModel.Control.addOnControlChangeCallback(
-      (inputNodes?: [number, ControlInfo][] | null) => {
+      (inputNodes?: [number, boolean][] | null) => {
         this.highlightControlEnabled(inputNodes);
       }
     );
     this.liveModel.Control.addOnPhenotypeChangeCallback(
-      (inputNodes?: [number, ControlInfo][] | null) => {
+      (inputNodes?: [number, Phenotype][] | null) => {
         this.highlightPhenotype(inputNodes);
       }
     );
@@ -505,13 +505,7 @@ class CytoscapeME implements ModelVisualizationInt {
     });
 
     this.highlightControlEnabled([
-      [
-        id,
-        this.controlStore.getState().getVariableControlInfo(id) ?? {
-          controlEnabled: true,
-          phenotype: null,
-        },
-      ],
+      [id, this.controlStore.getState().getVariableControlEnabled(id) ?? true],
     ]);
 
     const variable: ModelEditorVariable = { type: 'variable', id: id };
@@ -1046,16 +1040,21 @@ class CytoscapeME implements ModelVisualizationInt {
       },
     };
 
-    this.controlStore
-      .getState()
-      .getAllInfoIds()
-      .forEach(([id, info]) => {
-        if (phenotype == true) {
-          variables[id] = info.phenotype == null ? 0 : info.phenotype ? 1 : 2;
-        } else {
-          variables[id] = info.controlEnabled ? 0 : 1;
-        }
-      });
+    if (phenotype == true) {
+      this.controlStore
+        .getState()
+        .getAllCurrentPhenotypeIds()
+        .forEach(([id, phenotype]) => {
+          variables[id] = phenotype == null ? 0 : phenotype ? 1 : 2;
+        });
+    } else {
+      this.controlStore
+        .getState()
+        .getAllControlEnabledIds()
+        .forEach(([id, controlEnabled]) => {
+          variables[id] = controlEnabled ? 0 : 1;
+        });
+    }
 
     if (!layoutOnlySelected) {
       this.cytoscape.nodes().layout(layoutOptions).run();
@@ -1113,12 +1112,12 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Changes colour of all nodes which are set as control-enabled. */
   public highlightControlEnabled(
-    inputNodes: Array<[number, ControlInfo]> | null = null
+    inputNodes: Array<[number, boolean]> | null = null
   ) {
-    var nodes: Array<[number, ControlInfo]> | undefined = undefined;
+    var nodes: Array<[number, boolean]> | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = this.controlStore.getState().getAllInfoIds();
+      nodes = this.controlStore.getState().getAllControlEnabledIds();
       this.controlEnabledShown = !this.controlEnabledShown;
     } else {
       nodes = inputNodes;
@@ -1128,9 +1127,9 @@ class CytoscapeME implements ModelVisualizationInt {
       .getPropertyValue('--color-control-enabled')
       .trim();
 
-    nodes.forEach(([id, controlInfo]) => {
+    nodes.forEach(([id, controlEnabled]) => {
       const node = this.cytoscape.getElementById(id);
-      if (this.controlEnabledShown && controlInfo.controlEnabled) {
+      if (this.controlEnabledShown && controlEnabled) {
         node.style('background-color', color);
       } else {
         node.removeStyle('background-color');
@@ -1145,12 +1144,12 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Changes borders of all nodes which are in the phenotype. */
   public highlightPhenotype(
-    inputNodes: Array<[number, ControlInfo]> | null = null
+    inputNodes: Array<[number, Phenotype]> | null = null
   ) {
-    var nodes: Array<[number, ControlInfo]> | undefined = undefined;
+    var nodes: Array<[number, Phenotype]> | undefined = undefined;
 
     if (inputNodes == null) {
-      nodes = this.controlStore.getState().getAllInfoIds();
+      nodes = this.controlStore.getState().getAllCurrentPhenotypeIds();
       this.phenotypeShown = !this.phenotypeShown;
     } else {
       nodes = inputNodes;
@@ -1169,12 +1168,12 @@ class CytoscapeME implements ModelVisualizationInt {
       .getPropertyValue('---color-model-node-border')
       .trim();
 
-    nodes.forEach(([id, controlInfo]) => {
-      if (this.phenotypeShown && controlInfo.phenotype == true) {
+    nodes.forEach(([id, variablePhenotype]) => {
+      if (this.phenotypeShown && variablePhenotype == true) {
         this.cytoscape.getElementById(id).style('border-color', trueColor);
         this.cytoscape.getElementById(id).style('color', trueColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');
-      } else if (this.phenotypeShown && controlInfo.phenotype == false) {
+      } else if (this.phenotypeShown && variablePhenotype == false) {
         this.cytoscape.getElementById(id).style('border-color', falseColor);
         this.cytoscape.getElementById(id).style('color', falseColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');

@@ -1,4 +1,3 @@
-import type { ControlInfo } from '../../../../../types';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -8,12 +7,12 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
   computationManagerServ,
   controlStore,
 }) => {
-  const controlInfo: Record<number, ControlInfo> = controlStore(
-    (state) => state.controlInfo
+  const controlEnabledStatuses: Record<number, boolean> = controlStore(
+    (state) => state.controlEnabled
   );
 
-  const numberOfEnabled = Object.values(controlInfo).filter(
-    (info) => info.controlEnabled
+  const numberOfEnabled = Object.values(controlEnabledStatuses).filter(
+    (controlEnabledStatus) => controlEnabledStatus
   ).length;
 
   const headers: Array<string> = [

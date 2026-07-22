@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ControlInfo, ControlStats } from '../../../../../types';
+import type { ControlStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { ControlStatsTableProps } from './ControlStatsTableProps';
 
@@ -7,13 +7,12 @@ const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
   liveModelServ,
   controlStore,
 }) => {
-  const controlInfo: Record<number, ControlInfo> = controlStore(
-    (state) => state.controlInfo
-  );
+  const controlEnabled = controlStore((state) => state.controlEnabled);
+  const currentPhenotype = controlStore((state) => state.currentPhenotype);
 
   const stats: ControlStats = useMemo(
     () => liveModelServ.Control.getControlStats(),
-    [controlInfo]
+    [controlEnabled, currentPhenotype]
   );
 
   const insertStats = () => {

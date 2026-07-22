@@ -4,39 +4,63 @@ import type { ControlStatus } from './ControlStatus';
 
 function createControlStore(): ZustandStore<ControlStatus> {
   return create<ControlStatus>((set, get) => ({
-    controlInfo: {},
+    controlEnabled: {},
+
+    currentPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
+    phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
 
     addInfo: (id, controlInfo) => {
-      set((state) => ({
-        controlInfo: { ...state.controlInfo, [id]: controlInfo },
-      }));
+      set((state) => {
+        return {
+          controlEnabled: {
+            ...state.controlEnabled,
+            [id]: controlInfo.controlEnabled,
+          },
+          currentPhenotype: {
+            ...state.currentPhenotype,
+            variables: {
+              ...state.currentPhenotype.variables,
+              [id]: controlInfo.phenotype,
+            },
+          },
+        };
+      });
       return id;
     },
 
     removeInfo: (id) => {
       set((state) => {
-        const newControlInfo = { ...state.controlInfo };
-        delete newControlInfo[id];
-        return { controlInfo: newControlInfo };
+        const newControlEnabled = { ...state.controlEnabled };
+        const newCurrentPhenotype = {
+          ...state.currentPhenotype,
+        };
+        delete newControlEnabled[id];
+        delete newCurrentPhenotype.variables[id];
+        return {
+          controlEnabled: newControlEnabled,
+          currentPhenotype: newCurrentPhenotype,
+        };
       });
     },
 
-    getAllInfo: () => Object.values(get().controlInfo),
+    getAllControlEnabled: () => {
+      return Object.values(get().controlEnabled);
+    },
 
-    getAllInfoIds: () =>
-      Object.entries(get().controlInfo).map(([id, controlInfo]) => [
+    getAllControlEnabledIds: () =>
+      Object.entries(get().controlEnabled).map(([id, controlEnabled]) => [
         Number(id),
-        controlInfo,
+        controlEnabled,
       ]),
 
     setControlEnabled: (id, controlEnabled) => {
       set((state) => {
-        const controlInfo = state.controlInfo[id];
-        if (controlInfo) {
+        const controlEnabledStatus = state.controlEnabled[id];
+        if (controlEnabledStatus != undefined) {
           return {
-            controlInfo: {
-              ...state.controlInfo,
-              [id]: { ...controlInfo, controlEnabled },
+            controlEnabled: {
+              ...state.controlEnabled,
+              [id]: controlEnabled,
             },
           };
         }
@@ -44,14 +68,29 @@ function createControlStore(): ZustandStore<ControlStatus> {
       });
     },
 
+    getAllCurrentPhenotype: () => {
+      return Object.values(get().currentPhenotype.variables);
+    },
+
+    getAllCurrentPhenotypeIds: () =>
+      Object.entries(get().currentPhenotype.variables).map(
+        ([id, phenotype]) => [Number(id), phenotype]
+      ),
+
     setPhenotype: (id, phenotype) => {
       set((state) => {
-        const controlInfo = state.controlInfo[id];
-        if (controlInfo) {
+        const currentPhenotypeStatus = state.currentPhenotype.variables[id];
+        if (
+          currentPhenotypeStatus != undefined ||
+          currentPhenotypeStatus == null
+        ) {
           return {
-            controlInfo: {
-              ...state.controlInfo,
-              [id]: { ...controlInfo, phenotype },
+            currentPhenotype: {
+              ...state.currentPhenotype,
+              variables: {
+                ...state.currentPhenotype.variables,
+                [id]: phenotype,
+              },
             },
           };
         }
@@ -60,25 +99,49 @@ function createControlStore(): ZustandStore<ControlStatus> {
     },
 
     getVariableControlInfo: (id) => {
-      return get().controlInfo[id];
+      const controlEnabledStatus = get().getVariableControlEnabled(id);
+      const phenotypeStatus = get().getVariableCurrentPhenotype(id);
+
+      if (controlEnabledStatus === undefined && phenotypeStatus === undefined) {
+        return undefined;
+      }
+
+      return {
+        controlEnabled: controlEnabledStatus ?? true,
+        phenotype: phenotypeStatus ?? null,
+      };
+    },
+
+    getVariableControlEnabled: (id) => {
+      return get().controlEnabled[id];
+    },
+
+    getVariableCurrentPhenotype: (id) => {
+      return get().currentPhenotype.variables[id] ?? null;
     },
 
     getControlEnabledIds: (controlEnabled) => {
-      return Object.entries(get().controlInfo)
-        .filter(([, info]) => info.controlEnabled === controlEnabled)
+      return Object.entries(get().controlEnabled)
+        .filter(([, isControlEnabled]) => isControlEnabled === controlEnabled)
         .map(([id]) => Number(id));
     },
 
     getPhenotypeIds: (phenotype) => {
-      return Object.entries(get().controlInfo)
-        .filter(([, info]) => info.phenotype === phenotype)
+      return Object.entries(get().currentPhenotype.variables)
+        .filter(([, phenotypeStatus]) => phenotypeStatus === phenotype)
         .map(([id]) => Number(id));
     },
 
-    isEmpty: () => Object.keys(get().controlInfo).length === 0,
+    isEmpty: () =>
+      Object.keys(get().controlEnabled).length === 0 &&
+      Object.keys(get().currentPhenotype.variables).length === 0,
 
     clear: () => {
-      set({ controlInfo: {} });
+      set({
+        controlEnabled: {},
+        currentPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
+        phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
+      });
     },
   }));
 }
