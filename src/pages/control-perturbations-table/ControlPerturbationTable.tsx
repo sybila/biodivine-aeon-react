@@ -101,6 +101,45 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
     }
   };
 
+  const topMenuButtons: Array<{
+    id: TabTypeCPT;
+    iconSrc: string;
+    tagText: string;
+  }> = [
+    { id: 'Overview', iconSrc: OverviewIcon, tagText: 'Overview' },
+    { id: 'Filters', iconSrc: FilterIcon, tagText: 'Filters' },
+    { id: 'Sorting', iconSrc: SortingIcon, tagText: 'Sorting' },
+    { id: 'Pages', iconSrc: PagesIcon, tagText: 'Pages' },
+    { id: 'Help', iconSrc: HelpIcon, tagText: 'Help' },
+  ];
+
+  const renderMenuButtons = () => {
+    return (
+      <>
+        {topMenuButtons.map((button, index) => (
+          <div
+            key={button.id}
+            className="overflow-visible max-w-[67px] max-h-67px"
+            style={{ zIndex: topMenuButtons.length - index }}
+          >
+            <IconButtonReact
+              isActive={activeTab === button.id}
+              onClick={() => showHideTab(button.id)}
+              iconSrc={button.iconSrc}
+              iconAlt={button.tagText}
+              showTag={true}
+              tagText={button.tagText}
+              buttonColor="var(--color-primary-buttons)"
+              buttonHoverColor="var(--color-primary-buttons-hover)"
+              buttonActiveColor="var(--color-primary-buttons-active)"
+              tagTextColor="var(--color-primary-text)"
+            />
+          </div>
+        ))}
+      </>
+    );
+  };
+
   const showHideTab = (tabType: TabTypeCPT) => {
     if (activeTab === tabType) {
       setActiveTab(null);
@@ -112,78 +151,7 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
 
   return (
     <>
-      <TopButtonMenu>
-        <div className="z-3 overflow-visible max-w-[67px] max-h-67px">
-          <IconButtonReact
-            isActive={activeTab === 'Overview'}
-            onClick={() => showHideTab('Overview')}
-            iconSrc={OverviewIcon}
-            iconAlt="Overview"
-            showTag={true}
-            tagText="Overview"
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-          />
-        </div>
-
-        <div className="z-2 overflow-visible max-w-[67px] max-h-67px">
-          <IconButtonReact
-            isActive={activeTab === 'Filters'}
-            onClick={() => showHideTab('Filters')}
-            iconSrc={FilterIcon}
-            iconAlt="Filters"
-            showTag={true}
-            tagText="Filters"
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-          />
-        </div>
-
-        <div className="z-1 overflow-visible max-w-[67px] max-h-67px">
-          <IconButtonReact
-            isActive={activeTab === 'Sorting'}
-            onClick={() => showHideTab('Sorting')}
-            iconSrc={SortingIcon}
-            iconAlt="Sorting"
-            showTag={true}
-            tagText="Sorting"
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-          />
-        </div>
-
-        <IconButtonReact
-          isActive={activeTab === 'Pages'}
-          onClick={() => showHideTab('Pages')}
-          iconSrc={PagesIcon}
-          iconAlt="Pages"
-          showTag={true}
-          tagText="Pages"
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-        />
-
-        <IconButtonReact
-          isActive={activeTab === 'Help'}
-          onClick={() => showHideTab('Help')}
-          iconSrc={HelpIcon}
-          iconAlt="Help"
-          showTag={true}
-          tagText="Help"
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-        />
-      </TopButtonMenu>
+      <TopButtonMenu> {renderMenuButtons()} </TopButtonMenu>
 
       <ContentTab
         showTab={activeTab !== null}
