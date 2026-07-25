@@ -24,7 +24,7 @@ export type ControlStatus = {
    */
   removeInfo: (id: number) => void;
 
-  /** Function which swithes the currently active phenotype.
+  /** Function which swithes the currently active phenotype (currentPhenotype).
    *  @param id (number) - id of the phenotype which should be active
    *  @returns if succesful returns id of the newly created phenotype, else if phenotype with id doesn't exist returns undefined.
    */
@@ -54,18 +54,18 @@ export type ControlStatus = {
    *  @returns [id, Phenotype] - An array of tuples, where each tuple contains the variable ID and its phenotype status in the currently selected phenotype.
    */
   getAllCurrentPhenotypeIds: () => Array<[number, Phenotype]>;
-  /** Sets the phenotype for a variable. */
+  /** Sets the phenotype status for a variable in the currently active phenotype. */
   setPhenotype: (id: number, phenotype: Phenotype) => void;
-  /** Retrieves control information for a specific variable by ID. */
+  /** Retrieves control information for a specific variable by ID. (control-enabled status + phenotype status in the currently active phenotype) */
   getVariableControlInfo: (id: number) => ControlInfo | undefined;
   /** Retrieves control-enabled status for a specific variable by ID. */
   getVariableControlEnabled: (id: number) => boolean | undefined;
-  /** Retrieves phenotype status in the currently selected phenotype for a specific variable by ID. */
+  /** Retrieves phenotype status in the currently active phenotype for a specific variable by ID. */
   getVariableCurrentPhenotype: (id: number) => Phenotype | undefined;
 
   /** Retrieves IDs of variables based on their control enabled state. */
   getControlEnabledIds: (controlEnabled: boolean) => number[];
-  /** Retrieves IDs of variables based on their phenotype state. */
+  /** Retrieves IDs of variables based on their phenotype state in the currently active phenotype. */
   getPhenotypeIds: (phenotype: Phenotype) => number[];
   /** Checks if the control information is empty. */
   isEmpty: () => boolean;
