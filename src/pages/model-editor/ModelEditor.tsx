@@ -4,7 +4,7 @@ import SideButtonMenu from '../../components/react-components/global/SideButtonM
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 
-import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
+import ControlIcon from '../../assets/icons/control-enabled.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
 import PhenotypeIcon from '../../assets/icons/dna.svg'
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
