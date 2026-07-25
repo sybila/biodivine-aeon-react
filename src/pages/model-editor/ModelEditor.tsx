@@ -6,6 +6,7 @@ import ModelEditorCanvas from '../../components/react-components/model-editor/Mo
 
 import ControlIcon from '../../assets/icons/control-enabled-48px.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
+import PhenotypeIcon from '../../assets/icons/dna.svg'
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import HelpIcon from '../../assets/icons/help.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
@@ -225,7 +226,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       icon: ControlIcon,
       alt: 'Control-Enabled',
     },
-    { tab: 'Phenotype Editor', icon: ControlIcon, alt: 'Phenotype' },
+    { tab: 'Phenotype Editor', icon: PhenotypeIcon, alt: 'Phenotype' },
     { tab: 'Visual Options', icon: EyeIcon, alt: 'Visual' },
     { tab: 'Help', icon: HelpIcon, alt: 'Help' },
   ];
