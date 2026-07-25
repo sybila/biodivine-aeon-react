@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import type { Oscillation } from '../../../../types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import ControlStatsTable from './ControStatsTable/ControlStatsTable';
-import type { ControlEditorTabContentProps } from './ControlEditorTabContentProps';
-import ControlVariablesTable from './ControlVariablesTable/ControlVariablesTable';
+import type { ControlEditorTabContentProps } from './PhenotypeEditorTabContentProps';
 import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOscillationButton';
+import PhenotypeStatsTable from './PhenotypeStatsTable/PhenotypeStatsTable';
+import PhenotypeVariablesTable from './PhenotypeVariablesTable/PhenotypeVariablesTable';
 
 const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
-  liveModelServ,
-  controlEditorServ,
+  phenotypeEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
   loadingServ,
@@ -19,7 +18,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   helpHoverStore,
 }) => {
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
-    controlEditorServ.getPhenotypeOscillation()
+    phenotypeEditorServ.getPhenotypeOscillation()
   );
 
   return (
@@ -32,10 +31,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
           justifyHeader="start"
         />
 
-        <ControlStatsTable
-          liveModelServ={liveModelServ}
-          controlStore={controlStore}
-        />
+        <PhenotypeStatsTable controlStore={controlStore} />
       </section>
 
       <section className="flex flex-col items-center w-full h-fit gap-3">
@@ -47,7 +43,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
         />
 
         <PhenotypeOscillationButton
-          controlEditorServ={controlEditorServ}
+          phenotypeEditorServ={phenotypeEditorServ}
           oscillationValue={oscillationValue}
           setOscillationValue={setOscillationValue}
           compWidth="95%"
@@ -65,8 +61,8 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
         />
       </section>
 
-      <ControlVariablesTable
-        controlEditorServ={controlEditorServ}
+      <PhenotypeVariablesTable
+        phenotypeEditorServ={phenotypeEditorServ}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         pageStringProviderServ={pageStringProviderServ}
         loadingServ={loadingServ}

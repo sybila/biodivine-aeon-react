@@ -6,7 +6,8 @@ import type { OpenCloseOperationsInt } from '../../services/global/OpenCloseOper
 import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
 import type { ModelEditorPageStringsInt } from '../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { WarningInt } from '../../services/global/Warning/WarningInt';
-import type { ControlEditorInt } from '../../services/model-editor/ControlEditor/ControlEditorInt';
+import type { ControlEnabledEditorInt } from '../../services/model-editor/ControlEditor/ControlEnabledEditor/ControlEnabledEditorInt';
+import type { PhenotypeEditorInt } from '../../services/model-editor/ControlEditor/PhenotypeEditor/PhenotypeEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
 import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/FileConvertorsInt';
@@ -30,7 +31,8 @@ export type ModelEditorProps = {
   liveModelServ: LiveModelInt;
   modelVisualization: ModelVisualizationInt;
   modelEditorServ: ModelEditorInt;
-  controlEditorServ: ControlEditorInt;
+  controlEnabledEditorServ: ControlEnabledEditorInt;
+  phenotypeEditorServ: PhenotypeEditorInt;
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   fileConvertorsServ: FileConvertorsInt;

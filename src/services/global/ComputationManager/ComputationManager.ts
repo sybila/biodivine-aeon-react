@@ -1,6 +1,7 @@
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ComputeEngineStatusState } from '../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
@@ -60,6 +61,7 @@ class ComputationManager implements ComputationManagerInt {
   private loadingServ: LoadingInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
+  private controlStore: ZustandStore<ControlStatus>;
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>;
   private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
@@ -72,6 +74,7 @@ class ComputationManager implements ComputationManagerInt {
     loadingServ: LoadingInt,
 
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>,
+    controlStore: ZustandStore<ControlStatus>,
     resultsStatusStore: ZustandStore<ResultsStatus>,
     computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>,
     updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
@@ -83,6 +86,7 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ = loadingServ;
 
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
+    this.controlStore = controlStore;
     this.resultsStatusStore = resultsStatusStore;
     this.computeEngineStatusStore = computeEngineStatusStore;
     this.updateFunctionsStore = updateFunctionsStore;
@@ -156,8 +160,9 @@ class ComputationManager implements ComputationManagerInt {
 
   /** Sets maximum size of a perturbation */
   public setMaxSize(max: number | undefined) {
-    const numberOfEnabled =
-      this.getLiveModel()!.Control.getNumberOfSetControl()[0];
+    const numberOfEnabled = this.controlStore
+      .getState()
+      .getNumberOfSetControl()[0];
 
     if (!max || max > numberOfEnabled) {
       this.controlComputationParams.maxSize = numberOfEnabled;
@@ -171,8 +176,9 @@ class ComputationManager implements ComputationManagerInt {
   /** Returns maximum size of a perturbation */
   public getMaxSize() {
     if (this.controlComputationParams.maxSize === undefined) {
-      this.controlComputationParams.maxSize =
-        this.getLiveModel()!.Control.getNumberOfSetControl()[0];
+      this.controlComputationParams.maxSize = this.controlStore
+        .getState()
+        .getNumberOfSetControl()[0];
     }
 
     return this.controlComputationParams.maxSize;
@@ -268,8 +274,9 @@ class ComputationManager implements ComputationManagerInt {
     }
 
     if (mode === 'Control') {
-      const [controlEnabled, inPhenotype] =
-        this.getLiveModel()!.Control.getNumberOfSetControl();
+      const [controlEnabled, inPhenotype] = this.controlStore
+        .getState()
+        .getNumberOfSetControl();
 
       if (controlEnabled === 0) {
         throw new Error(

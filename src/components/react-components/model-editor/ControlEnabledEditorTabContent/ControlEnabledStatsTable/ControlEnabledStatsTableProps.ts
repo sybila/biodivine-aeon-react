@@ -2,7 +2,6 @@ import type { LiveModelInt } from '../../../../../services/global/LiveModel/Live
 import type { ControlStatus } from '../../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
-export type ControlStatsTableProps = {
-  liveModelServ: LiveModelInt;
+export type ControlEnabledStatsProps = {
   controlStore: ZustandStore<ControlStatus>;
 };

@@ -1,24 +1,20 @@
 import { useMemo } from 'react';
-import type { ControlStats } from '../../../../../types';
+import type { PhenotypeStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
-import type { ControlStatsTableProps } from './ControlStatsTableProps';
+import type { PhenotypeStatsTableProps } from './PhenotypeStatsTableProps';
 
-const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
-  liveModelServ,
+const PhenotypeStatsTable: React.FC<PhenotypeStatsTableProps> = ({
   controlStore,
 }) => {
-  const controlEnabled = controlStore((state) => state.controlEnabled);
   const currentPhenotype = controlStore((state) => state.currentPhenotype);
 
-  const stats: ControlStats = useMemo(
-    () => liveModelServ.Control.getControlStats(),
-    [controlEnabled, currentPhenotype]
+  const stats: PhenotypeStats = useMemo(
+    () => controlStore.getState().getPhenotypeStats(),
+    [currentPhenotype]
   );
 
   const insertStats = () => {
     const statCells = [
-      ['Control-Enabled', stats.controlEnabled.toString()],
-      ['Not-Control-Enabled', stats.notControlEnabled.toString()],
       ['Phenotype - True', stats.inPhenotypeTrue.toString()],
       ['Phenotype - False', stats.inPhenotypeFalse.toString()],
       ['Not in Phenotype', stats.notInPhenotype.toString()],
@@ -45,4 +41,4 @@ const ControlStatsTable: React.FC<ControlStatsTableProps> = ({
   return insertStats();
 };
 
-export default ControlStatsTable;
+export default PhenotypeStatsTable;

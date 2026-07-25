@@ -5,7 +5,6 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
-  type ControlStats,
   type Oscillation,
   type Phenotype,
   type PhenotypeControlEnabledVars,
@@ -54,63 +53,6 @@ class ControlLM implements ControlLMInt {
 
     this.onControlChange = [];
     this.onPhenotypeChange = [];
-  }
-
-  // #endregion
-
-  // #region --- Getters ---
-
-  /** Returns the number of variables set as Control-Enabled and in Phenotype .
-   * @returns A tuple with the first element being the count of Control-Enabled variables,
-   * and the second element being the count of variables in Phenotype.
-   */
-  public getNumberOfSetControl(): [number, number] {
-    const controlEnabled = this.controlStore.getState().getAllControlEnabled();
-    const phenotype = this.controlStore.getState().getAllCurrentPhenotype();
-    const controlEnabledCount = controlEnabled.reduce(
-      (acc: number, controlEnabled: boolean) => {
-        if (controlEnabled) acc++;
-        return acc;
-      },
-      0
-    );
-    const inPhenotypeCount = phenotype.reduce(
-      (acc: number, phenotype: Phenotype) => {
-        if (phenotype != PHENOTYPE_STATUS.NotInPhenotype) acc++;
-        return acc;
-      },
-      0
-    );
-    return [controlEnabledCount, inPhenotypeCount];
-  }
-
-  /** Returns control statistics for the live model */
-  public getControlStats(): ControlStats {
-    const controlEnabled = this.controlStore.getState().getAllControlEnabled();
-    const phenotype = this.controlStore.getState().getAllCurrentPhenotype();
-
-    const stats: ControlStats = {
-      controlEnabled: 0,
-      notControlEnabled: 0,
-      inPhenotypeTrue: 0,
-      inPhenotypeFalse: 0,
-      notInPhenotype: 0,
-    };
-
-    controlEnabled.forEach((variableControlEnabled) => {
-      if (variableControlEnabled) stats.controlEnabled++;
-      else stats.notControlEnabled++;
-    });
-
-    phenotype.forEach((variablePhenotype) => {
-      if (variablePhenotype === PHENOTYPE_STATUS.InPhenotypeTrue)
-        stats.inPhenotypeTrue++;
-      else if (variablePhenotype === PHENOTYPE_STATUS.InPhenotypeFalse)
-        stats.inPhenotypeFalse++;
-      else stats.notInPhenotype++;
-    });
-
-    return stats;
   }
 
   // #endregion

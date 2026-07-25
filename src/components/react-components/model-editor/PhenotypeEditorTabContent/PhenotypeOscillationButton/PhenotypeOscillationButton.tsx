@@ -4,7 +4,7 @@ import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { PhenotypeOscillationButtonProps } from './PhenotypeOscillationButtonProps';
 
 const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
-  controlEditorServ,
+  phenotypeEditorServ,
   oscillationValue,
   setOscillationValue,
   compWidth,
@@ -34,7 +34,7 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
           getNextOscillation(nextOscillation)
         )
       );
-    controlEditorServ.setPhenotypeOscillation(nextOscillation);
+    phenotypeEditorServ.setPhenotypeOscillation(nextOscillation);
   };
 
   return (

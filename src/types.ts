@@ -13,7 +13,8 @@ export type MenuTabTypeMENotNull =
   | 'Import/Export'
   | 'Export Witness'
   | 'Model Editor'
-  | 'Control Editor'
+  | 'Control-Enabled Editor'
+  | 'Phenotype Editor'
   | 'Visual Options'
   | 'Help';
 
@@ -131,9 +132,12 @@ export type ControlInfo = {
   phenotype: Phenotype;
 };
 
-export type ControlStats = {
+export type ControlEnabledStats = {
   controlEnabled: number;
   notControlEnabled: number;
+};
+
+export type PhenotypeStats = {
   inPhenotypeTrue: number;
   inPhenotypeFalse: number;
   notInPhenotype: number;

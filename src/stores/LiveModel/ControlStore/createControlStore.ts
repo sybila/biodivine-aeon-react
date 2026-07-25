@@ -222,6 +222,56 @@ function createControlStore(): ZustandStore<ControlStatus> {
         .map(([id]) => Number(id));
     },
 
+    getControlEnabledStats: () => {
+      const stats = {
+        controlEnabled: 0,
+        notControlEnabled: 0,
+      };
+
+      Object.values(get().controlEnabled).forEach((variableControlEnabled) => {
+        if (variableControlEnabled) stats.controlEnabled++;
+        else stats.notControlEnabled++;
+      });
+
+      return stats;
+    },
+    getPhenotypeStats: () => {
+      const stats = {
+        inPhenotypeTrue: 0,
+        inPhenotypeFalse: 0,
+        notInPhenotype: 0,
+      };
+
+      Object.values(get().currentPhenotype.variables).forEach(
+        (phenotypeStatus) => {
+          switch (phenotypeStatus) {
+            case PHENOTYPE_STATUS.InPhenotypeTrue: {
+              stats.inPhenotypeTrue++;
+              break;
+            }
+            case PHENOTYPE_STATUS.InPhenotypeFalse: {
+              stats.inPhenotypeFalse++;
+              break;
+            }
+            default: {
+              stats.notInPhenotype++;
+            }
+          }
+        }
+      );
+
+      return stats;
+    },
+    getNumberOfSetControl: () => {
+      const controlEnabled = get().getControlEnabledStats().controlEnabled;
+      const phenotypeStats = get().getPhenotypeStats();
+
+      const inPhenotype =
+        phenotypeStats.inPhenotypeTrue + phenotypeStats.inPhenotypeFalse;
+
+      return [controlEnabled, inPhenotype];
+    },
+
     isEmpty: () =>
       Object.keys(get().controlEnabled).length === 0 &&
       Object.keys(get().currentPhenotype.variables).length === 0,

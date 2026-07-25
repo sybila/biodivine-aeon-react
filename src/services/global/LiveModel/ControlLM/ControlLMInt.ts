@@ -1,5 +1,4 @@
 import type {
-  ControlStats,
   Oscillation,
   Phenotype,
   PhenotypeControlEnabledVars,
@@ -8,19 +7,6 @@ import type {
 /**
  * Interface to manage control information for live model variables */
 export interface ControlLMInt {
-  // #region --- Getters ---
-
-  /** Returns the number of variables set as Control-Enabled and in Phenotype .
-   * @returns A tuple with the first element being the count of Control-Enabled variables,
-   * and the second element being the count of variables in Phenotype.
-   */
-  getNumberOfSetControl(): [number, number];
-
-  /** Returns control statistics for the live model */
-  getControlStats(): ControlStats;
-
-  // #endregion
-
   // #region --- Phenotype and Control-Enabled callbacks ---
 
   /** Add a callback to be executed when phenotype changes.

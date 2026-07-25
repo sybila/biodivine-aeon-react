@@ -1,4 +1,9 @@
-import type { ControlInfo, Phenotype } from '../../../types';
+import type {
+  ControlEnabledStats,
+  ControlInfo,
+  Phenotype,
+  PhenotypeStats,
+} from '../../../types';
 
 /** Zustand store for managing control information of variables in LiveModel
  Provides actions for adding, removing, updating, and querying control info and phenotypes */
@@ -67,6 +72,17 @@ export type ControlStatus = {
   getControlEnabledIds: (controlEnabled: boolean) => number[];
   /** Retrieves IDs of variables based on their phenotype state in the currently active phenotype. */
   getPhenotypeIds: (phenotype: Phenotype) => number[];
+
+  /** Returns how many control enabled / not control enabled variable there is. */
+  getControlEnabledStats: () => ControlEnabledStats;
+  /** Returns how many variables have certain phenotype status in the currently active phenotype. */
+  getPhenotypeStats: () => PhenotypeStats;
+  /** Returns the number of variables set as Control-Enabled and in Phenotype .
+   * @returns A tuple with the first element being the count of Control-Enabled variables,
+   * and the second element being the count of variables in Phenotype.
+   */
+  getNumberOfSetControl: () => [number, number];
+
   /** Checks if the control information is empty. */
   isEmpty: () => boolean;
   /** Clears all control information. */

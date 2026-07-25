@@ -61,7 +61,8 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
 - Ctrl + Shift + S → Open Start Computation menu  
 - Ctrl + Shift + E → Open Import/Export menu  
 - Ctrl + Shift + M → Open Model Editor menu  
-- Ctrl + Shift + C → Open Control Editor menu  
+- Ctrl + Shift + C → Open Control-Enabled Editor menu
+- Ctrl + Shift + P → Open Phenotype Editor menu   
 - Ctrl + Shift + V → Open Visual Options menu  
 - Ctrl + Shift + U → Open Utilities menu
 

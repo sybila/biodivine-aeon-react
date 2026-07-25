@@ -14,8 +14,11 @@ const ModelEditorComponent = () => (
       ObjectProvider.ModelEditorServicesProvider.modelVisualizationServ
     }
     modelEditorServ={ObjectProvider.ModelEditorServicesProvider.modelEditorServ}
-    controlEditorServ={
-      ObjectProvider.ModelEditorServicesProvider.controlEditorServ
+    phenotypeEditorServ={
+      ObjectProvider.ModelEditorServicesProvider.phenotypeEditorServ
+    }
+    controlEnabledEditorServ={
+      ObjectProvider.ModelEditorServicesProvider.controlEnabledEditorServ
     }
     computationManagerServ={
       ObjectProvider.GlobalServicesProvider.computationManagerServ

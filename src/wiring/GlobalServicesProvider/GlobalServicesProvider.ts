@@ -81,6 +81,7 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
       this.messageServ,
       this.loadingServ,
       storesProvider.bifurcationExplorerStatusStore,
+      storesProvider.controlStore,
       storesProvider.resultsStatusStore,
       storesProvider.computeEngineStatusStore,
       storesProvider.updateFunctionsStore,

@@ -13,22 +13,29 @@ import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
 
 import KeepAlive from 'react-activation';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import ControlEditorTabContent from '../../components/react-components/model-editor/ControlEditorTabContent/ControlEditorTabContent';
+import ControlEnabledEditorTabContent from '../../components/react-components/model-editor/ControlEnabledEditorTabContent/ControlEnabledEditorTabContent';
 import ExportTabContent from '../../components/react-components/model-editor/ExportTabContent/ExportTabContent';
 import FloatMenu from '../../components/react-components/model-editor/FloatMenu/FloatMenu';
 import ImportExportTabContent from '../../components/react-components/model-editor/ImportExportTabContent/ImportExportTabContent';
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
+import PhenotypeEditorTabContent from '../../components/react-components/model-editor/PhenotypeEditorTabContent/PhenotypeEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
 import UtilitiesMenu from '../../components/react-components/model-editor/UtilitesMenu/UtilitiesMenu';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
-import type { MenuTabButton, MenuTabTypeME, ModelType } from '../../types';
+import type {
+  MenuTabButton,
+  MenuTabTypeME,
+  MenuTabTypeMENotNull,
+  ModelType,
+} from '../../types';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 const ModelEditor: React.FC<ModelEditorProps> = ({
   liveModelServ,
   modelVisualization,
   modelEditorServ,
-  controlEditorServ,
+  controlEnabledEditorServ,
+  phenotypeEditorServ,
   computationManagerServ,
   searchAndFilterHelpersServ,
   fileConvertorsServ,
@@ -127,11 +134,23 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             helpHoverStore={helpHoverStore}
           />
         );
-      case 'Control Editor':
+      case 'Control-Enabled Editor':
         return (
-          <ControlEditorTabContent
-            liveModelServ={liveModelServ}
-            controlEditorServ={controlEditorServ}
+          <ControlEnabledEditorTabContent
+            controlEnabledEditorServ={controlEnabledEditorServ}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+            pageStringProviderServ={pageStringProviderServ}
+            loadingServ={loadingServ}
+            controlStore={controlStore}
+            variablesStore={variablesStore}
+            modelEditorStatusStore={modelEditorStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
+      case 'Phenotype Editor':
+        return (
+          <PhenotypeEditorTabContent
+            phenotypeEditorServ={phenotypeEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             pageStringProviderServ={pageStringProviderServ}
             loadingServ={loadingServ}
@@ -173,6 +192,49 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
     setActiveTab(tabType);
   };
 
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
+  };
+
+  const sidePanelButtons: Array<{
+    tab: MenuTabTypeMENotNull;
+    icon: string;
+    alt: string;
+    hideFor?: string;
+    fallback?: MenuTabTypeMENotNull;
+  }> = [
+    {
+      tab: 'Start Computation',
+      icon: PlayIcon,
+      alt: 'Play',
+      hideFor: 'witness' as const,
+    },
+    {
+      tab: 'Import/Export',
+      icon: FileIcon,
+      alt: 'File',
+      fallback: 'Export Witness',
+    },
+    { tab: 'Model Editor', icon: ModelIcon, alt: 'Model' },
+    {
+      tab: 'Control-Enabled Editor',
+      icon: ControlIcon,
+      alt: 'Control-Enabled',
+    },
+    { tab: 'Phenotype Editor', icon: ControlIcon, alt: 'Phenotype' },
+    { tab: 'Visual Options', icon: EyeIcon, alt: 'Visual' },
+    { tab: 'Help', icon: HelpIcon, alt: 'Help' },
+  ];
+
+  const setTabRef = (tabName: MenuTabTypeMENotNull) => (el: any) =>
+    modelEditorStatusStore
+      .getState()
+      .setMenuTabButtonRef(tabName, el as MenuTabButton);
+
   return (
     <>
       <UtilitiesMenu
@@ -186,133 +248,23 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       />
 
       <SideButtonMenu>
-        {modelType !== 'witness' ? (
-          <IconButtonReact
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-            ref={(el) =>
-              modelEditorStatusStore
-                .getState()
-                .setMenuTabButtonRef('Start Computation', el as MenuTabButton)
-            }
-            isActive={activeTab === 'Start Computation'}
-            onClick={() => showHideTab('Start Computation')}
-            iconSrc={PlayIcon}
-            iconAlt="Play"
-            showTag={true}
-            tagText="Start Computation"
-          ></IconButtonReact>
-        ) : null}
-        {modelType !== 'witness' ? (
-          <IconButtonReact
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-            ref={(el) =>
-              modelEditorStatusStore
-                .getState()
-                .setMenuTabButtonRef('Import/Export', el as MenuTabButton)
-            }
-            isActive={activeTab === 'Import/Export'}
-            onClick={() => showHideTab('Import/Export')}
-            iconSrc={FileIcon}
-            iconAlt="File"
-            showTag={true}
-            tagText="Import/Export"
-          ></IconButtonReact>
-        ) : (
-          <IconButtonReact
-            buttonColor="var(--color-primary-buttons)"
-            buttonHoverColor="var(--color-primary-buttons-hover)"
-            buttonActiveColor="var(--color-primary-buttons-active)"
-            tagTextColor="var(--color-primary-text)"
-            ref={(el) =>
-              modelEditorStatusStore
-                .getState()
-                .setMenuTabButtonRef('Export Witness', el as MenuTabButton)
-            }
-            isActive={activeTab === 'Export Witness'}
-            onClick={() => showHideTab('Export Witness')}
-            iconSrc={FileIcon}
-            iconAlt="File"
-            showTag={true}
-            tagText="Export Witness"
-          ></IconButtonReact>
-        )}
-        <IconButtonReact
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          ref={(el) =>
-            modelEditorStatusStore
-              .getState()
-              .setMenuTabButtonRef('Model Editor', el as MenuTabButton)
-          }
-          isActive={activeTab === 'Model Editor'}
-          onClick={() => showHideTab('Model Editor')}
-          iconSrc={ModelIcon}
-          iconAlt="Model"
-          showTag={true}
-          tagText="Model Editor"
-        ></IconButtonReact>
-        <IconButtonReact
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          ref={(el) =>
-            modelEditorStatusStore
-              .getState()
-              .setMenuTabButtonRef('Control Editor', el as MenuTabButton)
-          }
-          isActive={activeTab === 'Control Editor'}
-          onClick={() => showHideTab('Control Editor')}
-          iconSrc={ControlIcon}
-          iconAlt="Control"
-          showTag={true}
-          tagText="Control Editor"
-        ></IconButtonReact>
-        <IconButtonReact
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          ref={(el) =>
-            modelEditorStatusStore
-              .getState()
-              .setMenuTabButtonRef('Visual Options', el as MenuTabButton)
-          }
-          isActive={activeTab === 'Visual Options'}
-          onClick={() => showHideTab('Visual Options')}
-          iconSrc={EyeIcon}
-          iconAlt="Visual"
-          showTag={true}
-          tagText="Visual Options"
-        ></IconButtonReact>
-        <IconButtonReact
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          ref={(el) =>
-            modelEditorStatusStore
-              .getState()
-              .setMenuTabButtonRef('Help', el as MenuTabButton)
-          }
-          isActive={activeTab === 'Help'}
-          onClick={() => showHideTab('Help')}
-          iconSrc={HelpIcon}
-          iconAlt="Help"
-          showTag={true}
-          tagText="Help"
-        />
-        {/* {modelType !== 'witness' ? (
-
-        ) : null} */}
+        {sidePanelButtons.map(({ tab, icon, alt, hideFor, fallback }) => {
+          if (hideFor && modelType === hideFor) return null;
+          const displayTab =
+            fallback && modelType === 'witness' ? fallback : tab;
+          return (
+            <IconButtonReact
+              key={displayTab}
+              {...commonButtonProps}
+              ref={setTabRef(displayTab)}
+              isActive={activeTab === displayTab}
+              onClick={() => showHideTab(displayTab)}
+              iconSrc={icon}
+              iconAlt={alt}
+              tagText={displayTab}
+            />
+          );
+        })}
       </SideButtonMenu>
 
       <ContentTab

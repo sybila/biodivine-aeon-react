@@ -49,10 +49,17 @@ class ModelEditorShortcuts implements PageShortcutsInt {
       return;
     }
 
-    /** Open model control editor menu */
+    /** Open model control-enabled editor menu */
     if (event.ctrlKey && event.shiftKey && event.key === 'C') {
       event.preventDefault();
-      this.modelEditorServ.openMenuTab('Control Editor');
+      this.modelEditorServ.openMenuTab('Control-Enabled Editor');
+      return;
+    }
+
+    /** Open model phenotype editor menu */
+    if (event.ctrlKey && event.shiftKey && event.key === 'P') {
+      event.preventDefault();
+      this.modelEditorServ.openMenuTab('Phenotype Editor');
       return;
     }
 

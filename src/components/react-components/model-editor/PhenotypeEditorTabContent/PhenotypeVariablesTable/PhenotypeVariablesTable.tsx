@@ -9,11 +9,11 @@ import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons'
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';
-import type { ControlVariablesTableProps } from './ControlVariablesTableProps';
-import VariableControlInfo from './VariableControlInfo/VariableControlInfo';
+import type { PhenotypeVariablesTableProps } from './PhenotypeVariablesTableProps';
+import VariablePhenotypeInfo from './VariablePhenotypeInfo/VariablePhenotypeInfo';
 
-const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
-  controlEditorServ,
+const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
+  phenotypeEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
   loadingServ,
@@ -24,7 +24,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   helpHoverStore,
 }) => {
   const [variableSearchText, setVariableSearchText] = useState<string>(
-    controlEditorServ.getVariableSearch()
+    phenotypeEditorServ.getVariableSearch()
   );
 
   const selectedVariables: VariableIdSet =
@@ -47,7 +47,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
   const setVariableSearch = (name: string) => {
     if (name !== variableSearchText) {
-      controlEditorServ.setVariableSearch(name);
+      phenotypeEditorServ.setVariableSearch(name);
       setVariableSearchText(name);
     }
   };
@@ -56,7 +56,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
     loadingServ.startLoading();
 
     modelEditorStatusStore.getState().clearSelectedItemsInfo();
-    controlEditorServ.unselectAllVisualization();
+    phenotypeEditorServ.unselectAllVisualization();
 
     newSelected.forEach((variableId) => {
       const variable: ModelEditorVariable = {
@@ -65,7 +65,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       };
 
       modelEditorStatusStore.getState().addSelectedItemInfo(variable);
-      controlEditorServ.selectVariableVisualization(variableId, true);
+      phenotypeEditorServ.selectVariableVisualization(variableId, true);
     });
 
     loadingServ.endLoading();
@@ -78,10 +78,10 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
     if (selectedVariables.has(variableId)) {
       modelEditorStatusStore.getState().removeSelectedItemInfo(variable);
-      controlEditorServ.selectVariableVisualization(variableId, false);
+      phenotypeEditorServ.selectVariableVisualization(variableId, false);
     } else {
       modelEditorStatusStore.getState().addSelectedItemInfo(variable);
-      controlEditorServ.selectVariableVisualization(variableId, true);
+      phenotypeEditorServ.selectVariableVisualization(variableId, true);
     }
 
     loadingServ.endLoading();
@@ -106,47 +106,10 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   > = [
     [
       'N',
-      'var(--color-not-control-enabled)',
-      'var(--color-not-control-enabled-highlight)',
-      () =>
-        controlEditorServ.changeControlEnabledSelected(
-          selectedVariables,
-          false
-        ),
-      (e: React.MouseEvent) =>
-        helpHoverStore
-          .getState()
-          .setHelpHoverAtMouse(
-            e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariableControlEnabled(false),
-            true,
-            -50,
-            200
-          ),
-    ],
-    [
-      'E',
-      'var(--color-control-enabled)',
-      'var(--color-control-enabled-highlight)',
-      () =>
-        controlEditorServ.changeControlEnabledSelected(selectedVariables, true),
-      (e: React.MouseEvent) =>
-        helpHoverStore
-          .getState()
-          .setHelpHoverAtMouse(
-            e.nativeEvent,
-            pageStringProviderServ.Tooltips.changeVariableControlEnabled(true),
-            true,
-            -50,
-            150
-          ),
-    ],
-    [
-      'N',
       'var(--color-not-in-phenotype)',
       'var(--color-not-in-phenotype-highlight)',
       () =>
-        controlEditorServ.changePhenotypeSelected(
+        phenotypeEditorServ.changePhenotypeSelected(
           selectedVariables,
           PHENOTYPE_STATUS.NotInPhenotype
         ),
@@ -166,7 +129,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       'var(--color-in-phenotype-true)',
       'var(--color-in-phenotype-true-highlight)',
       () =>
-        controlEditorServ.changePhenotypeSelected(
+        phenotypeEditorServ.changePhenotypeSelected(
           selectedVariables,
           PHENOTYPE_STATUS.InPhenotypeTrue
         ),
@@ -185,7 +148,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       'var(--color-in-phenotype-false)',
       'var(--color-in-phenotype-false-highlight)',
       () =>
-        controlEditorServ.changePhenotypeSelected(
+        phenotypeEditorServ.changePhenotypeSelected(
           selectedVariables,
           PHENOTYPE_STATUS.InPhenotypeFalse
         ),
@@ -254,14 +217,14 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       ) : (
         <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
           {filteredVariables.map((variable: Variable) => (
-            <VariableControlInfo
+            <VariablePhenotypeInfo
               key={variable.id}
               id={variable.id}
               name={variable.name ?? 'Unknown Variable'}
               hover={hoverVariableId === variable.id}
               selected={selectedVariables.has(variable.id) ?? false}
               toggleSelect={toggleVariableSelect}
-              controlEditorServ={controlEditorServ}
+              phenotypeEditorServ={phenotypeEditorServ}
               pageStringProviderServ={pageStringProviderServ}
               controlStore={controlStore}
               helpHoverStore={helpHoverStore}
@@ -273,4 +236,4 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
   );
 };
 
-export default ControlVariablesTable;
+export default PhenotypeVariablesTable;
