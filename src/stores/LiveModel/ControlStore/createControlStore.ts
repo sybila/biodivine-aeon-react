@@ -32,16 +32,103 @@ function createControlStore(): ZustandStore<ControlStatus> {
     removeInfo: (id) => {
       set((state) => {
         const newControlEnabled = { ...state.controlEnabled };
-        const newCurrentPhenotype = {
-          ...state.currentPhenotype,
+        const newPhenotypes = {
+          ...state.phenotypes,
+          [state.currentPhenotype.id]: state.currentPhenotype,
         };
+
+        Object.keys(newPhenotypes).forEach(
+          (phenId: string) => delete newPhenotypes[Number(phenId)].variables[id]
+        );
+
         delete newControlEnabled[id];
-        delete newCurrentPhenotype.variables[id];
+
         return {
           controlEnabled: newControlEnabled,
-          currentPhenotype: newCurrentPhenotype,
+          phenotypes: newPhenotypes,
+          currentPhenotype: {
+            ...newPhenotypes[state.currentPhenotype.id],
+            id: state.currentPhenotype.id,
+          },
         };
       });
+    },
+
+    switchPhenotype: (id: number) => {
+      if (get().currentPhenotype.id === id) {
+        get().phenotypes[get().currentPhenotype.id] = get().currentPhenotype;
+        return id;
+      }
+
+      const newPhenotype = get().phenotypes[id];
+
+      if (newPhenotype === undefined) {
+        return undefined;
+      }
+
+      set({
+        currentPhenotype: { ...newPhenotype, id: id },
+        phenotypes: {
+          ...get().phenotypes,
+          [get().currentPhenotype.id]: get().currentPhenotype,
+        },
+      });
+
+      return id;
+    },
+    createPhenotype: (name: string) => {
+      const [nameExists, highestId] = Object.entries(get().phenotypes).reduce(
+        (acc, phenotypeInfo) => {
+          const id = Number(phenotypeInfo[0]);
+
+          return [
+            acc[0] || phenotypeInfo[1].name === name,
+            id > acc[1] ? id : acc[1],
+          ];
+        },
+        [false, 0]
+      );
+
+      if (nameExists) {
+        return undefined;
+      }
+
+      const newPhenotypeId = highestId + 1;
+      const newPhenotype = { id: newPhenotypeId, name: name, variables: {} };
+
+      set({
+        phenotypes: {
+          ...get().phenotypes,
+          [get().currentPhenotype.id]: get().currentPhenotype,
+          [newPhenotypeId]: newPhenotype,
+        },
+        currentPhenotype: newPhenotype,
+      });
+
+      return newPhenotypeId;
+    },
+    removePhenotype: (id: number) => {
+      if (id < 0) {
+        return undefined;
+      }
+
+      set(() => {
+        const isCurrentPhenotype = get().currentPhenotype.id === id;
+        const newPhenotypes = { ...get().phenotypes };
+
+        delete newPhenotypes[id];
+
+        if (isCurrentPhenotype) {
+          return {
+            phenotypes: newPhenotypes,
+            currentPhenotype: { ...newPhenotypes[-1], id: -1 },
+          };
+        }
+
+        return { phenotypes: newPhenotypes };
+      });
+
+      return 0;
     },
 
     getAllControlEnabled: () => {

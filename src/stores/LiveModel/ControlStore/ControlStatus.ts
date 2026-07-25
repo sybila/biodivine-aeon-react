@@ -20,8 +20,25 @@ export type ControlStatus = {
 
   /** Adds control information for a variable. */
   addInfo: (id: number, controlInfo: ControlInfo) => number;
-  /** Removes control information for a variable. */
+  /** Removes all control information (accross all phenotypes) for a variable.
+   */
   removeInfo: (id: number) => void;
+
+  /** Function which swithes the currently active phenotype.
+   *  @param id (number) - id of the phenotype which should be active
+   *  @returns if succesful returns id of the newly created phenotype, else if phenotype with id doesn't exist returns undefined.
+   */
+  switchPhenotype: (id: number) => number | undefined;
+  /** Creates new empty phenotype and makes it currently active.
+   *  @param name (string) - name of the phenotype.
+   *  @returns if succesful returns id of the newly created phenotype, else returns undefined if the phenotype with this name already exists.
+   */
+  createPhenotype: (name: string) => number | undefined;
+  /** Removes phenotype and makes it currently active.
+   *  @param id (number) - id of the phenotype which should be removed
+   *  @returns if succesful returns id of the removed phenotype, else returns undefined if the phenotype cannot be removed (ex. is default phenotype).
+   */
+  removePhenotype: (id: number) => number | undefined;
 
   /** Retrieves control-enabled status of all variables without their ids. */
   getAllControlEnabled: () => boolean[];
@@ -37,7 +54,6 @@ export type ControlStatus = {
    *  @returns [id, Phenotype] - An array of tuples, where each tuple contains the variable ID and its phenotype status in the currently selected phenotype.
    */
   getAllCurrentPhenotypeIds: () => Array<[number, Phenotype]>;
-  /** Sets the control enabled state for a variable. */
   /** Sets the phenotype for a variable. */
   setPhenotype: (id: number, phenotype: Phenotype) => void;
   /** Retrieves control information for a specific variable by ID. */
