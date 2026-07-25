@@ -6,6 +6,7 @@ import {
   type ControlResult,
   type PertTableSort,
   type Perturbation,
+  type Phenotype,
 } from '../../types';
 import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
@@ -33,15 +34,8 @@ class ControlPerturbationsTable implements ControlPerturbationsTableInt {
 
   // #endregion
 
-  // #region --- Format Perturbation ---
+  // #region --- Format ---
 
-  /** Formats perturbation in a from of array into tuple of two JSX element.
-   *  On index 0 the element contains perturbation variables colored (--color-positive for positive, --color-negative for negative),
-   *  on index 1 the element contains perturbation variables and their values in text (VariableName: true, VariableName2: false).
-   *  Each tuple represents one variable in the perturbation.
-   *  @param perturbationArray (Array<[string, boolean]>) -> array containing perturbation formated as array of tuples containing variableName and boolean value to which the variab;e should be fixed
-   *  @param  baseTextColor (string) -> css property defining color of the text where its color is not defined by perturbation (ex. empty perturbation)
-   */
   public formatPerturbation(
     perturbationArray: Array<[string, boolean]>,
     baseTextColor: string
@@ -92,8 +86,70 @@ class ControlPerturbationsTable implements ControlPerturbationsTableInt {
       <div className="flex flex-row h-full w-fit gap-1">
         {coloredPerturbation}
       </div>,
-      <div className="flex flex-row h-full w-fit gap-1 text-black">
+      <div
+        className="flex flex-row h-full w-fit gap-1 "
+        style={{ color: baseTextColor }}
+      >
         {textPerturbation}
+      </div>,
+    ];
+  }
+
+  public formatPhenotype(
+    phenotypeArray: Array<[string, Phenotype]>,
+    baseTextColor: string
+  ): [JSX.Element, JSX.Element] {
+    if (phenotypeArray.length === 0) {
+      return [
+        <span
+          className="flex flex-row h-full w-fit"
+          style={{ color: baseTextColor }}
+        >
+          {'{ }'}
+        </span>,
+        <span
+          className="flex flex-row h-full w-fit "
+          style={{ color: baseTextColor }}
+        >
+          Empty Phenotype
+        </span>,
+      ];
+    }
+
+    const coloredPhenotype: Array<JSX.Element> = [];
+    const textPhenotype: Array<JSX.Element> = [];
+
+    phenotypeArray.forEach(([key, value], index) => {
+      coloredPhenotype.push(
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
+          <span
+            style={{
+              color: `${value ? 'var(--color-positive)' : 'var(--color-negative)'}`,
+            }}
+          >
+            {key}
+          </span>
+          {index < phenotypeArray.length - 1 && <span>,</span>}
+        </div>
+      );
+
+      textPhenotype.push(
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
+          <span className="">{`${key}: ${value ? 'true' : 'false'}`}</span>
+          {index < phenotypeArray.length - 1 && <span>,</span>}
+        </div>
+      );
+    });
+
+    return [
+      <div className="flex flex-row h-full w-fit gap-1">
+        {coloredPhenotype}
+      </div>,
+      <div
+        className="flex flex-row h-full w-fit gap-1"
+        style={{ color: baseTextColor }}
+      >
+        {textPhenotype}
       </div>,
     ];
   }

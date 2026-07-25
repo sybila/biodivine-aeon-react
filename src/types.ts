@@ -106,7 +106,25 @@ export type ModelObject = {
 
 // #region --- Control ---
 
-export type Phenotype = boolean | null;
+// export type Phenotype = boolean | null;
+
+export const IN_PHENOTYPE_STATUS = {
+  InPhenotypeTrue: 0,
+  InPhenotypeFalse: 1,
+} as const;
+
+export const PHENOTYPE_STATUS = {
+  ...IN_PHENOTYPE_STATUS,
+  NotInPhenotype: 2,
+} as const;
+
+type IN_PHENOTYPE_STATUS =
+  (typeof IN_PHENOTYPE_STATUS)[keyof typeof IN_PHENOTYPE_STATUS];
+
+type PHENOTYPE_STATUS =
+  (typeof PHENOTYPE_STATUS)[keyof typeof PHENOTYPE_STATUS];
+export type Phenotype =
+  (typeof PHENOTYPE_STATUS)[keyof typeof PHENOTYPE_STATUS];
 
 export type ControlInfo = {
   controlEnabled: boolean;
@@ -141,7 +159,7 @@ export type Perturbation = Record<string, boolean>;
 
 export type ControlEnabledVars = Array<string>;
 
-export type PhenotypeVars = Record<string, boolean>;
+export type PhenotypeVars = Record<string, IN_PHENOTYPE_STATUS>;
 
 export type PhenotypeControlEnabledVars = {
   controlEnabledVars: ControlEnabledVars;

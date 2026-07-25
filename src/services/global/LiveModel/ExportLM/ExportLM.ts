@@ -6,12 +6,13 @@ import type { RegulationsStatus } from '../../../../stores/LiveModel/Regulations
 import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type {
-  ControlInfo,
-  fileType,
-  ModelStats,
-  Position,
-  Variable,
+import {
+  PHENOTYPE_STATUS,
+  type ControlInfo,
+  type fileType,
+  type ModelStats,
+  type Position,
+  type Variable,
 } from '../../../../types';
 import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
 import type { MessageInt } from '../../Message/MessageInt';
@@ -181,7 +182,7 @@ class ExportLM implements ExportLMInt {
 
         result += `#!control:${varName}:${
           controlInfo?.controlEnabled ?? true
-        },${controlInfo?.phenotype ?? null}\n`;
+        },${controlInfo?.phenotype === PHENOTYPE_STATUS.InPhenotypeTrue ? true : controlInfo?.phenotype === PHENOTYPE_STATUS.InPhenotypeFalse ? false : null}\n`;
       }
 
       const fun = this.updateFunctionsStore

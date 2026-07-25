@@ -2,7 +2,11 @@ import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/Contr
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { Oscillation, Phenotype } from '../../../types';
+import {
+  PHENOTYPE_STATUS,
+  type Oscillation,
+  type Phenotype,
+} from '../../../types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
 import type { ControlEditorInt } from './ControlEditorInt';
@@ -131,14 +135,29 @@ class ControlEditor implements ControlEditorInt {
     if (variablePhenotype === undefined) return;
 
     switch (variablePhenotype) {
-      case true:
-        this.liveModelServ.Control.changePhenotypeById(id, false, true, false);
+      case PHENOTYPE_STATUS.InPhenotypeTrue:
+        this.liveModelServ.Control.changePhenotypeById(
+          id,
+          PHENOTYPE_STATUS.InPhenotypeFalse,
+          true,
+          false
+        );
         break;
-      case false:
-        this.liveModelServ.Control.changePhenotypeById(id, null, true, false);
+      case PHENOTYPE_STATUS.InPhenotypeFalse:
+        this.liveModelServ.Control.changePhenotypeById(
+          id,
+          PHENOTYPE_STATUS.NotInPhenotype,
+          true,
+          false
+        );
         break;
       default:
-        this.liveModelServ.Control.changePhenotypeById(id, true, true, false);
+        this.liveModelServ.Control.changePhenotypeById(
+          id,
+          PHENOTYPE_STATUS.InPhenotypeTrue,
+          true,
+          false
+        );
     }
   }
 

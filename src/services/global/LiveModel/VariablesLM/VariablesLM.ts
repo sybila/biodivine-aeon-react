@@ -5,7 +5,13 @@ import type { VariablePositionsState } from '../../../../stores/LiveModel/Variab
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { ControlInfo, Position, Variable } from '../../../../types';
+import {
+  PHENOTYPE_STATUS,
+  type ControlInfo,
+  type Phenotype,
+  type Position,
+  type Variable,
+} from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -141,7 +147,7 @@ class VariablesLM implements VariablesLMInt {
     id?: number,
     name?: string,
     controllable: boolean = true,
-    phenotype: any = null
+    phenotype: Phenotype = PHENOTYPE_STATUS.NotInPhenotype
   ): number | undefined {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) {
       return;
@@ -284,7 +290,7 @@ class VariablesLM implements VariablesLMInt {
             variable.id,
             variable.name,
             controlInfo?.controlEnabled ?? true,
-            controlInfo?.phenotype ?? null
+            controlInfo?.phenotype ?? PHENOTYPE_STATUS.NotInPhenotype
           );
 
           this.liveModel.Control.changeControlEnabledById(
@@ -296,7 +302,7 @@ class VariablesLM implements VariablesLMInt {
 
           this.liveModel.Control.changePhenotypeById(
             id,
-            controlInfo?.phenotype ?? null,
+            controlInfo?.phenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
             false,
             false
           );

@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
-import type {
-  ModelEditorVariable,
-  Variable,
-  VariableIdSet,
+import {
+  PHENOTYPE_STATUS,
+  type ModelEditorVariable,
+  type Variable,
+  type VariableIdSet,
 } from '../../../../../types';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
@@ -144,7 +145,11 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       'N',
       'var(--color-not-in-phenotype)',
       'var(--color-not-in-phenotype-highlight)',
-      () => controlEditorServ.changePhenotypeSelected(selectedVariables, null),
+      () =>
+        controlEditorServ.changePhenotypeSelected(
+          selectedVariables,
+          PHENOTYPE_STATUS.NotInPhenotype
+        ),
       (e: React.MouseEvent) =>
         helpHoverStore
           .getState()
@@ -160,7 +165,11 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       'T',
       'var(--color-in-phenotype-true)',
       'var(--color-in-phenotype-true-highlight)',
-      () => controlEditorServ.changePhenotypeSelected(selectedVariables, true),
+      () =>
+        controlEditorServ.changePhenotypeSelected(
+          selectedVariables,
+          PHENOTYPE_STATUS.InPhenotypeTrue
+        ),
       (e: React.MouseEvent) =>
         helpHoverStore
           .getState()
@@ -175,7 +184,11 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       'F',
       'var(--color-in-phenotype-false)',
       'var(--color-in-phenotype-false-highlight)',
-      () => controlEditorServ.changePhenotypeSelected(selectedVariables, false),
+      () =>
+        controlEditorServ.changePhenotypeSelected(
+          selectedVariables,
+          PHENOTYPE_STATUS.InPhenotypeFalse
+        ),
       (e: React.MouseEvent) =>
         helpHoverStore
           .getState()
@@ -193,7 +206,7 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
       <TextInputReact
         textColor="var(--color-secondary-text)"
         inputColor="var(--color-secondary-text-inputs)"
-        inputBorderColor='var(--color-secondary-text-inputs-border)'
+        inputBorderColor="var(--color-secondary-text-inputs-border)"
         compWidth="95%"
         placeholder="Search variables..."
         onWrite={setVariableSearch}
@@ -202,20 +215,22 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, hoverColor, onClick, onMouseEnter], index) => (
-            <TextButtonReact
-              textColor="var(--color-secondary-text)"
-              key={index}
-              compHeight="29px"
-              compWidth="29px"
-              text={label}
-              handleClick={onClick}
-              buttonColor={color}
-              buttonHoverColor={hoverColor}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={() => helpHoverStore.getState().clear()}
-            />
-          ))}
+          {statusButtons.map(
+            ([label, color, hoverColor, onClick, onMouseEnter], index) => (
+              <TextButtonReact
+                textColor="var(--color-secondary-text)"
+                key={index}
+                compHeight="29px"
+                compWidth="29px"
+                text={label}
+                handleClick={onClick}
+                buttonColor={color}
+                buttonHoverColor={hoverColor}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
+              />
+            )
+          )}
         </div>
         <SelectionButtons<number>
           keys={variableIds}
@@ -230,7 +245,8 @@ const ControlVariablesTable: React.FC<ControlVariablesTableProps> = ({
 
       {!filteredVariables || filteredVariables.length === 0 ? (
         <section className="flex h-[200px] w-[98%] justify-center items-center">
-          <SimpleHeaderReact textColor='var(--color-primary-text)'
+          <SimpleHeaderReact
+            textColor="var(--color-primary-text)"
             headerText="No Variables"
             textFontWeight="normal"
           />

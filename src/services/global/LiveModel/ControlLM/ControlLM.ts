@@ -2,13 +2,14 @@ import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/Co
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type {
-  ControlEnabledVars,
-  ControlStats,
-  Oscillation,
-  Phenotype,
-  PhenotypeControlEnabledVars,
-  PhenotypeVars,
+import {
+  PHENOTYPE_STATUS,
+  type ControlEnabledVars,
+  type ControlStats,
+  type Oscillation,
+  type Phenotype,
+  type PhenotypeControlEnabledVars,
+  type PhenotypeVars,
 } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -75,7 +76,7 @@ class ControlLM implements ControlLMInt {
     );
     const inPhenotypeCount = phenotype.reduce(
       (acc: number, phenotype: Phenotype) => {
-        if (phenotype != null) acc++;
+        if (phenotype != PHENOTYPE_STATUS.NotInPhenotype) acc++;
         return acc;
       },
       0
@@ -102,8 +103,10 @@ class ControlLM implements ControlLMInt {
     });
 
     phenotype.forEach((variablePhenotype) => {
-      if (variablePhenotype === true) stats.inPhenotypeTrue++;
-      else if (variablePhenotype === false) stats.inPhenotypeFalse++;
+      if (variablePhenotype === PHENOTYPE_STATUS.InPhenotypeTrue)
+        stats.inPhenotypeTrue++;
+      else if (variablePhenotype === PHENOTYPE_STATUS.InPhenotypeFalse)
+        stats.inPhenotypeFalse++;
       else stats.notInPhenotype++;
     });
 
@@ -188,10 +191,20 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.changePhenotypeById(id, oldPhenotype ?? null, false, false);
+          this.changePhenotypeById(
+            id,
+            oldPhenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
+            false,
+            false
+          );
         },
         redo: () => {
-          this.changePhenotypeById(id, phenotype ?? null, false, false);
+          this.changePhenotypeById(
+            id,
+            phenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
+            false,
+            false
+          );
         },
       });
     }
@@ -262,7 +275,10 @@ class ControlLM implements ControlLMInt {
       const controlEnabled = this.controlStore
         .getState()
         .getVariableControlEnabled(variable.id);
-      if (phenotype !== null && phenotype !== undefined)
+      if (
+        phenotype !== PHENOTYPE_STATUS.NotInPhenotype &&
+        phenotype !== undefined
+      )
         phenotypeVarsObj[variable.name ?? 'Unknown'] = phenotype;
       if (controlEnabled)
         controlEnabledVarsList.push(variable.name ?? 'Unknown');

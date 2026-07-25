@@ -32,9 +32,9 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
 
   const formatedPhenotype = useMemo(
     () =>
-      controlPerturbationsTableServ.formatPerturbation(
+      controlPerturbationsTableServ.formatPhenotype(
         Object.entries(controlEnabledPhenotypeVars.phenotypeVars),
-        "var(--color-secondary-text)"
+        'var(--color-secondary-text)'
       ),
     [controlEnabledPhenotypeVars]
   );

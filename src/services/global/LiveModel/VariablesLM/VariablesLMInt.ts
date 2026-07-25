@@ -1,4 +1,4 @@
-import type { Position } from '../../../../types';
+import type { Phenotype, Position } from '../../../../types';
 
 /**
  * Interface for managing variables in the LiveModel.
@@ -38,7 +38,7 @@ export interface VariablesLMInt {
     id?: number,
     name?: string,
     controllable?: boolean,
-    phenotype?: any
+    phenotype?: Phenotype
   ): number | undefined;
 
   /** Removes variable and displays warnings if necessary

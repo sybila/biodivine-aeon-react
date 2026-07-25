@@ -1,4 +1,4 @@
-import type { Phenotype } from '../../../../../types';
+import { PHENOTYPE_STATUS, type Phenotype } from '../../../../../types';
 import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 
@@ -76,9 +76,18 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
   }
 
   public currentPhenotype(phenotypeValue: Phenotype): string {
-    if (phenotypeValue != null) {
+    if (phenotypeValue != undefined) {
+      const phenotypeString =
+        phenotypeValue === PHENOTYPE_STATUS.InPhenotypeTrue
+          ? 'In Phenotype as Positive'
+          : phenotypeValue === PHENOTYPE_STATUS.InPhenotypeFalse
+            ? 'In Phenotype as Negative'
+            : 'Not In Phenotype';
+
       return (
-        'The current phenotype of the variable is "' + phenotypeValue + '".'
+        'The current phenotype status of the variable is "' +
+        phenotypeString +
+        '".'
       );
     }
 

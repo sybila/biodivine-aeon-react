@@ -3,7 +3,12 @@ import type { ResultsStatus } from '../../../../stores/ComputationManager/Result
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import { EdgeMonotonicity, type Variable } from '../../../../types';
+import {
+  EdgeMonotonicity,
+  PHENOTYPE_STATUS,
+  type Phenotype,
+  type Variable,
+} from '../../../../types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
@@ -74,7 +79,7 @@ class ImportLM implements ImportLMInt {
     variable: Variable | undefined,
     name: string,
     position: any,
-    control: any
+    control: [boolean, Phenotype]
   ): number | undefined {
     if (variable !== undefined) {
       return variable.id;
@@ -128,7 +133,7 @@ class ImportLM implements ImportLMInt {
   private setRegulations(
     regulations: any[],
     positions: Record<string, any>,
-    control: Record<string, any>
+    control: Record<string, [boolean, Phenotype]>
   ): void {
     for (const template of regulations) {
       const regulator = this.addVariableImport(
@@ -208,7 +213,7 @@ class ImportLM implements ImportLMInt {
     modelString: string,
     regulations: any[],
     positions: Record<string, any>,
-    control: Record<string, any>,
+    control: Record<string, [boolean, Phenotype]>,
     updateFunctions: Record<string, string>,
     results: Record<string, any>
   ): [string, string] | string {
@@ -281,7 +286,11 @@ class ImportLM implements ImportLMInt {
       if (match !== null) {
         control[match[1]] = [
           match[2] == 'true' ? true : false,
-          match[3] == 'true' ? true : match[3] == 'false' ? false : null,
+          match[3] == 'true'
+            ? PHENOTYPE_STATUS.InPhenotypeTrue
+            : match[3] == 'false'
+              ? PHENOTYPE_STATUS.InPhenotypeFalse
+              : PHENOTYPE_STATUS.NotInPhenotype,
         ];
         continue;
       }

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { PHENOTYPE_STATUS } from '../../../types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ControlStatus } from './ControlStatus';
 
@@ -108,7 +109,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
       return {
         controlEnabled: controlEnabledStatus ?? true,
-        phenotype: phenotypeStatus ?? null,
+        phenotype: phenotypeStatus ?? PHENOTYPE_STATUS.NotInPhenotype,
       };
     },
 
@@ -117,7 +118,9 @@ function createControlStore(): ZustandStore<ControlStatus> {
     },
 
     getVariableCurrentPhenotype: (id) => {
-      return get().currentPhenotype.variables[id] ?? null;
+      const phenotype = get().currentPhenotype.variables[id];
+
+      return phenotype === undefined ? undefined : phenotype;
     },
 
     getControlEnabledIds: (controlEnabled) => {

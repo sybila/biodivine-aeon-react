@@ -1,5 +1,9 @@
 import type { JSX } from 'react';
-import type { ControlResult, PertVariableFilterStatus } from '../../types';
+import type {
+  ControlResult,
+  PertVariableFilterStatus,
+  Phenotype,
+} from '../../types';
 
 /**
  * Interface working with table containing perturbations computed by control computation.
@@ -12,18 +16,30 @@ export interface ControlPerturbationsTableInt {
 
   // #endregion
 
-  // #region --- Format Perturbation ---
+  // #region --- Format ---
 
-  /** Formats perturbation in a from of array into tuple of two JSX element.
+  /** Formats perturbation in a form of array into tuple of two JSX element.
    *  On index 0 the element contains perturbation variables colored (--color-positive for positive, --color-negative for negative),
    *  on index 1 the element contains perturbation variables and their values in text (VariableName: true, VariableName2: false).
    *  Each tuple represents one variable in the perturbation.
-   *  @param perturbationArray (Array<[string, boolean]>) -> array containing perturbation formated as array of tuples containing variableName and boolean value to which the variab;e should be fixed
+   *  @param perturbationArray (Array<[string, boolean]>) -> array containing perturbation formated as array of tuples containing variableName and boolean value to which the variable should be fixed
    *  @param  baseTextColor (string) -> css property defining color of the text where its color is not defined by perturbation (ex. empty perturbation)
    */
   formatPerturbation(
     perturbationArray: Array<[string, boolean]>,
-    baseTextColor: string,
+    baseTextColor: string
+  ): [JSX.Element, JSX.Element];
+
+  /** Formats phenotype in a form of array into tuple of two JSX element.
+   *  On index 0 the element contains phenotype variables colored (--color-positive for positive, --color-negative for negative),
+   *  on index 1 the element contains phenotype variables and their values in text (VariableName: true, VariableName2: false).
+   *  Each tuple represents one variable in the phenotype.
+   *  @param phenotypeArray (Array<[string, Phenotype]>) -> array containing phenotype formated as array of tuples containing variableName and Phenotype value connected with this variable.
+   *  @param  baseTextColor (string) -> css property defining color of the text where its color is not defined by phenotyoe status
+   */
+  formatPhenotype(
+    phenotypeArray: Array<[string, Phenotype]>,
+    baseTextColor: string
   ): [JSX.Element, JSX.Element];
 
   // #endregion

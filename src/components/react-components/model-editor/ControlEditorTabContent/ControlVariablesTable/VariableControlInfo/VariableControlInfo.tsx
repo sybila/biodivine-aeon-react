@@ -1,4 +1,4 @@
-import type { Phenotype } from '../../../../../../types';
+import { PHENOTYPE_STATUS, type Phenotype } from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
@@ -38,22 +38,22 @@ const VariableControlInfo: React.FC<VariableControlInfoProps> = ({
 
   const getNextPhenotype = (current: Phenotype): Phenotype => {
     switch (current) {
-      case true:
-        return false;
-      case false:
-        return null;
+      case PHENOTYPE_STATUS.InPhenotypeTrue:
+        return PHENOTYPE_STATUS.InPhenotypeFalse;
+      case PHENOTYPE_STATUS.InPhenotypeFalse:
+        return PHENOTYPE_STATUS.NotInPhenotype;
       default:
-        return true;
+        return PHENOTYPE_STATUS.InPhenotypeTrue;
     }
   };
 
   const getPhenButtonColor = (hover: boolean) => {
     switch (controlInfo.phenotype) {
-      case true:
+      case PHENOTYPE_STATUS.InPhenotypeTrue:
         return hover
           ? 'var(--color-in-phenotype-true-highlight)'
           : 'var(--color-in-phenotype-true)';
-      case false:
+      case PHENOTYPE_STATUS.InPhenotypeFalse:
         return hover
           ? 'var(--color-in-phenotype-false-highlight)'
           : 'var(--color-in-phenotype-false)';

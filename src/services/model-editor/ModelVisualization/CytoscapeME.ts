@@ -12,6 +12,7 @@ import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
+  PHENOTYPE_STATUS,
   type ModelEditorRegulation,
   type ModelEditorVariable,
   type Phenotype,
@@ -1045,7 +1046,12 @@ class CytoscapeME implements ModelVisualizationInt {
         .getState()
         .getAllCurrentPhenotypeIds()
         .forEach(([id, phenotype]) => {
-          variables[id] = phenotype == null ? 0 : phenotype ? 1 : 2;
+          variables[id] =
+            phenotype == PHENOTYPE_STATUS.NotInPhenotype
+              ? 0
+              : PHENOTYPE_STATUS.InPhenotypeTrue
+                ? 1
+                : 2;
         });
     } else {
       this.controlStore
@@ -1169,11 +1175,17 @@ class CytoscapeME implements ModelVisualizationInt {
       .trim();
 
     nodes.forEach(([id, variablePhenotype]) => {
-      if (this.phenotypeShown && variablePhenotype == true) {
+      if (
+        this.phenotypeShown &&
+        variablePhenotype == PHENOTYPE_STATUS.InPhenotypeTrue
+      ) {
         this.cytoscape.getElementById(id).style('border-color', trueColor);
         this.cytoscape.getElementById(id).style('color', trueColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');
-      } else if (this.phenotypeShown && variablePhenotype == false) {
+      } else if (
+        this.phenotypeShown &&
+        variablePhenotype == PHENOTYPE_STATUS.InPhenotypeFalse
+      ) {
         this.cytoscape.getElementById(id).style('border-color', falseColor);
         this.cytoscape.getElementById(id).style('color', falseColor);
         this.cytoscape.getElementById(id).style('border-width', '2px');
