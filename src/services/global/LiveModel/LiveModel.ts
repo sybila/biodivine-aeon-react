@@ -183,6 +183,7 @@ class LiveModel implements LiveModelInt {
     this.Control = new ControlLM(
       this,
       this.computationManagerServ,
+      this.messageServ,
       controlStore,
       variablesStore,
       modelUndoRedoStore

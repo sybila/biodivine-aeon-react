@@ -48,6 +48,28 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     );
   }
 
+  filterObjectsBySearchTerms<T>(
+    objects: Array<T>,
+    getStringFromObject: (obj: T) => string,
+    searchText: string | undefined
+  ): T[] {
+    if (searchText === undefined || searchText === '') return objects;
+
+    const searchTerms =
+      this.dataFormatersServ.convertCommaSeparatedStringToArray(
+        searchText,
+        true
+      );
+
+    if (searchTerms[searchTerms.length - 1] === '') {
+      return objects;
+    }
+
+    return objects.filter((obj) =>
+      this.searchInArray(getStringFromObject(obj), searchTerms)
+    );
+  }
+
   /** Filters an array of strings by the search terms created from comma-separated search text string.
    *  If last character of searchText is a comma, returns the original array.
    */

@@ -2,13 +2,19 @@ import type { Oscillation, PhenotypeStatus } from '../../../../types';
 import type ControlEditor from '../ControlEditor';
 
 export interface PhenotypeEditorInt extends ControlEditor {
-  // #region --- Phenotype Search ---
+  // #region --- Search Inputs ---
 
-  /** Returns the last saved input from the phenotype search input. */
-  getPhenotypeSearch: () => string;
+  /** Returns the last saved input from the active phenotype variable search input. */
+  getActivePhenotypeVariableSearch: () => string;
 
-  /** Saves the current input of the phenotype search. */
-  setPhenotypeSearch: (searchInput: string) => void;
+  /** Saves the current input of the active phenotype variable search. */
+  setActivePhenotypeVariableSearch: (searchInput: string) => void;
+
+  /** Returns the last saved input from the phenotypes search input in the "Phenotypes Overlay Window". */
+  getPhenotypesSearch: () => string;
+
+  /** Saves the current input of the phenotypes search input in the "Phenotypes Overlay Window"*/
+  setPhenotypesSearch: (searchInput: string) => void;
 
   // #endregion
 
@@ -41,6 +47,13 @@ export interface PhenotypeEditorInt extends ControlEditor {
 
   /** Sets the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
   setPhenotypeOscillation(newOscillation: Oscillation): void;
+
+  // #endregion
+
+  // #region --- Open Content Overlay Windows ---
+
+  /** Opens the "Phenotypes Overlay Window" overlay window for editing of available phenotypes. */
+  openPhenotypesOverlayWindow(): void;
 
   // #endregion
 }

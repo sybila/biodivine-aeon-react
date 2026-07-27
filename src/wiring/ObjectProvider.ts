@@ -50,6 +50,7 @@ class ObjectProviderClass implements ObjectProviderInt {
       this.GlobalServicesProvider.liveModelServ,
       this.GlobalServicesProvider.stringProviderServ,
       this.GlobalServicesProvider.messageServ,
+      this.UtilitiesServiceProvider.searchAndFilterHelpersServ,
       this.StoresProvider
     );
     this.AttractorVisualizerServicesProvider =

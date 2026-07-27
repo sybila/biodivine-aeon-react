@@ -1,3 +1,6 @@
+import PhenotypesOverlayContent from '../../../../components/react-components/model-editor/PhenotypesOverlayContent/PhenotypesOverlayContent';
+import type { OverlayWindowState } from '../../../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../../stores/ModelEditor/ModelEditorStatus';
@@ -5,48 +8,70 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
   type Oscillation,
+  type Phenotype,
   type PhenotypeStatus,
 } from '../../../../types';
 import type { LiveModelInt } from '../../../global/LiveModel/LiveModelInt';
+import type { SearchAndFilterHelpersInt } from '../../../utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ModelVisualizationInt } from '../../ModelVisualization/ModelVisualizationInt';
 import ControlEditor from '../ControlEditor';
 
 class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
   // #region --- Properties + Constructor ---
 
-  private phenotypeSearch: string;
+  private phenotypeVariableSearch: string;
+  private phenotypesSearch: string;
 
   private liveModelServ: LiveModelInt;
+  private searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
 
   private controlStore: ZustandStore<ControlStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
+  private overlayWindowStore: ZustandStore<OverlayWindowState>;
+  private helpHoverStore: ZustandStore<HelpHoverState>;
 
   constructor(
     modelVisualizationServ: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
+    searchAndFilterHelpersServ: SearchAndFilterHelpersInt,
     controlStore: ZustandStore<ControlStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
-    modelEditorStatusStore: ZustandStore<ModelEditorStatus>
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    overlayWindowStore: ZustandStore<OverlayWindowState>,
+    helpHoverStore: ZustandStore<HelpHoverState>
   ) {
     super(modelVisualizationServ, modelEditorStatusStore);
+
+    this.searchAndFilterHelpersServ = searchAndFilterHelpersServ;
 
     this.liveModelServ = liveModelServ;
     this.controlStore = controlStore;
     this.variablesStore = variablesStore;
+    this.overlayWindowStore = overlayWindowStore;
+    this.helpHoverStore = helpHoverStore;
 
-    this.phenotypeSearch = '';
+    this.phenotypeVariableSearch = '';
+    this.phenotypesSearch = '';
   }
 
   // #endregion
 
-  // #region --- Phenotype Search ---
+  // #region --- Search Inputs ---
 
-  public getPhenotypeSearch() {
-    return this.phenotypeSearch;
+  public getActivePhenotypeVariableSearch() {
+    return this.phenotypeVariableSearch;
   }
 
-  public setPhenotypeSearch(searchInput: string) {
-    this.phenotypeSearch = searchInput;
+  public setActivePhenotypeVariableSearch(searchInput: string) {
+    this.phenotypeVariableSearch = searchInput;
+  }
+
+  public getPhenotypesSearch() {
+    return this.phenotypesSearch;
+  }
+
+  public setPhenotypesSearch(searchInput: string) {
+    this.phenotypesSearch = searchInput;
   }
 
   // #endregion
@@ -128,6 +153,33 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
   /** Sets the currently set phenotype oscillation state in the ControlEditorTabContent.tsx component */
   public setPhenotypeOscillation(newOscillation: Oscillation) {
     this.liveModelServ.Control.setOscillation(newOscillation);
+  }
+
+  // #endregion
+
+  // #region --- Open Content Overlay Windows ---
+
+  public openPhenotypesOverlayWindow(): void {
+    this.overlayWindowStore.getState().setCurrentContent({
+      header: 'Phenotypes',
+      content: (
+        <PhenotypesOverlayContent
+          filterElementsFunction={(elements, text) => {
+            return this.searchAndFilterHelpersServ.filterObjectsBySearchTerms<Phenotype>(
+              elements,
+              (el: Phenotype) => el.name,
+              text
+            );
+          }}
+          liveModelServ={this.liveModelServ}
+          phenotypeEditorServ={this}
+          controlStore={this.controlStore}
+          helpHoverStore={this.helpHoverStore}
+        />
+      ),
+      showCloseButton: true,
+      closeOnBgClick: true,
+    });
   }
 
   // #endregion

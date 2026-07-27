@@ -13,7 +13,7 @@ const PhenotypesTable: React.FC<PhenotypesTableProps> = ({
   helpHoverStore,
 }) => {
   const [phenotypeSearchText, setPhenotypeSearchText] = useState<string>(
-    phenotypeEditorServ.getPhenotypeSearch()
+    phenotypeEditorServ.getActivePhenotypeVariableSearch()
   );
 
   const phenotypes = controlStore((state) => state.phenotypes);

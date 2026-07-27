@@ -6,11 +6,12 @@ import {
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
   type Oscillation,
-  type PhenotypeStatus,
   type PhenotypeControlEnabledVars,
+  type PhenotypeStatus,
   type PhenotypeVars,
 } from '../../../../types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ControlLMInt } from './ControlLMInt';
 
@@ -22,6 +23,7 @@ class ControlLM implements ControlLMInt {
   private liveModel: LiveModelInt;
 
   private computationManager: ComputationManagerInt;
+  private messageServ: MessageInt;
 
   private controlStore: ZustandStore<ControlStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
@@ -40,12 +42,14 @@ class ControlLM implements ControlLMInt {
   constructor(
     liveModel: LiveModelInt,
     computationManager: ComputationManagerInt,
+    messageServ: MessageInt,
     controlStore: ZustandStore<ControlStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>
   ) {
     this.liveModel = liveModel;
     this.computationManager = computationManager;
+    this.messageServ = messageServ;
 
     this.controlStore = controlStore;
     this.variablesStore = variablesStore;
@@ -197,6 +201,22 @@ class ControlLM implements ControlLMInt {
     }
 
     this.controlStore.getState().removeInfo(id);
+  }
+
+  // #endregion
+
+  // #region --- Multiple Phenotypes Operations ---
+
+  changeCurrentlyActivePhenotype(id: number): number | undefined {
+    const result = this.controlStore.getState().switchPhenotype(id);
+
+    if (result === undefined) {
+      this.messageServ.showError(
+        "Cannot make this phenotype active: Phenotype doesn't exist."
+      );
+    }
+
+    return result;
   }
 
   // #endregion

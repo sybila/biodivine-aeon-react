@@ -1,7 +1,7 @@
 import type {
   Oscillation,
-  PhenotypeStatus,
   PhenotypeControlEnabledVars,
+  PhenotypeStatus,
 } from '../../../../types';
 
 /**
@@ -55,6 +55,16 @@ export interface ControlLMInt {
 
   /** Remove control information for a variable by its ID */
   removeControlInfo(id: number, force?: boolean): void;
+
+  // #endregion
+
+  // #region --- Multiple Phenotypes Operations ---
+
+  /** Changes currently active phenotype to the phenotype corresponding to the id.
+   *  @param id (number) - id of the phenotype which should be the new active phenotype.
+   *  @returns returns id of the new active phenotype, if phenotype with this id doesnt exist returns undefined
+   */
+  changeCurrentlyActivePhenotype(id: number): number | undefined;
 
   // #endregion
 

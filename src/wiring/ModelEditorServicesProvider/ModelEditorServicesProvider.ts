@@ -9,6 +9,7 @@ import ModelEditor from '../../services/model-editor/ModelEditor/ModelEditor';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import CytoscapeME from '../../services/model-editor/ModelVisualization/CytoscapeME';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
+import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProviderInt';
 
@@ -22,6 +23,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
     liveModelServ: LiveModelInt,
     stringProviderServ: StringProviderInt,
     messageServ: MessageInt,
+    searchAndFilterHelpersServ: SearchAndFilterHelpersInt,
     storesProvider: StoresProviderInt
   ) {
     this.modelVisualizationServ = new CytoscapeME(
@@ -54,9 +56,12 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
     this.phenotypeEditorServ = new PhenotypeEditor(
       this.modelVisualizationServ,
       liveModelServ,
+      searchAndFilterHelpersServ,
       storesProvider.controlStore,
       storesProvider.variablesStore,
-      storesProvider.modelEditorStatusStore
+      storesProvider.modelEditorStatusStore,
+      storesProvider.overlayWindowStore,
+      storesProvider.helpHoverStore
     );
   }
 }

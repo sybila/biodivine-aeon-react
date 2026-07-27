@@ -42,6 +42,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
         <TextButtonReact
           compWidth="100%"
           compHeight="40px"
+          handleClick={() => phenotypeEditorServ.openPhenotypesOverlayWindow()}
           text="Show Available Phenotypes"
         />
       </section>
