@@ -6,7 +6,7 @@ import {
   type ControlResult,
   type PertTableSort,
   type Perturbation,
-  type Phenotype,
+  type PhenotypeStatus,
 } from '../../types';
 import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
@@ -96,7 +96,7 @@ class ControlPerturbationsTable implements ControlPerturbationsTableInt {
   }
 
   public formatPhenotype(
-    phenotypeArray: Array<[string, Phenotype]>,
+    phenotypeArray: Array<[string, PhenotypeStatus]>,
     baseTextColor: string
   ): [JSX.Element, JSX.Element] {
     if (phenotypeArray.length === 0) {

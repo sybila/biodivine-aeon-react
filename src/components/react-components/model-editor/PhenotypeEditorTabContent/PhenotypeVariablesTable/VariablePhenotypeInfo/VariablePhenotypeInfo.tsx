@@ -1,4 +1,7 @@
-import { PHENOTYPE_STATUS, type Phenotype } from '../../../../../../types';
+import {
+  PHENOTYPE_STATUS,
+  type PhenotypeStatus,
+} from '../../../../../../types';
 import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
@@ -34,7 +37,7 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
     };
   }, [controlEnabledStatuses, currentPhenotype]);
 
-  const getNextPhenotype = (current: Phenotype): Phenotype => {
+  const getNextPhenotype = (current: PhenotypeStatus): PhenotypeStatus => {
     switch (current) {
       case PHENOTYPE_STATUS.InPhenotypeTrue:
         return PHENOTYPE_STATUS.InPhenotypeFalse;
@@ -67,12 +70,12 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
       className="cursor-pointer"
       compHeight="auto"
       compWidth="100%"
-      contColor="var(--color-secondary-light)"
-      contHoverColor="var(--color-secondary-light-highlight)"
-      contActiveColor="var(--color-secondary-active)"
-      contActiveBorder="2px var(--color-secondary-border) solid"
-      contHoverBorder="2px var(--color-secondary-border) dashed"
-      contBorder="2px var(--color-secondary-light) solid"
+      contColor="var(--color-tertiary-lighter)"
+      contHoverColor="var(--color-tertiary-lighter-highlight)"
+      contActiveColor="var(--color-tertiary-active)"
+      contActiveBorder="2px var(--color-tertiary-border) solid"
+      contHoverBorder="2px var(--color-tertiary-border) dashed"
+      contBorder="2px var(--color-tertiary-lighter) solid"
       contentOverflowX="visible"
       contentOverflowY="visible"
       hover={hover}

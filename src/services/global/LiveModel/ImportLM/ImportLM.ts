@@ -6,7 +6,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
   PHENOTYPE_STATUS,
-  type Phenotype,
+  type PhenotypeStatus,
   type Variable,
 } from '../../../../types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
@@ -79,7 +79,7 @@ class ImportLM implements ImportLMInt {
     variable: Variable | undefined,
     name: string,
     position: any,
-    control: [boolean, Phenotype]
+    control: [boolean, PhenotypeStatus]
   ): number | undefined {
     if (variable !== undefined) {
       return variable.id;
@@ -133,7 +133,7 @@ class ImportLM implements ImportLMInt {
   private setRegulations(
     regulations: any[],
     positions: Record<string, any>,
-    control: Record<string, [boolean, Phenotype]>
+    control: Record<string, [boolean, PhenotypeStatus]>
   ): void {
     for (const template of regulations) {
       const regulator = this.addVariableImport(
@@ -213,7 +213,7 @@ class ImportLM implements ImportLMInt {
     modelString: string,
     regulations: any[],
     positions: Record<string, any>,
-    control: Record<string, [boolean, Phenotype]>,
+    control: Record<string, [boolean, PhenotypeStatus]>,
     updateFunctions: Record<string, string>,
     results: Record<string, any>
   ): [string, string] | string {

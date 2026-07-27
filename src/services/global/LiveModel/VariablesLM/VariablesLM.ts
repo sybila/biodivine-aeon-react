@@ -8,7 +8,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
   type ControlInfo,
-  type Phenotype,
+  type PhenotypeStatus,
   type Position,
   type Variable,
 } from '../../../../types';
@@ -147,7 +147,7 @@ class VariablesLM implements VariablesLMInt {
     id?: number,
     name?: string,
     controllable: boolean = true,
-    phenotype: Phenotype = PHENOTYPE_STATUS.NotInPhenotype
+    phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype
   ): number | undefined {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) {
       return;

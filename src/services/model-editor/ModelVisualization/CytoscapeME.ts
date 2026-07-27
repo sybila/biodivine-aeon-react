@@ -15,7 +15,7 @@ import {
   PHENOTYPE_STATUS,
   type ModelEditorRegulation,
   type ModelEditorVariable,
-  type Phenotype,
+  type PhenotypeStatus,
   type Position,
   type Regulation,
   type RegulationVariables,
@@ -151,7 +151,7 @@ class CytoscapeME implements ModelVisualizationInt {
       }
     );
     this.liveModel.Control.addOnPhenotypeChangeCallback(
-      (inputNodes?: [number, Phenotype][] | null) => {
+      (inputNodes?: [number, PhenotypeStatus][] | null) => {
         this.highlightPhenotype(inputNodes);
       }
     );
@@ -1150,9 +1150,9 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Changes borders of all nodes which are in the phenotype. */
   public highlightPhenotype(
-    inputNodes: Array<[number, Phenotype]> | null = null
+    inputNodes: Array<[number, PhenotypeStatus]> | null = null
   ) {
-    var nodes: Array<[number, Phenotype]> | undefined = undefined;
+    var nodes: Array<[number, PhenotypeStatus]> | undefined = undefined;
 
     if (inputNodes == null) {
       nodes = this.controlStore.getState().getAllCurrentPhenotypeIds();

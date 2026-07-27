@@ -2,7 +2,9 @@ import type {
   ControlEnabledStats,
   ControlInfo,
   Phenotype,
+  PhenotypeNoId,
   PhenotypeStats,
+  PhenotypeStatus,
 } from '../../../types';
 
 /** Zustand store for managing control information of variables in LiveModel
@@ -12,16 +14,9 @@ export type ControlStatus = {
   controlEnabled: Record<number, boolean>;
 
   /** Property containing currently selected phenotype. */
-  currentPhenotype: {
-    id: number;
-    name: string;
-    variables: Record<number, Phenotype>;
-  };
+  currentPhenotype: Phenotype;
   /** Property containing phenotype status information for each variable. */
-  phenotypes: Record<
-    number,
-    { name: string; variables: Record<number, Phenotype> }
-  >;
+  phenotypes: Record<number, PhenotypeNoId>;
 
   /** Adds control information for a variable. */
   addInfo: (id: number, controlInfo: ControlInfo) => number;
@@ -54,24 +49,24 @@ export type ControlStatus = {
   /** Sets the control enabled state for a variable. */
   setControlEnabled: (id: number, controlEnabled: boolean) => void;
   /** Retrieves phenotype status of all variables in the currently selected phenotype (without ids of the variables). */
-  getAllCurrentPhenotype: () => Phenotype[];
+  getAllCurrentPhenotype: () => PhenotypeStatus[];
   /** Retrieves phenotype status of all variables in the currently selected phenotype with their corresponding IDs.
    *  @returns [id, Phenotype] - An array of tuples, where each tuple contains the variable ID and its phenotype status in the currently selected phenotype.
    */
-  getAllCurrentPhenotypeIds: () => Array<[number, Phenotype]>;
+  getAllCurrentPhenotypeIds: () => Array<[number, PhenotypeStatus]>;
   /** Sets the phenotype status for a variable in the currently active phenotype. */
-  setPhenotype: (id: number, phenotype: Phenotype) => void;
+  setPhenotype: (id: number, phenotype: PhenotypeStatus) => void;
   /** Retrieves control information for a specific variable by ID. (control-enabled status + phenotype status in the currently active phenotype) */
   getVariableControlInfo: (id: number) => ControlInfo | undefined;
   /** Retrieves control-enabled status for a specific variable by ID. */
   getVariableControlEnabled: (id: number) => boolean | undefined;
   /** Retrieves phenotype status in the currently active phenotype for a specific variable by ID. */
-  getVariableCurrentPhenotype: (id: number) => Phenotype | undefined;
+  getVariableCurrentPhenotype: (id: number) => PhenotypeStatus | undefined;
 
   /** Retrieves IDs of variables based on their control enabled state. */
   getControlEnabledIds: (controlEnabled: boolean) => number[];
   /** Retrieves IDs of variables based on their phenotype state in the currently active phenotype. */
-  getPhenotypeIds: (phenotype: Phenotype) => number[];
+  getPhenotypeIds: (phenotype: PhenotypeStatus) => number[];
 
   /** Returns how many control enabled / not control enabled variable there is. */
   getControlEnabledStats: () => ControlEnabledStats;

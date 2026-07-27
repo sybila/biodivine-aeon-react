@@ -1,18 +1,7 @@
-import { useMemo } from 'react';
-import type { PhenotypeStats } from '../../../../../types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { PhenotypeStatsTableProps } from './PhenotypeStatsTableProps';
 
-const PhenotypeStatsTable: React.FC<PhenotypeStatsTableProps> = ({
-  controlStore,
-}) => {
-  const currentPhenotype = controlStore((state) => state.currentPhenotype);
-
-  const stats: PhenotypeStats = useMemo(
-    () => controlStore.getState().getPhenotypeStats(),
-    [currentPhenotype]
-  );
-
+const PhenotypeStatsTable: React.FC<PhenotypeStatsTableProps> = ({ stats }) => {
   const insertStats = () => {
     const statCells = [
       ['Phenotype - True', stats.inPhenotypeTrue.toString()],
@@ -24,8 +13,8 @@ const PhenotypeStatsTable: React.FC<PhenotypeStatsTableProps> = ({
       <section className="flex flex-col justify-center items-start w-[94%] h-fit gap-0.5">
         {statCells.map(([name, value]) => (
           <StatEntryReact
-            contBgColor="var(--color-secondary-darker)"
-            textColor="var(--color-secondary-text)"
+            contBgColor="var(--color-tertiary-darker)"
+            textColor="var(--color-tertiary-text)"
             key={name}
             compHeight="100%"
             compWidth="100%"

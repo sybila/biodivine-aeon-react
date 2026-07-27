@@ -124,13 +124,21 @@ type IN_PHENOTYPE_STATUS =
 
 type PHENOTYPE_STATUS =
   (typeof PHENOTYPE_STATUS)[keyof typeof PHENOTYPE_STATUS];
-export type Phenotype =
+
+export type PhenotypeStatus =
   (typeof PHENOTYPE_STATUS)[keyof typeof PHENOTYPE_STATUS];
 
 export type ControlInfo = {
   controlEnabled: boolean;
-  phenotype: Phenotype;
+  phenotype: PhenotypeStatus;
 };
+
+export type PhenotypeNoId = {
+  name: string;
+  variables: Record<number, PhenotypeStatus>;
+};
+
+export type Phenotype = PhenotypeNoId & { id: number };
 
 export type ControlEnabledStats = {
   controlEnabled: number;

@@ -1,4 +1,4 @@
-import type { Phenotype } from '../../../../../types';
+import type { PhenotypeStatus } from '../../../../../types';
 import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
 
 /** Tooltips for the Model Editor page */
@@ -38,7 +38,7 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   // #region Control
 
   changeOscillation(oscillationValue: string): string;
-  currentPhenotype(phenotypeValue: Phenotype): string;
+  currentPhenotype(phenotypeValue: PhenotypeStatus): string;
   changeVariablePhenotype(phenotypeValue: string): string;
   removeVariableFromPhenotype(): string;
   currentControlEnabled(controlEnabledValue: boolean): string;

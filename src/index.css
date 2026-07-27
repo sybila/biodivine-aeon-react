@@ -175,15 +175,15 @@
   --color-bg-base: #ffffff;
 
   /** Colors for items which define/use primary background. */
-  --color-primary: #f5f7fa;
-  --color-primary-light: #f5f7fac9;
-  --color-primary-light-highlight: #eef1ff;
-  --color-primary-highlight: #b7c2e8;
-  --color-primary-light-border: #dde2f0;
+  --color-primary: #f5f7fb;
+  --color-primary-light: #f5f7fbc9;
+  --color-primary-light-highlight: #eceff8;
+  --color-primary-highlight: #b5c1e9;
+  --color-primary-light-border: #dbe1f0;
   --color-primary-hover-border: #5567d5;
-  --color-primary-buttons: #f0f3fa;
-  --color-primary-buttons-hover: #e2e7f5;
-  --color-primary-buttons-active: #d1d8ec;
+  --color-primary-buttons: #eef1f9;
+  --color-primary-buttons-hover: #dfe4f3;
+  --color-primary-buttons-active: #ced5ea;
 
   /** Colors for text/separators over the primary background. */
   --color-primary-text: #151e3a;
@@ -193,40 +193,44 @@
   --color-primary-separator-dark: #3a4568;
 
   /** Colors for items which define/use secondary background. */
-  --color-secondary: #e7ebf8;
-  --color-secondary-darker: #d2d9f2;
-  --color-secondary-light: #fafbfe;
-  --color-secondary-active: #a5b4f0;
-  --color-secondary-ultra-light-border: #c8d0e8;
+  --color-secondary: #e2e8f5;
+  --color-secondary-darker: #ccd4ed;
+  --color-secondary-light: #f8f9fd;
+  --color-secondary-active: #9aabee;
+  --color-secondary-ultra-light-border: #c3cce5;
   --color-secondary-border: #5567d5;
-  --color-secondary-buttons: #f0f3fa;
-  --color-secondary-buttons-hover: #e2e7f5;
-  --color-secondary-buttons-active: #d1d8ec;
+  --color-secondary-buttons: #edf1f8;
+  --color-secondary-buttons-hover: #dce3f3;
+  --color-secondary-buttons-active: #ccd3ea;
   --color-secondary-buttons-disabled: #cdd3e5;
-  --color-secondary-buttons-darker: #d2d8ed;
-  --color-secondary-buttons-darker-hover: #b1bcdb;
+  --color-secondary-buttons-darker: #cfd6ed;
+  --color-secondary-buttons-darker-hover: #b2bedc;
   --color-secondary-text-inputs: #ffffff;
   --color-secondary-text-inputs-border: #cfd6eb;
   --color-secondary-slider-thumb: #3d5ad1;
   --color-secondary-slider: #d8ddf2;
-  --color-secondary-highlight: #a5b4f0;
-  --color-secondary-medium-highlight: #c4cef4;
-  --color-secondary-light-highlight: #e7ebf8;
-  --color-highlight: #dce3f5;
+  --color-secondary-highlight: #9aabee;
+  --color-secondary-medium-highlight: #bfcaf2;
+  --color-secondary-light-highlight: #edf1f8;
 
   /** Colors for text/separators over the secondary background. */
   --color-secondary-text: #151e3a;
-  --color-secondary-text-active: #d2d9f2;
+  --color-secondary-text-active: #ccd4ed;
   --color-secondary-placeholder-text: #8b96b5;
 
   /** Colors for items which define/use tertiary background. */
-  --color-tertiary: #d6ddf0;
+  --color-tertiary: #d3dbef;
   --color-tertiary-darker: #9daacb;
-  --color-tertiary-light: #eaedf7;
+  --color-tertiary-light: #e7ecf6;
+  --color-tertiary-lighter: #f0f3fa;
   --color-tertiary-buttons: #ffffff;
-  --color-tertiary-buttons-hover: #e8ecf6;
+  --color-tertiary-buttons-hover: #e4e9f4;
   --color-tertiary-buttons-hover-darker: #9daacb;
-  --color-tertiary-light-highlight: #e3e8f5;
+  --color-tertiary-light-highlight: #dde4f2;
+  --color-tertiary-lighter-highlight: #e4e9f4;
+  --color-tertiary-highlight: #bcc9f0;
+  --color-tertiary-active: #bdcaf1;
+  --color-tertiary-border: #c2cce7;
   --color-tertiary-text-inputs: #ffffff;
   --color-tertiary-text-inputs-border: #cfd6eb;
 

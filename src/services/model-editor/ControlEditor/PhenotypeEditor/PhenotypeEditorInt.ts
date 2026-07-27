@@ -1,11 +1,21 @@
-import type { Oscillation, Phenotype } from '../../../../types';
+import type { Oscillation, PhenotypeStatus } from '../../../../types';
 import type ControlEditor from '../ControlEditor';
 
 export interface PhenotypeEditorInt extends ControlEditor {
+  // #region --- Phenotype Search ---
+
+  /** Returns the last saved input from the phenotype search input. */
+  getPhenotypeSearch: () => string;
+
+  /** Saves the current input of the phenotype search. */
+  setPhenotypeSearch: (searchInput: string) => void;
+
+  // #endregion
+
   // #region --- Phenotype Actions ---
 
   /** Changes the phenotype state of a variable by its ID */
-  changePhenotype(id: number, phenotype: Phenotype): void;
+  changePhenotype(id: number, phenotype: PhenotypeStatus): void;
 
   /** Toggles the phenotype state of a variable by its ID */
   togglePhenotype(id: number): void;
@@ -19,7 +29,7 @@ export interface PhenotypeEditorInt extends ControlEditor {
    */
   changePhenotypeSelected(
     selectedVariables: Set<number>,
-    phenotype: Phenotype
+    phenotype: PhenotypeStatus
   ): void;
 
   // #endregion

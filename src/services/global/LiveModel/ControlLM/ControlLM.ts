@@ -6,7 +6,7 @@ import {
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
   type Oscillation,
-  type Phenotype,
+  type PhenotypeStatus,
   type PhenotypeControlEnabledVars,
   type PhenotypeVars,
 } from '../../../../types';
@@ -30,7 +30,7 @@ class ControlLM implements ControlLMInt {
   private oscillation: Oscillation = 'allowed';
 
   private onPhenotypeChange: Array<
-    (inputNodes?: [number, Phenotype][] | null) => void
+    (inputNodes?: [number, PhenotypeStatus][] | null) => void
   >;
 
   private onControlChange: Array<
@@ -61,7 +61,7 @@ class ControlLM implements ControlLMInt {
 
   /** Add a callback to be executed when phenotype changes */
   public addOnPhenotypeChangeCallback(
-    callback: (inputNodes?: [number, Phenotype][] | null) => void
+    callback: (inputNodes?: [number, PhenotypeStatus][] | null) => void
   ): void {
     this.onPhenotypeChange.push(callback);
   }
@@ -108,7 +108,7 @@ class ControlLM implements ControlLMInt {
   /** Change control information for a variable by its ID */
   public changePhenotypeById(
     id: number,
-    phenotype: Phenotype,
+    phenotype: PhenotypeStatus,
     addIntoUndoRedo: boolean,
     force: boolean = false
   ): void {

@@ -1,6 +1,5 @@
-import type { ControlStatus } from '../../../../../stores/LiveModel/ControlStore/ControlStatus';
-import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
+import type { PhenotypeStats } from '../../../../../types';
 
 export type PhenotypeStatsTableProps = {
-  controlStore: ZustandStore<ControlStatus>;
+  stats: PhenotypeStats;
 };

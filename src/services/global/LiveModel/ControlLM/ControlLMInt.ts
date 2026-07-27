@@ -1,6 +1,6 @@
 import type {
   Oscillation,
-  Phenotype,
+  PhenotypeStatus,
   PhenotypeControlEnabledVars,
 } from '../../../../types';
 
@@ -13,7 +13,7 @@ export interface ControlLMInt {
    *  @param inputNodes ([number, Phenotype] | null) - optional parameter defining if the callback should run only on subset of variables, if is not specified runs on all the variables
    */
   addOnPhenotypeChangeCallback(
-    callback: (inputNodes?: [number, Phenotype][] | null) => void
+    callback: (inputNodes?: [number, PhenotypeStatus][] | null) => void
   ): void;
 
   /** Add a callback to be executed when control enabled changes
@@ -40,7 +40,7 @@ export interface ControlLMInt {
   /** Change control information for a variable by its ID */
   changePhenotypeById(
     id: number,
-    phenotype: Phenotype,
+    phenotype: PhenotypeStatus,
     addIntoUndoRedo: boolean,
     force: boolean
   ): void;

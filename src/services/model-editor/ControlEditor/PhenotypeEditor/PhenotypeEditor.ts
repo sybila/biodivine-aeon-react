@@ -5,7 +5,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
   type Oscillation,
-  type Phenotype,
+  type PhenotypeStatus,
 } from '../../../../types';
 import type { LiveModelInt } from '../../../global/LiveModel/LiveModelInt';
 import type { ModelVisualizationInt } from '../../ModelVisualization/ModelVisualizationInt';
@@ -13,6 +13,8 @@ import ControlEditor from '../ControlEditor';
 
 class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
   // #region --- Properties + Constructor ---
+
+  private phenotypeSearch: string;
 
   private liveModelServ: LiveModelInt;
 
@@ -31,6 +33,20 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
     this.liveModelServ = liveModelServ;
     this.controlStore = controlStore;
     this.variablesStore = variablesStore;
+
+    this.phenotypeSearch = '';
+  }
+
+  // #endregion
+
+  // #region --- Phenotype Search ---
+
+  public getPhenotypeSearch() {
+    return this.phenotypeSearch;
+  }
+
+  public setPhenotypeSearch(searchInput: string) {
+    this.phenotypeSearch = searchInput;
   }
 
   // #endregion
@@ -38,13 +54,13 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
   // #region --- Phenotype Actions ---
 
   /** Changes the phenotype state of a variable by its ID */
-  public changePhenotype(id: number, phenotype: Phenotype) {
+  public changePhenotype(id: number, phenotype: PhenotypeStatus) {
     this.liveModelServ.Control.changePhenotypeById(id, phenotype, true, false);
   }
 
   /** Toggles the phenotype state of a variable by its ID */
   public togglePhenotype(id: number) {
-    const variablePhenotype: Phenotype | undefined = this.controlStore
+    const variablePhenotype: PhenotypeStatus | undefined = this.controlStore
       .getState()
       .getVariableCurrentPhenotype(id);
 
@@ -88,7 +104,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
    */
   public changePhenotypeSelected(
     selectedVariables: Set<number>,
-    phenotype: Phenotype
+    phenotype: PhenotypeStatus
   ) {
     selectedVariables.forEach((variableId) => {
       const variable = this.variablesStore

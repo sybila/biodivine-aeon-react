@@ -39,9 +39,10 @@ const PhenotypeOscillationButton: React.FC<PhenotypeOscillationButtonProps> = ({
 
   return (
     <TextButtonReact
-      buttonColor="var(--color-secondary-buttons)"
-      buttonHoverColor="var(--color-secondary-buttons-hover)"
-      textColor="var(--color-secondary-text)"
+      buttonHeight="31px"
+      buttonColor="var(--color-tertiary-buttons)"
+      buttonHoverColor="var(--color-tertiary-buttons-hover)"
+      textColor="var(--color-tertiary-text)"
       text={oscillationValue}
       handleClick={() => circleThroughOscillation()}
       compWidth={compWidth}

@@ -167,9 +167,9 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
   return (
     <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
       <TextInputReact
-        textColor="var(--color-secondary-text)"
-        inputColor="var(--color-secondary-text-inputs)"
-        inputBorderColor="var(--color-secondary-text-inputs-border)"
+        textColor="var(--color-tertiary-text)"
+        inputColor="var(--color-tertiary-text-inputs)"
+        inputBorderColor="var(--color-tertiary-text-inputs-border)"
         compWidth="95%"
         placeholder="Search variables..."
         onWrite={setVariableSearch}
@@ -209,7 +209,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
       {!filteredVariables || filteredVariables.length === 0 ? (
         <section className="flex h-[200px] w-[98%] justify-center items-center">
           <SimpleHeaderReact
-            textColor="var(--color-primary-text)"
+            textColor="var(--color-secondary-text)"
             headerText="No Variables"
             textFontWeight="normal"
           />

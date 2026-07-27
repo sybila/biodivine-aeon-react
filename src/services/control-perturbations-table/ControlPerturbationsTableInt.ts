@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import type {
   ControlResult,
   PertVariableFilterStatus,
-  Phenotype,
+  PhenotypeStatus,
 } from '../../types';
 
 /**
@@ -38,7 +38,7 @@ export interface ControlPerturbationsTableInt {
    *  @param  baseTextColor (string) -> css property defining color of the text where its color is not defined by phenotyoe status
    */
   formatPhenotype(
-    phenotypeArray: Array<[string, Phenotype]>,
+    phenotypeArray: Array<[string, PhenotypeStatus]>,
     baseTextColor: string
   ): [JSX.Element, JSX.Element];
 
