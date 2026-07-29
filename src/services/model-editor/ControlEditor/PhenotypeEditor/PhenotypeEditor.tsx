@@ -12,6 +12,7 @@ import {
   type PhenotypeStatus,
 } from '../../../../types';
 import type { LiveModelInt } from '../../../global/LiveModel/LiveModelInt';
+import type { ModelEditorPageStringsInt } from '../../../global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { SearchAndFilterHelpersInt } from '../../../utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ModelVisualizationInt } from '../../ModelVisualization/ModelVisualizationInt';
 import ControlEditor from '../ControlEditor';
@@ -23,6 +24,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
   private phenotypesSearch: string;
 
   private liveModelServ: LiveModelInt;
+  private pageStringProviderServ: ModelEditorPageStringsInt;
   private searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
 
   private controlStore: ZustandStore<ControlStatus>;
@@ -34,6 +36,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
     modelVisualizationServ: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
     searchAndFilterHelpersServ: SearchAndFilterHelpersInt,
+    pageStringProviderServ: ModelEditorPageStringsInt,
     controlStore: ZustandStore<ControlStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
@@ -43,8 +46,9 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
     super(modelVisualizationServ, modelEditorStatusStore);
 
     this.searchAndFilterHelpersServ = searchAndFilterHelpersServ;
-
     this.liveModelServ = liveModelServ;
+    this.pageStringProviderServ = pageStringProviderServ;
+
     this.controlStore = controlStore;
     this.variablesStore = variablesStore;
     this.overlayWindowStore = overlayWindowStore;
@@ -173,6 +177,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
           }}
           liveModelServ={this.liveModelServ}
           phenotypeEditorServ={this}
+          pageStringProviderServ={this.pageStringProviderServ}
           controlStore={this.controlStore}
           helpHoverStore={this.helpHoverStore}
         />

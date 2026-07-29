@@ -57,6 +57,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
       this.modelVisualizationServ,
       liveModelServ,
       searchAndFilterHelpersServ,
+      stringProviderServ.ModelEditorPage,
       storesProvider.controlStore,
       storesProvider.variablesStore,
       storesProvider.modelEditorStatusStore,

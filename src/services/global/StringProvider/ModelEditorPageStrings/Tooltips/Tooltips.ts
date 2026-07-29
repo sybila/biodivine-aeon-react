@@ -67,7 +67,31 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #endregion
 
-  // #region Control
+  // #region Control-Enabled
+
+  public currentControlEnabled(controlEnabledValue: boolean): string {
+    return (
+      'The variable is currently ' +
+      (controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled') +
+      '.'
+    );
+  }
+
+  public changeVariableControlEnabled(controlEnabledValue: boolean): string {
+    const controlEnabledString = controlEnabledValue
+      ? 'Control Enabled'
+      : 'Not Control Enabled';
+
+    return (
+      'Change the control enabled status of the variable to "' +
+      controlEnabledString +
+      '".'
+    );
+  }
+
+  // #endregion
+
+  // #region Phenotype
 
   public changeOscillation(oscillationValue: string): string {
     return (
@@ -102,24 +126,28 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'Remove the variable from the phenotype.';
   }
 
-  public currentControlEnabled(controlEnabledValue: boolean): string {
-    return (
-      'The variable is currently ' +
-      (controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled') +
-      '.'
-    );
+  public createNewPhenotypeButton() {
+    return 'Create new phenotype with specified name.';
   }
 
-  public changeVariableControlEnabled(controlEnabledValue: boolean): string {
-    const controlEnabledString = controlEnabledValue
-      ? 'Control Enabled'
-      : 'Not Control Enabled';
+  public renamePhenotypeButton() {
+    return 'Rename currently active phenotype.';
+  }
 
-    return (
-      'Change the control enabled status of the variable to "' +
-      controlEnabledString +
-      '".'
-    );
+  public submitCreatePhenotype() {
+    return 'Create phenotype with currently inserted name.';
+  }
+
+  public exitCreatePhenotype() {
+    return 'Exit phenotype creation.';
+  }
+
+  public submitRenamePhenotype() {
+    return 'Submit new name for the currently active phenotype.';
+  }
+
+  public exitRenamePhenotype() {
+    return 'Exit rename phenotype.';
   }
 
   // #endregion

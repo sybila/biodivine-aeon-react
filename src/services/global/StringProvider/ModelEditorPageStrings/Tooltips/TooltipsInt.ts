@@ -35,14 +35,25 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
 
   // #endregion
 
-  // #region Control
+  // #region Control-Enabled
+
+  currentControlEnabled(controlEnabledValue: boolean): string;
+  changeVariableControlEnabled(controlEnabledValue: boolean): string;
+
+  // #endregion
+
+  // #region Phenotype
 
   changeOscillation(oscillationValue: string): string;
   currentPhenotype(phenotypeValue: PhenotypeStatus): string;
   changeVariablePhenotype(phenotypeValue: string): string;
   removeVariableFromPhenotype(): string;
-  currentControlEnabled(controlEnabledValue: boolean): string;
-  changeVariableControlEnabled(controlEnabledValue: boolean): string;
+  createNewPhenotypeButton(): string;
+  renamePhenotypeButton(): string;
+  submitCreatePhenotype(): string;
+  exitCreatePhenotype(): string;
+  submitRenamePhenotype(): string;
+  exitRenamePhenotype(): string;
 
   // #endregion
 
