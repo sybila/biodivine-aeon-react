@@ -2,13 +2,13 @@ import { useEffect, useMemo } from 'react';
 import type { Phenotype } from '../../../../types';
 import SearchTable from '../../global/SearchTable/SearchTable';
 import type { PhenotypesOverlayContentProps } from './PhenotypesOverlayContentProps';
-import PhenotypesTableRow from './PhenotypesTableRow/PhenotypesTableRow';
 
 import SectionWithDotHeader from '../../global/SectionWithDotHeader/SectionWithDotHeader';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 
 import AddIcon from '../../../../assets/icons/add_box.svg';
+import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
 const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   filterElementsFunction,
@@ -135,21 +135,36 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
             renderRowsWithContainer={(filteredElements) => (
               <section className="flex flex-col overflow-auto min-h-[100px] h-auto max-h-[25vh] w-[98%] px-[2%] pb-1 mb-1 gap-1">
                 {filteredElements.map((el) => (
-                  <PhenotypesTableRow
+                  <TableRowWithName
                     key={el.id}
-                    phenotypeId={el.id}
-                    phenotypeName={el.name}
+                    name={el.name}
                     isSelected={el.id === currentPhenotype.id}
-                    changeActivePhenotype={(id: number) =>
-                      liveModelServ.Control.changeCurrentlyActivePhenotype(id)
+                    handleClick={() =>
+                      liveModelServ.Control.changeCurrentlyActivePhenotype(
+                        el.id
+                      )
                     }
-                    handleChange={(newName) => {
+                    handleNameChange={(newName) => {
                       return changePhenotypeName(el.id, el.name, newName);
                     }}
-                    handleSubmit={(newName) => {
+                    handleNameSubmit={(newName) => {
                       return changePhenotypeName(el.id, el.name, newName);
                     }}
-                    helpHoverStore={helpHoverStore}
+                    nameTooltipFun={(e: MouseEvent) =>
+                      helpHoverStore
+                        .getState()
+                        .setHelpHoverAtMouse(e, el.name, true, -50, 50)
+                    }
+                    hideTooltipFun={() => helpHoverStore.getState().clear()}
+                    nameTextColor="var(--color-tertiary-text)"
+                    nameBgcolor="var(--color-tertiary-lighter)"
+                    rerenderOnNameUpdate={el.id === -1}
+                    contColor="var(--color-secondary-light)"
+                    contHoverColor="var(--color-secondary-light-highlight)"
+                    contActiveColor="var(--color-secondary-light-active)"
+                    contActiveBorderColor="var(--color-secondary-light-border)"
+                    contHoverBorderColor="var(--color-secondary-light-border)"
+                    contBorderColor="var(--color-secondary-light)"
                   />
                 ))}
               </section>
