@@ -12,4 +12,6 @@ export type InvisibleInputWithErrorProps = {
   hideTooltipFunction?: () => void;
 
   value?: string;
+
+  rerenderOnValueUpdate?: boolean;
 };
