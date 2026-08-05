@@ -3,10 +3,13 @@ import type { ReactNode } from 'react';
 export type SearchTableProps<E> = {
   elements: Array<E>;
 
+  containerHeight?: string;
+  containerWidth?: string;
+
   noRowsPlaceholder: string;
   noRowsTextColor: string;
-  noRowsHeight: string;
-  noRowsWidth: string;
+  noRowsHeight?: string;
+  noRowsWidth?: string;
 
   getSearchText: () => string;
   setSearchText: (text: string) => void;

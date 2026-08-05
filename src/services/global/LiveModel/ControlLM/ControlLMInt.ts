@@ -66,6 +66,19 @@ export interface ControlLMInt {
    */
   changeCurrentlyActivePhenotype(id: number): number | undefined;
 
+  /** Create new phenotype with name specified by phenotypeName.
+   *  @param phenotypeName (string) - optional name of the newly created phenotype, if is not same defaul name is constructed.
+   *  @returns returns id of the new phenotype, if phenotype with this name already exists returns undefined.
+   */
+  createNewPhenotype(phenotypeName?: string): number | undefined;
+
+  /** Renames phenotype with id to newName.
+   *  @param id (number) = id of the phenotype to be renamed.
+   *  @param newName (string) = newName for the phenotype
+   *  @returns If succesful returns newName string, else shows error and returns undefined.
+   */
+  renamePhenotype(id: number, newName: string): string | undefined;
+
   // #endregion
 
   // #region --- Get Formated Control Info ---

@@ -197,8 +197,10 @@
   --color-secondary-darker: #ccd4ed;
   --color-secondary-light: #f8f9fd;
   --color-secondary-active: #9aabee;
+  --color-secondary-light-active: #c2cde9;
   --color-secondary-ultra-light-border: #c3cce5;
   --color-secondary-border: #5567d5;
+  --color-secondary-light-border: #c3cce5;
   --color-secondary-buttons: #edf1f8;
   --color-secondary-buttons-hover: #dce3f3;
   --color-secondary-buttons-active: #ccd3ea;

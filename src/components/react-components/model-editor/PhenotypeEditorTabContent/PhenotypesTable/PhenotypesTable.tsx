@@ -21,7 +21,7 @@ const PhenotypesTable: React.FC<PhenotypesTableProps> = ({
 
   const setPhenotypeSearch = (name: string) => {
     if (name !== phenotypeSearchText) {
-      phenotypeEditorServ.setPhenotypeSearch(name);
+      phenotypeEditorServ.setActivePhenotypeVariableSearch(name);
       setPhenotypeSearchText(name);
     }
   };

@@ -127,27 +127,11 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
   }
 
   public createNewPhenotypeButton() {
-    return 'Create new phenotype with specified name.';
+    return 'Create new phenotype.';
   }
 
   public renamePhenotypeButton() {
     return 'Rename currently active phenotype.';
-  }
-
-  public submitCreatePhenotype() {
-    return 'Create phenotype with currently inserted name.';
-  }
-
-  public exitCreatePhenotype() {
-    return 'Exit phenotype creation.';
-  }
-
-  public submitRenamePhenotype() {
-    return 'Submit new name for the currently active phenotype.';
-  }
-
-  public exitRenamePhenotype() {
-    return 'Exit rename phenotype.';
   }
 
   // #endregion

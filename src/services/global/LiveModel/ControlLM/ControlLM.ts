@@ -3,6 +3,7 @@ import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStor
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
+  isErr,
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
   type Oscillation,
@@ -217,6 +218,58 @@ class ControlLM implements ControlLMInt {
     }
 
     return result;
+  }
+
+  createNewPhenotype(phenotypeName?: string): number | undefined {
+    const result = this.controlStore.getState().createPhenotype(phenotypeName);
+
+    if (isErr(result)) {
+      this.messageServ.showError(`Cannot create phenotype: ${result.error}`);
+      return undefined;
+    }
+
+    return result.value;
+  }
+
+  renamePhenotype(id: number, newName: string): string | undefined {
+    if (id === -1) {
+      const createdPhenotype = this.controlStore
+        .getState()
+        .createPhenotype(newName);
+
+      if (isErr(createdPhenotype)) {
+        this.messageServ.showError(
+          `Cannot rename phenotype: ${createdPhenotype.error}`
+        );
+        return undefined;
+      }
+
+      const shiftResult = this.controlStore
+        .getState()
+        .shiftPhenotype(id, createdPhenotype.value);
+
+      if (isErr(shiftResult)) {
+        this.controlStore.getState().removePhenotype(createdPhenotype.value);
+        this.messageServ.showError(
+          `Unexpected error when trying to shift default phenotype: ${shiftResult.error}`
+        );
+        return undefined;
+      }
+
+      this.messageServ.showSuccess(
+        'Cannot rename default phenotype => Created new phenotype containing variables of default phenotype.'
+      );
+      return newName;
+    }
+
+    const result = this.controlStore.getState().renamePhenotype(id, newName);
+
+    if (isErr(result)) {
+      this.messageServ.showError(`Cannot rename phenotype: ${result.error}`);
+      return undefined;
+    }
+
+    return result.value;
   }
 
   // #endregion

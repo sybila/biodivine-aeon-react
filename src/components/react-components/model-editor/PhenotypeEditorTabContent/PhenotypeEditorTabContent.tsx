@@ -52,7 +52,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
       <section className="flex flex-col items-center w-full h-fit gap-3">
         <DotHeaderReact
           textColor="var(--color-primary-text)"
-          headerText="Currently Active Phenotype"
+          headerText="Currently Edited Phenotype"
           textFontWeight="bold"
           textTransform="uppercase"
           compWidth="100%"

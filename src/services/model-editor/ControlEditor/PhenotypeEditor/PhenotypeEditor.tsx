@@ -89,11 +89,9 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
 
   /** Toggles the phenotype state of a variable by its ID */
   public togglePhenotype(id: number) {
-    const variablePhenotype: PhenotypeStatus | undefined = this.controlStore
-      .getState()
-      .getVariableCurrentPhenotype(id);
-
-    if (variablePhenotype === undefined) return;
+    const variablePhenotype: PhenotypeStatus | undefined =
+      this.controlStore.getState().getVariableCurrentPhenotype(id) ??
+      PHENOTYPE_STATUS.NotInPhenotype;
 
     switch (variablePhenotype) {
       case PHENOTYPE_STATUS.InPhenotypeTrue:

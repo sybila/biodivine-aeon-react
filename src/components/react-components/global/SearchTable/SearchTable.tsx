@@ -6,10 +6,13 @@ import type { SearchTableProps } from './SearchTableProps';
 function SearchTable<E>({
   elements,
 
+  containerHeight = 'fit',
+  containerWidth = '100%',
+
   noRowsPlaceholder,
   noRowsTextColor,
-  noRowsHeight,
-  noRowsWidth,
+  noRowsHeight = "100px",
+  noRowsWidth = "98%",
 
   getSearchText,
   setSearchText,
@@ -36,7 +39,10 @@ function SearchTable<E>({
   }, [elements, componentSearchText, filterElements]);
 
   return (
-    <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
+    <section
+      className="flex flex-col items-center gap-1"
+      style={{ height: containerHeight, width: containerWidth }}
+    >
       <TextInputReact
         textColor={textInputTextColor}
         inputColor={textInputColor}

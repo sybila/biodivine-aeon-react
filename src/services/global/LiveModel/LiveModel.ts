@@ -60,6 +60,7 @@ class LiveModel implements LiveModelInt {
   private tabStore: ZustandStore<TabsState>;
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private controlStore: ZustandStore<ControlStatus>;
 
   constructor(
     computationManagerServ: ComputationManagerInt,
@@ -90,6 +91,7 @@ class LiveModel implements LiveModelInt {
     this.tabStore = tabStore;
     this.resultsStatusStore = resultsStatusStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
+    this.controlStore = controlStore;
 
     this.intializeSubmodules(
       fileHelpersServ,
@@ -223,6 +225,7 @@ class LiveModel implements LiveModelInt {
   public clear(): void {
     this.Variables.clear();
     this.modelEditorStatusStore.getState().clear();
+    this.controlStore.getState().clear();
   }
 
   /** Function which blocks model modifications and initializes warnings || shows errors.

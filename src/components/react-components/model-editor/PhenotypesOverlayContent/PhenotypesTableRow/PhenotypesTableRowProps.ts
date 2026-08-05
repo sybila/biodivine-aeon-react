@@ -6,6 +6,8 @@ export type PhenotypesTableRowProps = {
   phenotypeName: string;
   isSelected: boolean;
   changeActivePhenotype: (id: number) => void;
+  handleChange?: (newName: string) => string | undefined;
+  handleSubmit?: (newName: string) => string | undefined;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
 };
