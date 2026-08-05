@@ -213,7 +213,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
         newState.currentPhenotype = { ...currentPhenotype, name: newName };
         newState.phenotypes = {
           ...phenotypes,
-          [currentPhenotype.id]: currentPhenotype,
+          [currentPhenotype.id]: newState.currentPhenotype,
         };
       } else {
         newState.phenotypes = {
