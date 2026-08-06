@@ -7,6 +7,9 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
   textEditorServ,
   importLmServ,
   exportLmServ,
+  pageStringProviderServ,
+
+  helpHoverStore,
 }) => {
   const [editorText, setEditorText] = useState(textEditorServ.getText());
 
@@ -17,7 +20,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
 
   const buttons = [
     {
-      text: 'Import Current Model',
+      text: 'Load Current Model',
       handleClick: () => {
         const result = exportLmServ.exportAeon(true);
 
@@ -25,12 +28,30 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
           handleTextChange(result);
         }
       },
+      tooltipFunction: (e: MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e,
+            pageStringProviderServ.Tooltips.loadCurrentModelButton(),
+            true,
+            -50
+          ),
     },
     {
-      text: 'Load Edited Model',
+      text: 'Import Edited Model',
       handleClick: () => {
         importLmServ.importAeonWithWarnings(editorText);
       },
+      tooltipFunction: (e: MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e,
+            pageStringProviderServ.Tooltips.importEditedModelButton(),
+            true,
+            -50
+          ),
     },
   ];
 
@@ -47,6 +68,10 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
             buttonColor="var(--color-secondary-buttons)"
             buttonHoverColor="var(--color-secondary-buttons-hover)"
             handleClick={() => button.handleClick()}
+            onMouseEnter={(e: React.MouseEvent) =>
+              button.tooltipFunction(e.nativeEvent)
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         ))}
       </section>

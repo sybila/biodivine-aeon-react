@@ -87,6 +87,14 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
 
   // #endregion
 
+  // #region Text Editor Menu
+
+  loadCurrentModelButton(): string;
+
+  importEditedModelButton(): string;
+
+  //#endregion
+
   // #region Utilities Menu
 
   utilitiesMenu(): string;

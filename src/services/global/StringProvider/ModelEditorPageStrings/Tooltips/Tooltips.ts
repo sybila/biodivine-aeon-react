@@ -204,6 +204,18 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #endregion
 
+  // #region Text Editor Menu
+
+  loadCurrentModelButton(): string {
+    return 'Load model text into text editor.';
+  }
+
+  importEditedModelButton(): string {
+    return 'Import edited model into application.';
+  }
+
+  //#endregion
+
   // #region Utilities Menu
 
   public utilitiesMenu(): string {

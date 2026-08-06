@@ -167,9 +167,11 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Text Editor':
         return (
           <TextEditorTabContent
-          textEditorServ={textEditorServ}
+            textEditorServ={textEditorServ}
             importLmServ={liveModelServ.Import}
             exportLmServ={liveModelServ.Export}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Visual Options':
