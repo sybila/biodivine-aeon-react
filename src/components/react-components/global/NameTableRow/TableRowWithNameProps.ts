@@ -71,4 +71,21 @@ export type TableRowWithNameProps = {
 
   /** Normal border color. */
   contBorderColor: string;
+
+  buttons?: Array<{
+    text: string;
+    icon: string;
+    iconAlt: string;
+    handleClick: () => void;
+    buttonBgColor: string;
+    buttonTextColor: string;
+    buttonHoverColor: string;
+    buttonActiveColor: string;
+    buttonTooltipFunction: (e: MouseEvent) => void;
+    isActive: boolean;
+  }>;
+  buttonHeight?: string;
+  buttonWidth?: string;
+  buttonSectionWidth?: string;
+  buttonSectionHeight?: string;
 };

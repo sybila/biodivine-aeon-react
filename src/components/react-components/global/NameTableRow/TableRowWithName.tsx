@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import NonExtendableContentReact from '../../lit-wrappers/NonExtebdableContentReact';
+import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 import InvisibleInputWithError from '../InvisibleInputWithError/InvisibleInputWithError';
 import type { TableRowWithNameProps } from './TableRowWithNameProps';
 
@@ -30,6 +31,12 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
     hideTooltipFun = () => {},
 
     rerenderOnNameUpdate = false,
+
+    buttons = [],
+    buttonHeight = '100%',
+    buttonWidth = '65px',
+    buttonSectionHeight = '100%',
+    buttonSectionWidth = '40%',
   }) => {
     const [forceRerender, setForceRerender] = useState(false);
     const [nameError, setNameError] = useState(false);
@@ -63,7 +70,7 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
         onClick={() => handleClick()}
       >
         <div
-          className="border border-dashed rounded-md"
+          className="border border-dashed rounded-md self-start"
           style={{
             height: nameHeight,
             width: nameWidth,
@@ -89,6 +96,36 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
             rerenderOnValueUpdate={rerenderOnNameUpdate}
           />
         </div>
+
+        {buttons && buttons.length > 0 ? (
+          <section
+            className="flex items-center justify-end overflow-y-hidden overflow-x-auto self-end"
+            style={{ height: buttonSectionHeight, width: buttonSectionWidth }}
+          >
+            {buttons.map((button, index) => (
+              <TextIconButtonReact
+                key={index}
+                compHeight={buttonHeight}
+                compWidth={buttonWidth}
+                buttonHeight="100%"
+                buttonWidth="100%"
+                text={button.text}
+                iconSrc={button.icon}
+                iconAlt={button.iconAlt}
+                buttonColor={button.buttonBgColor}
+                buttonHoverColor={button.buttonHoverColor}
+                buttonActiveColor={button.buttonActiveColor}
+                textColor={button.buttonTextColor}
+                active={button.isActive}
+                onMouseEnter={(e: React.MouseEvent) =>
+                  button.buttonTooltipFunction(e.nativeEvent)
+                }
+                onMouseLeave={() => hideTooltipFun()}
+                handleClick={() => button.handleClick()}
+              />
+            ))}
+          </section>
+        ) : null}
       </NonExtendableContentReact>
     );
   }
