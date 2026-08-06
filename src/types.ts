@@ -15,6 +15,7 @@ export type MenuTabTypeMENotNull =
   | 'Model Editor'
   | 'Control-Enabled Editor'
   | 'Phenotype Editor'
+  | 'Text Editor'
   | 'Visual Options'
   | 'Help';
 

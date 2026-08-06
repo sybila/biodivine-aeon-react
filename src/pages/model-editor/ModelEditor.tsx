@@ -5,12 +5,13 @@ import IconButtonReact from '../../components/react-components/lit-wrappers/Icon
 import ModelEditorCanvas from '../../components/react-components/model-editor/ModelEditorCanvas/ModelEditorCanvas';
 
 import ControlIcon from '../../assets/icons/control-enabled.svg';
+import PhenotypeIcon from '../../assets/icons/dna.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
-import PhenotypeIcon from '../../assets/icons/dna.svg'
 import FileIcon from '../../assets/icons/file_copy-48px.svg';
 import HelpIcon from '../../assets/icons/help.svg';
 import ModelIcon from '../../assets/icons/model-48px.svg';
 import PlayIcon from '../../assets/icons/play_circle_filled-48px.svg';
+import TextEditorIcon from '../../assets/icons/writer.svg';
 
 import KeepAlive from 'react-activation';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
@@ -21,6 +22,7 @@ import ImportExportTabContent from '../../components/react-components/model-edit
 import ModelEditorTabContent from '../../components/react-components/model-editor/ModelEditorTabContent/ModelEditorTabContent';
 import PhenotypeEditorTabContent from '../../components/react-components/model-editor/PhenotypeEditorTabContent/PhenotypeEditorTabContent';
 import StartCompTabContent from '../../components/react-components/model-editor/StartCompTabContent/StartCompTabContent';
+import TextEditorTabContent from '../../components/react-components/model-editor/TextEditorTabContent/TextEditorTabContent';
 import UtilitiesMenu from '../../components/react-components/model-editor/UtilitesMenu/UtilitiesMenu';
 import VisualOptionsTabContent from '../../components/react-components/model-editor/VisualOptionsTabContent/VisualOptionsTabContent';
 import type {
@@ -161,6 +163,13 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             helpHoverStore={helpHoverStore}
           />
         );
+      case 'Text Editor':
+        return (
+          <TextEditorTabContent
+            importLmServ={liveModelServ.Import}
+            exportLmServ={liveModelServ.Export}
+          />
+        );
       case 'Visual Options':
         return (
           <VisualOptionsTabContent
@@ -227,6 +236,12 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       alt: 'Control-Enabled',
     },
     { tab: 'Phenotype Editor', icon: PhenotypeIcon, alt: 'Phenotype' },
+    {
+      tab: 'Text Editor',
+      icon: TextEditorIcon,
+      alt: 'Text',
+      hideFor: 'witness' as const,
+    },
     { tab: 'Visual Options', icon: EyeIcon, alt: 'Visual' },
     { tab: 'Help', icon: HelpIcon, alt: 'Help' },
   ];
