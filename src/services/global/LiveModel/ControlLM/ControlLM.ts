@@ -272,6 +272,17 @@ class ControlLM implements ControlLMInt {
     return result.value;
   }
 
+  removePhenotype(id: number): number | undefined {
+    const result = this.controlStore.getState().removePhenotype(id);
+
+    if (isErr(result)) {
+      this.messageServ.showError(`Cannot remove phenotype: ${result.error}`);
+      return undefined;
+    }
+
+    return result.value;
+  }
+
   // #endregion
 
   // #region --- Get Formated Control Info ---

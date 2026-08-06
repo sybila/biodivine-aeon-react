@@ -62,9 +62,9 @@ export type ControlStatus = {
 
   /** Removes phenotype and makes it currently active.
    *  @param id (number) - id of the phenotype which should be removed
-   *  @returns if succesful returns id of the removed phenotype, else returns undefined if the phenotype cannot be removed (ex. is default phenotype).
+   *  @returns if succesful returns id of the removed phenotype, else Result object error property contains error messsage string. (ex. when deleted phenotype is default phenotype).
    */
-  removePhenotype: (id: number) => number | undefined;
+  removePhenotype: (id: number) => Result<number>;
 
   /** Renames phenotype specified by id to a new name.
    *  @param id (number) = id of the renamed phenotype

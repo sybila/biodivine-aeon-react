@@ -79,6 +79,12 @@ export interface ControlLMInt {
    */
   renamePhenotype(id: number, newName: string): string | undefined;
 
+  /** Deletes phenotype by id.
+   *  @param id (number) => id of the phenotype, which should be deleted
+   *  @returns If succesful returns id of the delted phenotype, else returns undefined.
+   */
+  removePhenotype(id: number): number | undefined;
+
   // #endregion
 
   // #region --- Get Formated Control Info ---

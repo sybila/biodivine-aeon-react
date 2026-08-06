@@ -165,6 +165,37 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
                     contActiveBorderColor="var(--color-secondary-light-border)"
                     contHoverBorderColor="var(--color-secondary-light-border)"
                     contBorderColor="var(--color-secondary-light)"
+                    buttons={
+                      el.id === -1
+                        ? []
+                        : [
+                            {
+                              text: 'Delete',
+                              icon: DeleteIcon,
+                              iconAlt: 'Trash',
+                              handleClick: () => {
+                                liveModelServ.Control.removePhenotype(el.id);
+                              },
+                              buttonBgColor: 'var(--color-delete)',
+                              buttonTextColor: 'var(--color-delete-text)',
+                              buttonHoverColor: 'var(--color-delete-hover)',
+                              buttonActiveColor: 'var(--color-delete-active)',
+                              buttonTooltipFunction: (e: MouseEvent) => {
+                                helpHoverStore
+                                  .getState()
+                                  .setHelpHoverAtMouse(
+                                    e,
+                                    el.name,
+                                    true,
+                                    -50,
+                                    50
+                                  );
+                              },
+                              isActive: false,
+                            },
+                          ]
+                    }
+                    buttonWidth="120px"
                   />
                 ))}
               </section>

@@ -337,6 +337,7 @@
   --color-delete: #f0c4c4;
   --color-delete-hover: #e04e4e;
   --color-delete-active: #c73535;
+  --color-delete-text: #f5f5f5;
 
   --base-font-family: 'Helvetica', 'Arial', sans-serif;
   --font-family-fira-mono: 'FiraMono', 'monospace';

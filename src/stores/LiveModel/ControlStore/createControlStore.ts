@@ -171,7 +171,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
     },
     removePhenotype: (id: number) => {
       if (id < 0) {
-        return undefined;
+        return err('Cannot delete Default Phenotype.');
       }
 
       set(() => {
@@ -190,7 +190,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
         return { phenotypes: newPhenotypes };
       });
 
-      return 0;
+      return ok(id);
     },
     renamePhenotype: (id: number, newName: string) => {
       const phenotypes = get().phenotypes;
