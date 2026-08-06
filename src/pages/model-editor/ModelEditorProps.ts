@@ -10,6 +10,7 @@ import type { ControlEnabledEditorInt } from '../../services/model-editor/Contro
 import type { PhenotypeEditorInt } from '../../services/model-editor/ControlEditor/PhenotypeEditor/PhenotypeEditorInt';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
+import type { TextEditorInt } from '../../services/model-editor/TextEditor/TextEditorInt';
 import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/FileConvertorsInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
@@ -33,6 +34,7 @@ export type ModelEditorProps = {
   modelEditorServ: ModelEditorInt;
   controlEnabledEditorServ: ControlEnabledEditorInt;
   phenotypeEditorServ: PhenotypeEditorInt;
+  textEditorServ: TextEditorInt;
   computationManagerServ: ComputationManagerInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   fileConvertorsServ: FileConvertorsInt;

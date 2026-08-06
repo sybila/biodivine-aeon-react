@@ -39,6 +39,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
   modelEditorServ,
   controlEnabledEditorServ,
   phenotypeEditorServ,
+  textEditorServ,
   computationManagerServ,
   searchAndFilterHelpersServ,
   fileConvertorsServ,
@@ -166,6 +167,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       case 'Text Editor':
         return (
           <TextEditorTabContent
+          textEditorServ={textEditorServ}
             importLmServ={liveModelServ.Import}
             exportLmServ={liveModelServ.Export}
           />

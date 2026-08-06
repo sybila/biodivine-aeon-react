@@ -4,10 +4,16 @@ import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { TextEditorTabContentProps } from './TextEditorTabContentProps';
 
 const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
+  textEditorServ,
   importLmServ,
   exportLmServ,
 }) => {
-  const [editorText, setEditorText] = useState('');
+  const [editorText, setEditorText] = useState(textEditorServ.getText());
+
+  const handleTextChange = (newText: string) => {
+    setEditorText(newText);
+    textEditorServ.setText(newText);
+  };
 
   const buttons = [
     {
@@ -16,7 +22,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
         const result = exportLmServ.exportAeon(true);
 
         if (result != undefined) {
-          setEditorText(result);
+          handleTextChange(result);
         }
       },
     },
@@ -56,7 +62,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
         multiLine={true}
         value={editorText}
         handleChange={(value) => {
-          setEditorText(value);
+          handleTextChange(value);
         }}
       />
     </div>

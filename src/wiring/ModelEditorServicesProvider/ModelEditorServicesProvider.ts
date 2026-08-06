@@ -9,6 +9,8 @@ import ModelEditor from '../../services/model-editor/ModelEditor/ModelEditor';
 import type { ModelEditorInt } from '../../services/model-editor/ModelEditor/ModelEditorInt';
 import CytoscapeME from '../../services/model-editor/ModelVisualization/CytoscapeME';
 import type { ModelVisualizationInt } from '../../services/model-editor/ModelVisualization/ModelVisualizationInt';
+import TextEditor from '../../services/model-editor/TextEditor/TextEditor';
+import type { TextEditorInt } from '../../services/model-editor/TextEditor/TextEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { StoresProviderInt } from '../StoresProvider/StoresProviderInt';
 import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProviderInt';
@@ -16,6 +18,7 @@ import type { ModelEditorServicesProviderInt } from './ModelEditorServicesProvid
 class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
   public controlEnabledEditorServ: ControlEnabledEditorInt;
   public phenotypeEditorServ: PhenotypeEditorInt;
+  public textEditorServ: TextEditorInt;
   public modelEditorServ: ModelEditorInt;
   public modelVisualizationServ: ModelVisualizationInt;
 
@@ -46,6 +49,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
       storesProvider.modelEditorStatusStore,
       storesProvider.helpHoverStore
     );
+    this.textEditorServ = new TextEditor();
     this.controlEnabledEditorServ = new ControlEnabledEditor(
       this.modelVisualizationServ,
       liveModelServ,
