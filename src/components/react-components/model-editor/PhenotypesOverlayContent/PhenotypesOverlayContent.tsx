@@ -10,6 +10,8 @@ import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 import AddIcon from '../../../../assets/icons/add_box.svg';
 import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
+import DeleteIcon from '../../../../assets/icons/white-delete.svg';
+
 const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   filterElementsFunction,
 
