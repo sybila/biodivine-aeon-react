@@ -72,20 +72,54 @@ export type TableRowWithNameProps = {
   /** Normal border color. */
   contBorderColor: string;
 
+  /**
+   * Collection of buttons rendered to the right of the name field.
+   * If the array is empty or omitted, no button section is rendered.
+   */
   buttons?: Array<{
+    /** Text shown on the button. */
     text: string;
+
+    /** URL or identifier for the button’s icon. */
     icon: string;
+
+    /** Alt text for the icon (accessibility). */
     iconAlt: string;
+
+    /** Click‑handler for the button. */
     handleClick: () => void;
+
+    /** Background colour of the button (normal state). */
     buttonBgColor: string;
+
+    /** Text colour of the button (normal state). */
     buttonTextColor: string;
+
+    /** Background colour when the button is hovered. */
     buttonHoverColor: string;
+
+    /** Background colour when the button is active / pressed. */
     buttonActiveColor: string;
+
+    /**
+     * Function called when the mouse enters the button.
+     * Receives the native `MouseEvent` (often used to show a tooltip).
+     */
     buttonTooltipFunction: (e: MouseEvent) => void;
+
+    /** Whether the button is currently in an “active” visual state. */
     isActive: boolean;
   }>;
+
+  /** Height of each button in the button strip. @default "100%" */
   buttonHeight?: string;
+
+  /** Width of each button in the button strip. @default "65px" */
   buttonWidth?: string;
+
+  /** Width of the whole button‑section container. @default "40%" */
   buttonSectionWidth?: string;
+
+  /** Height of the whole button‑section container. @default "100%" */
   buttonSectionHeight?: string;
 };
