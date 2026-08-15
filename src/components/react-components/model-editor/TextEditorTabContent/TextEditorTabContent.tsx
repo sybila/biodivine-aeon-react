@@ -58,8 +58,9 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
       <section className="flex justify-around items-center h-[30px] w-full">
-        {buttons.map((button) => (
+        {buttons.map((button, index) => (
           <TextButtonReact
+            key={index}
             text={button.text}
             compHeight="100%"
             compWidth="40%"
