@@ -66,6 +66,7 @@ export class InvisibleInput extends LitElement {
 
   @property({ type: String }) declare value?: string;
   @property({ type: Boolean }) declare error?: boolean;
+  @property({ type: Boolean }) declare editable?: boolean;
   @property({ type: String }) declare placeholder?: string;
 
   @property({ type: Function }) declare handleSubmit?: (value: string) => void;
@@ -92,6 +93,12 @@ export class InvisibleInput extends LitElement {
 
       border-radius: var(--invisible-input-border-radius, 4px);
       transition: 0.3s;
+      pointer-events: auto;
+    }
+
+    #container.not-editable {
+      pointer-events: none;
+      cursor: not-allowed;
     }
 
     #container.error {
@@ -192,7 +199,7 @@ export class InvisibleInput extends LitElement {
       transition: opacity 0.3s;
     }
 
-    #container:hover #hover-icon {
+    #container:hover:not(.not-editable) #hover-icon {
       opacity: 1;
     }
   `;
@@ -307,9 +314,11 @@ export class InvisibleInput extends LitElement {
 
     const initialValue = this.value ?? '';
     const error = this.error ? 'error' : '';
+    const notEditable = this.editable === false ? 'not-editable' : '';
+
     return html`<div
       id="container"
-      class="${multiLine} ${error}"
+      class="${multiLine} ${error} ${notEditable}"
       part="container"
     >
       ${!this.multiLine
