@@ -134,6 +134,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
             noRowsTextColor="var(--color-primary-text)"
             noRowsHeight="100px"
             noRowsWidth="98%"
+            hideTooltipFunction={() => helpHoverStore.getState().clear()}
             renderRowsWithContainer={(filteredElements) => (
               <section className="flex flex-col overflow-auto min-h-[100px] h-auto max-h-[25vh] w-[98%] px-[2%] pb-1 mb-1 gap-1">
                 {filteredElements.map((el) => (
