@@ -4,11 +4,13 @@ import type {
   Variable,
   VariableIdSet,
 } from '../../../../types';
+import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 import SearchTable from '../../global/SearchTable/SearchTable';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import type { ControlEnabledEditorTabContentProps } from './ControlEnabledEditorTabContentProps';
 import ControlEnabledStatsTable from './ControlEnabledStatsTable/ControlEnabledStatsTable';
-import VariableControlEnabledInfo from './ControlEnabledVariablesTable/VariableControlEnabledInfo/VariableControlEnabledInfo';
+
+import ContrIcon from '../../../../assets/icons/control-enabled-button.svg';
 
 const ControlEnabledEditorTabContent: React.FC<
   ControlEnabledEditorTabContentProps
@@ -23,6 +25,10 @@ const ControlEnabledEditorTabContent: React.FC<
   modelEditorStatusStore,
   helpHoverStore,
 }) => {
+  const controlEnabledStatuses: Record<number, boolean> = controlStore(
+    (state) => state.controlEnabled
+  );
+
   const selectedVariablesIds: VariableIdSet =
     modelEditorStatusStore((state) => state.selectedItemsInfo.variables) ??
     new Set();
@@ -74,6 +80,23 @@ const ControlEnabledEditorTabContent: React.FC<
     });
 
     loadingServ.endLoading();
+  };
+
+  const getControlButtonColor = (varId: number, hover: boolean) => {
+    switch (controlEnabledStatuses[varId] ?? false) {
+      case false:
+        return hover
+          ? 'var(--color-not-control-enabled-highlight)'
+          : 'var(--color-not-control-enabled)';
+      default:
+        return hover
+          ? 'var(--color-control-enabled-highlight)'
+          : 'var(--color-control-enabled)';
+    }
+  };
+
+  const getNextControlStatus = (current: boolean) => {
+    return !current;
   };
 
   return (
@@ -177,20 +200,103 @@ const ControlEnabledEditorTabContent: React.FC<
         renderRowsWithContainer={(variables: Variable[]): ReactNode => {
           return (
             <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
-              {variables.map((variable: Variable) => (
-                <VariableControlEnabledInfo
-                  key={variable.id}
-                  id={variable.id}
-                  name={variable.name ?? 'Unknown Variable'}
-                  hover={hoverVariableId === variable.id}
-                  selected={selectedVariablesIds.has(variable.id) ?? false}
-                  toggleSelect={toggleVariableSelect}
-                  controlEnabledEditorServ={controlEnabledEditorServ}
-                  pageStringProviderServ={pageStringProviderServ}
-                  controlStore={controlStore}
-                  helpHoverStore={helpHoverStore}
-                />
-              ))}
+              {variables.map(
+                (variable: Variable) => {
+                  const isVariableControlEnabled =
+                    controlStore
+                      .getState()
+                      .getVariableControlEnabled(variable.id) ?? false;
+
+                  return (
+                    <TableRowWithName
+                      key={variable.id}
+                      name={variable.name}
+                      nameWidth="80%"
+                      nameIsEditable={false}
+                      handleClick={() => toggleVariableSelect(variable.id)}
+                      isSelected={selectedVariablesIds.has(variable.id)}
+                      rowHeight="40px"
+                      buttonSectionHeight="100%"
+                      buttonHeight="21px"
+                      nameTextColor="var(--color-secondary-text)"
+                      contColor="var(--color-secondary-light)"
+                      contHoverColor="var(--color-secondary-light-highlight)"
+                      contActiveColor="var(--color-secondary-active)"
+                      contActiveBorderColor="var(--color-secondary-border)"
+                      contHoverBorderColor="var(--color-secondary-border)"
+                      contBorderColor="var(--color-secondary-light)"
+                      hideTooltipFun={() => helpHoverStore.getState().clear()}
+                      hover={hoverVariableId === variable.id}
+                      handleMouseEnter={() =>
+                        controlEnabledEditorServ.hoverVariableVisualization(
+                          variable.id,
+                          true
+                        )
+                      }
+                      handleMouseLeave={() =>
+                        controlEnabledEditorServ.hoverVariableVisualization(
+                          variable.id,
+                          false
+                        )
+                      }
+                      buttons={[
+                        {
+                          text: 'CE',
+                          icon: ContrIcon,
+                          handleClick: () => {
+                            controlEnabledEditorServ.toggleControlEnabled(
+                              variable.id
+                            );
+                            helpHoverStore
+                              .getState()
+                              .setHelpHoverText(
+                                pageStringProviderServ.Tooltips.currentControlEnabled(
+                                  getNextControlStatus(isVariableControlEnabled)
+                                )
+                              );
+                          },
+                          iconAlt: 'Control-Enabled Icon',
+                          buttonTextColor:
+                            'var(--color-control-enabled-status-text)',
+                          buttonBgColor: getControlButtonColor(
+                            variable.id,
+                            false
+                          ),
+                          buttonHoverColor: getControlButtonColor(
+                            variable.id,
+                            true
+                          ),
+                          buttonActiveColor: 'var(--color-not-control-enabled)',
+                          buttonTooltipFunction: (e: MouseEvent) =>
+                            helpHoverStore
+                              .getState()
+                              .setHelpHoverAtMouse(
+                                e,
+                                pageStringProviderServ.Tooltips.currentControlEnabled(
+                                  isVariableControlEnabled
+                                ),
+                                true,
+                                -50
+                              ),
+                          isActive: false,
+                        },
+                      ]}
+                    />
+                  );
+                }
+                // <VariableControlEnabledInfo
+                //   key={variable.id}
+                //   id={variable.id}
+                //   name={variable.name ?? 'Unknown Variable'}
+                //   hover={hoverVariableId === variable.id}
+                //   selected={selectedVariablesIds.has(variable.id) ?? false}
+                //   toggleSelect={toggleVariableSelect}
+                //   controlEnabledEditorServ={controlEnabledEditorServ}
+                //   pageStringProviderServ={pageStringProviderServ}
+                //   controlStore={controlStore}
+                //   helpHoverStore={helpHoverStore}
+                // />
+              )}
             </section>
           );
         }}
