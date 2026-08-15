@@ -11,7 +11,7 @@ export type TableRowWithNameProps = {
   /** Height of the name‑box that wraps the input. @default "100%" */
   nameHeight?: string;
 
-  /** Width of the name‑box that wraps the input. @default "40%" */
+  /** Width of the name‑box that wraps the input. @default "fit-content" */
   nameWidth?: string;
 
   /** If is true name is editable, if false name appears as non editable text.  @default true*/
