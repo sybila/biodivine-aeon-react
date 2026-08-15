@@ -2,6 +2,7 @@ export type InvisibleInputWithErrorProps = {
   height?: string;
   width?: string;
   textColor?: string;
+  editable?: boolean;
 
   onChange?: (newValue: string) => void;
   onSubmit?: (newValue: string) => void;

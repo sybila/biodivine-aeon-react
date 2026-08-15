@@ -6,6 +6,7 @@ const InvisibleInputWithError: React.FC<InvisibleInputWithErrorProps> = ({
   height = '30px',
   width = '60px',
   textColor = 'var(--color-secondary-text)',
+  editable = true,
   onChange = undefined,
   onSubmit = undefined,
 
@@ -39,6 +40,7 @@ const InvisibleInputWithError: React.FC<InvisibleInputWithErrorProps> = ({
       compHeight={height}
       compWidth={width}
       textColor={textColor}
+      editable={editable}
       handleSubmit={(val) =>
         onSubmit ? handleUpdate(val, onSubmit) : () => {}
       }
