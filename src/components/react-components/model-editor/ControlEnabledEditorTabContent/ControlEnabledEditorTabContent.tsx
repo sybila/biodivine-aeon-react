@@ -43,9 +43,9 @@ const ControlEnabledEditorTabContent: React.FC<
       .filter((id) => id !== -1);
   }, [variables]);
 
-  const hoverVariableId = modelEditorStatusStore((state) =>
-    state.hoverItemInfo?.type === 'variable' ? state.hoverItemInfo.id : null
-  );
+  const hoverItem = modelEditorStatusStore((state) => state.hoverItemInfo);
+
+  const hoverVariableId = hoverItem?.type === 'variable' ? hoverItem.id : null;
 
   const toggleVariableSelect = (variableId: number) => {
     loadingServ.startLoading();
