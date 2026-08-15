@@ -14,6 +14,9 @@ export type TableRowWithNameProps = {
   /** Width of the name‑box that wraps the input. @default "40%" */
   nameWidth?: string;
 
+  /** If is true name is editable, if false name appears as non editable text.  @default true*/
+  nameIsEditable?: boolean;
+
   /**
    * Text colour for the name value.
    * This prop is required because the original component always supplied a colour.
@@ -31,6 +34,10 @@ export type TableRowWithNameProps = {
 
   /** Callback invoked when the user clicks anywhere on the row. */
   handleClick?: () => void;
+  /** Callback invoked when the user places mouse over row. */
+  handleMouseEnter?: () => void;
+  /** Callback invoked when the cursor leaves area of the row. */
+  handleMouseLeave?: () => void;
 
   /**
    * Called on every **onChange** (each keystroke) of the inner input.
@@ -71,6 +78,9 @@ export type TableRowWithNameProps = {
 
   /** Normal border color. */
   contBorderColor: string;
+
+  /** Hover override. Can force the element to appear hovered even though its not. @default false */
+  hover?: boolean;
 
   /**
    * Collection of buttons rendered to the right of the name field.

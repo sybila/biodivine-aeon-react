@@ -15,6 +15,7 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
     nameTextColor,
     nameBgcolor = 'transparent',
     nameBorderColor = 'transparent',
+    nameIsEditable = true,
 
     contColor,
     contBorderColor,
@@ -24,6 +25,9 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
     contActiveBorderColor,
 
     isSelected = false,
+    hover = false,
+    handleMouseEnter = () => {},
+    handleMouseLeave = () => {},
     handleClick = () => {},
     handleNameChange = () => undefined,
     handleNameSubmit = () => undefined,
@@ -67,7 +71,10 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
         contentOverflowX="visible"
         contentOverflowY="visible"
         active={isSelected}
+        hover={hover}
         onClick={() => handleClick()}
+        handleMouseEnter={() => handleMouseEnter()}
+        handleMouseLeave={() => handleMouseLeave()}
       >
         <div
           className="border border-dashed rounded-md self-start"
@@ -82,6 +89,7 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
           <InvisibleInputWithError
             height="100%"
             width="100%"
+            editable={nameIsEditable}
             checkError={() => nameError}
             textColor={nameTextColor}
             onChange={(newName) => {
@@ -99,7 +107,8 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
 
         {buttons && buttons.length > 0 ? (
           <section
-            className="flex items-center justify-end overflow-y-hidden overflow-x-auto self-end"
+            className="flex items-center justify-end overflow-visible self-end"
+            onClick={(e) => e.stopPropagation()}
             style={{ height: buttonSectionHeight, width: buttonSectionWidth }}
           >
             {buttons.map((button, index) => (
@@ -109,6 +118,8 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
                 compWidth={buttonWidth}
                 buttonHeight="100%"
                 buttonWidth="100%"
+                iconHeight="21px"
+                textFontWeight="normal"
                 text={button.text}
                 iconSrc={button.icon}
                 iconAlt={button.iconAlt}
