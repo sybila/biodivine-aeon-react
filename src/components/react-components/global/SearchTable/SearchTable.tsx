@@ -70,8 +70,9 @@ function SearchTable<E, ID extends string | number = number>({
           style={{ height: buttonSectionHeight }}
         >
           <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start ">
-            {buttons.map((button) => (
+            {buttons.map((button, index) => (
               <TextButtonReact
+                key={index}
                 text={button.text}
                 buttonColor={button.buttonBgColor}
                 buttonHoverColor={button.buttonHoverColor}
