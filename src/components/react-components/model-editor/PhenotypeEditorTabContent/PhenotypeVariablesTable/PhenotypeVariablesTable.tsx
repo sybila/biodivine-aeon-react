@@ -1,14 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import {
   PHENOTYPE_STATUS,
   type ModelEditorVariable,
   type Variable,
   type VariableIdSet,
 } from '../../../../../types';
-import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
-import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import SearchTable from '../../../global/SearchTable/SearchTable';
 import type { PhenotypeVariablesTableProps } from './PhenotypeVariablesTableProps';
 import VariablePhenotypeInfo from './VariablePhenotypeInfo/VariablePhenotypeInfo';
 
@@ -23,11 +20,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
   modelEditorStatusStore,
   helpHoverStore,
 }) => {
-  const [variableSearchText, setVariableSearchText] = useState<string>(
-    phenotypeEditorServ.getVariableSearch()
-  );
-
-  const selectedVariables: VariableIdSet =
+  const selectedVariablesIds: VariableIdSet =
     modelEditorStatusStore((state) => state.selectedItemsInfo.variables) ??
     new Set();
 
@@ -44,13 +37,6 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
   const hoverVariableId = modelEditorStatusStore((state) =>
     state.hoverItemInfo?.type === 'variable' ? state.hoverItemInfo.id : null
   );
-
-  const setVariableSearch = (name: string) => {
-    if (name !== variableSearchText) {
-      phenotypeEditorServ.setVariableSearch(name);
-      setVariableSearchText(name);
-    }
-  };
 
   const updateSelectedVariables = (newSelected: Set<number>) => {
     loadingServ.startLoading();
@@ -76,7 +62,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
 
     const variable: ModelEditorVariable = { type: 'variable', id: variableId };
 
-    if (selectedVariables.has(variableId)) {
+    if (selectedVariablesIds.has(variableId)) {
       modelEditorStatusStore.getState().removeSelectedItemInfo(variable);
       phenotypeEditorServ.selectVariableVisualization(variableId, false);
     } else {
@@ -87,96 +73,126 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
     loadingServ.endLoading();
   };
 
-  const filteredVariables = useMemo(() => {
-    return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
-      variables,
-      variableSearchText
-    );
-  }, [variables, variableSearchText]);
-
-  /** Array of buttons for changing the Control-Enabled and Phenotype status of selected variables.
-   * Each button is represented as a tuple containing:
-   * - The button label (string)
-   * - The button color (string)
-   * - The onClick handler function (() => void)
-   * - The onMouseEnter handler function ((e: React.MouseEvent) => void)
-   */
-  const statusButtons: Array<
-    [string, string, string, () => void, (e: React.MouseEvent) => void]
-  > = [
-    [
-      'N',
-      'var(--color-not-in-phenotype)',
-      'var(--color-not-in-phenotype-highlight)',
-      () =>
+  const statusButtons = [
+    {
+      text: 'N',
+      handleClick: () =>
         phenotypeEditorServ.changePhenotypeSelected(
-          selectedVariables,
+          selectedVariablesIds,
           PHENOTYPE_STATUS.NotInPhenotype
         ),
-      (e: React.MouseEvent) =>
+      buttonBgColor: 'var(--color-not-in-phenotype)',
+      buttonHoverColor: 'var(--color-not-in-phenotype-highlight)',
+      buttonTooltipFunction: (e: MouseEvent) =>
         helpHoverStore
           .getState()
           .setHelpHoverAtMouse(
-            e.nativeEvent,
+            e,
             pageStringProviderServ.Tooltips.removeVariableFromPhenotype(),
             true,
             -50,
             20
           ),
-    ],
-    [
-      'T',
-      'var(--color-in-phenotype-true)',
-      'var(--color-in-phenotype-true-highlight)',
-      () =>
+    },
+    {
+      text: 'T',
+      handleClick: () =>
         phenotypeEditorServ.changePhenotypeSelected(
-          selectedVariables,
+          selectedVariablesIds,
           PHENOTYPE_STATUS.InPhenotypeTrue
         ),
-      (e: React.MouseEvent) =>
+      buttonBgColor: 'var(--color-in-phenotype-true)',
+      buttonHoverColor: 'var(--color-in-phenotype-true-highlight)',
+      buttonTooltipFunction: (e: MouseEvent) =>
         helpHoverStore
           .getState()
           .setHelpHoverAtMouse(
-            e.nativeEvent,
+            e,
             pageStringProviderServ.Tooltips.changeVariablePhenotype('true'),
             true,
             -50
           ),
-    ],
-    [
-      'F',
-      'var(--color-in-phenotype-false)',
-      'var(--color-in-phenotype-false-highlight)',
-      () =>
+    },
+    {
+      text: 'F',
+      handleClick: () =>
         phenotypeEditorServ.changePhenotypeSelected(
-          selectedVariables,
+          selectedVariablesIds,
           PHENOTYPE_STATUS.InPhenotypeFalse
         ),
-      (e: React.MouseEvent) =>
+      buttonBgColor: 'var(--color-in-phenotype-false)',
+      buttonHoverColor: 'var(--color-in-phenotype-false-highlight)',
+      buttonTooltipFunction: (e: MouseEvent) =>
         helpHoverStore
           .getState()
           .setHelpHoverAtMouse(
-            e.nativeEvent,
+            e,
             pageStringProviderServ.Tooltips.changeVariablePhenotype('false'),
             true,
             -50
           ),
-    ],
+    },
   ];
 
   return (
     <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
-      <TextInputReact
-        textColor="var(--color-tertiary-text)"
-        inputColor="var(--color-tertiary-text-inputs)"
-        inputBorderColor="var(--color-tertiary-text-inputs-border)"
-        compWidth="95%"
-        placeholder="Search variables..."
-        onWrite={setVariableSearch}
-        value={variableSearchText}
+      <SearchTable<Variable>
+        elements={variables}
+        noRowsPlaceholder={'No Variables'}
+        noRowsTextColor="var(--color-secondary-text)"
+        getSearchText={() => phenotypeEditorServ.getVariableSearch()}
+        setSearchText={(newText: string) =>
+          phenotypeEditorServ.setVariableSearch(newText)
+        }
+        searchPlaceholder={'Search variables...'}
+        filterElements={(
+          elements: Variable[],
+          searchTerm: string
+        ): Variable[] => {
+          return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
+            elements,
+            searchTerm
+          );
+        }}
+        textInputTextColor="var(--color-tertiary-text)"
+        textInputColor="var(--color-tertiary-text-inputs)"
+        textInputBorderColor="var(--color-tertiary-text-inputs-border)"
+        buttons={statusButtons}
+        selectionButtonsConfig={{
+          buttonColor: 'var(--color-tertiary-buttons)',
+          buttonHoverColor: 'var(--color-tertiary-buttons-hover)',
+          selectedElementsIds: selectedVariablesIds,
+          setSelectedElements: (newSelectedElements) => {
+            updateSelectedVariables(newSelectedElements);
+          },
+          allElementIds: variableIds,
+          selectionButtonsTooltips: pageStringProviderServ.Tooltips,
+          helpHoverStore: helpHoverStore,
+        }}
+        renderRowsWithContainer={(variables: Variable[]): ReactNode => {
+          return (
+            <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
+              {variables.map((variable: Variable) => (
+                <VariablePhenotypeInfo
+                  key={variable.id}
+                  id={variable.id}
+                  name={variable.name ?? 'Unknown Variable'}
+                  hover={hoverVariableId === variable.id}
+                  selected={selectedVariablesIds.has(variable.id) ?? false}
+                  toggleSelect={toggleVariableSelect}
+                  phenotypeEditorServ={phenotypeEditorServ}
+                  pageStringProviderServ={pageStringProviderServ}
+                  controlStore={controlStore}
+                  helpHoverStore={helpHoverStore}
+                />
+              ))}
+            </section>
+          );
+        }}
+        hideTooltipFunction={() => helpHoverStore.getState().clear()}
       />
 
-      <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
+      {/* <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
           {statusButtons.map(
             ([label, color, hoverColor, onClick, onMouseEnter], index) => (
@@ -231,7 +247,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
             />
           ))}
         </section>
-      )}
+      )} */}
     </section>
   );
 };
