@@ -10,7 +10,6 @@ import {
   PHENOTYPE_STATUS,
   type fileType,
   type ModelStats,
-  type PhenotypeStatus,
   type Position,
   type Variable,
 } from '../../../../types';
@@ -147,79 +146,97 @@ class ExportLM implements ExportLMInt {
 
   // #region --- Export/Save Model ---
 
-  /**
-   * Export current model in Aeon text format, or undefined if model cannot be
-   * exported (no variables).
-   */
   public exportAeon(emptyPossible = false): string | undefined {
-    let result = '';
-    const variables: Variable[] = this.variablesStore
-      .getState()
-      .getAllVariables();
+    const variables = this.variablesStore.getState().getAllVariables();
     if (!emptyPossible && variables.length === 0) {
       return undefined;
     }
 
-    const name = this.modelInfoStore.getState().getModelName();
-    if (name !== undefined) result += `#name:${name}\n`;
+    return [
+      this.exportName(),
+      this.exportDescription(),
+      this.exportVariables(),
+      this.exportPhenotypes(),
+    ].join('');
+  }
 
-    const description = this.modelInfoStore.getState().getModelDescription();
-    if (description !== undefined)
-      result += `#description:${description.replace(/\n/g, '\\n')}\n`;
+  private exportName(): string {
+    const modelName = this.modelInfoStore.getState().getModelName();
+    return modelName ? `#name:${modelName}\n` : '';
+  }
 
-    for (const variable of variables) {
-      const varName = variable?.name;
+  private exportDescription(): string {
+    const modelDescription = this.modelInfoStore
+      .getState()
+      .getModelDescription();
+    return modelDescription
+      ? `#description:${modelDescription.replace(/\n/g, '\\n')}\n`
+      : '';
+  }
 
-      const position = this.getNodePositionFunction(variable.id);
-      if (position !== undefined) {
-        result += `#position:${varName}:${position}\n`;
-      }
+  private exportVariables(): string {
+    const variables = this.variablesStore.getState().getAllVariables();
+    return variables.map((variable) => this.exportVariable(variable)).join('');
+  }
 
-      if (variable !== undefined) {
-        const controlEnabled: boolean | undefined = this.controlStore
-          .getState()
-          .getVariableControlEnabled(variable.id);
+  private exportVariable(variable: Variable): string {
+    let result = '';
 
-        const phenotypeStatus: PhenotypeStatus =
-          this.controlStore.getState().getVariablePhenotype(variable.id, -1) ??
-          PHENOTYPE_STATUS.NotInPhenotype;
-
-        result += `#!control:${varName}:${
-          controlEnabled ?? true
-        },${phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeTrue ? true : phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeFalse ? false : null}\n`;
-      }
-
-      const fun = this.updateFunctionsStore
-        .getState()
-        .getUpdateFunctionId(variable.id);
-      if (fun !== undefined) {
-        result += `$${varName}:${fun.functionString}\n`;
-      }
-
-      const regulations = this.regulationsStore
-        .getState()
-        .regulationsOf(variable.id);
-      for (let reg of regulations) {
-        result += this.liveModel.Regulations.regulationToString(reg) + '\n';
-      }
+    const variableName = variable?.name;
+    const position = this.getNodePositionFunction(variable.id);
+    if (position !== undefined) {
+      result += `#position:${variableName}:${position}\n`;
     }
 
-    const phenotypes = Object.entries(this.controlStore.getState().phenotypes);
+    const controlEnabled = this.controlStore
+      .getState()
+      .getVariableControlEnabled(variable.id);
+    const phenotypeStatus =
+      this.controlStore.getState().getVariablePhenotype(variable.id, -1) ??
+      PHENOTYPE_STATUS.NotInPhenotype;
 
-    phenotypes.forEach(([id, phen]) => {
-      if (id === '-1') {
-        return;
-      }
+    result += `#!control:${variableName}:${controlEnabled ?? true},${
+      phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeTrue
+        ? true
+        : phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeFalse
+          ? false
+          : null
+    }\n`;
 
-      result += `#!phen:${phen.name},${Object.entries(phen.variables)
-        .map(
-          ([varId, phenStatus]) =>
-            `${this.variablesStore.getState().getVariableName(Number(varId))} ${phenStatus}`
-        )
-        .join(',')}\n`;
+    const fun = this.updateFunctionsStore
+      .getState()
+      .getUpdateFunctionId(variable.id);
+    if (fun !== undefined) {
+      result += `$${variableName}:${fun.functionString}\n`;
+    }
+
+    const regulations = this.regulationsStore
+      .getState()
+      .regulationsOf(variable.id);
+    regulations.forEach((reg) => {
+      result += this.liveModel.Regulations.regulationToString(reg) + '\n';
     });
 
     return result;
+  }
+
+  private exportPhenotypes(): string {
+    const phenotypes = Object.entries(this.controlStore.getState().phenotypes);
+
+    return phenotypes
+      .map(([id, phen]) => {
+        if (id === '-1') {
+          return '';
+        }
+
+        return `#!phen:${phen.name},${Object.entries(phen.variables)
+          .map(
+            ([varId, phenStatus]) =>
+              `${this.variablesStore.getState().getVariableName(Number(varId))} ${phenStatus}`
+          )
+          .join(',')}`;
+      })
+      .join('\n');
   }
 
   /**
