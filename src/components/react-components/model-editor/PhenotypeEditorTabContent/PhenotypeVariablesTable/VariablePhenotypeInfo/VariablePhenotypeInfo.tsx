@@ -2,11 +2,10 @@ import {
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
 } from '../../../../../../types';
-import NonExtendableContentReact from '../../../../lit-wrappers/NonExtebdableContentReact';
-import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 
 import { useMemo } from 'react';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';
+import TableRowWithName from '../../../../global/NameTableRow/TableRowWithName';
 import type { VariablePhenotypeInfoProps } from './VariablePhenotypeInfoProps';
 
 const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
@@ -66,80 +65,65 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
   };
 
   return (
-    <NonExtendableContentReact
-      className="cursor-pointer"
-      compHeight="auto"
-      compWidth="100%"
+    <TableRowWithName
+      key={id}
+      name={name}
+      nameWidth="80%"
+      nameIsEditable={false}
+      handleClick={() => toggleSelect(id)}
+      isSelected={selected}
+      rowHeight="40px"
+      buttonSectionHeight="100%"
+      buttonHeight="21px"
+      nameTextColor="var(--color-secondary-text)"
       contColor="var(--color-tertiary-lighter)"
       contHoverColor="var(--color-tertiary-lighter-highlight)"
       contActiveColor="var(--color-tertiary-active)"
-      contActiveBorder="2px var(--color-tertiary-border) solid"
-      contHoverBorder="2px var(--color-tertiary-border) dashed"
-      contBorder="2px var(--color-tertiary-lighter) solid"
-      contentOverflowX="visible"
-      contentOverflowY="visible"
+      contActiveBorderColor="var(--color-tertiary-border)"
+      contHoverBorderColor="var(--color-tertiary-border)"
+      contBorderColor="var(--color-tertiary-lighter)"
+      hideTooltipFun={() => helpHoverStore.getState().clear()}
       hover={hover}
-      active={selected}
-      onMouseEnter={() =>
+      handleMouseEnter={() =>
         phenotypeEditorServ.hoverVariableVisualization(id, true)
       }
-      onMouseLeave={() =>
+      handleMouseLeave={() =>
         phenotypeEditorServ.hoverVariableVisualization(id, false)
       }
-      onClick={() => toggleSelect(id)}
-    >
-      <span
-        className="h-full w-[55%] select-none overflow-x-auto overflow-y-hidden text-(--color-secondary-text) text-[100%] font-(family-name:--font-family-fira-mono)"
-        onMouseEnter={(e: React.MouseEvent) =>
-          helpHoverStore
-            .getState()
-            .setHelpHoverAtMouse(e.nativeEvent, name, true, -50, 50)
-        }
-        onMouseLeave={() => helpHoverStore.getState().clear()}
-      >
-        {name}
-      </span>
-
-      <section className="flex flex-row items-center justify-end h-[23px] w-[39%] overflow-visible">
-        <div className="h-[95%] w-[40%]" onClick={(e) => e.stopPropagation()}>
-          <TextIconButtonReact
-            compHeight="100%"
-            compWidth="100%"
-            iconHeight="21px"
-            textFontWeight="normal"
-            text="Ph"
-            iconSrc={PhenIcon}
-            iconAlt="Phenotype Icon"
-            textColor="var(--color-phenotype-status-text)"
-            buttonColor={getPhenButtonColor(false)}
-            buttonHoverColor={getPhenButtonColor(true)}
-            handleClick={() => {
-              phenotypeEditorServ.togglePhenotype(id);
-              helpHoverStore
-                .getState()
-                .setHelpHoverText(
-                  pageStringProviderServ.Tooltips.currentPhenotype(
-                    getNextPhenotype(controlInfo.phenotype)
-                  )
-                );
-            }}
-            onMouseEnter={(e: React.MouseEvent) =>
-              helpHoverStore
-                .getState()
-                .setHelpHoverAtMouse(
-                  e.nativeEvent,
-                  pageStringProviderServ.Tooltips.currentPhenotype(
-                    controlInfo.phenotype
-                  ),
-                  true,
-                  -50
+      buttons={[
+        {
+          text: 'Ph',
+          icon: PhenIcon,
+          handleClick: () => {
+            phenotypeEditorServ.togglePhenotype(id);
+            helpHoverStore
+              .getState()
+              .setHelpHoverText(
+                pageStringProviderServ.Tooltips.currentPhenotype(
+                  getNextPhenotype(controlInfo.phenotype)
                 )
-            }
-            onMouseLeave={() => helpHoverStore.getState().clear()}
-          />
-        </div>
-      </section>
-    </NonExtendableContentReact>
+              );
+          },
+          iconAlt: 'Phenotype Icon',
+          buttonTextColor: 'var(--color-phenotype-status-text)',
+          buttonBgColor: getPhenButtonColor(false),
+          buttonHoverColor: getPhenButtonColor(true),
+          buttonActiveColor: 'var(--color-not-in-phenotype)',
+          buttonTooltipFunction: (e: MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.currentPhenotype(
+                  controlInfo.phenotype
+                ),
+                true,
+                -50
+              ),
+          isActive: false,
+        },
+      ]}
+    />
   );
 };
 
