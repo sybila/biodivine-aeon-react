@@ -123,13 +123,13 @@ class ControlLM implements ControlLMInt {
 
     const oldPhenotype = this.controlStore
       .getState()
-      .getVariableCurrentPhenotype(id);
+      .getVariablePhenotype(id);
 
     this.controlStore.getState().setPhenotype(id, phenotype);
 
     const newPhenotype = this.controlStore
       .getState()
-      .getVariableCurrentPhenotype(id);
+      .getVariablePhenotype(id);
 
     if (newPhenotype !== undefined) {
       this.runCallbacks(this.onPhenotypeChange, [[id, newPhenotype]]);
@@ -297,7 +297,7 @@ class ControlLM implements ControlLMInt {
     variables.forEach((variable) => {
       const phenotype = this.controlStore
         .getState()
-        .getVariableCurrentPhenotype(variable.id);
+        .getVariablePhenotype(variable.id);
       const controlEnabled = this.controlStore
         .getState()
         .getVariableControlEnabled(variable.id);

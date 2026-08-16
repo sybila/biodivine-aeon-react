@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { err, ok, PHENOTYPE_STATUS } from '../../../types';
+import {
+  err,
+  ok,
+  PHENOTYPE_STATUS,
+  type PhenotypeStatus,
+} from '../../../types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ControlStatus } from './ControlStatus';
 
@@ -66,7 +71,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     getVariableControlInfo: (id) => {
       const controlEnabledStatus = get().getVariableControlEnabled(id);
-      const phenotypeStatus = get().getVariableCurrentPhenotype(id);
+      const phenotypeStatus = get().getVariablePhenotype(id);
 
       if (controlEnabledStatus === undefined && phenotypeStatus === undefined) {
         return undefined;
@@ -352,7 +357,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     // #endregion
 
-    // #region --- Current Phenotype Operations ---
+    // #region --- Phenotype Operations ---
 
     getAllCurrentPhenotype: () => {
       return Object.values(get().currentPhenotype.variables);
@@ -384,10 +389,17 @@ function createControlStore(): ZustandStore<ControlStatus> {
       });
     },
 
-    getVariableCurrentPhenotype: (id) => {
-      const phenotype = get().currentPhenotype.variables[id];
+    getVariablePhenotype: (id, phenotypeId) => {
+      let phenotypeStatus: PhenotypeStatus | undefined;
 
-      return phenotype === undefined ? undefined : phenotype;
+      if (!phenotypeId) {
+        phenotypeStatus = get().currentPhenotype.variables[id];
+      } else {
+        const phenotype = get().phenotypes[phenotypeId];
+        phenotypeStatus = phenotype?.variables[id] ?? undefined;
+      }
+
+      return phenotypeStatus;
     },
 
     getPhenotypeIds: (phenotype) => {

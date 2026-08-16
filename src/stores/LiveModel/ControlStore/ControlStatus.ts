@@ -114,7 +114,7 @@ export type ControlStatus = {
 
   // #endregion
 
-  // #region --- Current Phenotype Operations ---
+  // #region --- Phenotype Operations ---
 
   /** Retrieves phenotype status of all variables in the currently selected phenotype (without ids of the variables). */
   getAllCurrentPhenotype: () => PhenotypeStatus[];
@@ -125,8 +125,20 @@ export type ControlStatus = {
   /** Sets the phenotype status for a variable in the currently active phenotype. */
   setPhenotype: (id: number, phenotype: PhenotypeStatus) => void;
 
-  /** Retrieves phenotype status in the currently active phenotype for a specific variable by ID. */
-  getVariableCurrentPhenotype: (id: number) => PhenotypeStatus | undefined;
+  /** Retrieves the phenotype status for a specific variable by ID, either in the currently active phenotype or in a phenotype specified by the 
+  `phenotypeId`. If no `phenotypeId` is provided, the function will default to the currently active phenotype.
+
+  @param id (number): The ID of the variable for which to retrieve the phenotype status.
+  @param phenotypeId (number, optional): The ID of the phenotype in which to retrieve the phenotype status. If not provided, the function will use the 
+  currently active phenotype.
+
+  @returns `PhenotypeStatus | undefined`: The phenotype status for the specified variable in the given phenotype, or `undefined` if no phenotype status is 
+  found.
+ */
+  getVariablePhenotype: (
+    id: number,
+    phenotypeId?: number
+  ) => PhenotypeStatus | undefined;
 
   /** Retrieves IDs of variables based on their phenotype state in the currently active phenotype. */
   getPhenotypeIds: (phenotype: PhenotypeStatus) => number[];
