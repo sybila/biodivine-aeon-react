@@ -8,9 +8,9 @@ import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStor
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
-  type ControlInfo,
   type fileType,
   type ModelStats,
+  type PhenotypeStatus,
   type Position,
   type Variable,
 } from '../../../../types';
@@ -176,13 +176,17 @@ class ExportLM implements ExportLMInt {
       }
 
       if (variable !== undefined) {
-        const controlInfo: ControlInfo | undefined = this.controlStore
+        const controlEnabled: boolean | undefined = this.controlStore
           .getState()
-          .getVariableControlInfo(variable.id);
+          .getVariableControlEnabled(variable.id);
+
+        const phenotypeStatus: PhenotypeStatus =
+          this.controlStore.getState().getVariablePhenotype(variable.id, -1) ??
+          PHENOTYPE_STATUS.NotInPhenotype;
 
         result += `#!control:${varName}:${
-          controlInfo?.controlEnabled ?? true
-        },${controlInfo?.phenotype === PHENOTYPE_STATUS.InPhenotypeTrue ? true : controlInfo?.phenotype === PHENOTYPE_STATUS.InPhenotypeFalse ? false : null}\n`;
+          controlEnabled ?? true
+        },${phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeTrue ? true : phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeFalse ? false : null}\n`;
       }
 
       const fun = this.updateFunctionsStore
@@ -199,6 +203,21 @@ class ExportLM implements ExportLMInt {
         result += this.liveModel.Regulations.regulationToString(reg) + '\n';
       }
     }
+
+    const phenotypes = Object.entries(this.controlStore.getState().phenotypes);
+
+    phenotypes.forEach(([id, phen]) => {
+      if (id === '-1') {
+        return;
+      }
+
+      result += `#!phen:${phen.name},${Object.entries(phen.variables)
+        .map(
+          ([varId, phenStatus]) =>
+            `${this.variablesStore.getState().getVariableName(Number(varId))} ${phenStatus}`
+        )
+        .join(',')}\n`;
+    });
 
     return result;
   }
