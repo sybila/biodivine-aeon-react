@@ -34,9 +34,9 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
       .filter((id) => id !== -1);
   }, [variables]);
 
-  const hoverVariableId = modelEditorStatusStore((state) =>
-    state.hoverItemInfo?.type === 'variable' ? state.hoverItemInfo.id : null
-  );
+  const hoverItem = modelEditorStatusStore((state) => state.hoverItemInfo);
+
+  const hoverVariableId = hoverItem?.type === 'variable' ? hoverItem.id : null;
 
   const updateSelectedVariables = (newSelected: Set<number>) => {
     loadingServ.startLoading();
@@ -191,63 +191,6 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
         }}
         hideTooltipFunction={() => helpHoverStore.getState().clear()}
       />
-
-      {/* <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
-        <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(
-            ([label, color, hoverColor, onClick, onMouseEnter], index) => (
-              <TextButtonReact
-                textColor="var(--color-secondary-text)"
-                key={index}
-                compHeight="29px"
-                compWidth="29px"
-                text={label}
-                handleClick={onClick}
-                buttonColor={color}
-                buttonHoverColor={hoverColor}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={() => helpHoverStore.getState().clear()}
-              />
-            )
-          )}
-        </div>
-        <SelectionButtons<number>
-          keys={variableIds}
-          selectedVariables={selectedVariables}
-          setSelectedVariables={(newSelected) =>
-            updateSelectedVariables(newSelected)
-          }
-          tooltips={pageStringProviderServ.Tooltips}
-          helpHoverStore={helpHoverStore}
-        />
-      </section>
-
-      {!filteredVariables || filteredVariables.length === 0 ? (
-        <section className="flex h-[200px] w-[98%] justify-center items-center">
-          <SimpleHeaderReact
-            textColor="var(--color-secondary-text)"
-            headerText="No Variables"
-            textFontWeight="normal"
-          />
-        </section>
-      ) : (
-        <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
-          {filteredVariables.map((variable: Variable) => (
-            <VariablePhenotypeInfo
-              key={variable.id}
-              id={variable.id}
-              name={variable.name ?? 'Unknown Variable'}
-              hover={hoverVariableId === variable.id}
-              selected={selectedVariables.has(variable.id) ?? false}
-              toggleSelect={toggleVariableSelect}
-              phenotypeEditorServ={phenotypeEditorServ}
-              pageStringProviderServ={pageStringProviderServ}
-              controlStore={controlStore}
-              helpHoverStore={helpHoverStore}
-            />
-          ))}
-        </section>
-      )} */}
     </section>
   );
 };
