@@ -518,6 +518,7 @@ class ImportLM implements ImportLMInt {
     const parsingResult = this.parseAeonFile(modelString);
 
     if (isErr(parsingResult)) {
+      this.loadingServ.endLoading();
       return false;
     }
 
