@@ -272,117 +272,205 @@ class ImportLM implements ImportLMInt {
       results: {},
     };
 
-    let lines = modelString.split('\n');
-    // name1 -> name2
-    let regulationRegex =
-      /^\s*([a-zA-Z0-9_{}]+)\s*-([>|?])(\??)\s*([a-zA-Z0-9_{}]+)\s*$/;
-    // #name:content
-    let modelNameRegex = /^\s*#name:(.+)$/;
-    // #description:content
-    let modelDescriptionRegex = /^\s*#description:(.+)$/;
-    // #position:var_name:num1,num2
-    let positionRegex = /^\s*#position:([a-zA-Z0-9_{}]+):(.+?),(.+?)\s*$/;
-    // #!control:var_name:ccontrollability,pphenotypeStatus
-    let controlRegex =
-      /^\s*#!control:([a-zA-Z0-9_{}]+):(true|false),(true|false|null)\s*$/;
-    // #!phen:phen_name,var_name var_phen_status ....
-    const phenotypePrefixRegex = /^\s*#!phen:([a-zA-Z0-9_{}]+)/;
-    const phenotypeVariableRegex = /([a-zA-Z0-9_{}]+)\s+(true|false|null)/g;
-    // $var_name:function_data
-    let updateFunctionRegex = /^\s*\$\s*([a-zA-Z0-9_{}]+)\s*:\s*(.+)\s*$/;
-    //#results:stringifiedJSONofresults
-    let resultsRegex = /^\s*#!results:\s*(attractor|control)\s*:\s*(.+)\s*$/;
-    // #...
-    let commentRegex = /^\s*#.*?$/;
+    const lines = modelString.split('\n');
 
-    for (let line of lines) {
-      line = line.trim();
-      if (line.length == 0) continue; // skip whitespace
-      let match = line.match(regulationRegex);
-      if (match !== null) {
-        let monotonicity: EdgeMonotonicity = EdgeMonotonicity.unspecified;
-        if (match[2] == '>') monotonicity = EdgeMonotonicity.activation;
-        if (match[2] == '|') monotonicity = EdgeMonotonicity.inhibition;
-        result.regulations.push({
-          regulatorName: match[1],
-          targetName: match[4],
-          monotonicity: monotonicity,
-          observable: match[3].length == 0,
-        });
-        continue;
-      }
-      match = line.match(modelNameRegex);
-      if (match !== null) {
-        result.modelName = match[1];
-        continue;
-      }
-      match = line.match(modelDescriptionRegex);
-      if (match !== null) {
-        result.modelDescription += match[1];
-        continue;
-      }
-      match = line.match(positionRegex);
-      if (match !== null) {
-        let x = parseFloat(match[2]);
-        let y = parseFloat(match[3]);
-        if (x === x && y === y) {
-          // test for NaN
-          result.varPositions[match[1]] = [x, y];
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+
+      if (line.length === 0) continue; // skip whitespace
+
+      // Try to match against specific parsers in order
+      const parsed =
+        this.parseRegulation(line) ||
+        this.parseModelName(line) ||
+        this.parseModelDescription(line) ||
+        this.parsePosition(line) ||
+        this.parseUpdateFunction(line) ||
+        this.parseControl(line) ||
+        this.parsePhenotype(line) ||
+        this.parseResults(line);
+
+      if (parsed) {
+        // Apply the parsed data to the result object
+        if (parsed.type === 'regulation') result.regulations.push(parsed.data);
+        else if (parsed.type === 'name') result.modelName = parsed.data;
+        else if (parsed.type === 'description')
+          result.modelDescription += parsed.data;
+        else if (parsed.type === 'position')
+          result.varPositions[parsed.data.name] = parsed.data.coords;
+        else if (parsed.type === 'updateFunction')
+          result.updateFunctions[parsed.data.name] = parsed.data.func;
+        else if (parsed.type === 'control')
+          result.control[parsed.data.name] = parsed.data.values;
+        else if (parsed.type === 'phenotype')
+          result.phenotypes.push(parsed.data);
+        else if (parsed.type === 'results') {
+          result.results.type = parsed.data.type;
+          result.results.data = parsed.data.data;
         }
         continue;
       }
-      match = line.match(updateFunctionRegex);
-      if (match !== null) {
-        result.updateFunctions[match[1]] = match[2];
-        continue;
-      }
 
-      match = line.match(controlRegex);
-      if (match !== null) {
-        result.control[match[1]] = [
-          match[2] == 'true' ? true : false,
-          this.convertStringToPhenotypeStatus(match[3]),
-        ];
-        continue;
-      }
-
-      match = line.match(phenotypePrefixRegex);
-      if (match !== null) {
-        const variables = Array.from(
-          line.matchAll(phenotypeVariableRegex),
-          (m) => ({
-            varName: m[1],
-            phenValue: this.convertStringToPhenotypeStatus(m[2]),
-          })
-        );
-
-        result.phenotypes.push({
-          phenName: match[1],
-          variables: variables,
-        });
-
-        continue;
-      }
-
-      match = line.match(resultsRegex);
-      if (match != null) {
-        try {
-          result.results.type = match[1];
-          result.results.data = JSON.parse(match[2]);
-        } catch (e) {
-          console.log('Results are invalid: ' + e);
-        }
-      }
-
-      if (line.match(commentRegex) === null) {
-        // todeo-error
+      // If no parser matched, check if it's a comment
+      if (!this.isComment(line)) {
         return err('Unexpected line in file: ' + line);
       }
     }
 
-    result.modelDescription.replace(/\\n/g, '\n');
+    // Post-processing
+    result.modelDescription = result.modelDescription.replace(/\\n/g, '\n');
 
     return ok(result);
+  }
+
+  private parseRegulation(line: string): {
+    type: 'regulation';
+    data: {
+      regulatorName: string;
+      targetName: string;
+      monotonicity: EdgeMonotonicity;
+      observable: boolean;
+    };
+  } | null {
+    const regex =
+      /^\s*([a-zA-Z0-9_{}]+)\s*-([>|?])(\??)\s*([a-zA-Z0-9_{}]+)\s*$/;
+    const match = line.match(regex);
+    if (!match) return null;
+
+    let monotonicity: EdgeMonotonicity = EdgeMonotonicity.unspecified;
+    if (match[2] === '>') monotonicity = EdgeMonotonicity.activation;
+    if (match[2] === '|') monotonicity = EdgeMonotonicity.inhibition;
+
+    return {
+      type: 'regulation',
+      data: {
+        regulatorName: match[1],
+        targetName: match[4],
+        monotonicity,
+        observable: match[3].length === 0,
+      },
+    };
+  }
+
+  private parseModelName(line: string): { type: 'name'; data: string } | null {
+    const regex = /^\s*#name:(.+)$/;
+    const match = line.match(regex);
+    return match ? { type: 'name', data: match[1] } : null;
+  }
+
+  private parseModelDescription(
+    line: string
+  ): { type: 'description'; data: string } | null {
+    const regex = /^\s*#description:(.+)$/;
+    const match = line.match(regex);
+    return match ? { type: 'description', data: match[1] } : null;
+  }
+
+  private parsePosition(line: string): {
+    type: 'position';
+    data: { name: string; coords: [number, number] };
+  } | null {
+    const regex = /^\s*#position:([a-zA-Z0-9_{}]+):(.+?),(.+?)\s*$/;
+    const match = line.match(regex);
+    if (!match) return null;
+
+    const x = parseFloat(match[2]);
+    const y = parseFloat(match[3]);
+
+    // Check for NaN
+    if (x !== x || y !== y) return null;
+
+    return {
+      type: 'position',
+      data: {
+        name: match[1],
+        coords: [x, y],
+      },
+    };
+  }
+
+  private parseUpdateFunction(
+    line: string
+  ): { type: 'updateFunction'; data: { name: string; func: string } } | null {
+    const regex = /^\s*\$\s*([a-zA-Z0-9_{}]+)\s*:\s*(.+)\s*$/;
+    const match = line.match(regex);
+    return match
+      ? { type: 'updateFunction', data: { name: match[1], func: match[2] } }
+      : null;
+  }
+
+  private parseControl(line: string): {
+    type: 'control';
+    data: { name: string; values: [boolean, PhenotypeStatus] };
+  } | null {
+    const regex =
+      /^\s*#!control:([a-zA-Z0-9_{}]+):(true|false),(true|false|null)\s*$/;
+    const match = line.match(regex);
+    if (!match) return null;
+
+    return {
+      type: 'control',
+      data: {
+        name: match[1],
+        values: [
+          match[2] === 'true',
+          this.convertStringToPhenotypeStatus(match[3]),
+        ],
+      },
+    };
+  }
+
+  private parsePhenotype(
+    line: string
+  ): { type: 'phenotype'; data: Phenotype } | null {
+    const prefixRegex = /^\s*#!phen:([a-zA-Z0-9_{}]+)/;
+    const varRegex = /([a-zA-Z0-9_{}]+)\s+(true|false|null)/g;
+
+    const prefixMatch = line.match(prefixRegex);
+    if (!prefixMatch) return null;
+
+    const variables: { varName: string; phenValue: PhenotypeStatus }[] = [];
+    let varMatch: RegExpExecArray | null;
+
+    while ((varMatch = varRegex.exec(line)) !== null) {
+      variables.push({
+        varName: varMatch[1],
+        phenValue: this.convertStringToPhenotypeStatus(varMatch[2]),
+      });
+    }
+
+    return {
+      type: 'phenotype',
+      data: {
+        phenName: prefixMatch[1],
+        variables,
+      },
+    };
+  }
+
+  private parseResults(
+    line: string
+  ): { type: 'results'; data: { type: string; data: unknown } } | null {
+    const regex = /^\s*#!results:\s*(attractor|control)\s*:\s*(.+)\s*$/;
+    const match = line.match(regex);
+    if (!match) return null;
+
+    try {
+      return {
+        type: 'results',
+        data: {
+          type: match[1],
+          data: JSON.parse(match[2]),
+        },
+      };
+    } catch (e) {
+      console.log('Results are invalid: ' + e);
+      return null;
+    }
+  }
+
+  private isComment(line: string): boolean {
+    return /^\s*#.*?$/.test(line);
   }
 
   // #endregion
