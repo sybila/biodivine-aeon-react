@@ -37,13 +37,22 @@ export interface ControlLMInt {
 
   // #region --- Change Control Info ---
 
-  /** Change control information for a variable by its ID */
+  /**
+   * Changes the phenotype status for a variable in the specified phenotype.
+   *
+   * @param id - The identifier of the variable to change.
+   * @param phenotype - The new phenotype status for the variable.
+   * @param addIntoUndoRedo - Indicates whether to add the change to the undo/redo history.
+   * @param force - Indicates whether to force the change without checking current status.
+   * @param phenotypeId - (Optional) The identifier of the phenotype. If not provided, the currently edited phenotype is assumed.
+   */
   changePhenotypeById(
     id: number,
     phenotype: PhenotypeStatus,
     addIntoUndoRedo: boolean,
-    force: boolean
-  ): void;
+    force: boolean,
+    phenotypeId?: number
+  ): boolean;
 
   /** Change variable control enabled state by its ID */
   changeControlEnabledById(

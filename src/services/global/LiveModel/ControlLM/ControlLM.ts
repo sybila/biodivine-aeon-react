@@ -115,21 +115,26 @@ class ControlLM implements ControlLMInt {
     id: number,
     phenotype: PhenotypeStatus,
     addIntoUndoRedo: boolean,
-    force: boolean = false
-  ): void {
+    force: boolean = false,
+    phenotypeId?: number
+  ) {
     if (!force && !this.liveModel.modelCanBeModified('Control')) {
-      return;
+      this.messageServ.showError(
+        'Some event blocks the phenotype status change. Try again later.'
+      );
+
+      return false;
     }
 
     const oldPhenotype = this.controlStore
       .getState()
-      .getVariablePhenotype(id);
+      .getVariablePhenotype(id, phenotypeId);
 
-    this.controlStore.getState().setPhenotype(id, phenotype);
+    this.controlStore.getState().setPhenotype(id, phenotype, phenotypeId);
 
     const newPhenotype = this.controlStore
       .getState()
-      .getVariablePhenotype(id);
+      .getVariablePhenotype(id, phenotypeId);
 
     if (newPhenotype !== undefined) {
       this.runCallbacks(this.onPhenotypeChange, [[id, newPhenotype]]);
@@ -155,6 +160,8 @@ class ControlLM implements ControlLMInt {
         },
       });
     }
+
+    return true;
   }
 
   /** Change variable control enabled state by its ID */
