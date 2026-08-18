@@ -1,3 +1,5 @@
+import type { Result } from '../../../../types';
+
 /**
  * Interface to allow import of models into the live model.
  */
@@ -15,13 +17,16 @@ export interface ImportLMInt {
    *  If there are results loaded or tabs open, warn the user that they will be lost.
    *  If the model is not empty, warn the user that it will be erased.
    */
-  importAeonWithWarnings(modelString: string): Promise<boolean>;
+  importAeonWithWarnings(modelString: string): Promise<Result<boolean>>;
 
   /**
-   * Import model from Aeon file, load it into the live model and save it as the main model.
-   * If the import is successful, return true.
+   * Imports a model from an Aeon file, loads it into the live model, and saves it as the main model.
+   * If the import is successful, returns `true`.
+   *
+   * @param modelString - The string representation of the Aeon model to be imported.
+   * @returns A `Result<boolean>` object indicating the success of the import operation.
    */
-  importAeon(modelString: string): boolean;
+  importAeon(modelString: string): Result<boolean>;
 
   // #endregion
 

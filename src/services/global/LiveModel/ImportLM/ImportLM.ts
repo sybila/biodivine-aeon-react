@@ -477,11 +477,9 @@ class ImportLM implements ImportLMInt {
 
   // #region --- Import Aeon ---
 
-  /** Import a model from an Aeon file with warnings.
-   *  If there are results loaded or tabs open, warn the user that they will be lost.
-   *  If the model is not empty, warn the user that it will be erased.
-   */
-  public async importAeonWithWarnings(modelString: string): Promise<boolean> {
+  public async importAeonWithWarnings(
+    modelString: string
+  ) {
     if (
       Object.values(this.resultsStatusStore.getState().results).some(
         (value) => value !== undefined
@@ -492,14 +490,14 @@ class ImportLM implements ImportLMInt {
         'Importing a new model'
       );
       if (!proceed) {
-        return false;
+        return ok(false);
       }
     }
 
     if (!this.liveModel.isEmpty()) {
       const proceed = await this.warningServ.addImportModelEraseModelWarning();
       if (!proceed) {
-        return false;
+        return ok(false);
       }
     }
 
@@ -510,7 +508,7 @@ class ImportLM implements ImportLMInt {
    * Import model from Aeon file, load it into the live model and save it as the main model.
    * If the import is successful, return true.
    */
-  public importAeon(modelString: string): boolean {
+  public importAeon(modelString: string) {
     this.loadingServ.startLoading();
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
@@ -519,7 +517,7 @@ class ImportLM implements ImportLMInt {
 
     if (isErr(parsingResult)) {
       this.loadingServ.endLoading();
-      return false;
+      return err(parsingResult.error);
     }
 
     const parsedModel = parsingResult.value;
@@ -554,7 +552,7 @@ class ImportLM implements ImportLMInt {
     this.runOnImportCallbacks();
 
     this.loadingServ.endLoading();
-    return true; // no error
+    return ok(true); // no error
   }
 
   // #endregion
