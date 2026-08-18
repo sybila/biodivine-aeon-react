@@ -5,8 +5,12 @@ import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
+  err,
+  isErr,
+  ok,
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
+  type Result,
   type Variable,
 } from '../../../../types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
@@ -14,6 +18,22 @@ import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ImportLMInt } from './ImportLMInt';
+
+type Phenotype = {
+  phenName: string;
+  variables: Array<{ varName: string; phenValue: PhenotypeStatus }>;
+};
+
+type ModelObject = {
+  modelName: string;
+  modelDescription: string;
+  varPositions: Record<string, any>;
+  regulations: any[];
+  updateFunctions: Record<string, string>;
+  control: Record<string, [boolean, PhenotypeStatus]>;
+  phenotypes: Array<Phenotype>;
+  results: Record<string, any>;
+};
 
 class ImportLM implements ImportLMInt {
   // #region --- Properties and Constructor ---
@@ -204,19 +224,54 @@ class ImportLM implements ImportLMInt {
   }
 
   /**
+   * Imports a list of phenotypes into the model.
+   *
+   * @param phenotypes - An array of phenotypes to be imported.
+   */
+  private importPhenotypes(phenotypes: Array<Phenotype>) {
+    phenotypes.forEach((phen) => {
+      const phenId = this.liveModel.Control.createNewPhenotype(phen.phenName);
+
+      if (phenId != undefined) {
+        phen.variables.forEach((variable) => {
+          const existingVarObject = this.variablesStore
+            .getState()
+            .variableFromName(variable.varName);
+
+          if (existingVarObject != undefined) {
+            this.liveModel.Control.changePhenotypeById(
+              existingVarObject.id,
+              variable.phenValue,
+              false,
+              true,
+              phenId
+            );
+          }
+        });
+      } else {
+        console.warn('Failed to create phenotype.');
+      }
+    });
+  }
+
+  /**
    * Parses model into intermediate objects.
    * Returns model name and model description.
    * modelString is model in the form of Aeon string
    * All the other parameters are empty objects to be filled with data from the parsed Aeon string
    */
-  private parseAeonFile(
-    modelString: string,
-    regulations: any[],
-    positions: Record<string, any>,
-    control: Record<string, [boolean, PhenotypeStatus]>,
-    updateFunctions: Record<string, string>,
-    results: Record<string, any>
-  ): [string, string] | string {
+  private parseAeonFile(modelString: string): Result<ModelObject> {
+    const result: ModelObject = {
+      modelName: '',
+      modelDescription: '',
+      regulations: [],
+      varPositions: {},
+      updateFunctions: {},
+      control: {},
+      phenotypes: [],
+      results: {},
+    };
+
     let lines = modelString.split('\n');
     // name1 -> name2
     let regulationRegex =
@@ -227,18 +282,18 @@ class ImportLM implements ImportLMInt {
     let modelDescriptionRegex = /^\s*#description:(.+)$/;
     // #position:var_name:num1,num2
     let positionRegex = /^\s*#position:([a-zA-Z0-9_{}]+):(.+?),(.+?)\s*$/;
-    // #control:var_name:ccontrollability,pphenotypeStatus
+    // #!control:var_name:ccontrollability,pphenotypeStatus
     let controlRegex =
       /^\s*#!control:([a-zA-Z0-9_{}]+):(true|false),(true|false|null)\s*$/;
+    // #!phen:phen_name,var_name var_phen_status ....
+    const phenotypePrefixRegex = /^\s*#!phen:([a-zA-Z0-9_{}]+)/;
+    const phenotypeVariableRegex = /([a-zA-Z0-9_{}]+)\s+(true|false|null)/g;
     // $var_name:function_data
     let updateFunctionRegex = /^\s*\$\s*([a-zA-Z0-9_{}]+)\s*:\s*(.+)\s*$/;
     //#results:stringifiedJSONofresults
     let resultsRegex = /^\s*#!results:\s*(attractor|control)\s*:\s*(.+)\s*$/;
     // #...
     let commentRegex = /^\s*#.*?$/;
-
-    let modelName = '';
-    let modelDescription = '';
 
     for (let line of lines) {
       line = line.trim();
@@ -248,7 +303,7 @@ class ImportLM implements ImportLMInt {
         let monotonicity: EdgeMonotonicity = EdgeMonotonicity.unspecified;
         if (match[2] == '>') monotonicity = EdgeMonotonicity.activation;
         if (match[2] == '|') monotonicity = EdgeMonotonicity.inhibition;
-        regulations.push({
+        result.regulations.push({
           regulatorName: match[1],
           targetName: match[4],
           monotonicity: monotonicity,
@@ -258,12 +313,12 @@ class ImportLM implements ImportLMInt {
       }
       match = line.match(modelNameRegex);
       if (match !== null) {
-        modelName = match[1];
+        result.modelName = match[1];
         continue;
       }
       match = line.match(modelDescriptionRegex);
       if (match !== null) {
-        modelDescription += match[1];
+        result.modelDescription += match[1];
         continue;
       }
       match = line.match(positionRegex);
@@ -272,34 +327,48 @@ class ImportLM implements ImportLMInt {
         let y = parseFloat(match[3]);
         if (x === x && y === y) {
           // test for NaN
-          positions[match[1]] = [x, y];
+          result.varPositions[match[1]] = [x, y];
         }
         continue;
       }
       match = line.match(updateFunctionRegex);
       if (match !== null) {
-        updateFunctions[match[1]] = match[2];
+        result.updateFunctions[match[1]] = match[2];
         continue;
       }
 
       match = line.match(controlRegex);
       if (match !== null) {
-        control[match[1]] = [
+        result.control[match[1]] = [
           match[2] == 'true' ? true : false,
-          match[3] == 'true'
-            ? PHENOTYPE_STATUS.InPhenotypeTrue
-            : match[3] == 'false'
-              ? PHENOTYPE_STATUS.InPhenotypeFalse
-              : PHENOTYPE_STATUS.NotInPhenotype,
+          this.convertStringToPhenotypeStatus(match[3]),
         ];
+        continue;
+      }
+
+      match = line.match(phenotypePrefixRegex);
+      if (match !== null) {
+        const variables = Array.from(
+          line.matchAll(phenotypeVariableRegex),
+          (m) => ({
+            varName: m[1],
+            phenValue: this.convertStringToPhenotypeStatus(m[2]),
+          })
+        );
+
+        result.phenotypes.push({
+          phenName: match[1],
+          variables: variables,
+        });
+
         continue;
       }
 
       match = line.match(resultsRegex);
       if (match != null) {
         try {
-          results.type = match[1];
-          results.data = JSON.parse(match[2]);
+          result.results.type = match[1];
+          result.results.data = JSON.parse(match[2]);
         } catch (e) {
           console.log('Results are invalid: ' + e);
         }
@@ -307,11 +376,13 @@ class ImportLM implements ImportLMInt {
 
       if (line.match(commentRegex) === null) {
         // todeo-error
-        return 'Unexpected line in file: ' + line;
+        return err('Unexpected line in file: ' + line);
       }
     }
 
-    return [modelName, modelDescription.replace(/\\n/g, '\n')];
+    result.modelDescription.replace(/\\n/g, '\n');
+
+    return ok(result);
   }
 
   // #endregion
@@ -356,32 +427,36 @@ class ImportLM implements ImportLMInt {
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
 
-    let modelName = '';
-    let modelDescription = '';
-    let regulations: any[] = [];
-    let positions: Record<string, any> = {};
-    let control: Record<string, any> = {};
-    let updateFunctions: Record<string, string> = {};
-    let results: Record<string, any> = {};
+    const parsingResult = this.parseAeonFile(modelString);
 
-    [modelName, modelDescription] = this.parseAeonFile(
-      modelString,
-      regulations,
-      positions,
-      control,
-      updateFunctions,
-      results
-    ) as [string, string];
+    if (isErr(parsingResult)) {
+      return false;
+    }
+
+    const parsedModel = parsingResult.value;
 
     this.liveModel.clear();
 
     // Set model metadata
-    this.liveModel.Info.setModelName(modelName, false, true);
-    this.liveModel.Info.setModelDescription(modelDescription, false, true);
+    this.liveModel.Info.setModelName(parsedModel.modelName, false, true);
+    this.liveModel.Info.setModelDescription(
+      parsedModel.modelDescription,
+      false,
+      true
+    );
 
-    this.setRegulations(regulations, positions, control);
-    this.setUpdateFunctions(updateFunctions, positions, control);
-    this.insertNotConnected(positions, control);
+    this.setRegulations(
+      parsedModel.regulations,
+      parsedModel.varPositions,
+      parsedModel.control
+    );
+    this.setUpdateFunctions(
+      parsedModel.updateFunctions,
+      parsedModel.varPositions,
+      parsedModel.control
+    );
+    this.insertNotConnected(parsedModel.varPositions, parsedModel.control);
+    this.importPhenotypes(parsedModel.phenotypes);
 
     // Re-enable server checks and run them.
     this.liveModel.disable_dynamic_validation = false;
@@ -468,6 +543,25 @@ class ImportLM implements ImportLMInt {
 
       console.log(e);
     }
+  }
+
+  // #endregion
+
+  // #region --- Utilities ----
+
+  /**
+   * Converts a string representation of a phenotype status into the corresponding
+   * `PhenotypeStatus` enum.
+   *
+   * @param value The string value to convert.
+   * @returns The `PhenotypeStatus` enum value representing the input string.
+   */
+  private convertStringToPhenotypeStatus(value: string): PhenotypeStatus {
+    return value == 'true'
+      ? PHENOTYPE_STATUS.InPhenotypeTrue
+      : value == 'false'
+        ? PHENOTYPE_STATUS.InPhenotypeFalse
+        : PHENOTYPE_STATUS.NotInPhenotype;
   }
 
   // #endregion

@@ -10,6 +10,7 @@ import {
   PHENOTYPE_STATUS,
   type fileType,
   type ModelStats,
+  type PhenotypeStatus,
   type Position,
   type Variable,
 } from '../../../../types';
@@ -221,7 +222,9 @@ class ExportLM implements ExportLMInt {
   }
 
   private exportPhenotypes(): string {
-    const phenotypes = Object.entries(this.controlStore.getState().phenotypes);
+    const phenotypes = Object.entries(
+      this.controlStore.getState().getAllPhenotypes()
+    );
 
     return phenotypes
       .map(([id, phen]) => {
@@ -232,9 +235,9 @@ class ExportLM implements ExportLMInt {
         return `#!phen:${phen.name},${Object.entries(phen.variables)
           .map(
             ([varId, phenStatus]) =>
-              `${this.variablesStore.getState().getVariableName(Number(varId))} ${phenStatus}`
+              `${this.variablesStore.getState().getVariableName(Number(varId))} ${this.convertPhenotypeStatusToString(phenStatus)}`
           )
-          .join(',')}`;
+          .join(' ')}`;
       })
       .join('\n');
   }
@@ -301,6 +304,24 @@ class ExportLM implements ExportLMInt {
     }
 
     this.fileHelpersServ.downloadFile(`${fileName}${fileEnding}`, modelString);
+  }
+
+  // #endregion
+
+  // #region --- Utilities ---
+
+  /**
+   * Converts a PhenotypeStatus value to a string based on predefined mappings.
+   *
+   * @param value - The PhenotypeStatus value to be converted.
+   * @returns A string representation of the PhenotypeStatus value. Returns 'true' if the value is 'InPhenotypeTrue', 'false' if it is 'InPhenotypeFalse', and 'null' otherwise.
+   */
+  private convertPhenotypeStatusToString(value: PhenotypeStatus): string {
+    return value == PHENOTYPE_STATUS.InPhenotypeTrue
+      ? 'true'
+      : value == PHENOTYPE_STATUS.InPhenotypeFalse
+        ? 'false'
+        : 'null';
   }
 
   // #endregion
