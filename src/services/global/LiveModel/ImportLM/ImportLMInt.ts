@@ -1,4 +1,4 @@
-import type { Result } from '../../../../types/types';
+import type { Result } from "../../../../types/result";
 
 /**
  * Interface to allow import of models into the live model.

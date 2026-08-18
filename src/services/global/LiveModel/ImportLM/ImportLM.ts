@@ -5,14 +5,15 @@ import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   EdgeMonotonicity,
-  err,
-  isErr,
-  ok,
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
-  type Result,
   type Variable,
 } from '../../../../types/types';
+import {
+  err,
+  isErr,
+  ok, type Result
+} from "../../../../types/result";
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';

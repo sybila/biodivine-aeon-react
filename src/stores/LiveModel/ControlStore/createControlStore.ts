@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import {
-  err,
-  ok,
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
 } from '../../../types/types';
+import {
+  err,
+  ok
+} from "../../../types/result";
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ControlStatus } from './ControlStatus';
 

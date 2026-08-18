@@ -5,8 +5,8 @@ import type {
   PhenotypeNoId,
   PhenotypeStats,
   PhenotypeStatus,
-  Result,
 } from '../../../types/types';
+import type { Result } from "../../../types/result";
 
 /** Zustand store for managing control information of variables in LiveModel
  Provides actions for adding, removing, updating, and querying control info and phenotypes */

@@ -575,27 +575,3 @@ export type MenuTabButton = HTMLElement & { isActive: boolean };
 export type ContentVisibleComponent = HTMLElement & { contentVisible: boolean };
 
 // #endregion
-
-// #region --- General Types ---
-
-type Success<T> = { type: 'ok'; value: T };
-type Err = { type: 'err'; error: string };
-
-export type Result<T> = Success<T> | Err;
-
-export function ok<T>(value: T): Success<T> {
-  return { type: 'ok', value };
-}
-
-export function err(message: string): Err {
-  return {
-    type: 'err',
-    error: message,
-  };
-}
-
-export function isErr<T>(result: Result<T>) {
-  return result.type === 'err';
-}
-
-// #endregion

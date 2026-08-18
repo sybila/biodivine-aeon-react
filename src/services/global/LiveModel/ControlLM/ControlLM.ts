@@ -3,7 +3,6 @@ import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStor
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
-  isErr,
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
   type Oscillation,
@@ -11,6 +10,7 @@ import {
   type PhenotypeStatus,
   type PhenotypeVars,
 } from '../../../../types/types';
+import { isErr } from "../../../../types/result";
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';
