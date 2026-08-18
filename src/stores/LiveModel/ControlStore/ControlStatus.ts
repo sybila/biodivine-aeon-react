@@ -79,6 +79,9 @@ export type ControlStatus = {
    */
   shiftPhenotype: (fromId: number, toId: number) => Result<number>;
 
+  /** Returns all existing phenotypes. */
+  getAllPhenotypes: () => Record<number, PhenotypeNoId>;
+
   /** Finds first phenotype with matching name.
    *  @returns If phenotype with specified name exists returns it, else returns undefined.
    */
@@ -122,8 +125,18 @@ export type ControlStatus = {
    *  @returns [id, Phenotype] - An array of tuples, where each tuple contains the variable ID and its phenotype status in the currently selected phenotype.
    */
   getAllCurrentPhenotypeIds: () => Array<[number, PhenotypeStatus]>;
-  /** Sets the phenotype status for a variable in the currently active phenotype. */
-  setPhenotype: (id: number, phenotype: PhenotypeStatus) => void;
+  /**
+   * Sets the phenotype status for a variable in phenotype.
+   *
+   * @param id - The identifier of the variable to update.
+   * @param phenotypeStatus - The new phenotype status for the variable.
+   * @param phenotypeId - (Optional) The identifier of the phenotype. If not provided, the current phenotype is assumed.
+   */
+  setPhenotype: (
+    id: number,
+    phenotypeStatus: PhenotypeStatus,
+    phenotypeId?: number
+  ) => Result<number>;
 
   /** Retrieves the phenotype status for a specific variable by ID, either in the currently active phenotype or in a phenotype specified by the 
   `phenotypeId`. If no `phenotypeId` is provided, the function will default to the currently active phenotype.

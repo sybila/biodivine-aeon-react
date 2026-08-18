@@ -278,6 +278,13 @@ function createControlStore(): ZustandStore<ControlStatus> {
         : { ...phenWithName[1], id: Number(phenWithName[0]) };
     },
 
+    getAllPhenotypes() {
+      return {
+        ...this.phenotypes,
+        [this.currentPhenotype.id]: this.currentPhenotype,
+      };
+    },
+
     getNewPhenotypeName(): { name: string; newCounterValue: number } {
       const name = get().noNamePhenotypePrefix + get().noNamePhenotypeCounter;
 
@@ -368,25 +375,48 @@ function createControlStore(): ZustandStore<ControlStatus> {
         ([id, phenotype]) => [Number(id), phenotype]
       ),
 
-    setPhenotype: (id, phenotype) => {
-      set((state) => {
-        const currentPhenotypeStatus = state.currentPhenotype.variables[id];
-        if (
-          currentPhenotypeStatus != undefined ||
-          currentPhenotypeStatus == null
-        ) {
+    setPhenotype: (id, phenotypeStatus, phenotypeId) => {
+      if (
+        phenotypeId != undefined &&
+        phenotypeId != get().currentPhenotype.id
+      ) {
+        const phenotype = get().phenotypes[phenotypeId];
+
+        if (!phenotype) return err("Phenotype with this Id doesn't exist.");
+
+        set((state) => {
           return {
-            currentPhenotype: {
-              ...state.currentPhenotype,
-              variables: {
-                ...state.currentPhenotype.variables,
-                [id]: phenotype,
+            phenotypes: {
+              ...state.phenotypes,
+              [phenotypeId]: {
+                ...phenotype,
+                variables: { ...phenotype.variables, [id]: phenotypeStatus },
               },
             },
           };
-        }
-        return state;
-      });
+        });
+      } else {
+        set((state) => {
+          const currentPhenotypeStatus = state.currentPhenotype.variables[id];
+          if (
+            currentPhenotypeStatus != undefined ||
+            currentPhenotypeStatus == null
+          ) {
+            return {
+              currentPhenotype: {
+                ...state.currentPhenotype,
+                variables: {
+                  ...state.currentPhenotype.variables,
+                  [id]: phenotypeStatus,
+                },
+              },
+            };
+          }
+          return state;
+        });
+      }
+
+      return ok(id);
     },
 
     getVariablePhenotype: (id, phenotypeId) => {
