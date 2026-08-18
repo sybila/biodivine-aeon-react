@@ -218,7 +218,10 @@ class LiveModel implements LiveModelInt {
 
   /** True if the model has no variables. */
   public isEmpty(): boolean {
-    return this.Variables.isEmpty();
+    return (
+      this.Variables.isEmpty() &&
+      Object.values(this.controlStore.getState().phenotypes).length < 2
+    );
   }
 
   /** Erase the whole model */
