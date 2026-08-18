@@ -2,7 +2,7 @@ import type {
   AttractorResults,
   ComputationModes,
   ControlResults,
-} from '../../../../types';
+} from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import AttractorResultsTable from './AttractorResultsTable/AttractorResultsTable';
 import ControlResultsStats from './ControlResultsStats/ControlResultsStats';

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { ComputationModes, TabInfo } from '../../../../../types';
+import type { ComputationModes, TabInfo } from '../../../../../types/types';
 import DynamicTabs from '../DynamicTabs/DynamicTabs';
 import type { ResultTabsProps } from './ResultTabsProps';
 

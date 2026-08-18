@@ -1,4 +1,4 @@
-import type { PertVariableFilterStatus } from '../../../../../../types';
+import type { PertVariableFilterStatus } from '../../../../../../types/types';
 
 export type SelectVarFilterTableRowProp = {
   varName: string;

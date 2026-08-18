@@ -1,4 +1,4 @@
-import type { Position } from '../../types';
+import type { Position } from '../../types/types';
 
 /** Zustand store for managing the help hover in the application. */
 export type HelpHoverState = {

@@ -1,6 +1,6 @@
 import type { ModelState } from '../../../../stores/LiveModel/LoadedModelStore/ModelState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { ModelSave, ModelType } from '../../../../types';
+import type { ModelSave, ModelType } from '../../../../types/types';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { ModelsLMInt } from './ModelsLMInt';
 

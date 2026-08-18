@@ -1,4 +1,4 @@
-import type { ComputationModes, ControlResult } from '../../../types';
+import type { ComputationModes, ControlResult } from '../../../types/types';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ResultsOperationsInt } from './ResultsOperationsInt';

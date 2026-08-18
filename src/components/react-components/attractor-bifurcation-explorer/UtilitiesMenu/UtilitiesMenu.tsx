@@ -1,7 +1,7 @@
 import HorizontalHidableContentReact from '../../lit-wrappers/HorizontalHidableContentReact';
 import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 
-import type { ContentVisibleComponent } from '../../../../types';
+import type { ContentVisibleComponent } from '../../../../types/types';
 import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
 import ZoomSection from '../../global/ZoomSection/ZoomSection';
 

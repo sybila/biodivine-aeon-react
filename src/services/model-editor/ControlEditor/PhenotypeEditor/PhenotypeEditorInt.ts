@@ -1,4 +1,4 @@
-import type { Oscillation, PhenotypeStatus } from '../../../../types';
+import type { Oscillation, PhenotypeStatus } from '../../../../types/types';
 import type ControlEditor from '../ControlEditor';
 
 export interface PhenotypeEditorInt extends ControlEditor {

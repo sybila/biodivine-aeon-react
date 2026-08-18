@@ -1,4 +1,4 @@
-import type { ComputationModes, TabType } from '../../../types';
+import type { ComputationModes, TabType } from '../../../types/types';
 
 /** Class defining for operations on navigation tabs */
 export interface TabOperationsInt {

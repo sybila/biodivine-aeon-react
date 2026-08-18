@@ -7,7 +7,7 @@ import type {
   MenuTabTypeABE,
   NodeStabilityData,
   VisualizationStatus,
-} from '../../types';
+} from '../../types/types';
 
 /** Zustand store for managing Bifurcation Explorer status.
  * Provides actions to set and clear the selected node, load stability analysis results...

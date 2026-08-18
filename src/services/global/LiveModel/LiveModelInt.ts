@@ -1,4 +1,4 @@
-import type { ComputationModes } from '../../../types';
+import type { ComputationModes } from '../../../types/types';
 import type { ControlLMInt } from './ControlLM/ControlLMInt';
 import type { ExportLMInt } from './ExportLM/ExportLMInt';
 import type { ImportLMInt } from './ImportLM/ImportLMInt';

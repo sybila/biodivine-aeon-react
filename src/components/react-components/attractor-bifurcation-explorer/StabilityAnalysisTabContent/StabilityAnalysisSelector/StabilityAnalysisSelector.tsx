@@ -2,7 +2,7 @@ import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
 import type {
   FullStabilityAnalysisMode,
   StabilityAnalysisModes,
-} from '../../../../../types';
+} from '../../../../../types/types';
 import ArrowSelectButton from '../../../global/ArrowsSelectButton/ArrowsSelectButton';
 import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';

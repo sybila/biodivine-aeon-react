@@ -1,4 +1,4 @@
-import { PHENOTYPE_STATUS, type PhenotypeStatus } from '../../../../../types';
+import { PHENOTYPE_STATUS, type PhenotypeStatus } from '../../../../../types/types';
 import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 

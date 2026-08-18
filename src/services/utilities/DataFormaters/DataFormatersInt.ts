@@ -1,4 +1,4 @@
-import type { ControlResult } from '../../../types';
+import type { ControlResult } from '../../../types/types';
 
 /**
  * Interface for data formating utility function.

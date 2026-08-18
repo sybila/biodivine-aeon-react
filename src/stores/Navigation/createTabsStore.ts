@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import router from '../../router';
-import type { TabInfo, TabType } from '../../types';
+import type { TabInfo, TabType } from '../../types/types';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { TabsState } from './TabState';
 

@@ -1,4 +1,4 @@
-import { type ControlResults } from '../../../../types';
+import { type ControlResults } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';

@@ -1,4 +1,4 @@
-import type { ComputationModes } from '../../../../types';
+import type { ComputationModes } from '../../../../types/types';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ComputationExtendableContent from './ComputationExtendableContent/ComputationExtendableContent';
 import ControlCompParams from './ControlCompParams/ControlCompParams';

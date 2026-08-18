@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import config from '../../../config';
-import type { ComputationStatus } from '../../../types';
+import type { ComputationStatus } from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ComputeEngineStatusState } from './ComputeEngineStatusState';
 

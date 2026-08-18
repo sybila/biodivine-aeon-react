@@ -1,4 +1,4 @@
-import type { PhenotypeStatus, Position } from '../../../../types';
+import type { PhenotypeStatus, Position } from '../../../../types/types';
 
 /**
  * Interface for managing variables in the LiveModel.

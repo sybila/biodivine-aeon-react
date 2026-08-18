@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type ControlResults } from '../../../../types';
+import { type ControlResults } from '../../../../types/types';
 import type { PerturbationTableProps } from './PerturbationTableProps';
 import PerturbationTableRow from './PerturbationTableRow/PerturbationTableRow';
 

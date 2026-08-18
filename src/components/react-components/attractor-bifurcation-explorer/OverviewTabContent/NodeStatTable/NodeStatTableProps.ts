@@ -1,5 +1,5 @@
 import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
-import type { DecisionMixedNode, LeafNode } from '../../../../../types';
+import type { DecisionMixedNode, LeafNode } from '../../../../../types/types';
 
 export type NodeStatTableProps = {
   nodeData: LeafNode | DecisionMixedNode;

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import type { VariableStability } from '../../../../../../types';
+import type { VariableStability } from '../../../../../../types/types';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { StabilityAnalysisTableRowProps } from './StabilityAnalysisTableRowProps';

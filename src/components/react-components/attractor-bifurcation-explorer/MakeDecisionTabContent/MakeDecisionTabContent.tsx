@@ -1,4 +1,4 @@
-import type { DecisionMixedNode, LeafNode } from '../../../../types';
+import type { DecisionMixedNode, LeafNode } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';

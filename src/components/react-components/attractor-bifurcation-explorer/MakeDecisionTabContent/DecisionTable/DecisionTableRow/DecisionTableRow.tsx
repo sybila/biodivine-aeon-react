@@ -1,4 +1,4 @@
-import type { DecisionBehaviorClass } from '../../../../../../types';
+import type { DecisionBehaviorClass } from '../../../../../../types/types';
 import BehaviorClassLegend from '../../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import SeparatorLine from '../../../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';

@@ -1,6 +1,6 @@
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { DecisionsTSSD, NodeDataTSSD } from '../../../types';
+import type { DecisionsTSSD, NodeDataTSSD } from '../../../types/types';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';

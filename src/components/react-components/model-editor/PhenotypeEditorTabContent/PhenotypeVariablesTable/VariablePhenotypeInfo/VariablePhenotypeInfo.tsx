@@ -1,7 +1,7 @@
 import {
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
-} from '../../../../../../types';
+} from '../../../../../../types/types';
 
 import { useMemo } from 'react';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';

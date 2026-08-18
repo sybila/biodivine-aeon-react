@@ -3,7 +3,7 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 
 import { useMemo } from 'react';
 
-import type { ContentVisibleComponent, Variable } from '../../../../types';
+import type { ContentVisibleComponent, Variable } from '../../../../types/types';
 import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
 import ZoomSection from '../../global/ZoomSection/ZoomSection';
 import UndoRedoSection from './UndoRedoSection/UndoRedoSection';

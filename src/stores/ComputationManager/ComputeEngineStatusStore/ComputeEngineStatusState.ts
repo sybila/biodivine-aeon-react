@@ -1,4 +1,4 @@
-import type { ComputationStatus } from '../../../types';
+import type { ComputationStatus } from '../../../types/types';
 
 /** Zustand store for managing Compute Engine status and computation status.
  * Provides actions to set and clear the status of the Compute Engine

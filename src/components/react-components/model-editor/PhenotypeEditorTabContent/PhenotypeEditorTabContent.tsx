@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Oscillation, PhenotypeStats } from '../../../../types';
+import type { Oscillation, PhenotypeStats } from '../../../../types/types';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';

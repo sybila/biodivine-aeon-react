@@ -1,4 +1,4 @@
-import type { ControlResult } from '../../../types';
+import type { ControlResult } from '../../../types/types';
 import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { ControlResults } from '../../../../types';
+import type { ControlResults } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';

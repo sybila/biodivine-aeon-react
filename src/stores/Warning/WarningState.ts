@@ -1,4 +1,4 @@
-import type { TextButton, Warning } from '../../types';
+import type { TextButton, Warning } from '../../types/types';
 
 /** Store for managing warnings in the application */
 export type WarningState = {

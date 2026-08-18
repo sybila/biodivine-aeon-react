@@ -2,7 +2,7 @@ import type { ModelEditorPageStringsInt } from '../../../../services/global/Stri
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { UpdateFunctionStatus } from '../../../../types';
+import type { UpdateFunctionStatus } from '../../../../types/types';
 
 export type ChangeUpdateFunctionInputProps = {
   compHeight: string;

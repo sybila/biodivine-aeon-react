@@ -1,4 +1,4 @@
-import type { fileType, ModelStats, Position } from '../../../../types';
+import type { fileType, ModelStats, Position } from '../../../../types/types';
 
 /**
  * Interface to allow export of currently loaded model.

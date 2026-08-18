@@ -1,4 +1,4 @@
-import type { UndoRedoFunctions } from '../../types';
+import type { UndoRedoFunctions } from '../../types/types';
 
 /** State for managing undo and redo operationss */
 export type UndoRedoState = {

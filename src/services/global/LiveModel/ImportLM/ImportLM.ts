@@ -12,7 +12,7 @@ import {
   type PhenotypeStatus,
   type Result,
   type Variable,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';

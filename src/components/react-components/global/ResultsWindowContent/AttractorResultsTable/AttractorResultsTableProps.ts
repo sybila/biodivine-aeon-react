@@ -5,7 +5,7 @@ import type { GlobalStringsInt } from '../../../../../services/global/StringProv
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
 import type { TabsState } from '../../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
-import type { AttractorResults } from '../../../../../types';
+import type { AttractorResults } from '../../../../../types/types';
 
 export type AttractorResultsTableProps = {
   results: AttractorResults;

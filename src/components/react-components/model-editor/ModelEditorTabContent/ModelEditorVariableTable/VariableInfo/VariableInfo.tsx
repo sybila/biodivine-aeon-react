@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
 import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
-import type { UpdateFunctionStatus } from '../../../../../../types';
+import type { UpdateFunctionStatus } from '../../../../../../types/types';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';

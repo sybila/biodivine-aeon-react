@@ -7,7 +7,7 @@ import type {
   StabilityAnalysisModes,
   VisualizationStatus,
   VisualOptionsSwitchableABE,
-} from '../../../types';
+} from '../../../types/types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';

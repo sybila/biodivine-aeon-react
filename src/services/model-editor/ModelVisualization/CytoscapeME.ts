@@ -20,7 +20,7 @@ import {
   type Regulation,
   type RegulationVariables,
   type Variable,
-} from '../../../types';
+} from '../../../types/types';
 import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { ModelVisualizationInt } from './ModelVisualizationInt';

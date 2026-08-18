@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import type { Phenotype } from '../../../../types';
+import type { Phenotype } from '../../../../types/types';
 import SearchTable from '../../global/SearchTable/SearchTable';
 import type { PhenotypesOverlayContentProps } from './PhenotypesOverlayContentProps';
 

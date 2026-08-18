@@ -2,7 +2,7 @@ import type {
   PossibleTabIds,
   PossibleTabsTypes,
   TabInfo,
-} from '../../../../../types';
+} from '../../../../../types/types';
 
 export type DynamicTabsProps<
   T extends PossibleTabsTypes,

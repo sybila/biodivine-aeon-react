@@ -1,4 +1,4 @@
-import type { PhenotypeStatus } from '../../../../../types';
+import type { PhenotypeStatus } from '../../../../../types/types';
 import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
 
 /** Tooltips for the Model Editor page */

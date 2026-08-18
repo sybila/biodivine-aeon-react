@@ -1,4 +1,4 @@
-import type { ModelType } from '../../../../types';
+import type { ModelType } from '../../../../types/types';
 
 /**
  * Interface or managing multiple models in the LiveModel.

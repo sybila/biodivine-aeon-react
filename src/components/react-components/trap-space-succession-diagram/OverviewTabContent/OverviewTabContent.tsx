@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { NodeDataTSSD } from '../../../../types';
+import type { NodeDataTSSD } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import ColoredWordsReact from '../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';

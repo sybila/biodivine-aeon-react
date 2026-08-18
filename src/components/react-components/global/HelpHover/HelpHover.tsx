@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { Position } from '../../../../types';
+import type { Position } from '../../../../types/types';
 import type { HelpHoverProps } from './HelpHoverProps';
 
 const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {

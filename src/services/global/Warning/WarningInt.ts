@@ -1,4 +1,4 @@
-import type { ComputationModes } from '../../../types';
+import type { ComputationModes } from '../../../types/types';
 
 /**
  * Interface for creation and management of warnings in the application

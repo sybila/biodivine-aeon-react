@@ -2,7 +2,7 @@ import type {
   Oscillation,
   PhenotypeControlEnabledVars,
   PhenotypeStatus,
-} from '../../../../types';
+} from '../../../../types/types';
 
 /**
  * Interface to manage control information for live model variables */

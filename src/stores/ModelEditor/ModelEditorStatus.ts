@@ -6,7 +6,7 @@ import type {
   ModelEditorItems,
   Position,
   VisualizationZoomStatus,
-} from '../../types';
+} from '../../types/types';
 
 /* Zustand store for managing the model editor state */
 export type ModelEditorStatus = {

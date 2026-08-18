@@ -10,7 +10,7 @@ import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorS
 import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { ComputationModes } from '../../../types';
+import type { ComputationModes } from '../../../types/types';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
 import type { LoadingInt } from '../Loading/LoadingInt';

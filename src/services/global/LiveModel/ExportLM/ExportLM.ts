@@ -13,7 +13,7 @@ import {
   type PhenotypeStatus,
   type Position,
   type Variable,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';

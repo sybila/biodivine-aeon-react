@@ -7,7 +7,7 @@ import type {
   NodeDataTSSD,
   StabilityAnalysisModes,
   UpdateFunctionStatus,
-} from '../../../types';
+} from '../../../types/types';
 import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';

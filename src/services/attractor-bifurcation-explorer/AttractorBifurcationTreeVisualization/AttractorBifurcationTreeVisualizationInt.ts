@@ -4,7 +4,7 @@ import type {
   NodeNecessaryConditions,
   VisualizationStatus,
   VisualOptionsSwitchableABE,
-} from '../../../types';
+} from '../../../types/types';
 
 /**
  * Interface which defines the methods and properties for the Attractor Bifurcation Tree Visualization from the AttractorBifurcationExplorer page.

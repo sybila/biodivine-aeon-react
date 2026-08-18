@@ -10,7 +10,7 @@ import type {
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
-} from '../../../types';
+} from '../../../types/types';
 
 /**
  * Interface for ComputeEngine class used inside ComputationManager. Provides direct communication with the compute engine.

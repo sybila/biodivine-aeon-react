@@ -11,7 +11,7 @@ import {
   type PhenotypeStatus,
   type Position,
   type Variable,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';

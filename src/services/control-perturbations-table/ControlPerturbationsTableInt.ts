@@ -3,7 +3,7 @@ import type {
   ControlResult,
   PertVariableFilterStatus,
   PhenotypeStatus,
-} from '../../types';
+} from '../../types/types';
 
 /**
  * Interface working with table containing perturbations computed by control computation.

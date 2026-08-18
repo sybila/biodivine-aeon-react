@@ -6,7 +6,7 @@ import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
 import type {
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
-} from '../../../../../../types';
+} from '../../../../../../types/types';
 
 export type StabilityAnalysisTableRowProps = StabilityAnalysisVariable & {
   computedBehavior: StabilityAnalysisModes;

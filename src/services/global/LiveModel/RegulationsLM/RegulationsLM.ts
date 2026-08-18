@@ -2,7 +2,7 @@ import type { RegulationsStatus } from '../../../../stores/LiveModel/Regulations
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import { EdgeMonotonicity, type Regulation } from '../../../../types';
+import { EdgeMonotonicity, type Regulation } from '../../../../types/types';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { RegulationsLMInt } from './RegulationsLMInt';
 

@@ -3,7 +3,7 @@ import type { AttractorBifurcationExplorerPageStringsInt } from '../../../../../
 import type { BehaviorClassOperationsInt } from '../../../../../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
-import type { Decision } from '../../../../../../types';
+import type { Decision } from '../../../../../../types/types';
 
 export type DecisionTableRowProps = {
   decision: Decision;

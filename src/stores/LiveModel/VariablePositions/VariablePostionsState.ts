@@ -1,4 +1,4 @@
-import type { Position } from '../../../types';
+import type { Position } from '../../../types/types';
 
 /** State for managing positions variable nodes in the ModelVisualization */
 export type VariablePositionsState = {

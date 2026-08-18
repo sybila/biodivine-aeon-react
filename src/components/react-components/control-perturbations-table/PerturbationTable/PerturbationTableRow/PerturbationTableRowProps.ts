@@ -1,6 +1,6 @@
 import type { ControlPerturbationsTableInt } from '../../../../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import type { DataFormatersInt } from '../../../../../services/utilities/DataFormaters/DataFormatersInt';
-import type { Perturbation } from '../../../../../types';
+import type { Perturbation } from '../../../../../types/types';
 
 export type PerturbationTableRowProps = {
   perturbationId: number;

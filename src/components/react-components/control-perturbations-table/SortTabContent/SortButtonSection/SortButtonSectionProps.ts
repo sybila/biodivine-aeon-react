@@ -5,7 +5,7 @@ import type {
   PertTableSort,
   PerturbationSortFields,
   SortDirection,
-} from '../../../../../types';
+} from '../../../../../types/types';
 
 export type SortButtonSectionProps = {
   sortDirection: SortDirection;

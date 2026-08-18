@@ -3,7 +3,7 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import VisualizationCanvas from '../../components/react-components/global/VisualizationCanvas/VisualizationCanvas';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import type { MenuTabTypeTrapSpaceSD } from '../../types';
+import type { MenuTabTypeTrapSpaceSD } from '../../types/types';
 import type { TrapSpaceSuccessionDiagramProps } from './TrapSpaceSuccessionDiagramProps';
 
 import StateIcon from '../../assets/icons/state_overview.svg';

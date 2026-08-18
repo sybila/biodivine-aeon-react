@@ -6,7 +6,7 @@ import type {
   VisualizationNodeDataTSSD,
   VisualizationStatus,
   VisualOptionsSwitchableABE,
-} from '../../../types';
+} from '../../../types/types';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 

@@ -2,7 +2,7 @@ import type { ResultsStatus } from '../../../stores/ComputationManager/ResultSta
 import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { WarningState } from '../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { ComputationModes } from '../../../types';
+import type { ComputationModes } from '../../../types/types';
 import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
 import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
 import type { WarningInt } from './WarningInt';

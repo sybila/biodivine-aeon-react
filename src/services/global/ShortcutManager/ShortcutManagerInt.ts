@@ -1,4 +1,4 @@
-import type { TabType } from '../../../types';
+import type { TabType } from '../../../types/types';
 
 /** Class for managing keyboard shortcuts. Each page should have its own set of shortcuts.
  * 

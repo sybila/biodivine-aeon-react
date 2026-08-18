@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Regulation } from '../../../types';
+import { type Regulation } from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { RegulationsStatus } from './RegulationsStatus';
 

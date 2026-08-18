@@ -30,7 +30,7 @@ import type {
   MenuTabTypeME,
   MenuTabTypeMENotNull,
   ModelType,
-} from '../../types';
+} from '../../types/types';
 import type { ModelEditorProps } from './ModelEditorProps';
 
 const ModelEditor: React.FC<ModelEditorProps> = ({

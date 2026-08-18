@@ -1,7 +1,7 @@
 import type {
   UpdateFunctionMetadata,
   UpdateFunctionStatus,
-} from '../../../../types';
+} from '../../../../types/types';
 
 /**
  * Interface for managing update functions of variables in model.

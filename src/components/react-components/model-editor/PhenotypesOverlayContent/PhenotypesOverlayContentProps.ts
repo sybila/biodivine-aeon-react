@@ -4,7 +4,7 @@ import type { PhenotypeEditorInt } from '../../../../services/model-editor/Contr
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { Phenotype } from '../../../../types';
+import type { Phenotype } from '../../../../types/types';
 
 export type PhenotypesOverlayContentProps = {
   filterElementsFunction: (

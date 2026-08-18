@@ -1,4 +1,4 @@
-import type { EdgeMonotonicity, Regulation } from '../../../../types';
+import type { EdgeMonotonicity, Regulation } from '../../../../types/types';
 
 /**
  * Interface for managing regulations in the LiveModel.

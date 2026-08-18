@@ -7,7 +7,7 @@ import type {
   AttractorVisualizerInput,
   VisEdge,
   VisNode,
-} from '../../types';
+} from '../../types/types';
 import type { ComputationManagerInt } from '../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../global/Message/MessageInt';
 import type { AttractorVisualizerInt } from './AttractorVisualizerInt';

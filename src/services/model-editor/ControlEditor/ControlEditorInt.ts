@@ -1,4 +1,4 @@
-import type { Oscillation, PhenotypeStatus } from '../../../types';
+import type { Oscillation, PhenotypeStatus } from '../../../types/types';
 
 /**
  * Interface for ControlEditor functionality of the ModelEditor page.

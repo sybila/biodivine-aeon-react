@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { VisualizationZoomStatus } from '../../types';
+import type { VisualizationZoomStatus } from '../../types/types';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { ModelEditorStatus } from './ModelEditorStatus';
 

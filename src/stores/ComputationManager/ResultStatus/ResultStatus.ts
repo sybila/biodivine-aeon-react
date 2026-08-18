@@ -2,7 +2,7 @@ import type {
   ComputationModes,
   Results,
   TimestampedResultsMode,
-} from '../../../types';
+} from '../../../types/types';
 
 /** Zustand store for managing computation results.
  * Provides actions to set and clear the results.

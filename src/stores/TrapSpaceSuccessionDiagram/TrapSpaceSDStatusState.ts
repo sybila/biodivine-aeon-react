@@ -3,7 +3,7 @@ import type {
   MenuTabTypeTrapSpaceSD,
   NodeDataTSSD,
   VisualizationStatus,
-} from '../../types';
+} from '../../types/types';
 
 /** Zustand Store which manages state of the Trap Space Succession Diagram page. */
 export type TrapSpaceSDStatusState = {

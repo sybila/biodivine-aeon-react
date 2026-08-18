@@ -3,7 +3,7 @@ import type { ComputationManagerInt } from '../../../../../../services/global/Co
 import type { GlobalStringsInt } from '../../../../../../services/global/StringProvider/GlobalStrings/GlobalStringsInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
-import type { AttractorBehavior } from '../../../../../../types';
+import type { AttractorBehavior } from '../../../../../../types/types';
 
 export type AttractorResultsTableRowProps = {
   interpretationCount: number;

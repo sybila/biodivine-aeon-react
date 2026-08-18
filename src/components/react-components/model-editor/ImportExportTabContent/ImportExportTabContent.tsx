@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { ExampleModels } from '../../../../ExampleModels';
-import type { fileType } from '../../../../types';
+import type { fileType } from '../../../../types/types';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import type { ImportExportTabContentProps } from './ImportExportTabContentProps';

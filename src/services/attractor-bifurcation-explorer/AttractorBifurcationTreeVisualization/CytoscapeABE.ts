@@ -14,7 +14,7 @@ import type {
   NodeNecessaryConditions,
   VisualizationStatus,
   VisualOptionsSwitchableABE,
-} from '../../../types';
+} from '../../../types/types';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { BehaviorClassOperationsInt } from '../../utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { AttractorBifurcationTreeVisualizationInt } from './AttractorBifurcationTreeVisualizationInt';

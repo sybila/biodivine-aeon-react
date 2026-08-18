@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { VisualOptionsButtonSection } from '../../../../types';
+import type { VisualOptionsButtonSection } from '../../../../types/types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';

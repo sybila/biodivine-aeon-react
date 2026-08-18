@@ -3,7 +3,7 @@ import {
   type ModelEditorVariable,
   type Variable,
   type VariableIdSet,
-} from '../../../../../types';
+} from '../../../../../types/types';
 import SearchTable from '../../../global/SearchTable/SearchTable';
 import type { ControlEnabledVariablesTableProps } from './ControlEnabledVariablesTableProps';
 import VariableControlEnabledInfo from './VariableControlEnabledInfo/VariableControlEnabledInfo';

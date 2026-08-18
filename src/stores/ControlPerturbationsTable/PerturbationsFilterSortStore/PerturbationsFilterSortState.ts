@@ -1,4 +1,4 @@
-import type { PertTableSort, PertVariableFilterStatus } from '../../../types';
+import type { PertTableSort, PertVariableFilterStatus } from '../../../types/types';
 
 export type PerturbationFiltersSortState = {
   pageNumber: number;

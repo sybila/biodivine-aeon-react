@@ -3,7 +3,7 @@ import type {
   AttractorResults,
   ComputationModes,
   ControlResults,
-} from '../../../types';
+} from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ResultsStatus } from './ResultStatus';
 

@@ -1,4 +1,4 @@
-import type { NodeDataTSSD } from '../../../types';
+import type { NodeDataTSSD } from '../../../types/types';
 
 /** Interface which defines service responsible for managing Trap Space Succession Diagram page.  */
 export interface TrapSpaceSuccessionDiagramInt {

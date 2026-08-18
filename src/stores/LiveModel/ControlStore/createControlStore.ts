@@ -4,7 +4,7 @@ import {
   ok,
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
-} from '../../../types';
+} from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ControlStatus } from './ControlStatus';
 

@@ -2,7 +2,7 @@ import type {
   MenuTabTypeMENotNull,
   ModelStats,
   RegulationVariables,
-} from '../../../types';
+} from '../../../types/types';
 
 /**
  * Interface for ModelEditor service that is used to manage the state of the ModelEditor page.

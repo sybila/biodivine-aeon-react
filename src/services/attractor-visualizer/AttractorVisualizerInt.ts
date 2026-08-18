@@ -1,4 +1,4 @@
-import type { AttractorVisualizerInput } from '../../types';
+import type { AttractorVisualizerInput } from '../../types/types';
 
 /**
  * Interface for managing the Attractor Visualizer page.

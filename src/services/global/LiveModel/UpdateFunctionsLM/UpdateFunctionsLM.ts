@@ -7,7 +7,7 @@ import {
   EdgeMonotonicity,
   type UpdateFunctionMetadata,
   type UpdateFunctionStatus,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { WarningInt } from '../../Warning/WarningInt';
 import type { LiveModelInt } from '../LiveModelInt';

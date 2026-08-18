@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Regulation } from '../../../../types';
+import type { Regulation } from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
 import type { RegulationInfoListProps } from './RegulationInfoListProps';

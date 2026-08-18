@@ -6,7 +6,7 @@ import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverSt
 import type { ModelInfoState } from '../../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { TabsState } from '../../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
-import type { ControlResults } from '../../../../../types';
+import type { ControlResults } from '../../../../../types/types';
 
 export type ControlResultsStatsProps = {
   results: ControlResults;

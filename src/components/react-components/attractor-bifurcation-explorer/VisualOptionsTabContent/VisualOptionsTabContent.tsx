@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type {
   VisualOptionsButtonSection,
   VisualOptionsSwitchableABE,
-} from '../../../../types';
+} from '../../../../types/types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ValueSliderReact from '../../lit-wrappers/ValueSliderReact';

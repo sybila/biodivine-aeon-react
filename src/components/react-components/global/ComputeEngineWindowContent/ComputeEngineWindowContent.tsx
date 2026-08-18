@@ -5,7 +5,7 @@ import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 
 import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
 import Time from '../../../../services/utilities/Time';
-import type { ComputationStatus } from '../../../../types';
+import type { ComputationStatus } from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import SeparatorLine from '../SeparatorLine/SeparatorLine';

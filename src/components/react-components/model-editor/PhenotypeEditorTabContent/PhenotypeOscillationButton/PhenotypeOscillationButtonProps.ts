@@ -2,7 +2,7 @@ import type { ModelEditorPageStringsInt } from '../../../../../services/global/S
 import type { PhenotypeEditorInt } from '../../../../../services/model-editor/ControlEditor/PhenotypeEditor/PhenotypeEditorInt';
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
-import type { Oscillation } from '../../../../../types';
+import type { Oscillation } from '../../../../../types/types';
 
 export type PhenotypeOscillationButtonProps = {
   phenotypeEditorServ: PhenotypeEditorInt;

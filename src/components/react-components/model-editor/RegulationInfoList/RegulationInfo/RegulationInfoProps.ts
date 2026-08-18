@@ -3,7 +3,7 @@ import type { ModelEditorInt } from '../../../../../services/model-editor/ModelE
 import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverState';
 import type { VariablesStatus } from '../../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
-import type { Regulation } from '../../../../../types';
+import type { Regulation } from '../../../../../types/types';
 
 export type RegulationInfoProps = Regulation & {
   hover: boolean;

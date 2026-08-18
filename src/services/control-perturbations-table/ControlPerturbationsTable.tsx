@@ -7,7 +7,7 @@ import {
   type PertTableSort,
   type Perturbation,
   type PhenotypeStatus,
-} from '../../types';
+} from '../../types/types';
 import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
 class ControlPerturbationsTable implements ControlPerturbationsTableInt {

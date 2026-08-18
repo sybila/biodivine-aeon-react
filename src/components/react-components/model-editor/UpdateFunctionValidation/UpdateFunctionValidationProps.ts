@@ -1,4 +1,4 @@
-import type { UpdateFunctionStatus } from '../../../../types';
+import type { UpdateFunctionStatus } from '../../../../types/types';
 
 export type UpdateFunctionValidationProps = {
   compMinHeight: string;

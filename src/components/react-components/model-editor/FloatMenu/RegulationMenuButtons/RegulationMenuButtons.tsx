@@ -8,7 +8,7 @@ import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
 import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
 import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
 import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
-import type { EdgeMonotonicity } from '../../../../../types';
+import type { EdgeMonotonicity } from '../../../../../types/types';
 
 type MOButtonInfo = {
   icon: string;

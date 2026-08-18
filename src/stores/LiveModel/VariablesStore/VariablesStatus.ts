@@ -1,4 +1,4 @@
-import type { Variable } from '../../../types';
+import type { Variable } from '../../../types/types';
 
 /**  Zustand store for managing variables in the LiveModel
  Provides actions for adding, removing, renaming, and querying variables */

@@ -1,7 +1,7 @@
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { TabType } from '../../../types';
+import type { TabType } from '../../../types/types';
 import type { ModelEditorInt } from '../../model-editor/ModelEditor/ModelEditorInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import AttractorBifurcationExplorerShortcuts from './PageShortcuts/AttractorBifurcationExplorerShortcuts';

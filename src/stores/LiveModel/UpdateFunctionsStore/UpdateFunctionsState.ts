@@ -1,4 +1,4 @@
-import type { UpdateFunction, UpdateFunctionStatus } from '../../../types';
+import type { UpdateFunction, UpdateFunctionStatus } from '../../../types/types';
 
 /**
  * Zustand store for update functions.

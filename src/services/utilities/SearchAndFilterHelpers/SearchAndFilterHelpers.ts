@@ -1,4 +1,4 @@
-import type { Variable } from '../../../types';
+import type { Variable } from '../../../types/types';
 import type { DataFormatersInt } from '../DataFormaters/DataFormatersInt';
 import type { SearchAndFilterHelpersInt } from './SearchAndFilterHelpersInt';
 

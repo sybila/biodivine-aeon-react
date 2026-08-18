@@ -3,7 +3,7 @@ import type { ModelEditorInt } from '../../../../services/model-editor/ModelEdit
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { Regulation, RegulationVariables } from '../../../../types';
+import type { Regulation, RegulationVariables } from '../../../../types/types';
 
 export type RegulationInfoListProps = {
   height: string;

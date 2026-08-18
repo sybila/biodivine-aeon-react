@@ -10,7 +10,7 @@ import {
   type PhenotypeControlEnabledVars,
   type PhenotypeStatus,
   type PhenotypeVars,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';

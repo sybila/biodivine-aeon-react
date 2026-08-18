@@ -18,7 +18,7 @@ import type {
   StabilityAnalysisVariable,
   TimestampResponse,
   UpdateFunctionStatus,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { ComputeEngineInt } from '../ComputeEngineInt';
 import type {

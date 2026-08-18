@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Variable } from '../../../types';
+import type { Variable } from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { VariablesStatus } from './VariablesStatus';
 

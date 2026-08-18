@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { PertVariableFilterStatus } from '../../../../../types';
+import { PertVariableFilterStatus } from '../../../../../types/types';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../../lit-wrappers/TextInputReact';

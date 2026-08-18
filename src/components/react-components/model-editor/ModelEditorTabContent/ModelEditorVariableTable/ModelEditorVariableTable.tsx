@@ -3,7 +3,7 @@ import type {
   ModelEditorItem,
   ModelEditorItems,
   Variable,
-} from '../../../../../types';
+} from '../../../../../types/types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import VariableInfo from './VariableInfo/VariableInfo';

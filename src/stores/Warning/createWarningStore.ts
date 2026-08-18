@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { TextButton } from '../../types';
+import type { TextButton } from '../../types/types';
 import type { ZustandStore } from '../ZustandStoreType';
 import type { WarningState } from './WarningState';
 

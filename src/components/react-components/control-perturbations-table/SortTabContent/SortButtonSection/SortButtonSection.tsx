@@ -1,6 +1,6 @@
 import ArrowDownIcon from '../../../../../assets/icons/arrow_down.svg';
 import ArrowUpIcon from '../../../../../assets/icons/arrow_up.svg';
-import type { PerturbationSortFields } from '../../../../../types';
+import type { PerturbationSortFields } from '../../../../../types/types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { SortButtonSectionProps } from './SortButtonSectionProps';

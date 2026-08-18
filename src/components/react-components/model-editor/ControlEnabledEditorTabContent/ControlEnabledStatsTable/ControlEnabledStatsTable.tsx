@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ControlEnabledStats } from '../../../../../types';
+import type { ControlEnabledStats } from '../../../../../types/types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { ControlEnabledStatsProps } from './ControlEnabledStatsTableProps';
 

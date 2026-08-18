@@ -1,4 +1,4 @@
-import type { Variable } from '../../../types';
+import type { Variable } from '../../../types/types';
 
 /**
  * Interface for search and filter helper utility functions.

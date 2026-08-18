@@ -1,4 +1,4 @@
-import type { TabInfo, TabType } from '../../types';
+import type { TabInfo, TabType } from '../../types/types';
 
 export type TabsState = {
   /** Property containing information about all opened tabs. */

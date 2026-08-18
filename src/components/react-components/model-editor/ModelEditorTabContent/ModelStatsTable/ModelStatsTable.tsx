@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ModelStats } from '../../../../../types';
+import type { ModelStats } from '../../../../../types/types';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
 import type { ModelStatsTableProps } from './ModelStatsTableProps';
 

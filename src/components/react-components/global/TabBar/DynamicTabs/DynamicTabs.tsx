@@ -1,4 +1,4 @@
-import type { PossibleTabIds, PossibleTabsTypes } from '../../../../../types';
+import type { PossibleTabIds, PossibleTabsTypes } from '../../../../../types/types';
 import type { DynamicTabsProps } from './DynamicTabsProps';
 import TabButton from './TabButton/TabButton';
 

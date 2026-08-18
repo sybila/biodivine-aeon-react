@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { Oscillation } from '../../../../../types';
+import type { Oscillation } from '../../../../../types/types';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { PhenotypeOscillationButtonProps } from './PhenotypeOscillationButtonProps';
 

@@ -1,4 +1,4 @@
-import type { EdgeMonotonicity, Regulation } from '../../../types';
+import type { EdgeMonotonicity, Regulation } from '../../../types/types';
 
 /**
  * Zustand store for regulations.

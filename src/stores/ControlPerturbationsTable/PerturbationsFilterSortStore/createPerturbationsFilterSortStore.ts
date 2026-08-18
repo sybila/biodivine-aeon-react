@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { PertTableSort, PertVariableFilterStatus } from '../../../types';
+import type { PertTableSort, PertVariableFilterStatus } from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { PerturbationFiltersSortState } from './PerturbationsFilterSortState';
 

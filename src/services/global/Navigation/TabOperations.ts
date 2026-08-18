@@ -1,4 +1,4 @@
-import type { ComputationModes, TabType } from '../../../types';
+import type { ComputationModes, TabType } from '../../../types/types';
 
 import AttractorBifurcationExplorerIcon from '../../../assets/icons/attractor-bifurcation-explorer.svg';
 import AttractorVisualizerIcon from '../../../assets/icons/attractor-visualizer.svg';

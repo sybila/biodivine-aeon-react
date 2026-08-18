@@ -10,7 +10,7 @@ import {
   type Oscillation,
   type Phenotype,
   type PhenotypeStatus,
-} from '../../../../types';
+} from '../../../../types/types';
 import type { LiveModelInt } from '../../../global/LiveModel/LiveModelInt';
 import type { ModelEditorPageStringsInt } from '../../../global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { SearchAndFilterHelpersInt } from '../../../utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';

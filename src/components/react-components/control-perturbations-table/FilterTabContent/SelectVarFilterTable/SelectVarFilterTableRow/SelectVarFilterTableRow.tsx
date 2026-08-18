@@ -1,4 +1,4 @@
-import { PertVariableFilterStatus } from '../../../../../../types';
+import { PertVariableFilterStatus } from '../../../../../../types/types';
 import type { SelectVarFilterTableRowProp } from './SelectVarFilterTableRowProp';
 
 const SelectVarFilterTableRow: React.FC<SelectVarFilterTableRowProp> = ({

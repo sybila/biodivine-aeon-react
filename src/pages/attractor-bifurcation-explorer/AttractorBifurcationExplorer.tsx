@@ -16,7 +16,7 @@ import StateIcon from '../../assets/icons/state_overview.svg';
 
 import UtilitiesMenu from '../../components/react-components/attractor-bifurcation-explorer/UtilitiesMenu/UtilitiesMenu';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import type { DecisionMixedNode, LeafNode, MenuTabTypeABE } from '../../types';
+import type { DecisionMixedNode, LeafNode, MenuTabTypeABE } from '../../types/types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
 const AttractorBifurcationExplorer: React.FC<

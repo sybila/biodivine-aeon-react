@@ -1,4 +1,4 @@
-import type { ComputationModes, ControlResult } from '../../../types';
+import type { ComputationModes, ControlResult } from '../../../types/types';
 
 /** Interface for performing operations on results. (eg. exporting to CSV) */
 export interface ResultsOperationsInt {

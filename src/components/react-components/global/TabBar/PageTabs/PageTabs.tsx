@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { TabType } from '../../../../../types';
+import type { TabType } from '../../../../../types/types';
 import DynamicTabs from '../DynamicTabs/DynamicTabs';
 import type { PageTabsProps } from './PageTabsProps';
 

@@ -4,7 +4,7 @@ import type {
   NodeNecessaryConditions,
   StabilityAnalysisModes,
   VisualOptionsSwitchableABE,
-} from '../../../types';
+} from '../../../types/types';
 
 /**
  * Interface which defines service responsible for managing the attractor bifurcation explorer page.
