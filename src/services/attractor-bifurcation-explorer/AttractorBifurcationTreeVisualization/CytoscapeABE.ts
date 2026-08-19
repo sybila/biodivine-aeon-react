@@ -51,7 +51,6 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
   private container: HTMLElement | null = null;
 
   private behaviorClassOperationsServ: BehaviorClassOperationsInt;
-  private messageServ: MessageInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
@@ -64,11 +63,9 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   constructor(
     behaviorClassOperationsServ: BehaviorClassOperationsInt,
-    messageServ: MessageInt,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
   ) {
     this.behaviorClassOperationsServ = behaviorClassOperationsServ;
-    this.messageServ = messageServ;
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
 
     this.mathDimPercentFunction = (_: number, __: number) => {
