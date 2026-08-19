@@ -62,8 +62,11 @@ export interface LiveModelInt {
   /** Erase the whole model */
   clear(): void;
 
-  /** Function which blocks model modifications and initializes warnings || shows errors.
-   *  Returns true if the model can be modified, false otherwise.
+  /**
+   * Checks if the model can be modified based on the current state of the application.
+   *
+   * @param computationMode - The computation mode to check, if applicable.
+   * @returns `true` if the model can be modified, `false` otherwise.
    */
   modelCanBeModified(computationMode?: ComputationModes): boolean;
 

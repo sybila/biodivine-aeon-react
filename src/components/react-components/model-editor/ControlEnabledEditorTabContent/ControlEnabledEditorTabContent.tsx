@@ -9,6 +9,7 @@ const ControlEnabledEditorTabContent: React.FC<
   controlEnabledEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
+  messageServ,
   loadingServ,
 
   controlStore,
@@ -41,6 +42,7 @@ const ControlEnabledEditorTabContent: React.FC<
         controlEnabledEditorServ={controlEnabledEditorServ}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         pageStringProviderServ={pageStringProviderServ}
+        messageServ={messageServ}
         loadingServ={loadingServ}
         variablesStore={variablesStore}
         controlStore={controlStore}

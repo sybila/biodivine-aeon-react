@@ -5,6 +5,7 @@ import {
 
 import { useMemo } from 'react';
 import PhenIcon from '../../../../../../assets/icons/phenotype-button.svg';
+import { isErr } from '../../../../../../types/result';
 import TableRowWithName from '../../../../global/NameTableRow/TableRowWithName';
 import type { VariablePhenotypeInfoProps } from './VariablePhenotypeInfoProps';
 
@@ -16,6 +17,7 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
   toggleSelect,
 
   phenotypeEditorServ,
+  messageServ,
   pageStringProviderServ,
 
   controlStore,
@@ -95,14 +97,22 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
           text: 'Ph',
           icon: PhenIcon,
           handleClick: () => {
-            phenotypeEditorServ.togglePhenotype(id);
-            helpHoverStore
-              .getState()
-              .setHelpHoverText(
-                pageStringProviderServ.Tooltips.currentPhenotype(
-                  getNextPhenotype(controlInfo.phenotype)
+            if (
+              !isErr(
+                messageServ.showFromResult(
+                  phenotypeEditorServ.togglePhenotype(id),
+                  'Failed to toggle phenotype status'
                 )
-              );
+              )
+            ) {
+              helpHoverStore
+                .getState()
+                .setHelpHoverText(
+                  pageStringProviderServ.Tooltips.currentPhenotype(
+                    getNextPhenotype(controlInfo.phenotype)
+                  )
+                );
+            }
           },
           iconAlt: 'Phenotype Icon',
           buttonTextColor: 'var(--color-phenotype-status-text)',

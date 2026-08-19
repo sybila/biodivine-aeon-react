@@ -3,17 +3,13 @@ import type { ResultsStatus } from '../../../../stores/ComputationManager/Result
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { err, isErr, ok, type Result } from '../../../../types/result';
 import {
   EdgeMonotonicity,
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
   type Variable,
 } from '../../../../types/types';
-import {
-  err,
-  isErr,
-  ok, type Result
-} from "../../../../types/result";
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
@@ -233,7 +229,7 @@ class ImportLM implements ImportLMInt {
     phenotypes.forEach((phen) => {
       const phenId = this.liveModel.Control.createNewPhenotype(phen.phenName);
 
-      if (phenId != undefined) {
+      if (!isErr(phenId)) {
         phen.variables.forEach((variable) => {
           const existingVarObject = this.variablesStore
             .getState()
@@ -245,7 +241,7 @@ class ImportLM implements ImportLMInt {
               variable.phenValue,
               false,
               true,
-              phenId
+              phenId.value
             );
           }
         });
@@ -478,9 +474,7 @@ class ImportLM implements ImportLMInt {
 
   // #region --- Import Aeon ---
 
-  public async importAeonWithWarnings(
-    modelString: string
-  ) {
+  public async importAeonWithWarnings(modelString: string) {
     if (
       Object.values(this.resultsStatusStore.getState().results).some(
         (value) => value !== undefined

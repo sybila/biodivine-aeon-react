@@ -13,6 +13,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
   phenotypeEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
+  messageServ,
   loadingServ,
 
   variablesStore,
@@ -181,6 +182,7 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
                   selected={selectedVariablesIds.has(variable.id) ?? false}
                   toggleSelect={toggleVariableSelect}
                   phenotypeEditorServ={phenotypeEditorServ}
+                  messageServ={messageServ}
                   pageStringProviderServ={pageStringProviderServ}
                   controlStore={controlStore}
                   helpHoverStore={helpHoverStore}

@@ -216,7 +216,6 @@ class LiveModel implements LiveModelInt {
 
   // #region --- Global Live Model Functions ---
 
-  /** True if the model has no variables. */
   public isEmpty(): boolean {
     return (
       this.Variables.isEmpty() &&
@@ -224,17 +223,13 @@ class LiveModel implements LiveModelInt {
     );
   }
 
-  /** Erase the whole model */
   public clear(): void {
     this.Variables.clear();
     this.modelEditorStatusStore.getState().clear();
     this.controlStore.getState().clear();
   }
 
-  /** Function which blocks model modifications and initializes warnings || shows errors.
-   *  Returns true if the model can be modified, false otherwise.
-   */
-  public modelCanBeModified(computationMode?: ComputationModes): boolean {
+  public modelCanBeModified(computationMode?: ComputationModes) {
     if (this.loadedModelStore.getState().loadedModelType !== 'main') {
       this.messageServ.showError(
         'You can only modify the model in the Model Editor. Please switch to the Model Editor to proceed.'

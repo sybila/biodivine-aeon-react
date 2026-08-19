@@ -1,3 +1,4 @@
+import type { Result } from '../../../../types/result';
 import type {
   Oscillation,
   PhenotypeControlEnabledVars,
@@ -45,6 +46,8 @@ export interface ControlLMInt {
    * @param addIntoUndoRedo - Indicates whether to add the change to the undo/redo history.
    * @param force - Indicates whether to force the change without checking current status.
    * @param phenotypeId - (Optional) The identifier of the phenotype. If not provided, the currently edited phenotype is assumed.
+   * @returns An `Ok` result with `true` if the phenotype status was successfully changed,
+   *  or an `Err` result with an error message if there was an issue.
    */
   changePhenotypeById(
     id: number,
@@ -52,15 +55,24 @@ export interface ControlLMInt {
     addIntoUndoRedo: boolean,
     force: boolean,
     phenotypeId?: number
-  ): boolean;
+  ): Result<boolean>;
 
-  /** Change variable control enabled state by its ID */
+  /**
+   * Changes the control-enabled status of a variable by its ID.
+   *
+   * @param id - The ID of the variable whose control-enabled status is to be changed.
+   * @param controlEnabled - The new control-enabled status to set.
+   * @param addIntoUndoRedo - Whether to add this change to the undo/redo stack.
+   * @param force - Whether to force the change even if it blocks certain conditions.
+   * @returns An `Ok` result with `true` if the control-enabled status was successfully changed,
+   * or an `Err` result with an error message if there was an issue.
+   */
   changeControlEnabledById(
     id: number,
     controlEnabled: boolean,
     addIntoUndoRedo: boolean,
     force: boolean
-  ): void;
+  ): Result<boolean>;
 
   /** Remove control information for a variable by its ID */
   removeControlInfo(id: number, force?: boolean): void;
@@ -69,30 +81,34 @@ export interface ControlLMInt {
 
   // #region --- Multiple Phenotypes Operations ---
 
-  /** Changes currently active phenotype to the phenotype corresponding to the id.
-   *  @param id (number) - id of the phenotype which should be the new active phenotype.
-   *  @returns returns id of the new active phenotype, if phenotype with this id doesnt exist returns undefined
+  /** Changes currently edited phenotype to the phenotype corresponding to the id.
+   *  @param id (number) - id of the phenotype which should be the new edited phenotype.
+   *  @returns returns Result object with id of the new edited phenotype, if there is an error returns Result object containing error message
    */
-  changeCurrentlyActivePhenotype(id: number): number | undefined;
+  changeCurrentlyEditedPhenotype(id: number): Result<number>;
 
   /** Create new phenotype with name specified by phenotypeName.
    *  @param phenotypeName (string) - optional name of the newly created phenotype, if is not same defaul name is constructed.
-   *  @returns returns id of the new phenotype, if phenotype with this name already exists returns undefined.
+   *  @returns returns Result object with  id of the new phenotype, if there is an error returns Result object containing error message
    */
-  createNewPhenotype(phenotypeName?: string): number | undefined;
+  createNewPhenotype(phenotypeName?: string): Result<number>;
 
   /** Renames phenotype with id to newName.
    *  @param id (number) = id of the phenotype to be renamed.
    *  @param newName (string) = newName for the phenotype
-   *  @returns If succesful returns newName string, else shows error and returns undefined.
+   * @returns
+   * - If successful, returns a `Result` object containing the string `newName`.
+   * - If an error occurs during the process, shows an error message and returns an undefined `Result` object.
    */
-  renamePhenotype(id: number, newName: string): string | undefined;
+  renamePhenotype(id: number, newName: string): Result<string>;
 
   /** Deletes phenotype by id.
    *  @param id (number) => id of the phenotype, which should be deleted
-   *  @returns If succesful returns id of the delted phenotype, else returns undefined.
+   * @returns
+   * - If successful, returns a `Result` object containing the number `id` of the deleted phenotype.
+   * - If an error occurs during the deletion process, shows an error message and returns an undefined `Result` object.
    */
-  removePhenotype(id: number): number | undefined;
+  removePhenotype(id: number): Result<number>;
 
   // #endregion
 

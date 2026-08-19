@@ -12,6 +12,7 @@ const ControlVariablesTable: React.FC<ControlEnabledVariablesTableProps> = ({
   controlEnabledEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
+  messageServ,
   loadingServ,
 
   variablesStore,
@@ -165,6 +166,7 @@ const ControlVariablesTable: React.FC<ControlEnabledVariablesTableProps> = ({
                   selected={selectedVariablesIds.has(variable.id) ?? false}
                   toggleSelect={toggleVariableSelect}
                   controlEnabledEditorServ={controlEnabledEditorServ}
+                  messageServ={messageServ}
                   pageStringProviderServ={pageStringProviderServ}
                   controlStore={controlStore}
                   helpHoverStore={helpHoverStore}

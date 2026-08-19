@@ -1,3 +1,4 @@
+import type { MessageInt } from '../../../../../../services/global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ControlEnabledEditorInt } from '../../../../../../services/model-editor/ControlEditor/ControlEnabledEditor/ControlEnabledEditorInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
@@ -12,6 +13,7 @@ export type VariableControlEnabledInfoProps = {
   toggleSelect: (variableId: number) => void;
 
   controlEnabledEditorServ: ControlEnabledEditorInt;
+  messageServ: MessageInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
 
   controlStore: ZustandStore<ControlStatus>;

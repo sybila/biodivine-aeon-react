@@ -1,4 +1,5 @@
 import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../../../services/global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { PhenotypeEditorInt } from '../../../../services/model-editor/ControlEditor/PhenotypeEditor/PhenotypeEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
@@ -14,6 +15,7 @@ export type PhenotypesOverlayContentProps = {
 
   liveModelServ: LiveModelInt;
   phenotypeEditorServ: PhenotypeEditorInt;
+  messageServ: MessageInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
 
   controlStore: ZustandStore<ControlStatus>;

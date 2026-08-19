@@ -2,6 +2,7 @@ import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/Co
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { err, isErr, ok } from '../../../../types/result';
 import {
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
@@ -10,7 +11,6 @@ import {
   type PhenotypeStatus,
   type PhenotypeVars,
 } from '../../../../types/types';
-import { isErr } from "../../../../types/result";
 import type { ComputationManagerInt } from '../../ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -110,7 +110,6 @@ class ControlLM implements ControlLMInt {
     }
   }
 
-  /** Change control information for a variable by its ID */
   public changePhenotypeById(
     id: number,
     phenotype: PhenotypeStatus,
@@ -119,11 +118,9 @@ class ControlLM implements ControlLMInt {
     phenotypeId?: number
   ) {
     if (!force && !this.liveModel.modelCanBeModified('Control')) {
-      this.messageServ.showError(
+      return err(
         'Some event blocks the phenotype status change. Try again later.'
       );
-
-      return false;
     }
 
     const oldPhenotype = this.controlStore
@@ -161,21 +158,19 @@ class ControlLM implements ControlLMInt {
       });
     }
 
-    return true;
+    return ok(true);
   }
 
-  /** Change variable control enabled state by its ID */
   public changeControlEnabledById(
     id: number,
     controlEnabled: boolean,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified('Control')) {
-      console.log(
-        'Model cannot be modified at the moment change control enabled.'
+      return err(
+        'Some event blocks the control-enabled status change. Try again later.'
       );
-      return;
     }
 
     this.controlStore.getState().setControlEnabled(id, controlEnabled);
@@ -200,10 +195,11 @@ class ControlLM implements ControlLMInt {
         },
       });
     }
+
+    return ok(true);
   }
 
-  /** Remove control information for a variable by its ID */
-  public removeControlInfo(id: number, force = false): void {
+  public removeControlInfo(id: number, force = false) {
     if (!force && !this.liveModel.modelCanBeModified('Control')) {
       return;
     }
@@ -215,40 +211,34 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Multiple Phenotypes Operations ---
 
-  changeCurrentlyActivePhenotype(id: number): number | undefined {
+  changeCurrentlyEditedPhenotype(id: number) {
     const result = this.controlStore.getState().switchPhenotype(id);
 
     if (result === undefined) {
-      this.messageServ.showError(
-        "Cannot make this phenotype active: Phenotype doesn't exist."
-      );
+      return err("Phenotype doesn't exist.");
     }
 
-    return result;
+    return ok(result);
   }
 
-  createNewPhenotype(phenotypeName?: string): number | undefined {
+  createNewPhenotype(phenotypeName?: string) {
     const result = this.controlStore.getState().createPhenotype(phenotypeName);
 
     if (isErr(result)) {
-      this.messageServ.showError(`Cannot create phenotype: ${result.error}`);
-      return undefined;
+      return result;
     }
 
-    return result.value;
+    return ok(result.value);
   }
 
-  renamePhenotype(id: number, newName: string): string | undefined {
+  renamePhenotype(id: number, newName: string) {
     if (id === -1) {
       const createdPhenotype = this.controlStore
         .getState()
         .createPhenotype(newName);
 
       if (isErr(createdPhenotype)) {
-        this.messageServ.showError(
-          `Cannot rename phenotype: ${createdPhenotype.error}`
-        );
-        return undefined;
+        return err('Failed to create phenotype with new name. ');
       }
 
       const shiftResult = this.controlStore
@@ -257,37 +247,35 @@ class ControlLM implements ControlLMInt {
 
       if (isErr(shiftResult)) {
         this.controlStore.getState().removePhenotype(createdPhenotype.value);
-        this.messageServ.showError(
-          `Unexpected error when trying to shift default phenotype: ${shiftResult.error}`
+        return err(
+          `Failed to shift default phenotype into newly created phenotype.`
         );
-        return undefined;
       }
 
       this.messageServ.showSuccess(
         'Cannot rename default phenotype => Created new phenotype containing variables of default phenotype.'
       );
-      return newName;
+
+      return ok(newName);
     }
 
     const result = this.controlStore.getState().renamePhenotype(id, newName);
 
     if (isErr(result)) {
-      this.messageServ.showError(`Cannot rename phenotype: ${result.error}`);
-      return undefined;
+      return result;
     }
 
-    return result.value;
+    return ok(result.value);
   }
 
-  removePhenotype(id: number): number | undefined {
+  removePhenotype(id: number) {
     const result = this.controlStore.getState().removePhenotype(id);
 
     if (isErr(result)) {
-      this.messageServ.showError(`Cannot remove phenotype: ${result.error}`);
-      return undefined;
+      return result;
     }
 
-    return result.value;
+    return ok(result.value);
   }
 
   // #endregion

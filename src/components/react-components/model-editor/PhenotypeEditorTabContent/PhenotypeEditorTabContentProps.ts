@@ -1,4 +1,5 @@
 import type { LoadingInt } from '../../../../services/global/Loading/LoadingInt';
+import type { MessageInt } from '../../../../services/global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { PhenotypeEditorInt } from '../../../../services/model-editor/ControlEditor/PhenotypeEditor/PhenotypeEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
@@ -8,10 +9,11 @@ import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStor
 import type { ModelEditorStatus } from '../../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
-export type ControlEditorTabContentProps = {
+export type PhenotypeEditorTabContentProps = {
   phenotypeEditorServ: PhenotypeEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
+  messageServ: MessageInt;
   loadingServ: LoadingInt;
 
   controlStore: ZustandStore<ControlStatus>;

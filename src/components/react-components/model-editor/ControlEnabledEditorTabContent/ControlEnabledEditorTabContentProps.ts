@@ -1,5 +1,5 @@
-import type { LiveModelInt } from '../../../../services/global/LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../../../services/global/Loading/LoadingInt';
+import type { MessageInt } from '../../../../services/global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ControlEnabledEditorInt } from '../../../../services/model-editor/ControlEditor/ControlEnabledEditor/ControlEnabledEditorInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
@@ -13,6 +13,7 @@ export type ControlEnabledEditorTabContentProps = {
   controlEnabledEditorServ: ControlEnabledEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
+  messageServ: MessageInt;
   loadingServ: LoadingInt;
 
   controlStore: ZustandStore<ControlStatus>;

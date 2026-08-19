@@ -11,12 +11,14 @@ import AddIcon from '../../../../assets/icons/add_box.svg';
 import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
 import DeleteIcon from '../../../../assets/icons/white-delete.svg';
+import { isErr } from '../../../../types/result';
 
 const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   filterElementsFunction,
 
   liveModelServ,
   phenotypeEditorServ,
+  messageServ,
   pageStringProviderServ,
 
   controlStore,
@@ -57,13 +59,14 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       return newName;
     }
 
-    const result = liveModelServ.Control.renamePhenotype(id, newName);
+    const result = messageServ.showFromResult(
+      liveModelServ.Control.renamePhenotype(id, newName),
+      'Failed to rename phenotype'
+    );
 
-    if (result != undefined && id === -1) {
-      return oldName;
+    if (!isErr(result)) {
+      return id === -1 ? oldName : newName;
     }
-
-    return result != undefined ? newName : undefined;
   };
 
   return (
@@ -101,7 +104,10 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
               buttonHoverColor="var(--color-secondary-buttons-hover)"
               textColor="var(--color-secondary-text)"
               handleClick={() => {
-                liveModelServ.Control.createNewPhenotype();
+                messageServ.showFromResult(
+                  liveModelServ.Control.createNewPhenotype(),
+                  'Failed to create new phenotype'
+                );
               }}
               onMouseEnter={(e: React.MouseEvent) =>
                 helpHoverStore
@@ -143,8 +149,11 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
                     name={el.name}
                     isSelected={el.id === currentPhenotype.id}
                     handleClick={() =>
-                      liveModelServ.Control.changeCurrentlyActivePhenotype(
-                        el.id
+                      messageServ.showFromResult(
+                        liveModelServ.Control.changeCurrentlyEditedPhenotype(
+                          el.id
+                        ),
+                        'Failed to switch currently edited phenotype'
                       )
                     }
                     handleNameChange={(newName) => {
@@ -177,7 +186,10 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
                               icon: DeleteIcon,
                               iconAlt: 'Trash',
                               handleClick: () => {
-                                liveModelServ.Control.removePhenotype(el.id);
+                                messageServ.showFromResult(
+                                  liveModelServ.Control.removePhenotype(el.id),
+                                  'Failed to remove phenotype'
+                                );
                               },
                               buttonBgColor: 'var(--color-delete)',
                               buttonTextColor: 'var(--color-delete-text)',

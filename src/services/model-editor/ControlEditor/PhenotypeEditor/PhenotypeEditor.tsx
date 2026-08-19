@@ -12,18 +12,21 @@ import {
   type PhenotypeStatus,
 } from '../../../../types/types';
 import type { LiveModelInt } from '../../../global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../../global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { SearchAndFilterHelpersInt } from '../../../utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ModelVisualizationInt } from '../../ModelVisualization/ModelVisualizationInt';
 import ControlEditor from '../ControlEditor';
+import type { PhenotypeEditorInt } from './PhenotypeEditorInt';
 
-class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
+class PhenotypeEditor extends ControlEditor implements PhenotypeEditorInt {
   // #region --- Properties + Constructor ---
 
   private phenotypeVariableSearch: string;
   private phenotypesSearch: string;
 
   private liveModelServ: LiveModelInt;
+  private messageServ: MessageInt;
   private pageStringProviderServ: ModelEditorPageStringsInt;
   private searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
 
@@ -36,6 +39,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
     modelVisualizationServ: ModelVisualizationInt,
     liveModelServ: LiveModelInt,
     searchAndFilterHelpersServ: SearchAndFilterHelpersInt,
+    messageServ: MessageInt,
     pageStringProviderServ: ModelEditorPageStringsInt,
     controlStore: ZustandStore<ControlStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
@@ -47,6 +51,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
 
     this.searchAndFilterHelpersServ = searchAndFilterHelpersServ;
     this.liveModelServ = liveModelServ;
+    this.messageServ = messageServ;
     this.pageStringProviderServ = pageStringProviderServ;
 
     this.controlStore = controlStore;
@@ -82,12 +87,15 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
 
   // #region --- Phenotype Actions ---
 
-  /** Changes the phenotype state of a variable by its ID */
   public changePhenotype(id: number, phenotype: PhenotypeStatus) {
-    this.liveModelServ.Control.changePhenotypeById(id, phenotype, true, false);
+    return this.liveModelServ.Control.changePhenotypeById(
+      id,
+      phenotype,
+      true,
+      false
+    );
   }
 
-  /** Toggles the phenotype state of a variable by its ID */
   public togglePhenotype(id: number) {
     const variablePhenotype: PhenotypeStatus | undefined =
       this.controlStore.getState().getVariablePhenotype(id) ??
@@ -95,23 +103,21 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
 
     switch (variablePhenotype) {
       case PHENOTYPE_STATUS.InPhenotypeTrue:
-        this.liveModelServ.Control.changePhenotypeById(
+        return this.liveModelServ.Control.changePhenotypeById(
           id,
           PHENOTYPE_STATUS.InPhenotypeFalse,
           true,
           false
         );
-        break;
       case PHENOTYPE_STATUS.InPhenotypeFalse:
-        this.liveModelServ.Control.changePhenotypeById(
+        return this.liveModelServ.Control.changePhenotypeById(
           id,
           PHENOTYPE_STATUS.NotInPhenotype,
           true,
           false
         );
-        break;
       default:
-        this.liveModelServ.Control.changePhenotypeById(
+        return this.liveModelServ.Control.changePhenotypeById(
           id,
           PHENOTYPE_STATUS.InPhenotypeTrue,
           true,
@@ -120,15 +126,6 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
     }
   }
 
-  /** Changes the phenotype state of selected variables.
-   *  @param selectedVariables - Array of tuples where each tuple contains:
-   *    - variable name (string)
-   *    - whether the variable is selected (boolean)
-   *  @param phenotype - The new phenotype state to set (true, false, or null)
-   *  Only variables that are marked as selected (true) will have their phenotype state changed.
-   *  Variables not present in the selectedVariables array are considered not selected and will be ignored.
-   *  If a variable name does not correspond to any existing variable, it will be ignored.
-   */
   public changePhenotypeSelected(
     selectedVariables: Set<number>,
     phenotype: PhenotypeStatus
@@ -175,6 +172,7 @@ class PhenotypeEditor extends ControlEditor implements PhenotypeEditor {
           }}
           liveModelServ={this.liveModelServ}
           phenotypeEditorServ={this}
+          messageServ={this.messageServ}
           pageStringProviderServ={this.pageStringProviderServ}
           controlStore={this.controlStore}
           helpHoverStore={this.helpHoverStore}

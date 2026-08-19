@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import ContrIcon from '../../../../../../assets/icons/control-enabled-button.svg';
+import { isErr } from '../../../../../../types/result';
 import TableRowWithName from '../../../../global/NameTableRow/TableRowWithName';
 import type { VariableControlEnabledInfoProps } from './VariableControlEnabledInfoProps';
 
@@ -11,6 +12,7 @@ const VariableControlEnabledInfo: React.FC<VariableControlEnabledInfoProps> = ({
   toggleSelect,
 
   controlEnabledEditorServ,
+  messageServ,
   pageStringProviderServ,
 
   controlStore,
@@ -72,14 +74,22 @@ const VariableControlEnabledInfo: React.FC<VariableControlEnabledInfoProps> = ({
           text: 'CE',
           icon: ContrIcon,
           handleClick: () => {
-            controlEnabledEditorServ.toggleControlEnabled(id);
-            helpHoverStore
-              .getState()
-              .setHelpHoverText(
-                pageStringProviderServ.Tooltips.currentControlEnabled(
-                  getNextControlStatus(variableControlEnabled)
+            if (
+              !isErr(
+                messageServ.showFromResult(
+                  controlEnabledEditorServ.toggleControlEnabled(id),
+                  'Failed to toggle control-enabled state'
                 )
-              );
+              )
+            ) {
+              helpHoverStore
+                .getState()
+                .setHelpHoverText(
+                  pageStringProviderServ.Tooltips.currentControlEnabled(
+                    getNextControlStatus(variableControlEnabled)
+                  )
+                );
+            }
           },
           iconAlt: 'Control-Enabled Icon',
           buttonTextColor: 'var(--color-control-enabled-status-text)',

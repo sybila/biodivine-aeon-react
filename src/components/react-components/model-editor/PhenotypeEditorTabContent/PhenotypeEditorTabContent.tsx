@@ -3,15 +3,16 @@ import type { Oscillation, PhenotypeStats } from '../../../../types/types';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import type { ControlEditorTabContentProps } from './PhenotypeEditorTabContentProps';
+import type { PhenotypeEditorTabContentProps } from './PhenotypeEditorTabContentProps';
 import PhenotypeOscillationButton from './PhenotypeOscillationButton/PhenotypeOscillationButton';
 import PhenotypeStatsTable from './PhenotypeStatsTable/PhenotypeStatsTable';
 import PhenotypeVariablesTable from './PhenotypeVariablesTable/PhenotypeVariablesTable';
 
-const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
+const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
   phenotypeEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
+  messageServ,
   loadingServ,
 
   controlStore,
@@ -120,6 +121,7 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
             phenotypeEditorServ={phenotypeEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             pageStringProviderServ={pageStringProviderServ}
+            messageServ={messageServ}
             loadingServ={loadingServ}
             variablesStore={variablesStore}
             controlStore={controlStore}
@@ -132,4 +134,4 @@ const ControlEditorTabContent: React.FC<ControlEditorTabContentProps> = ({
   );
 };
 
-export default ControlEditorTabContent;
+export default PhenotypeEditorTabContent;

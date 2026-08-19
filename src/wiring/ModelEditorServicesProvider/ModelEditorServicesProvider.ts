@@ -53,6 +53,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
     this.controlEnabledEditorServ = new ControlEnabledEditor(
       this.modelVisualizationServ,
       liveModelServ,
+      messageServ,
       storesProvider.controlStore,
       storesProvider.variablesStore,
       storesProvider.modelEditorStatusStore
@@ -61,6 +62,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
       this.modelVisualizationServ,
       liveModelServ,
       searchAndFilterHelpersServ,
+      messageServ,
       stringProviderServ.ModelEditorPage,
       storesProvider.controlStore,
       storesProvider.variablesStore,

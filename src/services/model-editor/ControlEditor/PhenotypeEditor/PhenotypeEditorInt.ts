@@ -1,3 +1,4 @@
+import type { Result } from '../../../../types/result';
 import type { Oscillation, PhenotypeStatus } from '../../../../types/types';
 import type ControlEditor from '../ControlEditor';
 
@@ -20,11 +21,27 @@ export interface PhenotypeEditorInt extends ControlEditor {
 
   // #region --- Phenotype Actions ---
 
-  /** Changes the phenotype state of a variable by its ID */
-  changePhenotype(id: number, phenotype: PhenotypeStatus): void;
+  /**
+   * Changes the phenotype status of a variable by its ID.
+   *
+   * @param id - The ID of the variable whose phenotype status is to be changed.
+   * @param phenotype - The new phenotype status to set.
+   * @param addIntoUndoRedo - Whether to add this change to the undo/redo stack.
+   * @param force - Whether to force the change even if it blocks certain conditions.
+   * @param phenotypeId - The specific phenotype ID to change (optional).
+   * @returns An `Ok` result with `true` if the phenotype status was successfully changed,
+   * or an `Err` result with an error message if there was an issue.
+   */
+  changePhenotype(id: number, phenotype: PhenotypeStatus): Result<boolean>;
 
-  /** Toggles the phenotype state of a variable by its ID */
-  togglePhenotype(id: number): void;
+  /**
+   * Toggles the phenotype status of a variable by its ID between different states.
+   *
+   * @param id - The ID of the variable whose phenotype status is to be toggled.
+   * @returns An `Ok` result with `true` if the phenotype status was successfully changed,
+   * or an `Err` result with an error message if there was an issue.
+   */
+  togglePhenotype(id: number): Result<boolean>;
 
   /** Changes the phenotype state of selected variables.
    *  @param selectedVariables - Set of variable IDs:
