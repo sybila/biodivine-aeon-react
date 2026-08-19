@@ -24,8 +24,6 @@ export interface AttractorVisualizerInt {
 
   insertAttractorData(result: any, newTab: boolean): void;
 
-  displayGraph(index: number): void;
-
   // #endregion
 
   // #region --- Get Data ---

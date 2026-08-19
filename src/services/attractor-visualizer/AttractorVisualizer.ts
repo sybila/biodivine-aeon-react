@@ -2,6 +2,7 @@ import * as vis from 'vis-network';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
+import { err, ok, type Result } from '../../types/result';
 import type {
   AttractorData,
   AttractorVisualizerInput,
@@ -144,7 +145,10 @@ class AttractorVisualizer implements AttractorVisualizerInt {
         .getState()
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
-          this.reloadVisualizer();
+          this.messageServ.showFromResult(
+            this.reloadVisualizer(),
+            'Failed to open attractor visualization tab'
+          );
           this.clear();
         });
     }
@@ -155,12 +159,9 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   /** Inserts this.loadedResults into the visualizer.
    *  Creates new network visualizer with the currently loaded attractor. */
-  private displayAll(): boolean {
+  private displayAll(): Result<boolean> {
     if (!this.attractorData) {
-      this.messageServ.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return false;
+      return err('No loaded result available for display.');
     }
 
     if (this.attractorData['has_large_attractors']) {
@@ -178,10 +179,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
     }
 
     if (!this.container) {
-      this.messageServ.showError(
-        'Unable to render Attractor Visualization: Missing container element - Internal Error'
-      );
-      return false;
+      return err('Internal Error - Missing container element');
     }
 
     this.network = new vis.Network(
@@ -190,46 +188,22 @@ class AttractorVisualizer implements AttractorVisualizerInt {
       this.options
     );
 
-    return true;
-  }
-
-  public displayGraph(index: number): void {
-    if (!this.container) {
-      this.messageServ.showError(
-        'Cannot show Attractor Visualization: Internal Error'
-      );
-      return;
-    }
-
-    if (!this.attractorData) {
-      this.messageServ.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return;
-    }
-
-    if (this.attractorData?.has_large_attractors) {
-      this.messageServ.showInfo(
-        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
-      );
-    }
-
-    this.network = new vis.Network(
-      this.container!,
-      this.attractorData.attractors[index].vis,
-      this.options
-    );
+    return ok(true);
   }
 
   /** Reload the visualizer and display currently set attractor. */
-  private reloadVisualizer(): void {
+  private reloadVisualizer(): Result<boolean> {
     if (this.container) {
-      this.displayAll();
+      const result = this.displayAll();
 
       if (this.network) {
         this.network.on('click', this.nodeClick.bind(this));
       }
+
+      return result;
     }
+
+    return err('Internal Error - Missing container.');
   }
 
   // #endregion
