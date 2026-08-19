@@ -1,3 +1,4 @@
+import { isErr, type Result } from '../../../types/result';
 import type { MessageInt } from './MessageInt';
 
 /** Class which implements global message management. */
@@ -26,6 +27,20 @@ class Message implements MessageInt {
 
   showError(message: string, duration: number = 3000): void {
     this.errorFunction(message, duration);
+  }
+
+  showFromResult<T>(
+    result: Result<T>,
+    errorPrefix: string,
+    successMessage?: string
+  ): Result<T> {
+    if (isErr(result)) {
+      this.showError(`${errorPrefix}: ${result.error}`);
+    } else if (successMessage != undefined) {
+      this.showSuccess(successMessage);
+    }
+
+    return result;
   }
 }
 
