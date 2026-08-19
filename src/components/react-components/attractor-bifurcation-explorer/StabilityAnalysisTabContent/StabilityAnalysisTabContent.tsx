@@ -7,6 +7,7 @@ const StabilityAnalysisTabContent: React.FC<
   StabilityAnalysisTabContentProps
 > = ({
   attractorBifurcationExplorerServ,
+  messageServ,
   pageStringProviderServ,
 
   bifurcationExplorerStatusStore,
@@ -32,6 +33,7 @@ const StabilityAnalysisTabContent: React.FC<
       <StabilityAnalysisTable
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
         pageStringProviderServ={pageStringProviderServ}
+        messageServ={messageServ}
         bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
         helpHoverStore={helpHoverStore}
       />

@@ -16,7 +16,11 @@ import StateIcon from '../../assets/icons/state_overview.svg';
 
 import UtilitiesMenu from '../../components/react-components/attractor-bifurcation-explorer/UtilitiesMenu/UtilitiesMenu';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import type { DecisionMixedNode, LeafNode, MenuTabTypeABE } from '../../types/types';
+import type {
+  DecisionMixedNode,
+  LeafNode,
+  MenuTabTypeABE,
+} from '../../types/types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
 const AttractorBifurcationExplorer: React.FC<
@@ -25,6 +29,7 @@ const AttractorBifurcationExplorer: React.FC<
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
   pageStringProviderServ,
+  messageServ,
   shortcutManagerServ,
 
   bifurcationExplorerStatusStore,
@@ -77,6 +82,7 @@ const AttractorBifurcationExplorer: React.FC<
           <OverviewTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
+            messageServ={messageServ}
             pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
             helpHoverStore={helpHoverStore}
@@ -86,6 +92,7 @@ const AttractorBifurcationExplorer: React.FC<
         return (
           <StabilityAnalysisTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            messageServ={messageServ}
             pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
             helpHoverStore={helpHoverStore}
@@ -96,6 +103,7 @@ const AttractorBifurcationExplorer: React.FC<
           <MakeDecisionTabContent
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
+            messageServ={messageServ}
             pageStringProviderServ={pageStringProviderServ}
             bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
             helpHoverStore={helpHoverStore}

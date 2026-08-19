@@ -7,6 +7,7 @@ import type { AutoExpandSectionProps } from './AutoExpandSectionProps';
 
 const AutoExpandSection: React.FC<AutoExpandSectionProps> = ({
   attractorBifurcationExplorerServ,
+  messageServ,
   pageStringProviderServ,
 
   helpHoverStore,
@@ -21,12 +22,15 @@ const AutoExpandSection: React.FC<AutoExpandSectionProps> = ({
         text={`Auto-Expand (${depth} level${depth === 1 ? '' : 's'})`}
         iconAlt="Graph Icon"
         iconSrc={GraphIcon}
-        textColor='var(--color-secondary-text)'
-        buttonColor='var(--color-secondary-buttons)'
-        buttonHoverColor='var(--color-secondary-buttons-hover)'
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         handleClick={() =>
-          attractorBifurcationExplorerServ.autoExpandBifurcationTreeFromSelected(
-            depth
+          messageServ.showFromResult(
+            attractorBifurcationExplorerServ.autoExpandBifurcationTreeFromSelected(
+              depth
+            ),
+            'Error Auto-Expanding Bifurcation Tree'
           )
         }
         onMouseEnter={(e: React.MouseEvent) =>

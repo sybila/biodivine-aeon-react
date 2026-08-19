@@ -11,6 +11,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
 
   attractorBifurcationExplorerServ,
   pageStringProviderServ,
+  messageServ,
 
   bifurcationExplorerStatusStore,
   helpHoverStore,
@@ -111,22 +112,28 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
       [
         'Witness',
         () =>
-          attractorBifurcationExplorerServ.openStabilityWitness(
-            selectedNode?.id ?? null,
-            variable,
-            computedBehavior,
-            vector
+          messageServ.showFromResult(
+            attractorBifurcationExplorerServ.openStabilityWitness(
+              selectedNode?.id ?? null,
+              variable,
+              computedBehavior,
+              vector
+            ),
+            'Failed to open witness'
           ),
         pageStringProviderServ.Tooltips.openStabilityAnalysisWitness,
       ],
       [
         'Attractor',
         () =>
-          attractorBifurcationExplorerServ.openStabilityAttractor(
-            selectedNode?.id ?? null,
-            variable,
-            computedBehavior,
-            vector
+          messageServ.showFromResult(
+            attractorBifurcationExplorerServ.openStabilityAttractor(
+              selectedNode?.id ?? null,
+              variable,
+              computedBehavior,
+              vector
+            ),
+            'Failed to open attractor visualization'
           ),
         pageStringProviderServ.Tooltips.openStabilityAnalysisAttractor,
       ],
@@ -173,7 +180,7 @@ const StabilityAnalysisTableRow: React.FC<StabilityAnalysisTableRowProps> = ({
       topContentOverflowX="visible"
       topContentOverflowY="visible"
       contColor="var(--color-secondary-light)"
-      contHoverColor='var(--color-secondary-light-highlight)'
+      contHoverColor="var(--color-secondary-light-highlight)"
       contBorder="2px var(--color-secondary-light) solid"
       contHoverBorder="2px var(--color-secondary-border) dashed"
       buttonColor="var(--color-tertiary-buttons)"

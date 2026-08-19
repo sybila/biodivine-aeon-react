@@ -5,6 +5,7 @@ import StabilityAnalysisTableRow from './StabilityAnalysisTableRow/StabilityAnal
 
 const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
   attractorBifurcationExplorerServ,
+  messageServ,
   pageStringProviderServ,
 
   bifurcationExplorerStatusStore,
@@ -38,6 +39,7 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
               attractorBifurcationExplorerServ={
                 attractorBifurcationExplorerServ
               }
+              messageServ={messageServ}
               pageStringProviderServ={pageStringProviderServ}
               bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
               helpHoverStore={helpHoverStore}

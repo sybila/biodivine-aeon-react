@@ -1,3 +1,4 @@
+import type { Result } from '../../../types/result';
 import type {
   Decisions,
   NodeDataBE,
@@ -18,10 +19,28 @@ export interface AttractorBifurcationExplorerInt {
 
   // #region --- Math helpers ---
 
-  /** Calculates the logarithmic dimension percentage of a subset relative to the total set. */
+  /** Calculates the logarithmic dimension percentage of a subset relative to the total set.
+   * The result is computed as:
+   *   percent = Math.round(((Math.log2(cardinality) + 1) / (Math.log2(total) + 1)) * 100)
+   * This reflects the relative "dimension" (logarithmic scale) of the subset compared to the whole,
+   * which is useful for visualizing exponential growth or combinatorial complexity.
+   *
+   * @param subsetSize The size of the subset.
+   * @param total The size of the total set.
+   * @return The dimension percentage (0-100) of the subset relative to the total.
+   */
   mathDimPercent(subsetSize: number, total: number): number;
 
-  /** Calculates the linear percentage of a subset relative to the total set. */
+  /** Calculates the linear percentage of a subset relative to the total set.
+   * The result is computed as:
+   *   percent = Math.round((cardinality / total) * 100)
+   * This reflects the direct ratio of the subset size to the total size,
+   * expressed as a percentage (0-100).
+   *
+   * @param subsetSize The size of the subset.
+   * @param total The size of the total set.
+   * @return The percentage (0-100) of the subset relative to the total.
+   */
   mathPercent(subsetSize: number, total: number): number;
 
   // #endregion
@@ -57,8 +76,15 @@ export interface AttractorBifurcationExplorerInt {
    */
   loadBifurcationTree(fit: boolean, animate: boolean): void;
 
-  /** Automatically expands the bifurcation tree from the selected node. */
-  autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number): void;
+  /** Automatically expands the bifurcation tree from the selected node.
+   *  If nodeId is not provided, it uses the currently selected node.
+   * @param nodeId - (number?) The ID of the node to expand from.
+   * @param depth - (number) The depth to expand to.
+   */
+  autoExpandBifurcationTreeFromSelected(
+    depth: number,
+    nodeId?: number
+  ): Result<boolean>;
 
   // #endregion
 
@@ -79,6 +105,12 @@ export interface AttractorBifurcationExplorerInt {
   /** Gets the necessary conditions for a specific node. */
   getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions;
 
+  /**
+   * Moves a node up or down in the layout by a specified number of steps.
+   *
+   * @param nodeId - The unique identifier of the node to move.
+   * @param steps - The number of steps to move the node. Positive values move the node down, negative values move it up.
+   */
   moveNode(nodeId: string, steps: number): void;
 
   // #endregion
@@ -92,7 +124,10 @@ export interface AttractorBifurcationExplorerInt {
 
   // #region --- Make Decision ---
 
-  /** Formats behavior classes inside decisions for display. */
+  /** Formats behavior classes inside decisions for display.
+   * @param decisions - The decisions to format.
+   * @returns The formatted decisions.
+   */
   formatClassesDecisions(decisions: Decisions): Decisions;
 
   /** Gets the decisions for the selected node. */
@@ -141,27 +176,53 @@ export interface AttractorBifurcationExplorerInt {
 
   // #region --- Open witness/attractor ---
 
-  /** Opens the witness tab for a specific leaf node. */
-  openLeafNodeWitness(nodeId: number): void;
+  /**
+   * Opens a witness bifurcation explorer for a specified leaf node.
+   *
+   * @param nodeId - The ID of the leaf node for which the witness bifurcation explorer should be opened.
+   */
+  openLeafNodeWitness(nodeId: number): Result<boolean>;
 
-  /** Opens the witness tab for a specific stability analysis. */
+  /**
+   * Opens the witness tab for a specific stability analysis.
+   * This function takes the following parameters:
+   *
+   * @param nodeId The ID of the node for which the witness tab is being opened.
+   * @param variable The variable for which the witness tab is being opened.
+   * @param behaviour The behaviour class for which the witness tab is being opened.
+   * @param vector An array of strings representing the witness data.
+   */
   openStabilityWitness(
     nodeId: number | null,
     variable: string,
     behaviour: string,
     vector: Array<string>
-  ): void;
+  ): Result<boolean>;
 
-  /** Opens the attractor visualizer for a specific leaf node. */
-  openLeafNodeAttractor(nodeId: number): void;
+  /**
+   * Opens the attractor visualizer for a specific leaf node.
+   *
+   * @param nodeId - The unique identifier of the leaf node to open the attractor visualizer for.
+   * @returns A Result object indicating whether the operation was successful.
+   */
+  openLeafNodeAttractor(nodeId: number): Result<boolean>;
 
-  /** Opens the attractor visualizer for a specific stability analysis. */
+  /**
+ * Opens the attractor visualizer for a specific stability analysis.
+ * 
+ * @param nodeId - The unique identifier of the node to open the attractor visualizer for, or null if the attractor visualizer should be opened for a 
+global stability analysis.
+ * @param variableName - The name of the variable to analyze for stability.
+ * @param behavior - The type of stability analysis to perform.
+ * @param vector - An array of strings representing the vector components for the stability analysis.
+ * @returns A Result object indicating whether the operation was successful.
+ */
   openStabilityAttractor(
     nodeId: number | null,
     variableName: string,
     behavior: StabilityAnalysisModes,
     vector: string[]
-  ): void;
+  ): Result<boolean>;
 
   // #endregion
 

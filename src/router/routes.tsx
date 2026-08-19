@@ -83,6 +83,7 @@ export const AttractorBifurcationExplorerRoute = createRoute({
       behaviorClassOperationsServ={
         ObjectProvider.UtilitiesServiceProvider.behaviorClassOperationsServ
       }
+      messageServ={ObjectProvider.GlobalServicesProvider.messageServ}
       pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .AttractorBifurcationExplorerPage

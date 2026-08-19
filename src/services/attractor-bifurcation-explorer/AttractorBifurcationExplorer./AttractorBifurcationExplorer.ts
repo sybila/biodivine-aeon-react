@@ -1,5 +1,6 @@
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { err, ok } from '../../../types/result';
 import type {
   Decisions,
   NodeDataBE,
@@ -10,7 +11,6 @@ import type {
 } from '../../../types/types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
-import type { MessageInt } from '../../global/Message/MessageInt';
 import type { AttractorBifurcationTreeVisualizationInt } from '../AttractorBifurcationTreeVisualization/AttractorBifurcationTreeVisualizationInt';
 import type { AttractorBifurcationExplorerInt } from './AttractorBifurcationExplorerInt';
 
@@ -47,7 +47,6 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   private computationManagerServ: ComputationManagerInt;
   private cytoscape: AttractorBifurcationTreeVisualizationInt;
   private attractorVisualizerServ: AttractorVisualizerInt;
-  private messageServ: MessageInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
@@ -55,13 +54,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     computationManagerServ: ComputationManagerInt,
     attractorVisualizerServ: AttractorVisualizerInt,
     attractorBifurcationTreeVisualization: AttractorBifurcationTreeVisualizationInt,
-    messageServ: MessageInt,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
   ) {
     this.cytoscape = attractorBifurcationTreeVisualization;
     this.computationManagerServ = computationManagerServ;
     this.attractorVisualizerServ = attractorVisualizerServ;
-    this.messageServ = messageServ;
 
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
 
@@ -91,41 +88,13 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Math helpers ---
 
-  /** Calculates the logarithmic dimension percentage of a subset relative to the total set.
-   * <p>
-   * The result is computed as:
-   * <pre>
-   *   percent = Math.round(((Math.log2(cardinality) + 1) / (Math.log2(total) + 1)) * 100)
-   * </pre>
-   * This reflects the relative "dimension" (logarithmic scale) of the subset compared to the whole,
-   * which is useful for visualizing exponential growth or combinatorial complexity.
-   * </p>
-   *
-   * @param subsetSize The size of the subset.
-   * @param total The size of the total set.
-   * @return The dimension percentage (0-100) of the subset relative to the total.
-   */
-  public mathDimPercent(subsetSize: number, total: number): number {
+  public mathDimPercent(subsetSize: number, total: number) {
     return Math.round(
       ((Math.log2(subsetSize) + 1) / (Math.log2(total) + 1)) * 100
     );
   }
 
-  /** Calculates the linear percentage of a subset relative to the total set.
-   * <p>
-   * The result is computed as:
-   * <pre>
-   *   percent = Math.round((cardinality / total) * 100)
-   * </pre>
-   * This reflects the direct ratio of the subset size to the total size,
-   * expressed as a percentage (0-100).
-   * </p>
-   *
-   * @param subsetSize The size of the subset.
-   * @param total The size of the total set.
-   * @return The percentage (0-100) of the subset relative to the total.
-   */
-  public mathPercent(subsetSize: number, total: number): number {
+  public mathPercent(subsetSize: number, total: number) {
     return Math.round((subsetSize / total) * 100);
   }
 
@@ -220,8 +189,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Cardinality ---
 
-  /** Returns total cardinality of the graph or -1 if not available */
-  public getTotalCardinality(): number {
+  public getTotalCardinality() {
     return this.cytoscape.getTotalCardinality();
   }
 
@@ -229,8 +197,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Bifurcation Tree Management ---
 
-  /** Opens the bifurcation tree, loading it if necessary. */
-  public openBifurcationTree(): void {
+  public openBifurcationTree() {
     if (this.isEmpty) {
       const hasSavedVisualizationStatus =
         this.bifurcationExplorerStatusStore.getState().visualizationStatus !==
@@ -242,16 +209,12 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     }
   }
 
-  /** Inserts a bifurcation tree into this.cytoscape.
-   *  @param nodeList - () List of nodes to insert.
-   *  @param fit - (boolean) Whether to fit the view after insertion. Default is true.
-   */
   public insertBifurcationTree(
     nodeList: NodeDataBE[],
     fit: boolean = true,
     animate: boolean = true,
     clearCytoscape: boolean = true
-  ): void {
+  ) {
     if (nodeList !== undefined && nodeList.length > 0) {
       if (clearCytoscape) this.cytoscape.removeAll();
       for (const n of nodeList) {
@@ -273,29 +236,21 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     );
   }
 
-  /** Loads the bifurcation tree from the compute engine and inserts it into the this.cytoscape. */
   public loadBifurcationTree(
     fit: boolean = true,
     animate: boolean = true
-  ): void {
+  ) {
     this.computationManagerServ.getBifurcationTree(fit, animate, this);
   }
 
-  /** Automatically expands the bifurcation tree from the selected node.
-   *  If nodeId is not provided, it uses the currently selected node.
-   * @param nodeId - (number?) The ID of the node to expand from.
-   * @param depth - (number) The depth to expand to.
-   */
+
   public autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number) {
     if (!nodeId) {
       const newNodeID =
         this.bifurcationExplorerStatusStore.getState().selectedNode;
 
       if (!newNodeID) {
-        this.messageServ.showError(
-          'Error Auto-Expanding Bifurcation Tree: No node selected'
-        );
-        return;
+        return err('No node selected.');
       }
 
       this.computationManagerServ.autoExpandBifurcationTree(
@@ -310,6 +265,8 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
         this
       );
     }
+
+    return ok(true);
   }
 
   // #endregion
@@ -349,7 +306,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     return this.cytoscape.getNodeNecessaryConditions(nodeId);
   }
 
-  public moveNode(nodeId: string, steps: number): void {
+  public moveNode(nodeId: string, steps: number) {
     this.cytoscape.moveNode(nodeId, steps);
   }
 
@@ -357,14 +314,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Stability Analysis ---
 
-  /** Gets the stability data for a specific node.
-   * @param nodeId - (number) The ID of the node to get stability data for.
-   * @param behavior - (StabilityAnalysisModes) The type of stability analysis to perform.
-   */
-  public getStabilityData(
-    nodeId: number,
-    behavior: StabilityAnalysisModes
-  ): void {
+  public getStabilityData(nodeId: number, behavior: StabilityAnalysisModes) {
     this.bifurcationExplorerStatusStore.getState().loadStabilityData(null);
     this.computationManagerServ.getStabilityData(nodeId, behavior);
   }
@@ -373,11 +323,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Make Decision ---
 
-  /** Formats behavior classes inside decisions for display.
-   * @param decisions - The decisions to format.
-   * @returns The formatted decisions.
-   */
-  public formatClassesDecisions(decisions: Decisions): Decisions {
+  public formatClassesDecisions(decisions: Decisions) {
     for (const decision of decisions) {
       decision.left.sort(function (a, b) {
         return b.cardinality - a.cardinality;
@@ -405,13 +351,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     return decisions;
   }
 
-  /** Gets the decisions for the selected node. */
-  public getDecisions(nodeId: number): void {
+  public getDecisions(nodeId: number) {
     this.computationManagerServ.getDecisions(nodeId, this);
   }
 
-  /** Make decision for a specific node. */
-  public makeDecision(nodeId: number, decisionId: number): void {
+  public makeDecision(nodeId: number, decisionId: number) {
     this.computationManagerServ.makeDecision(nodeId, decisionId, this);
   }
 
@@ -419,8 +363,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Visualization Status ---
 
-  /** Saves the current status of the bifurcation tree visualization */
-  public saveVisualizationStatus(): void {
+  public saveVisualizationStatus() {
     const status: VisualizationStatus = this.cytoscape.getVisualizationStatus();
 
     this.bifurcationExplorerStatusStore
@@ -428,10 +371,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       .setVisualizationStatus(status);
   }
 
-  /** Restores state of the bifurcation tree visualization (pan, zoom, selected node ...) */
-  public restoreVisualizationState(
-    selectRootNodeFallback: boolean = false
-  ): void {
+  public restoreVisualizationState(selectRootNodeFallback: boolean = false) {
     const status =
       this.bifurcationExplorerStatusStore.getState().visualizationStatus;
     const selectedNode =
@@ -452,34 +392,28 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Visual Options ---
 
-  /** Gets last precision set in the VisualOptions of AttractorExplorer */
-  public getLastPrecision(): number {
+  public getLastPrecision() {
     return this.precision;
   }
 
-  /** Gets the current state of the switchable options in the visual options tab */
   public getSwitchableOptionsState(): VisualOptionsSwitchableABE {
     return this.cytoscape.getSwitchLayoutOptions();
   }
 
-  /** Set precision for the bifurcation tree. */
-  public setPrecision(precision: number): void {
+  public setPrecision(precision: number) {
     this.precision = precision;
     this.computationManagerServ.setBifurcationTreePrecision(precision, this);
   }
 
-  /** Sets the nodes to snap to their respective layers. */
-  public toggleSnapNodesToLayers(): void {
+  public toggleSnapNodesToLayers() {
     this.cytoscape.toggleSnapNodesToLayers();
   }
 
-  /** Animates layout changes in the Cytoscape instance. */
-  public toggleAnimateLayoutChanges(): void {
+  public toggleAnimateLayoutChanges() {
     this.cytoscape.toggleAnimateLayoutChanges();
   }
 
-  /** Toggles the positive class on the left side of the bifurcation tree. */
-  public togglePositiveOnLeft(): void {
+  public togglePositiveOnLeft() {
     this.cytoscape.togglePositiveOnLeft();
   }
 
@@ -487,25 +421,22 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Open witness/attractor ---
 
-  /** Opens the witness tab for a specific leaf node. */
-  public openLeafNodeWitness(nodeId: number): void {
+  public openLeafNodeWitness(nodeId: number) {
     if (nodeId === undefined || nodeId === null) {
-      this.messageServ.showError(
-        'Cannot open witness: Internal error (Missing node ID).'
-      );
-      return;
+      return err('Internal error (Missing node ID).');
     }
 
     this.computationManagerServ.openWitnessBifurcationExplorer(nodeId);
+
+    return ok(true);
   }
 
-  /** Opens the witness tab for a specific stability analysis. */
   public openStabilityWitness(
     nodeId: number | null,
     variable: string,
     behaviour: string,
     vector: Array<string>
-  ): void {
+  ) {
     if (
       nodeId === null ||
       nodeId === undefined ||
@@ -513,10 +444,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       !behaviour ||
       !vector
     ) {
-      this.messageServ.showError(
-        'Cannot open witness: Internal error (Missing parameters).'
-      );
-      return;
+      return err('Internal error (Missing parameters).');
     }
 
     this.computationManagerServ.openWitnessStabilityAnalysis(
@@ -525,49 +453,37 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       behaviour,
       vector
     );
+
+    return ok(true);
   }
 
-  /** Opens the attractor visualizer for a specific leaf node. */
-  public openLeafNodeAttractor(nodeId: number): void {
+  public openLeafNodeAttractor(nodeId: number) {
     if (!nodeId) {
-      this.messageServ.showError(
-        "Can't open attractor visualizer: no leaf node selected"
-      );
+      return err('No leaf node selected.');
     } else {
       this.attractorVisualizerServ.openVisualizer({ nodeId: nodeId });
     }
+
+    return ok(true);
   }
 
-  /** Opens the attractor visualizer for a specific stability analysis. */
   public openStabilityAttractor(
     nodeId: number | null,
     variableName: string,
     behavior: StabilityAnalysisModes,
     vector: string[]
-  ): void {
+  ) {
     if (nodeId === null) {
-      this.messageServ.showError(
-        'Cannot open attractor explorer: Internal error (Missing node ID).'
-      );
-      return;
+      return err('Internal error (Missing node ID).');
     }
     if (!variableName) {
-      this.messageServ.showError(
-        'Cannot open attractor explorer: Internal error (Missing variable name).'
-      );
-      return;
+      return err('Internal error (Missing variable name).');
     }
     if (!behavior) {
-      this.messageServ.showError(
-        'Cannot open attractor explorer: Internal error (Missing behavior).'
-      );
-      return;
+      return err('Internal error (Missing behavior).');
     }
     if (!vector) {
-      this.messageServ.showError(
-        'Cannot open attractor explorer: Internal error (Missing vector).'
-      );
-      return;
+      return err('Internal error (Missing vector).');
     }
 
     this.attractorVisualizerServ.openVisualizer({
@@ -576,27 +492,24 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       behavior,
       vector,
     });
+
+    return ok(true);
   }
 
   // #endregion
 
   // #region --- Visualization Operations ---
 
-  /** Set zoom level of the model visualization
-   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
-   */
-  setZoom(zoomLevel: number): void {
+  public setZoom(zoomLevel: number): void {
     this.cytoscape.setZoom(zoomLevel);
 
     this.saveVisualizationStatus();
   }
 
-  /** Fits the bifurcation tree to the viewport. */
   public fitTree(): void {
     this.cytoscape.fit();
   }
 
-  /** Resets the layout of the bifurcation tree. */
   public resetTreeLayout(): void {
     this.cytoscape.resetTreeLayout();
   }

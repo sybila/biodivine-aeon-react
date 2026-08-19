@@ -10,6 +10,7 @@ import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  messageServ,
   pageStringProviderServ,
 
   bifurcationExplorerStatusStore,
@@ -29,7 +30,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
           <SimpleHeaderReact
             compHeight="fit-content"
             compWidth="100%"
-            textColor='var(--color-primary-text)'
+            textColor="var(--color-primary-text)"
             headerText={selectedNode.label ?? 'Unknown'}
             justifyHeader="center"
             textFontSize="26px"
@@ -53,6 +54,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
           <WitnessAttractorRow
             leafNodeId={selectedNode.id}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            messageServ={messageServ}
             pageStringProviderServ={pageStringProviderServ}
             helpHoverStore={helpHoverStore}
           />

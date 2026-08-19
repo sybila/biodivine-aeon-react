@@ -6,6 +6,7 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
   leafNodeId,
 
   attractorBifurcationExplorerServ,
+  messageServ,
   pageStringProviderServ,
 
   helpHoverStore,
@@ -22,7 +23,10 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
-            attractorBifurcationExplorerServ.openLeafNodeWitness(leafNodeId)
+            messageServ.showFromResult(
+              attractorBifurcationExplorerServ.openLeafNodeWitness(leafNodeId),
+              'Failed to Open Witness'
+            )
           }
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore
@@ -45,7 +49,12 @@ const WitnessAttractorRow: React.FC<WitnessAttractorRowProps> = ({
           compHeight="25px"
           compWidth="40%"
           handleClick={() =>
-            attractorBifurcationExplorerServ.openLeafNodeAttractor(leafNodeId)
+            messageServ.showFromResult(
+              attractorBifurcationExplorerServ.openLeafNodeAttractor(
+                leafNodeId
+              ),
+              'Failed to open attractor visualization'
+            )
           }
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore

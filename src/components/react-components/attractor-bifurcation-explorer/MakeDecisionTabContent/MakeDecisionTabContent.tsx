@@ -10,6 +10,7 @@ import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps'
 const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
+  messageServ,
   pageStringProviderServ,
 
   bifurcationExplorerStatusStore,
@@ -40,6 +41,7 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
         <AutoExpandSection
           attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
           pageStringProviderServ={pageStringProviderServ}
+          messageServ={messageServ}
           helpHoverStore={helpHoverStore}
         />
       </section>
