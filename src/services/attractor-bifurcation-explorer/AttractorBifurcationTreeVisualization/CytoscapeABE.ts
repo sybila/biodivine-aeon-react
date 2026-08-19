@@ -6,6 +6,7 @@ import cytoscape, {
 import tidytree from 'cytoscape-tidytree';
 import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { err, isErr, ok, type Result } from '../../../types/result';
 import type {
   CytoscapeNodeDataBE,
   DecisionMixedNode,
@@ -499,7 +500,6 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
     return this.cytoscape.getElementById(nodeId).data().type;
   }
 
-  /** Returns necessary conditions to reach a node. */
   public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
     const conditions: NodeNecessaryConditions = [];
     let pathId = nodeId;
@@ -525,12 +525,14 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
 
   // #region --- Ensure/Remove Nodes/Edges ---
 
-  private applyTreeData(data: any, treeData: NodeDataBE): CytoscapeNodeDataBE {
+  private applyTreeData(
+    data: any,
+    treeData: NodeDataBE
+  ): Result<CytoscapeNodeDataBE> {
     if (data.id != treeData.id) {
-      this.messageServ.showError(
-        'Bifurcation Error: Internal Error - Updating wrong node.'
-      );
+      return err('Internal Error - Attempting to update the wrong node.');
     }
+
     if (treeData.id == 0) {
       this.totalCardinality = treeData.cardinality;
     }
@@ -575,40 +577,45 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
       opacity = this._computeMassOpacity(treeData.cardinality);
     }
     data.opacity = opacity;
-    return data;
+
+    return ok(data);
   }
 
-  /** Checks if node exists, if it doesn't, creates it, else updates its data. */
   public ensureNode(treeData: NodeDataBE) {
-    let node = this.cytoscape.getElementById(treeData.id);
+    const node = this.cytoscape.getElementById(treeData.id);
+
     if (node !== undefined && node.length > 0) {
       const data = node.data();
       this.applyTreeData(data, treeData);
       this.cytoscape.style().update(); //redraw graph
-      return node;
+      return ok(node);
     } else {
-      const data = this.applyTreeData({ id: treeData.id }, treeData);
+      const dataResult = this.applyTreeData({ id: treeData.id }, treeData);
 
-      return this.cytoscape.add({
+      if (isErr(dataResult)) {
+        return dataResult;
+      }
+
+      const data = dataResult.value;
+
+      this.cytoscape.add({
         id: data.id,
         data: data,
         grabbable: treeData.id != 0,
         position: { x: 0.0, y: 0.0 },
       });
+
+      return ok(true);
     }
   }
 
-  /** Ensures that an edge exists between two nodes. */
   public ensureEdge(
     sourceId: number | undefined,
     targetId: number | undefined,
     positive: boolean
   ) {
     if (sourceId === undefined || targetId === undefined) {
-      this.messageServ.showError(
-        'Error inserting edge: Source or target ID is undefined.'
-      );
-      return;
+      return err('Internal Error - Source or target ID is undefined.');
     }
 
     const edge = this.cytoscape.edges(
@@ -628,6 +635,8 @@ class CytoscapeABE implements AttractorBifurcationTreeVisualizationInt {
         },
       });
     }
+
+    return ok(true);
   }
 
   /** Removes all nodes from the CytoscapeABE. */

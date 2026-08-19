@@ -4,13 +4,13 @@ import { err, ok } from '../../../types/result';
 import type {
   Decisions,
   NodeDataBE,
-  NodeNecessaryConditions,
   StabilityAnalysisModes,
   VisualizationStatus,
   VisualOptionsSwitchableABE,
 } from '../../../types/types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../../global/Message/MessageInt';
 import type { AttractorBifurcationTreeVisualizationInt } from '../AttractorBifurcationTreeVisualization/AttractorBifurcationTreeVisualizationInt';
 import type { AttractorBifurcationExplorerInt } from './AttractorBifurcationExplorerInt';
 
@@ -47,17 +47,20 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   private computationManagerServ: ComputationManagerInt;
   private cytoscape: AttractorBifurcationTreeVisualizationInt;
   private attractorVisualizerServ: AttractorVisualizerInt;
+  private messageServ: MessageInt;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
 
   constructor(
     computationManagerServ: ComputationManagerInt,
     attractorVisualizerServ: AttractorVisualizerInt,
+    messageServ: MessageInt,
     attractorBifurcationTreeVisualization: AttractorBifurcationTreeVisualizationInt,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>
   ) {
     this.cytoscape = attractorBifurcationTreeVisualization;
     this.computationManagerServ = computationManagerServ;
+    this.messageServ = messageServ;
     this.attractorVisualizerServ = attractorVisualizerServ;
 
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
@@ -218,12 +221,21 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     if (nodeList !== undefined && nodeList.length > 0) {
       if (clearCytoscape) this.cytoscape.removeAll();
       for (const n of nodeList) {
-        this.cytoscape.ensureNode(n);
+        this.messageServ.showFromResult(
+          this.cytoscape.ensureNode(n),
+          'Failed to insert node'
+        );
       }
       for (const n of nodeList) {
         if (n.type === 'decision') {
-          this.cytoscape.ensureEdge(n.id, n.left, false);
-          this.cytoscape.ensureEdge(n.id, n.right, true);
+          this.messageServ.showFromResult(
+            this.cytoscape.ensureEdge(n.id, n.left, false),
+            'Failed to insert edge'
+          );
+          this.messageServ.showFromResult(
+            this.cytoscape.ensureEdge(n.id, n.right, true),
+            'Failed to insert edge'
+          );
         }
       }
       // Do not auto-fit when restoring a previously saved pan/zoom state.
@@ -236,10 +248,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     );
   }
 
-  public loadBifurcationTree(
-    fit: boolean = true,
-    animate: boolean = true
-  ) {
+  public loadBifurcationTree(fit: boolean = true, animate: boolean = true) {
     this.computationManagerServ.getBifurcationTree(fit, animate, this);
   }
 
@@ -286,7 +295,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       }
     }
     if (node !== undefined) {
-      this.cytoscape.ensureNode(node);
+      this.messageServ.showFromResult(
+        this.cytoscape.ensureNode(node),
+        'Failed to ensure nodes existence'
+      );
+
       this.cytoscape.refreshSelection(node.id.toString());
     } else {
       this.cytoscape.refreshSelection();

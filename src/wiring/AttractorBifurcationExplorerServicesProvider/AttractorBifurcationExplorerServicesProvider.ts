@@ -28,6 +28,7 @@ class AttractorBifurcationExplorerServicesProvider implements AttractorBifurcati
     this.attractorBifurcationExplorerServ = new AttractorBifurcationExplorer(
       computationManagerServ,
       attractorVisualizerServ,
+      messageServ,
       bifurcationTreeVisualization,
       storesProvider.bifurcationExplorerStatusStore
     );

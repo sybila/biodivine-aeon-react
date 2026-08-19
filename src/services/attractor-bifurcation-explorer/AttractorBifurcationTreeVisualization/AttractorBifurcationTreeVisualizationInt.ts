@@ -1,4 +1,5 @@
 // #region --- AttractorBifurcationTreeVisualizationInt ---
+import type { Result } from '../../../types/result';
 import type {
   NodeDataBE,
   NodeNecessaryConditions,
@@ -78,15 +79,29 @@ export interface AttractorBifurcationTreeVisualizationInt {
 
   // #region --- Ensure/Remove Nodes/Edges ---
 
-  /** Checks if node exists, if it doesn't, creates it, else updates its data. */
-  ensureNode(treeData: NodeDataBE): any;
+  /**
+   * Ensures a node exists in the cytoscape graph.
+   *
+   * @param treeData - The data for the node to ensure in the graph.
+   * @returns An `Ok` result with true if it exists or was successfully added,
+   * or an `Err` result with an error message if there was an issue.
+   */
+  ensureNode(treeData: NodeDataBE): Result<boolean>;
 
-  /** Ensures that an edge exists between two nodes. */
+  /**
+   * Ensures an edge exists between two nodes in the cytoscape graph.
+   *
+   * @param sourceId - The ID of the source node.
+   * @param targetId - The ID of the target node.
+   * @param positive - A boolean indicating whether the edge is positive.
+   * @returns An `Ok` result with `true` if the edge was successfully ensured,
+   * or an `Err` result with an error message if there was an issue.
+   */
   ensureEdge(
     sourceId: number | undefined,
     targetId: number | undefined,
     positive: boolean
-  ): void;
+  ): Result<boolean>;
 
   /** Removes all nodes from the CytoscapeABE. */
   removeAll(): void;
