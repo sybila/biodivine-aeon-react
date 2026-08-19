@@ -18,7 +18,11 @@ const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
   >(null);
 
   const handleExampleImport = async (exampleModel: string) => {
-    await liveModelServ.Import.importAeonWithWarnings(exampleModel);
+    messageServ.showFromResult(
+      await liveModelServ.Import.importAeonWithWarnings(exampleModel),
+      'Failed to import example model',
+      'Model imported successfully.'
+    );
   };
 
   const startFileImport = async (

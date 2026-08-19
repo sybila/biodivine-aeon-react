@@ -7,6 +7,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
   textEditorServ,
   importLmServ,
   exportLmServ,
+  messageServ,
   pageStringProviderServ,
 
   helpHoverStore,
@@ -40,8 +41,12 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
     },
     {
       text: 'Import Edited Model',
-      handleClick: () => {
-        importLmServ.importAeonWithWarnings(editorText);
+      handleClick: async () => {
+        messageServ.showFromResult(
+          await importLmServ.importAeonWithWarnings(editorText),
+          'Failed to import model',
+          'Model imported successfully.'
+        );
       },
       tooltipFunction: (e: MouseEvent) =>
         helpHoverStore

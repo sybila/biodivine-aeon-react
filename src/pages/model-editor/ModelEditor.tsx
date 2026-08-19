@@ -170,6 +170,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             textEditorServ={textEditorServ}
             importLmServ={liveModelServ.Import}
             exportLmServ={liveModelServ.Export}
+            messageServ={messageServ}
             pageStringProviderServ={pageStringProviderServ}
             helpHoverStore={helpHoverStore}
           />
