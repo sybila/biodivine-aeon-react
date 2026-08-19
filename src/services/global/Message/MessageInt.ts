@@ -30,6 +30,6 @@ export interface MessageInt {
   showFromResult<T>(
     result: Result<T>,
     errorPrefix: string,
-    successPrefix?: string
+    successMessage?: string
   ): Result<T>;
 }
