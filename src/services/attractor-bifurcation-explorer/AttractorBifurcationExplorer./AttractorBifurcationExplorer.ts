@@ -243,7 +243,6 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     this.computationManagerServ.getBifurcationTree(fit, animate, this);
   }
 
-
   public autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number) {
     if (!nodeId) {
       const newNodeID =
@@ -273,12 +272,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Node Operations ---
 
-  /** Refreshes the selection in the AttractorBifurcationExplorer. */
-  public refreshSelection(): void {
+  public refreshSelection() {
     this.cytoscape.refreshSelection();
   }
 
-  /** Removes a node from Cytoscape. Should be used only after calling of the removeNode function.*/
   public removeFromCytoscape(
     node: NodeDataBE | undefined,
     removedNodes: number[]
@@ -296,13 +293,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     }
   }
 
-  /** Removes a node and its child nodes from the AttractorBifurcationExplorer. */
-  public removeNode(nodeId: number): void {
+  public removeNode(nodeId: number) {
     this.computationManagerServ.deleteBifurcationDecision(nodeId, this);
   }
 
-  /** Gets the necessary conditions for a specific node. */
-  public getNodeNecessaryConditions(nodeId: number): NodeNecessaryConditions {
+  public getNodeNecessaryConditions(nodeId: number) {
     return this.cytoscape.getNodeNecessaryConditions(nodeId);
   }
 
