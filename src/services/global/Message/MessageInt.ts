@@ -27,7 +27,6 @@ export interface MessageInt {
    *
    * @returns The original result object.
    */
-
   showFromResult<T>(
     result: Result<T>,
     errorPrefix: string,
