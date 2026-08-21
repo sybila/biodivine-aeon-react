@@ -315,7 +315,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       />
 
       <QuickHelp
-        headerText="Welcome to AEON!"
+        headerText={pageStringProviderServ.quickHelpHeaderModelEditor()}
         helpText={pageStringProviderServ.quickHelpModelEditor()}
         visible={showQuickHelp}
       />
