@@ -564,7 +564,19 @@ class CytoscapeME implements ModelVisualizationInt {
 
     this.cytoscape.resize();
 
-    if (fit) this.cytoscape.fit();
+    if (fit) {
+      this.cytoscape.animate(
+        {
+          fit: {
+            eles: this.cytoscape.elements(),
+            padding: 5,
+          },
+        },
+        {
+          duration: 1,
+        }
+      );
+    }
   }
 
   /** Remove the node with the given ID from the graph. */
