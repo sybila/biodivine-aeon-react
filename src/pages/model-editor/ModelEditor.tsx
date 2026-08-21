@@ -316,19 +316,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
 
       <QuickHelp
         headerText="Welcome to AEON!"
-        helpText="
-**Start by loading or creating your boolean model.**
-
-1.  **Load a Model:** Press `Ctrl+Shift+E` to import `.aeon`, `.bnet`, or `.sbml` files.
-2.  **Create from Scratch:** Double-click the canvas or open the **Model Editor** (`Ctrl+Shift+M`) to add variables.
-3.  **Define Logic:** Select a variable on the canvas and press `Ctrl+E` to write its update function.
-4.  **Analyze:** Run computations with `Ctrl+Shift+S`.
-
-### Need more help?
-- [Open help menu](#) – Located in the left menu under the **?** button.
-
-> *Note: This message disappears once you create your first variable.*
-"
+        helpText={pageStringProviderServ.quickHelpModelEditor()}
         visible={showQuickHelp}
       />
 
