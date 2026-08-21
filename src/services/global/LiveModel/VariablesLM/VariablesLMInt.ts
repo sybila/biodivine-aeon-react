@@ -8,7 +8,12 @@ export interface VariablesLMInt {
 
   /** Setter for the function that adds new node to the model visualization */
   setAddNodeFromVisualizationFunction(
-    func: (id: number, variableName: string, position?: Position) => void
+    func: (
+      id: number,
+      variableName: string,
+      fit?: boolean,
+      position?: Position
+    ) => void
   ): void;
 
   /** Setter for the function that removes a node from the model visualization */
@@ -38,7 +43,8 @@ export interface VariablesLMInt {
     id?: number,
     name?: string,
     controllable?: boolean,
-    phenotype?: PhenotypeStatus
+    phenotype?: PhenotypeStatus,
+    fitVisualization?: boolean
   ): number | undefined;
 
   /** Removes variable and displays warnings if necessary

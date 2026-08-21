@@ -28,8 +28,9 @@ class VariablesLM implements VariablesLMInt {
   private addNodeFromVisualizationFunction: (
     id: number,
     variableName: string,
+    fit?: boolean,
     position?: Position
-  ) => void = (_: number, __: string, ___?: Position) => {
+  ) => void = (_: number, __: string, ___?: boolean, ____?: Position) => {
     console.warn(
       'VariablesLM: No function set to add node from model visualization'
     );
@@ -104,7 +105,12 @@ class VariablesLM implements VariablesLMInt {
   // #region --- Setters for Model Visualization functions ---
 
   public setAddNodeFromVisualizationFunction(
-    func: (id: number, variableName: string, position?: Position) => void
+    func: (
+      id: number,
+      variableName: string,
+      fit?: boolean,
+      position?: Position
+    ) => void
   ): void {
     if (func != undefined) {
       this.addNodeFromVisualizationFunction = func;
@@ -147,7 +153,8 @@ class VariablesLM implements VariablesLMInt {
     id?: number,
     name?: string,
     controllable: boolean = true,
-    phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype
+    phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype,
+    fitVisualization: boolean = true
   ): number | undefined {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) {
       return;
@@ -172,7 +179,12 @@ class VariablesLM implements VariablesLMInt {
       .getState()
       .setVariablePosition(variableId, position);
 
-    this.addNodeFromVisualizationFunction(variableId, variableName, position);
+    this.addNodeFromVisualizationFunction(
+      variableId,
+      variableName,
+      fitVisualization,
+      position
+    );
 
     this.computationManagerServ.resetMaxSize();
 

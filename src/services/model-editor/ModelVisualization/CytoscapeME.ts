@@ -130,10 +130,16 @@ class CytoscapeME implements ModelVisualizationInt {
         this.lastClickTimestamp &&
         now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
-        this.liveModel.Variables.addVariable(false, true, [
-          e.position['x'],
-          e.position['y'],
-        ]);
+        this.liveModel.Variables.addVariable(
+          false,
+          true,
+          [e.position['x'], e.position['y']],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          false
+        );
       }
       this.lastClickTimestamp = now;
     });
@@ -173,8 +179,8 @@ class CytoscapeME implements ModelVisualizationInt {
     );
 
     this.liveModel.Variables.setAddNodeFromVisualizationFunction(
-      (id: number, name: string, position?: Position) => {
-        this.addNode(id, name, position);
+      (id: number, name: string, fit?: boolean, position?: Position) => {
+        this.addNode(id, name, position, fit ?? true);
       }
     );
     this.liveModel.Variables.setRemoveNodeFromVisualizationFunction(
@@ -498,7 +504,8 @@ class CytoscapeME implements ModelVisualizationInt {
   public addNode(
     id: number,
     name: string,
-    position: [number, number] = [0, 0]
+    position: [number, number] = [0, 0],
+    fit: boolean = true
   ) {
     let node = this.cytoscape.add({
       data: { id: id, name: name },
@@ -556,7 +563,8 @@ class CytoscapeME implements ModelVisualizationInt {
     });
 
     this.cytoscape.resize();
-    this.cytoscape.fit();
+
+    if (fit) this.cytoscape.fit();
   }
 
   /** Remove the node with the given ID from the graph. */
