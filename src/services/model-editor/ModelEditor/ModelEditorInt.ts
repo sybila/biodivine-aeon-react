@@ -1,3 +1,4 @@
+import type { Result } from '../../../types/result';
 import type {
   MenuTabTypeMENotNull,
   ModelStats,
@@ -23,8 +24,20 @@ export interface ModelEditorInt {
   /** Adds a new variable and zooms on it */
   addVariable(): void;
 
-  /** Changes the name of a variable */
-  changeVariableName(id: number, newName: string, force?: boolean): boolean;
+  /**
+   * Changes the name of a variable.
+   *
+   * @param id - The ID of the variable to rename.
+   * @param newName - The new name for the variable.
+   * @param force - Optional flag to force the rename operation even if the new name is empty. Defaults to `false`.
+   * @returns A `Result<boolean>` indicating the success or failure of the operation.
+   *
+   */
+  changeVariableName(
+    id: number,
+    newName: string,
+    force?: boolean
+  ): Result<boolean>;
 
   /** Removes a variable */
   removeVariable(id: number): Promise<void>;
@@ -41,8 +54,13 @@ export interface ModelEditorInt {
 
   // #region --- Update Functions ---
 
-  /** Sets update function for a variable in the ModelEditorTabContent.tsx component */
-  setUpdateFunction(id: number, updateFunction: string): string | undefined;
+  /**
+   * Sets an update function for a variable.
+   * @param id - The ID of the variable.
+   * @param updateFunction - The string representation of the update function.
+   * @returns A `Result<boolean>` object. If successful, the boolean value is `true`. If an error occurs, it contains an error message.
+   */
+  setUpdateFunction(id: number, updateFunction: string): Result<boolean>;
 
   // #endregion
 
@@ -82,14 +100,13 @@ export interface ModelEditorInt {
 
   /** Opens a menu tab by its type.
    *  @param tabType - The type of the menu tab to open.
-   *  @returns {boolean} - True if the tab was opened successfully, false otherwise.
+   *  @returns True if the tab was opened successfully, false otherwise.
    */
   openMenuTab(tabType: MenuTabTypeMENotNull): boolean;
 
   /** Scrolls a variable into view in the variable table of the Model Editor menu tab.
    *  Opens the Model Editor menu tab if it is not already open.
-   *  @param variableId - The id of the variable to scroll into view.
-   *  @returns {void} */
+   *  @param variableId - The id of the variable to scroll into view. */
   scrollVariableIntoView(variableId: number): void;
 
   // #endregion

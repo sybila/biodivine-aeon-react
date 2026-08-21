@@ -15,6 +15,7 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   closeFunction,
 
   modelEditorServ,
+  messageServ,
   pageStringProviderServ,
 
   regulationsStore,
@@ -46,7 +47,10 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
 
   const applyFunction = () => {
     if (originalUpdateFunction != updateFunction) {
-      modelEditorServ.setUpdateFunction(varId, updateFunction);
+      messageServ.showFromResult(
+        modelEditorServ.setUpdateFunction(varId, updateFunction),
+        'Failed to change update function'
+      );
     }
 
     closeFunction();

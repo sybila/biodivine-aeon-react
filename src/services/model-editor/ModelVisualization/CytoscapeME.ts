@@ -561,7 +561,7 @@ class CytoscapeME implements ModelVisualizationInt {
 
   /** Remove the node with the given ID from the graph. */
   public removeNode(id: number) {
-    let node = this.cytoscape.getElementById(id);
+    const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       if (node.selected()) node.unselect(); // ensure menu is hidden, etc.
       this.cytoscape.remove(node);

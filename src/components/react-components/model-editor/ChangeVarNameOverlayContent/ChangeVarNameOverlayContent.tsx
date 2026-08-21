@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isErr } from '../../../../types/result';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
 import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
@@ -9,8 +10,11 @@ const ChangeVarNameOverlayContent: React.FC<
   varId,
   originalName,
   closeFunction,
+
   modelEditorServ,
   pageStringProviderServ,
+  messageServ,
+
   helpHoverStore,
 }) => {
   const [inputReference, setInputReference] = useState<HTMLElement | null>(
@@ -34,13 +38,12 @@ const ChangeVarNameOverlayContent: React.FC<
       return;
     }
 
-    const result: boolean = modelEditorServ.changeVariableName(
-      varId,
-      currentName,
-      false
+    const result = messageServ.showFromResult(
+      modelEditorServ.changeVariableName(varId, currentName, false),
+      'Failed to change variable name'
     );
 
-    if (result) {
+    if (!isErr(result)) {
       closeFunction();
     } else {
       setNameError(true);

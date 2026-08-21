@@ -7,6 +7,7 @@ import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunct
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { err, ok } from '../../../types/result';
 import type {
   ContentVisibleComponent,
   MenuTabButton,
@@ -87,7 +88,6 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Variable Actions ---
 
-  /** Adds a new variable and zooms on it */
   public addVariable() {
     const newVariableId = this.liveModelServ.Variables.addVariable(true, true);
     if (newVariableId !== undefined) {
@@ -95,12 +95,11 @@ class ModelEditor implements ModelEditorInt {
     }
   }
 
-  /** Changes the name of a variable */
   public changeVariableName(
     id: number,
     newName: string,
     force: boolean = false
-  ): boolean {
+  ) {
     if (force || newName != '') {
       const error = this.liveModelServ.Variables.renameVariable(
         id,
@@ -110,13 +109,12 @@ class ModelEditor implements ModelEditorInt {
       );
 
       if (!force && error) {
-        this.messageServ.showError('Variable name not changed: ' + error);
-        return false;
+        return err(error);
       }
 
-      return true;
+      return ok(true);
     }
-    return false;
+    return ok(false);
   }
 
   /** Removes a variable */
@@ -150,11 +148,7 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Update Functions ---
 
-  /** Sets update function for a variable in the ModelEditorTabContent.tsx component */
-  public setUpdateFunction(
-    id: number,
-    updateFunction: string
-  ): string | undefined {
+  public setUpdateFunction(id: number, updateFunction: string) {
     const error = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
       updateFunction,
@@ -162,12 +156,7 @@ class ModelEditor implements ModelEditorInt {
       false
     );
 
-    if (error) {
-      this.messageServ.showError('Update function not changed: ' + error);
-      return error;
-    }
-
-    return undefined;
+    return error ? err(error) : ok(true);
   }
 
   // #endregion
@@ -315,6 +304,7 @@ class ModelEditor implements ModelEditorInt {
           }
           modelEditorServ={this}
           pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
+          messageServ={this.messageServ}
           helpHoverStore={this.helpHoverStore}
         />
       ),
@@ -365,6 +355,7 @@ class ModelEditor implements ModelEditorInt {
           }
           modelEditorServ={this}
           pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
+          messageServ={this.messageServ}
           regulationsStore={this.regulationStore}
           variablesStore={this.variablesStore}
           updateFunctionsStore={this.updateFunctionsStore}

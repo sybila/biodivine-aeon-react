@@ -622,8 +622,6 @@ class ImportLM implements ImportLMInt {
       this.messageServ.showError(
         'Import Error: Failed to load model from local storage. '
       );
-
-      console.log(e);
     }
   }
 

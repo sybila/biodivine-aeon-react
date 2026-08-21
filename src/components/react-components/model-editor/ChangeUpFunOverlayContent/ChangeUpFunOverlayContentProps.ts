@@ -1,3 +1,4 @@
+import type { MessageInt } from '../../../../services/global/Message/MessageInt';
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelEditorInt } from '../../../../services/model-editor/ModelEditor/ModelEditorInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
@@ -19,6 +20,7 @@ export type ChangeUpFunOverlayContentProps = {
   closeFunction: () => void;
 
   modelEditorServ: ModelEditorInt;
+  messageServ: MessageInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
 
   regulationsStore: ZustandStore<RegulationsStatus>;
