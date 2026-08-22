@@ -465,7 +465,10 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis(): void {
-    const model = this.getLiveModel()!.Export.exportAeon();
+    const model = this.getLiveModel()!.Export.exportAeon(
+      false,
+      this.controlStore.getState().currentPhenotype.id
+    );
 
     try {
       this.computationCanStart(model, 'Attractor Analysis');
@@ -810,7 +813,10 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Control Computation ---
 
   public startControlComputation(): void {
-    const model = this.getLiveModel()!.Export.exportAeon();
+    const model = this.getLiveModel()!.Export.exportAeon(
+      false,
+      this.controlStore.getState().currentPhenotype.id
+    );
 
     const oscillation =
       this.getLiveModel()!.Control.getOscillation() ?? 'allowed';
@@ -861,7 +867,10 @@ class ComputationManager implements ComputationManagerInt {
   public getTrapSpaceSuccessionDiagram(
     insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
   ): void {
-    const model = this.getLiveModel()!.Export.exportAeon();
+    const model = this.getLiveModel()!.Export.exportAeon(
+      false,
+      this.controlStore.getState().currentPhenotype.id
+    );
 
     try {
       // Todo - change the mode string to a specific one for TSSD when we have more computations using TSSD

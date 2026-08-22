@@ -9,7 +9,6 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
   PHENOTYPE_STATUS,
   type fileType,
-  type ModelStats,
   type PhenotypeStatus,
   type Position,
   type Variable,
@@ -91,8 +90,7 @@ class ExportLM implements ExportLMInt {
 
   // #region --- Model Stats ---
 
-  /** Export stats object */
-  public stats(): ModelStats {
+  public stats() {
     let maxInDegree = 0;
     let maxOutDegree = 0;
     let variables: Variable[] = this.variablesStore
@@ -147,7 +145,7 @@ class ExportLM implements ExportLMInt {
 
   // #region --- Export/Save Model ---
 
-  public exportAeon(emptyPossible = false): string | undefined {
+  public exportAeon(emptyPossible = false, defaultPhenotypeId = -1) {
     const variables = this.variablesStore.getState().getAllVariables();
     if (!emptyPossible && variables.length === 0) {
       return undefined;
@@ -156,7 +154,7 @@ class ExportLM implements ExportLMInt {
     return [
       this.exportName(),
       this.exportDescription(),
-      this.exportVariables(),
+      this.exportVariables(defaultPhenotypeId),
       this.exportPhenotypes(),
     ].join('');
   }
@@ -175,12 +173,17 @@ class ExportLM implements ExportLMInt {
       : '';
   }
 
-  private exportVariables(): string {
+  private exportVariables(defaultPhenotypeId: number): string {
     const variables = this.variablesStore.getState().getAllVariables();
-    return variables.map((variable) => this.exportVariable(variable)).join('');
+    return variables
+      .map((variable) => this.exportVariable(variable, defaultPhenotypeId))
+      .join('');
   }
 
-  private exportVariable(variable: Variable): string {
+  private exportVariable(
+    variable: Variable,
+    defaultPhenotypeId: number
+  ): string {
     let result = '';
 
     const variableName = variable?.name;
@@ -193,7 +196,9 @@ class ExportLM implements ExportLMInt {
       .getState()
       .getVariableControlEnabled(variable.id);
     const phenotypeStatus =
-      this.controlStore.getState().getVariablePhenotype(variable.id, -1) ??
+      this.controlStore
+        .getState()
+        .getVariablePhenotype(variable.id, defaultPhenotypeId) ??
       PHENOTYPE_STATUS.NotInPhenotype;
 
     result += `#!control:${variableName}:${controlEnabled ?? true},${

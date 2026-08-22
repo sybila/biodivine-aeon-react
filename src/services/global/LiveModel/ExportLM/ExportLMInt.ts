@@ -26,7 +26,10 @@ export interface ExportLMInt {
    * Export current model in Aeon text format, or undefined if model cannot be
    * exported (no variables).
    */
-  exportAeon(emptyPossible?: boolean): string | undefined;
+  exportAeon(
+    emptyPossible?: boolean,
+    defaultPhenotypeId?: number
+  ): string | undefined;
 
   /**
    * Save the current state of the model to local storage and ModelsLM live model module.
