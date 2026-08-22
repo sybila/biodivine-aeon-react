@@ -251,9 +251,9 @@
   --color-negative: #e04e4e;
   --color-positive: #2da562;
   --color-neutral: #9daacb;
-  --color-negative-light: #fde8e8;
-  --color-positive-light: #e6f7ef;
-  --color-neutral-light: #ebf0fa;
+  --color-negative-highlight: #f0c4c4;
+  --color-positive-highlight: #a8dcb3;
+  --color-neutral-highlight: #bacee6;
 
   /** Colors for notification popup. */
   --color-notification-message: #f0f3fa;

@@ -1,12 +1,6 @@
 import { create } from 'zustand';
-import {
-  PHENOTYPE_STATUS,
-  type PhenotypeStatus,
-} from '../../../types/types';
-import {
-  err,
-  ok
-} from "../../../types/result";
+import { err, ok } from '../../../types/result';
+import { PHENOTYPE_STATUS, type PhenotypeStatus } from '../../../types/types';
 import type { ZustandStore } from '../../ZustandStoreType';
 import type { ControlStatus } from './ControlStatus';
 
@@ -16,8 +10,12 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     controlEnabled: {},
 
-    currentlyEditedPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
-
+    currentlyEditedPhenotype: {
+      id: -1,
+      name: 'Default Phenotype',
+      variables: {},
+    },
+    phenotypesUsedInComputation: new Set([-1]),
     phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
 
     noNamePhenotypeCounter: 0,
@@ -101,7 +99,8 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     switchPhenotype: (id: number) => {
       if (get().currentlyEditedPhenotype.id === id) {
-        get().phenotypes[get().currentlyEditedPhenotype.id] = get().currentlyEditedPhenotype;
+        get().phenotypes[get().currentlyEditedPhenotype.id] =
+          get().currentlyEditedPhenotype;
         return id;
       }
 
@@ -217,7 +216,10 @@ function createControlStore(): ZustandStore<ControlStatus> {
       const newState: Partial<ControlStatus> = {};
 
       if (currentPhenotype.id === id) {
-        newState.currentlyEditedPhenotype = { ...currentPhenotype, name: newName };
+        newState.currentlyEditedPhenotype = {
+          ...currentPhenotype,
+          name: newName,
+        };
         newState.phenotypes = {
           ...phenotypes,
           [currentPhenotype.id]: newState.currentlyEditedPhenotype,
@@ -232,6 +234,32 @@ function createControlStore(): ZustandStore<ControlStatus> {
       set(newState);
 
       return ok(newName);
+    },
+
+    includePhenotypeInComp(id: number) {
+      const phen = get().phenotypes[id];
+
+      if (phen === undefined) {
+        return err("Phenotype with this Id doesn't exist.");
+      }
+
+      set((state) => {
+        const newPhenComp = new Set(state.phenotypesUsedInComputation);
+        newPhenComp.add(id);
+        return { phenotypesUsedInComputation: newPhenComp };
+      });
+
+      return ok(id);
+    },
+
+    removePhenotypeFromComp(id: number) {
+      set((state) => {
+        const newPhenComp = new Set(state.phenotypesUsedInComputation);
+        newPhenComp.delete(id);
+        return { phenotypesUsedInComputation: newPhenComp };
+      });
+
+      return ok(id);
     },
 
     shiftPhenotype(fromId: number, toId: number) {
@@ -399,7 +427,8 @@ function createControlStore(): ZustandStore<ControlStatus> {
         });
       } else {
         set((state) => {
-          const currentPhenotypeStatus = state.currentlyEditedPhenotype.variables[id];
+          const currentPhenotypeStatus =
+            state.currentlyEditedPhenotype.variables[id];
           if (
             currentPhenotypeStatus != undefined ||
             currentPhenotypeStatus == null
@@ -477,7 +506,12 @@ function createControlStore(): ZustandStore<ControlStatus> {
     clear: () => {
       set({
         controlEnabled: {},
-        currentlyEditedPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
+        currentlyEditedPhenotype: {
+          id: -1,
+          name: 'Default Phenotype',
+          variables: {},
+        },
+        phenotypesUsedInComputation: new Set([-1]),
         phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
         noNamePhenotypeCounter: 0,
       });

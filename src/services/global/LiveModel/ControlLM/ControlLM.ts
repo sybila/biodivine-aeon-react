@@ -278,6 +278,33 @@ class ControlLM implements ControlLMInt {
     return ok(result.value);
   }
 
+  // TODO - rewrite this function when multiple phenotypes in computation are allowed
+  includePhenotypeInComp(id: number) {
+    const result = this.controlStore.getState().includePhenotypeInComp(id);
+
+    if (isErr(result)) {
+      return result;
+    }
+
+    this.controlStore
+      .getState()
+      .phenotypesUsedInComputation.forEach((phenId) => {
+        if (id != phenId) {
+          this.removePhenotypeFromComp(phenId);
+        }
+      });
+
+    return ok(id);
+  }
+
+  removePhenotypeFromComp(id: number) {
+    if (this.controlStore.getState().phenotypesUsedInComputation.size < 2) {
+      return err('At least one phenotype must be included for computations.');
+    }
+
+    return this.controlStore.getState().removePhenotypeFromComp(id);
+  }
+
   // #endregion
 
   // #region --- Get Formated Control Info ---

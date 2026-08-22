@@ -110,6 +110,21 @@ export interface ControlLMInt {
    */
   removePhenotype(id: number): Result<number>;
 
+  // TODO - currently only one phenotype in computation is allowed -- because of that includePhenotypeInComp adds the new phenotype as in computation and removes other phenotypes which were previously included in computations
+  /**
+   * Adds a phenotype to the set of phenotypes used in computation.
+   * @param id (number) - ID of the phenotype to be added.
+   * @returns Result<number> where if the phenotype is successfully added, the id of the added phenotype is returned. Otherwise, an error message is returned.
+   */
+  includePhenotypeInComp: (id: number) => Result<number>;
+
+  /**
+   * Removes a phenotype from the set of phenotypes used in computation.
+   * @param id (number) - ID of the phenotype to be removed.
+   * @returns Result<number> where if the phenotype is successfully removed, the id of the removed phenotype is returned. Otherwise, an error message is returned.
+   */
+  removePhenotypeFromComp: (id: number) => Result<number>;
+
   // #endregion
 
   // #region --- Get Formated Control Info ---

@@ -1,3 +1,4 @@
+import type { Result } from '../../../types/result';
 import type {
   ControlEnabledStats,
   ControlInfo,
@@ -6,7 +7,6 @@ import type {
   PhenotypeStats,
   PhenotypeStatus,
 } from '../../../types/types';
-import type { Result } from "../../../types/result";
 
 /** Zustand store for managing control information of variables in LiveModel
  Provides actions for adding, removing, updating, and querying control info and phenotypes */
@@ -18,6 +18,8 @@ export type ControlStatus = {
 
   /** Property containing currently edited phenotype. */
   currentlyEditedPhenotype: Phenotype;
+  /** Set of IDs for phenotypes that are currently selected and used in computations. */
+  phenotypesUsedInComputation: Set<number>;
   /** Property containing phenotype status information for each variable. */
   phenotypes: Record<number, PhenotypeNoId>;
 
@@ -72,6 +74,20 @@ export type ControlStatus = {
    *  @returns Result<string> where if the renaming is succesful returns new name as value, else returns error message.
    */
   renamePhenotype: (id: number, newName: string) => Result<string>;
+
+  /**
+   * Adds a phenotype to the set of phenotypes used in computation.
+   * @param id (number) - ID of the phenotype to be added.
+   * @returns Result<number> where if the phenotype is successfully added, the id of the added phenotype is returned. Otherwise, an error message is returned.
+   */
+  includePhenotypeInComp: (id: number) => Result<number>;
+
+  /**
+   * Removes a phenotype from the set of phenotypes used in computation.
+   * @param id (number) - ID of the phenotype to be removed.
+   * @returns Result<number> where if the phenotype is successfully removed, the id of the removed phenotype is returned. Otherwise, an error message is returned.
+   */
+  removePhenotypeFromComp: (id: number) => Result<number>;
 
   /** Shifts variables from phenotype to the other phenotype.
    *  Phenotype specified by fromId should be empty after this, and phenotype specified by toId should contain only the variables previouslu present in fromId Phenotype.

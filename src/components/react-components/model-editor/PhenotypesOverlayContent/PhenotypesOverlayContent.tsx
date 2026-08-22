@@ -30,7 +30,12 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   });
 
   const phenotypes = controlStore((state) => state.phenotypes);
-  const currentPhenotype = controlStore((state) => state.currentlyEditedPhenotype);
+  const phenotypesInComp = controlStore(
+    (state) => state.phenotypesUsedInComputation
+  );
+  const editedPhenotype = controlStore(
+    (state) => state.currentlyEditedPhenotype
+  );
 
   const phenotypesWithId = useMemo(() => {
     return Object.entries(phenotypes)
@@ -46,9 +51,21 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       });
   }, [phenotypes]);
 
+  const phenotypesInComputationString = useMemo(() => {
+    let nameString = '';
+    phenotypesInComp.forEach((phenId) => {
+      if (phenotypes[phenId]) {
+        nameString += `${nameString.length === 0 ? '' : ', '}${phenotypes[phenId].name}`;
+      }
+    });
+
+    return nameString;
+  }, [phenotypes, phenotypesInComp]);
+
   const statistics = [
     ['Number of Phenotypes', phenotypesWithId.length.toString()],
-    ['Currently Edited Phenotype', currentPhenotype.name],
+    ['Currently Edited Phenotype', editedPhenotype.name],
+    ['Used in computations', phenotypesInComputationString],
   ];
 
   const rowButtons = (
@@ -56,22 +73,38 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
     usedInComputation: boolean,
     isDefaultPhenotype: boolean
   ) => {
-    // const computationButton = {
-    //   text: 'Comp',
-    //   icon: DeleteIcon,
-    //   iconAlt: 'Trash',
-    //   handleClick: () => {},
-    //   buttonBgColor: 'var(--color-neutral-light)',
-    //   buttonTextColor: 'var(--color-positive-text)',
-    //   buttonHoverColor: 'var(--color-neutral-light)',
-    //   buttonActiveColor: 'var(--color-positive-light)',
-    //   buttonTooltipFunction: (e: MouseEvent) => {
-    //     helpHoverStore
-    //       .getState()
-    //       .setHelpHoverAtMouse(e, phenotype.name, true, -50, 50);
-    //   },
-    //   isActive: usedInComputation,
-    // };
+    const computationButton = {
+      text: 'Comp',
+      icon: DeleteIcon,
+      iconAlt: 'Trash',
+      handleClick: () => {
+        if (usedInComputation) {
+          messageServ.showFromResult(
+            liveModelServ.Control.removePhenotypeFromComp(phenotype.id),
+            'Failed to remove phenotype from computations'
+          );
+        } else {
+          messageServ.showFromResult(
+            liveModelServ.Control.includePhenotypeInComp(phenotype.id),
+            'Failed to include phenotype in computations'
+          );
+        }
+      },
+      buttonBgColor: usedInComputation
+        ? 'var(--color-positive)'
+        : 'var(--color-neutral)',
+      buttonTextColor: 'var(--color-positive-text)',
+      buttonHoverColor: usedInComputation
+        ? 'var(--color-positive-highlight)'
+        : 'var(--color-neutral-highlight)',
+      buttonActiveColor: 'var(--color-positive)',
+      buttonTooltipFunction: (e: MouseEvent) => {
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(e, phenotype.name, true, -50, 50);
+      },
+      isActive: false,
+    };
 
     const deleteButton = {
       text: 'Del',
@@ -111,7 +144,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       isActive: false,
     };
 
-    return [deleteButton];
+    return [computationButton, deleteButton];
   };
 
   const changePhenotypeName = (
@@ -208,7 +241,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
             renderRowsWithContainer={(filteredElements) => (
               <section className="flex flex-col overflow-auto min-h-[100px] h-auto max-h-[25vh] w-[98%] px-[2%] pb-1 mb-1 gap-1">
                 {filteredElements.map((el) => {
-                  const isSelected = el.id === currentPhenotype.id;
+                  const isSelected = el.id === editedPhenotype.id;
 
                   return (
                     <TableRowWithName
@@ -244,7 +277,11 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
                       contActiveBorderColor="var(--color-secondary-light-border)"
                       contHoverBorderColor="var(--color-secondary-light-border)"
                       contBorderColor="var(--color-secondary-light)"
-                      buttons={rowButtons(el, isSelected, el.id === -1)}
+                      buttons={rowButtons(
+                        el,
+                        phenotypesInComp.has(el.id),
+                        el.id === -1
+                      )}
                       buttonsGap="7px"
                       buttonWidth="100px"
                     />

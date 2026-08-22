@@ -465,9 +465,11 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis(): void {
+    // TODO - change when multiple phenotypes for computation are allowed
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentlyEditedPhenotype.id
+      this.controlStore.getState().phenotypesUsedInComputation.values().next()
+        .value ?? -1
     );
 
     try {
@@ -813,9 +815,11 @@ class ComputationManager implements ComputationManagerInt {
   // #region --- Control Computation ---
 
   public startControlComputation(): void {
+    // TODO - change when multiple phenotypes for computation are allowed
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentlyEditedPhenotype.id
+      this.controlStore.getState().phenotypesUsedInComputation.values().next()
+        .value ?? -1
     );
 
     const oscillation =
@@ -867,9 +871,11 @@ class ComputationManager implements ComputationManagerInt {
   public getTrapSpaceSuccessionDiagram(
     insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
   ): void {
+    // TODO - change when multiple phenotypes for computation are allowed
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentlyEditedPhenotype.id
+      this.controlStore.getState().phenotypesUsedInComputation.values().next()
+        .value ?? -1
     );
 
     try {
