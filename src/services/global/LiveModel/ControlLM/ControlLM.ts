@@ -222,6 +222,12 @@ class ControlLM implements ControlLMInt {
   }
 
   createNewPhenotype(phenotypeName?: string) {
+    if (!this.liveModel.modelCanBeModified('Control')) {
+      return err(
+        'Some event blocks the control-enabled status change. Try again later.'
+      );
+    }
+
     const result = this.controlStore.getState().createPhenotype(phenotypeName);
 
     if (isErr(result)) {
@@ -232,6 +238,12 @@ class ControlLM implements ControlLMInt {
   }
 
   renamePhenotype(id: number, newName: string) {
+    if (!this.liveModel.modelCanBeModified('Control')) {
+      return err(
+        'Some event blocks the control-enabled status change. Try again later.'
+      );
+    }
+
     if (id === -1) {
       const createdPhenotype = this.controlStore
         .getState()
@@ -280,6 +292,12 @@ class ControlLM implements ControlLMInt {
 
   // TODO - rewrite this function when multiple phenotypes in computation are allowed
   includePhenotypeInComp(id: number) {
+    if (!this.liveModel.modelCanBeModified('Control')) {
+      return err(
+        'Some event blocks the control-enabled status change. Try again later.'
+      );
+    }
+
     const result = this.controlStore.getState().includePhenotypeInComp(id);
 
     if (isErr(result)) {
@@ -298,6 +316,12 @@ class ControlLM implements ControlLMInt {
   }
 
   removePhenotypeFromComp(id: number) {
+    if (!this.liveModel.modelCanBeModified('Control')) {
+      return err(
+        'Some event blocks the control-enabled status change. Try again later.'
+      );
+    }
+
     if (this.controlStore.getState().phenotypesUsedInComputation.size < 2) {
       return err('At least one phenotype must be included for computations.');
     }
