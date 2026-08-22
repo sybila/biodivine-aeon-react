@@ -228,7 +228,9 @@ class ImportLM implements ImportLMInt {
   private importPhenotypes(phenotypes: Array<Phenotype>) {
     phenotypes.forEach((phen) => {
       const phenId = this.liveModel.Control.createNewPhenotype(
+        false,
         phen.phenName,
+        undefined,
         true
       );
 

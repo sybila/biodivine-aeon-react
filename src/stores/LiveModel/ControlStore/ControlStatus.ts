@@ -56,11 +56,13 @@ export type ControlStatus = {
    *  @returns if succesful returns id of the newly created phenotype, else if phenotype with id doesn't exist returns undefined.
    */
   switchPhenotype: (id: number) => number | undefined;
-  /** Creates new empty phenotype and makes it currently active.
-   *  @param name (string) - name of the phenotype.
-   *  @returns returns Result object, if succesful error is set to undefined and value is set to the id of the new phenotype, else Result object error property contains error messsage string.
+  /**
+   * Creates a new empty phenotype and makes it currently active.
+   * @param name (string | undefined) - optional name for the phenotype. If not provided, a default name will be generated.
+   * @param id (number | undefined) - optional ID for the phenotype. If not provided, a new ID will be generated.
+   * @returns Returns a Result object. If successful value property is set to the ID of the new phenotype. Otherwise, the error property contains an error message string.
    */
-  createPhenotype: (name?: string) => Result<number>;
+  createPhenotype: (name?: string, id?: number) => Result<number>;
 
   /** Removes phenotype and makes it currently active.
    *  @param id (number) - id of the phenotype which should be removed

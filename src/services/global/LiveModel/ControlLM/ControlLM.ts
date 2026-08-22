@@ -217,15 +217,35 @@ class ControlLM implements ControlLMInt {
     return ok(result);
   }
 
-  createNewPhenotype(phenotypeName?: string, force = false) {
+  createNewPhenotype(
+    addIntoUndoRedo: boolean,
+    phenotypeName?: string,
+    phenotypeId?: number,
+    force = false
+  ) {
     if (!force && !this.liveModel.modelCanBeModified('Control')) {
       return ok(undefined);
     }
 
-    const result = this.controlStore.getState().createPhenotype(phenotypeName);
+    const result = this.controlStore
+      .getState()
+      .createPhenotype(phenotypeName, phenotypeId);
 
     if (isErr(result)) {
       return result;
+    }
+
+    const phenName = this.controlStore.getState().phenotypes[result.value].name;
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.removePhenotype(result.value);
+        },
+        redo: () => {
+          this.createNewPhenotype(false, phenName, result.value, false);
+        },
+      });
     }
 
     return ok(result.value);

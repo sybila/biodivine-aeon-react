@@ -120,7 +120,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
       return id;
     },
-    createPhenotype: (name?: string) => {
+    createPhenotype: (name?: string, id?: number) => {
       let currentName = name;
       let newPhenotypeCounterValue = undefined;
 
@@ -131,20 +131,29 @@ function createControlStore(): ZustandStore<ControlStatus> {
         newPhenotypeCounterValue = newPhenInfo.newCounterValue;
       }
 
-      const [nameExists, highestId] = Object.entries(get().phenotypes).reduce(
+      const [nameExists, highestId, idExists] = Object.entries(
+        get().phenotypes
+      ).reduce(
         (acc, phenotypeInfo) => {
-          const id = Number(phenotypeInfo[0]);
+          const phenId = Number(phenotypeInfo[0]);
 
           return [
             acc[0] || phenotypeInfo[1].name === currentName,
-            id > acc[1] ? id : acc[1],
+            phenId > acc[1] ? phenId : acc[1],
+            acc[2] || phenId === id,
           ];
         },
-        [false, 0]
+        [false, 0, false]
       );
 
       if (nameExists) {
         return err('Phenotype with this name already exists.');
+      }
+
+      if (id && idExists) {
+        return name != get().phenotypes[id].name
+          ? err('Phenotype with this id already exists.')
+          : ok(id);
       }
 
       const newNoNamePhenNumber = !name

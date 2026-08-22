@@ -212,7 +212,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
               textColor="var(--color-secondary-text)"
               handleClick={() => {
                 messageServ.showFromResult(
-                  liveModelServ.Control.createNewPhenotype(),
+                  liveModelServ.Control.createNewPhenotype(true),
                   'Failed to create new phenotype'
                 );
               }}

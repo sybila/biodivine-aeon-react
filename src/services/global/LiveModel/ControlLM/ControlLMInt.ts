@@ -90,18 +90,23 @@ export interface ControlLMInt {
   changeCurrentlyEditedPhenotype(id: number): Result<number>;
 
   /**
-   * Creates a new phenotype with an optional name.
-   *
-   * @param phenotypeName (string, optional) - The name of the newly created phenotype. If not provided, a default name will be generated.
-   * @param force (boolean, default: false) - If set to `true`, the change will be forced even if it violates certain conditions.
-   *
-   * @returns A `Result` object that indicates whether the operation was successful or if an error occurred.
-   * - If successful, it returns a `Success` object containing the ID of the new phenotype.
-   * - If an error occurs, it returns an `Err` object containing an error message.
-   * - If operation was blocked by some other operation, returns 'Success' object containing undefined. This should not happen when force is set to true.
-   */
+ * Creates a new phenotype with an optional name and optional ID.
+ *
+ * @param addIntoUndoRedo - Whether to add this change to the undo/redo stack.
+ * @param phenotypeName (string, optional) - The name of the newly created phenotype. If not provided, a default name will be generated.
+ * @param phenotypeId (number | undefined, optional) - The ID of the newly created phenotype. If not provided, a new ID will be generated. Should be used only for undo/redo.
+ * @param force (boolean, default: false) - If set to `true`, the change will be forced even if it violates certain conditions.
+ *
+ * @returns A `Result` object that indicates whether the operation was successful or if an error occurred.
+ * - If successful, it returns a `Success` object containing the ID of the new phenotype.
+ * - If an error occurs, it returns an `Err` object containing an error message.
+ * - If operation was blocked by some other operation, returns 'Success' object containing undefined. This should not happen when force is set to 
+true.
+ */
   createNewPhenotype(
+    addIntoUndoRedo: boolean,
     phenotypeName?: string,
+    phenotypeId?: number,
     force?: boolean
   ): Result<number | undefined>;
 
