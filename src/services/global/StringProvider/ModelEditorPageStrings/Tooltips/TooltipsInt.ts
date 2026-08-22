@@ -50,6 +50,7 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   removeVariableFromPhenotype(): string;
   createNewPhenotypeButton(): string;
   renamePhenotypeButton(): string;
+  deletePhenotypeButton(isDefaultPhenotype: boolean): string;
 
   // #endregion
 

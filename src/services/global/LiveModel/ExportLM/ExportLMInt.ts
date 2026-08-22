@@ -23,8 +23,16 @@ export interface ExportLMInt {
   // #region --- Export/Save Model ---
 
   /**
-   * Export current model in Aeon text format, or undefined if model cannot be
-   * exported (no variables).
+   * Exports the current model into string in aeon format.
+   * This includes model metadata, variable definitions with control states and regulations,
+   * and phenotype associations.
+   *
+   * @param emptyPossible - Determines whether to allow exporting if no variables exist.
+   *                       If set to `true`, returns the export string even if the variable store is empty.
+   *                       If set to `false` (default), returns `undefined` when there are no variables.
+   * @param defaultPhenotypeId - The ID of the reference phenotype used to determine control states for variables.
+   * @returns (string | undefined) A concatenated string containing model as string,
+   *                               or `undefined` if `emptyPossible` is false and no variables are present.
    */
   exportAeon(
     emptyPossible?: boolean,

@@ -10,6 +10,7 @@ import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 import AddIcon from '../../../../assets/icons/add_box.svg';
 import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
+import BlackDeleteIcon from '../../../../assets/icons/delete-24px.svg';
 import DeleteIcon from '../../../../assets/icons/white-delete.svg';
 import { isErr } from '../../../../types/result';
 
@@ -49,6 +50,69 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
     ['Number of Phenotypes', phenotypesWithId.length.toString()],
     ['Currently Edited Phenotype', currentPhenotype.name],
   ];
+
+  const rowButtons = (
+    phenotype: Phenotype,
+    usedInComputation: boolean,
+    isDefaultPhenotype: boolean
+  ) => {
+    // const computationButton = {
+    //   text: 'Comp',
+    //   icon: DeleteIcon,
+    //   iconAlt: 'Trash',
+    //   handleClick: () => {},
+    //   buttonBgColor: 'var(--color-neutral-light)',
+    //   buttonTextColor: 'var(--color-positive-text)',
+    //   buttonHoverColor: 'var(--color-neutral-light)',
+    //   buttonActiveColor: 'var(--color-positive-light)',
+    //   buttonTooltipFunction: (e: MouseEvent) => {
+    //     helpHoverStore
+    //       .getState()
+    //       .setHelpHoverAtMouse(e, phenotype.name, true, -50, 50);
+    //   },
+    //   isActive: usedInComputation,
+    // };
+
+    const deleteButton = {
+      text: 'Del',
+      icon: isDefaultPhenotype ? BlackDeleteIcon : DeleteIcon,
+      iconAlt: 'Trash',
+      handleClick: () => {
+        if (!isDefaultPhenotype) {
+          messageServ.showFromResult(
+            liveModelServ.Control.removePhenotype(phenotype.id),
+            'Failed to remove phenotype'
+          );
+        }
+      },
+      buttonBgColor: isDefaultPhenotype
+        ? 'var(--color-tertiary-buttons-disabled)'
+        : 'var(--color-delete-darker)',
+      buttonTextColor: isDefaultPhenotype
+        ? 'var(--color-teritary-text)'
+        : 'var(--color-delete-text)',
+      buttonHoverColor: isDefaultPhenotype
+        ? 'var(--color-tertiary-buttons-disabled)'
+        : 'var(--color-delete-hover)',
+      buttonActiveColor: 'var(--color-delete-active)',
+      buttonTooltipFunction: (e: MouseEvent) => {
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e,
+            pageStringProviderServ.Tooltips.deletePhenotypeButton(
+              isDefaultPhenotype
+            ),
+            true,
+            -50,
+            50
+          );
+      },
+      isActive: false,
+    };
+
+    return [deleteButton];
+  };
 
   const changePhenotypeName = (
     id: number,
@@ -143,76 +207,49 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
             hideTooltipFunction={() => helpHoverStore.getState().clear()}
             renderRowsWithContainer={(filteredElements) => (
               <section className="flex flex-col overflow-auto min-h-[100px] h-auto max-h-[25vh] w-[98%] px-[2%] pb-1 mb-1 gap-1">
-                {filteredElements.map((el) => (
-                  <TableRowWithName
-                    key={el.id}
-                    name={el.name}
-                    isSelected={el.id === currentPhenotype.id}
-                    handleClick={() =>
-                      messageServ.showFromResult(
-                        liveModelServ.Control.changeCurrentlyEditedPhenotype(
-                          el.id
-                        ),
-                        'Failed to switch currently edited phenotype'
-                      )
-                    }
-                    handleNameChange={(newName) => {
-                      return changePhenotypeName(el.id, el.name, newName);
-                    }}
-                    handleNameSubmit={(newName) => {
-                      return changePhenotypeName(el.id, el.name, newName);
-                    }}
-                    nameTooltipFun={(e: MouseEvent) =>
-                      helpHoverStore
-                        .getState()
-                        .setHelpHoverAtMouse(e, el.name, true, -50, 50)
-                    }
-                    hideTooltipFun={() => helpHoverStore.getState().clear()}
-                    nameTextColor="var(--color-tertiary-text)"
-                    nameBgcolor="var(--color-tertiary-lighter)"
-                    rerenderOnNameUpdate={el.id === -1}
-                    contColor="var(--color-secondary-light)"
-                    contHoverColor="var(--color-secondary-light-highlight)"
-                    contActiveColor="var(--color-secondary-light-active)"
-                    contActiveBorderColor="var(--color-secondary-light-border)"
-                    contHoverBorderColor="var(--color-secondary-light-border)"
-                    contBorderColor="var(--color-secondary-light)"
-                    buttons={
-                      el.id === -1
-                        ? []
-                        : [
-                            {
-                              text: 'Delete',
-                              icon: DeleteIcon,
-                              iconAlt: 'Trash',
-                              handleClick: () => {
-                                messageServ.showFromResult(
-                                  liveModelServ.Control.removePhenotype(el.id),
-                                  'Failed to remove phenotype'
-                                );
-                              },
-                              buttonBgColor: 'var(--color-delete)',
-                              buttonTextColor: 'var(--color-delete-text)',
-                              buttonHoverColor: 'var(--color-delete-hover)',
-                              buttonActiveColor: 'var(--color-delete-active)',
-                              buttonTooltipFunction: (e: MouseEvent) => {
-                                helpHoverStore
-                                  .getState()
-                                  .setHelpHoverAtMouse(
-                                    e,
-                                    el.name,
-                                    true,
-                                    -50,
-                                    50
-                                  );
-                              },
-                              isActive: false,
-                            },
-                          ]
-                    }
-                    buttonWidth="120px"
-                  />
-                ))}
+                {filteredElements.map((el) => {
+                  const isSelected = el.id === currentPhenotype.id;
+
+                  return (
+                    <TableRowWithName
+                      key={el.id}
+                      name={el.name}
+                      isSelected={isSelected}
+                      handleClick={() =>
+                        messageServ.showFromResult(
+                          liveModelServ.Control.changeCurrentlyEditedPhenotype(
+                            el.id
+                          ),
+                          'Failed to switch currently edited phenotype'
+                        )
+                      }
+                      handleNameChange={(newName) => {
+                        return changePhenotypeName(el.id, el.name, newName);
+                      }}
+                      handleNameSubmit={(newName) => {
+                        return changePhenotypeName(el.id, el.name, newName);
+                      }}
+                      nameTooltipFun={(e: MouseEvent) =>
+                        helpHoverStore
+                          .getState()
+                          .setHelpHoverAtMouse(e, el.name, true, -50, 50)
+                      }
+                      hideTooltipFun={() => helpHoverStore.getState().clear()}
+                      nameTextColor="var(--color-tertiary-text)"
+                      nameBgcolor="var(--color-tertiary-lighter)"
+                      rerenderOnNameUpdate={el.id === -1}
+                      contColor="var(--color-secondary-light)"
+                      contHoverColor="var(--color-secondary-light-highlight)"
+                      contActiveColor="var(--color-secondary-light-active)"
+                      contActiveBorderColor="var(--color-secondary-light-border)"
+                      contHoverBorderColor="var(--color-secondary-light-border)"
+                      contBorderColor="var(--color-secondary-light)"
+                      buttons={rowButtons(el, isSelected, el.id === -1)}
+                      buttonsGap="7px"
+                      buttonWidth="100px"
+                    />
+                  );
+                })}
               </section>
             )}
           />

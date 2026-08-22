@@ -1,4 +1,7 @@
-import { PHENOTYPE_STATUS, type PhenotypeStatus } from '../../../../../types/types';
+import {
+  PHENOTYPE_STATUS,
+  type PhenotypeStatus,
+} from '../../../../../types/types';
 import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 
@@ -132,6 +135,12 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   public renamePhenotypeButton() {
     return 'Rename currently active phenotype.';
+  }
+
+  public deletePhenotypeButton(isDefaultPhenotype: boolean): string {
+    return isDefaultPhenotype
+      ? 'Default phenotype cannot be deleted.'
+      : 'Delete this phenotype.';
   }
 
   // #endregion
