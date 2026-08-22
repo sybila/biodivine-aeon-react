@@ -145,7 +145,6 @@ class VariablesLM implements VariablesLMInt {
 
   // #region --- Variable Actions ---
 
-  /** Add a variable to the model */
   public addVariable(
     modAllowed: boolean,
     addIntoUndoRedo: boolean,
@@ -155,7 +154,7 @@ class VariablesLM implements VariablesLMInt {
     controllable: boolean = true,
     phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype,
     fitVisualization: boolean = true
-  ): number | undefined {
+  ) {
     if (!modAllowed && !this.liveModel.modelCanBeModified()) {
       return;
     }
@@ -188,8 +187,6 @@ class VariablesLM implements VariablesLMInt {
 
     this.computationManagerServ.resetMaxSize();
 
-    // Todo - QuickHelp OFF;
-
     this.liveModel.UpdateFunctions.validateUpdateFunction(variableId);
     this.liveModel.Export.saveModel();
 
@@ -212,14 +209,10 @@ class VariablesLM implements VariablesLMInt {
     return variableId;
   }
 
-  /** Removes variable and displays warnings if necessary
-   *  Returns true if the variable was removed, false otherwise.
-   *  Shows warnings if there are existing results or if the user needs to confirm variable removal.
-   */
   public async removeVariableWithWarnings(
     id: number,
     addIntoUndoRedo: boolean
-  ): Promise<boolean> {
+  ) {
     const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable || !this.liveModel.modelCanBeModified()) return false;
 
@@ -231,12 +224,11 @@ class VariablesLM implements VariablesLMInt {
     return true;
   }
 
-  /** Remove a variable by its ID */
   public removeVariable(
     id: number,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified()) return;
 
     const variable = this.variablesStore.getState().variableFromId(id);
@@ -269,10 +261,6 @@ class VariablesLM implements VariablesLMInt {
     this.variablePositionsStore.getState().removeVariablePosition(id);
 
     this.removeNodeFromVisualizationFunction(id);
-
-    if (this.liveModel.isEmpty()) {
-      //Todo - add QuickHelp ON;
-    }
 
     this.liveModel.Export.saveModel();
 
@@ -337,13 +325,12 @@ class VariablesLM implements VariablesLMInt {
     }
   }
 
-  /** Rename a variable by its ID */
   public renameVariable(
     id: number,
     newName: string,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): string | undefined {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified()) {
       return;
     }
