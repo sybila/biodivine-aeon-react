@@ -89,9 +89,10 @@ export interface ControlLMInt {
 
   /** Create new phenotype with name specified by phenotypeName.
    *  @param phenotypeName (string) - optional name of the newly created phenotype, if is not same defaul name is constructed.
+   *  @param force (boolean) - Whether to force the change even if it blocks certain conditions. If not set, set to false by default.
    *  @returns returns Result object with  id of the new phenotype, if there is an error returns Result object containing error message
    */
-  createNewPhenotype(phenotypeName?: string): Result<number>;
+  createNewPhenotype(phenotypeName?: string, force?: boolean): Result<number>;
 
   /** Renames phenotype with id to newName.
    *  @param id (number) = id of the phenotype to be renamed.

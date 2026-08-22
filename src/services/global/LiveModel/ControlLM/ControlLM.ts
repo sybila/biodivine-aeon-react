@@ -221,8 +221,8 @@ class ControlLM implements ControlLMInt {
     return ok(result);
   }
 
-  createNewPhenotype(phenotypeName?: string) {
-    if (!this.liveModel.modelCanBeModified('Control')) {
+  createNewPhenotype(phenotypeName?: string, force = false) {
+    if (!force && !this.liveModel.modelCanBeModified('Control')) {
       return err(
         'Some event blocks the control-enabled status change. Try again later.'
       );
