@@ -10,9 +10,9 @@ import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 import AddIcon from '../../../../assets/icons/add_box.svg';
 import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
+import ComputationIcon from '../../../../assets/icons/arrow-spin.svg';
 import BlackDeleteIcon from '../../../../assets/icons/delete-24px.svg';
 import DeleteIcon from '../../../../assets/icons/white-delete.svg';
-import ComputationIcon from '../../../../assets/icons/arrow-spin.svg'
 
 import { isErr } from '../../../../types/result';
 
@@ -103,7 +103,15 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       buttonTooltipFunction: (e: MouseEvent) => {
         helpHoverStore
           .getState()
-          .setHelpHoverAtMouse(e, phenotype.name, true, -50, 50);
+          .setHelpHoverAtMouse(
+            e,
+            pageStringProviderServ.Tooltips.changePhenotypeInComputationStatusButton(
+              usedInComputation
+            ),
+            true,
+            -50,
+            50
+          );
       },
       isActive: false,
     };

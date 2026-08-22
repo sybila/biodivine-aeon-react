@@ -143,6 +143,14 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
       : 'Delete this phenotype.';
   }
 
+  public changePhenotypeInComputationStatusButton(
+    includedInComputation: boolean
+  ): string {
+    return includedInComputation
+      ? 'Remove phenotype from future computations.'
+      : 'Include phenotype in future computations.';
+  }
+
   // #endregion
 
   // #region Visual Options

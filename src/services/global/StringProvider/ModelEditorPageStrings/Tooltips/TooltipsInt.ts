@@ -51,6 +51,9 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   createNewPhenotypeButton(): string;
   renamePhenotypeButton(): string;
   deletePhenotypeButton(isDefaultPhenotype: boolean): string;
+  changePhenotypeInComputationStatusButton(
+    includedInComputation: boolean
+  ): string;
 
   // #endregion
 
