@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { Oscillation, PhenotypeStats } from '../../../../types/types';
+import SectionWithDotHeader from '../../global/SectionWithDotHeader/SectionWithDotHeader';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
+import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { PhenotypeEditorTabContentProps } from './PhenotypeEditorTabContentProps';
@@ -20,33 +22,67 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
   modelEditorStatusStore,
   helpHoverStore,
 }) => {
-  const currentPhenotype = controlStore((state) => state.currentlyEditedPhenotype);
+  const editedPhenotype = controlStore(
+    (state) => state.currentlyEditedPhenotype
+  );
+
+  const phenotypeInComputation = controlStore(
+    (state) => state.phenotypesUsedInComputation
+  );
+  const phenotypes = controlStore((state) => state.phenotypes);
+
+  const phenotypesAsString = useMemo(() => {
+    let nameString = '';
+
+    phenotypeInComputation.forEach((phenId) => {
+      if (phenotypes[phenId]) {
+        nameString += `${nameString.length < 1 ? '' : ' ,'}${phenotypes[phenId].name}`;
+      }
+    });
+
+    return nameString;
+  }, [phenotypes, phenotypeInComputation]);
+
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
     phenotypeEditorServ.getPhenotypeOscillation()
   );
 
   const currentPhenotypeStats: PhenotypeStats = useMemo(
     () => controlStore.getState().getPhenotypeStats(),
-    [currentPhenotype]
+    [editedPhenotype]
   );
 
   return (
     <div className="flex flex-col items-center w-full h-fit gap-3">
-      <section className="flex flex-col items-center w-full h-fit gap-3">
-        <DotHeaderReact
-          textColor="var(--color-primary-text)"
-          compWidth="100%"
-          headerText="Phenotypes"
-          justifyHeader="start"
-        />
-
+      <SectionWithDotHeader
+        textColor="var(--color-primary-text)"
+        text="Phenotypes"
+      >
         <TextButtonReact
           compWidth="100%"
           compHeight="40px"
           handleClick={() => phenotypeEditorServ.openPhenotypesOverlayWindow()}
           text="Show Available Phenotypes"
         />
-      </section>
+      </SectionWithDotHeader>
+
+      <SectionWithDotHeader
+        textColor="var(--color-primary-text)"
+        text="Used For Computations"
+      >
+        <ContentWindowReact
+          compHeight="40px"
+          compWidth="99%"
+          contentAlignI="safe center"
+          contentJustifyC="center"
+          windOverflowY="hidden"
+          windColor="var(--color-secondary-light)"
+        >
+          <div className="flex flex-row h-full w-auto font-(--base-font-family) text-(--color-secondary-text) select-none px-2">
+            {phenotypesAsString}
+          </div>
+        </ContentWindowReact>
+      </SectionWithDotHeader>
 
       <SeparatorLine color="var(--color-primary-separator)" />
 
@@ -68,7 +104,7 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
                 .getState()
                 .setHelpHoverAtMouse(
                   e.nativeEvent,
-                  currentPhenotype.name,
+                  editedPhenotype.name,
                   true,
                   -50,
                   50
@@ -76,7 +112,7 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
             }
             onMouseLeave={() => helpHoverStore.getState().clear()}
           >
-            {currentPhenotype.name}
+            {editedPhenotype.name}
           </span>
 
           <section className="flex flex-col items-center w-full h-fit gap-3">
