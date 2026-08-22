@@ -11,8 +11,11 @@ function SelectionButtons<T extends string | number>({
   setSelectedVariables,
   buttonBorderRadius = '10px',
   buttonSize = '29px',
+  buttonGap = '8px',
   buttonColor = 'var(--color-secondary-buttons)',
   buttonHoverColor = 'var(--color-secondary-buttons-hover)',
+  componentHeight = '100%',
+  componentWidth = 'fit-content',
   tooltips,
   helpHoverStore,
 }: SelectionButtonsProps<T>) {
@@ -94,7 +97,10 @@ function SelectionButtons<T extends string | number>({
   ];
 
   return (
-    <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
+    <div
+      className="flex flex-row items-center justify-start"
+      style={{ height: componentHeight, width: componentWidth, gap: buttonGap }}
+    >
       {statusButtons.map(([icon, alt, onClick, onMouseEnter], index) => (
         <IconButtonReact
           key={index}

@@ -15,6 +15,12 @@ export type SelectionButtonsProps<T extends string | number> = {
 
   buttonHoverColor?: string;
 
+  buttonGap?: string;
+
+  componentHeight?: string;
+
+  componentWidth?: string;
+
   tooltips: SelectionButtonsTooltipsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
