@@ -39,6 +39,7 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
     buttons = [],
     buttonHeight = '100%',
     buttonWidth = '65px',
+    buttonsGap = '5px',
     buttonSectionHeight = '100%',
     buttonSectionWidth = 'fit-content',
   }) => {
@@ -109,7 +110,11 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
           <section
             className="flex items-center justify-end overflow-visible self-end"
             onClick={(e) => e.stopPropagation()}
-            style={{ height: buttonSectionHeight, width: buttonSectionWidth }}
+            style={{
+              height: buttonSectionHeight,
+              width: buttonSectionWidth,
+              gap: buttonsGap,
+            }}
           >
             {buttons.map((button, index) => (
               <TextIconButtonReact

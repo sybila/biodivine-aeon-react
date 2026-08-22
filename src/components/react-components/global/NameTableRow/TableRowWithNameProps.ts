@@ -132,4 +132,7 @@ export type TableRowWithNameProps = {
 
   /** Height of the whole button‑section container. @default "100%" */
   buttonSectionHeight?: string;
+
+  /**Gap between buttons. @default "5px" */
+  buttonsGap?: string;
 };
