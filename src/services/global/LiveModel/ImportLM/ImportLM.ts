@@ -232,7 +232,7 @@ class ImportLM implements ImportLMInt {
         true
       );
 
-      if (!isErr(phenId)) {
+      if (!isErr(phenId) && phenId.value != undefined) {
         phen.variables.forEach((variable) => {
           const existingVarObject = this.variablesStore
             .getState()

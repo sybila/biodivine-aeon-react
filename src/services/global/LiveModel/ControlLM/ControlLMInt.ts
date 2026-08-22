@@ -47,6 +47,7 @@ export interface ControlLMInt {
    * @param force - Indicates whether to force the change without checking current status.
    * @param phenotypeId - (Optional) The identifier of the phenotype. If not provided, the currently edited phenotype is assumed.
    * @returns An `Ok` result with `true` if the phenotype status was successfully changed,
+   * 'Ok' result with `false` if the operation was blocked (shouldn't happen when force is set to true)
    *  or an `Err` result with an error message if there was an issue.
    */
   changePhenotypeById(
@@ -65,6 +66,7 @@ export interface ControlLMInt {
    * @param addIntoUndoRedo - Whether to add this change to the undo/redo stack.
    * @param force - Whether to force the change even if it blocks certain conditions.
    * @returns An `Ok` result with `true` if the control-enabled status was successfully changed,
+   * 'Ok' result with `false` if the operation was blocked (shouldn't happen when force is set to true)
    * or an `Err` result with an error message if there was an issue.
    */
   changeControlEnabledById(
@@ -87,44 +89,64 @@ export interface ControlLMInt {
    */
   changeCurrentlyEditedPhenotype(id: number): Result<number>;
 
-  /** Create new phenotype with name specified by phenotypeName.
-   *  @param phenotypeName (string) - optional name of the newly created phenotype, if is not same defaul name is constructed.
-   *  @param force (boolean) - Whether to force the change even if it blocks certain conditions. If not set, set to false by default.
-   *  @returns returns Result object with  id of the new phenotype, if there is an error returns Result object containing error message
+  /**
+   * Creates a new phenotype with an optional name.
+   *
+   * @param phenotypeName (string, optional) - The name of the newly created phenotype. If not provided, a default name will be generated.
+   * @param force (boolean, default: false) - If set to `true`, the change will be forced even if it violates certain conditions.
+   *
+   * @returns A `Result` object that indicates whether the operation was successful or if an error occurred.
+   * - If successful, it returns a `Success` object containing the ID of the new phenotype.
+   * - If an error occurs, it returns an `Err` object containing an error message.
+   * - If operation was blocked by some other operation, returns 'Success' object containing undefined. This should not happen when force is set to true.
    */
-  createNewPhenotype(phenotypeName?: string, force?: boolean): Result<number>;
+  createNewPhenotype(
+    phenotypeName?: string,
+    force?: boolean
+  ): Result<number | undefined>;
 
-  /** Renames phenotype with id to newName.
-   *  @param id (number) = id of the phenotype to be renamed.
-   *  @param newName (string) = newName for the phenotype
-   * @returns
-   * - If successful, returns a `Result` object containing the string `newName`.
-   * - If an error occurs during the process, shows an error message and returns an undefined `Result` object.
+  /**
+   * Renames a phenotype with the specified ID to a new name.
+   *
+   * @param id (number) - The ID of the phenotype to be renamed.
+   * @param newName (string) - The new name for the phenotype.
+   *
+   * @returns A `Result` object indicating the outcome of the operation.
+   * - If the operation was successful, returns a `Success` object containing `true`.
+   * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
+   * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  renamePhenotype(id: number, newName: string): Result<string>;
+  renamePhenotype(id: number, newName: string): Result<boolean>;
 
   /** Deletes phenotype by id.
    *  @param id (number) => id of the phenotype, which should be deleted
-   * @returns
-   * - If successful, returns a `Result` object containing the number `id` of the deleted phenotype.
-   * - If an error occurs during the deletion process, shows an error message and returns an undefined `Result` object.
+   * @returns A `Result` object indicating the outcome of the operation.
+   * - If the operation was successful, returns a `Success` object containing `true`.
+   * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
+   * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  removePhenotype(id: number): Result<number>;
+  removePhenotype(id: number): Result<boolean>;
 
   // TODO - currently only one phenotype in computation is allowed -- because of that includePhenotypeInComp adds the new phenotype as in computation and removes other phenotypes which were previously included in computations
   /**
    * Adds a phenotype to the set of phenotypes used in computation.
    * @param id (number) - ID of the phenotype to be added.
-   * @returns Result<number> where if the phenotype is successfully added, the id of the added phenotype is returned. Otherwise, an error message is returned.
+   * @returns A `Result` object indicating the outcome of the operation.
+   * - If the operation was successful, returns a `Success` object containing `true`.
+   * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
+   * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  includePhenotypeInComp: (id: number) => Result<number>;
+  includePhenotypeInComp: (id: number) => Result<boolean>;
 
   /**
    * Removes a phenotype from the set of phenotypes used in computation.
    * @param id (number) - ID of the phenotype to be removed.
-   * @returns Result<number> where if the phenotype is successfully removed, the id of the removed phenotype is returned. Otherwise, an error message is returned.
+   * @returns A `Result` object indicating the outcome of the operation.
+   * - If the operation was successful, returns a `Success` object containing `true`.
+   * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
+   * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  removePhenotypeFromComp: (id: number) => Result<number>;
+  removePhenotypeFromComp: (id: number) => Result<boolean>;
 
   // #endregion
 

@@ -171,7 +171,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       'Failed to rename phenotype'
     );
 
-    if (!isErr(result)) {
+    if (!isErr(result) && result.value) {
       return id === -1 ? oldName : newName;
     }
   };
