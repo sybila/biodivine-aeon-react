@@ -3,14 +3,16 @@ import type { UtilitiesMenuProps } from './UtilitiesMenuProps';
 
 import { useMemo } from 'react';
 
-import type { ContentVisibleComponent, Variable } from '../../../../types/types';
+import type { ContentVisibleComponent } from '../../../../types/types';
 import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
 import ZoomSection from '../../global/ZoomSection/ZoomSection';
 import UndoRedoSection from './UndoRedoSection/UndoRedoSection';
 import VariableSearchSection from './VariableSearchSection/VariableSearchSection';
+import VariableSelectionSection from './VariableSelectionSection/VariableSelectionSection';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   modelVisualization,
+  loadingServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
 
@@ -23,8 +25,15 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 
   const variables = variablesStore((state) => state.variables);
 
-  const variableNames = useMemo(() => {
-    return Object.values(variables).map((variable: Variable) => variable.name);
+  const [variableIds, variableNames] = useMemo(() => {
+    return Object.values(variables).reduce(
+      (acc, variable) => {
+        acc[0].push(variable.id);
+        acc[1].push(variable.name);
+        return acc;
+      },
+      [[], []] as [number[], string[]]
+    );
   }, [variables]);
 
   const zoomStatus = modelEditorStatusStore(
@@ -40,7 +49,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       }
       className="absolute top-[55px] right-[12px] z-1"
       compBgColor="var(--color-primary)"
-      buttonHoverColor='var(--color-primary-buttons-hover)'
+      buttonHoverColor="var(--color-primary-buttons-hover)"
       buttonRight={true}
       compHeight="400px"
       buttonWidth="25px"
@@ -90,6 +99,15 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           suggestionstrings={variableNames}
         />
 
+        <VariableSelectionSection
+          variableIds={variableIds}
+          modelVisualizationServ={modelVisualization}
+          loadingServ={loadingServ}
+          pageStringProviderServ={pageStringProviderServ}
+          modelEditorStatusStore={modelEditorStatusStore}
+          helpHoverStore={helpHoverStore}
+        />
+
         <UndoRedoSection
           undoFunction={() => modelUndoRedoStore.getState().undo()}
           redoFunction={() => modelUndoRedoStore.getState().redo()}
@@ -133,8 +151,8 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           gapInsideSection={gapInsideSection}
           headerText="Fit Into View"
           buttonText="Fit"
-          headerTextColor='var(--color-primary-text)'
-          buttonTextColor='var(--color-secondary-text)'
+          headerTextColor="var(--color-primary-text)"
+          buttonTextColor="var(--color-secondary-text)"
           buttonColor="var(--color-secondary-buttons)"
           buttonTooltipFunction={(e: MouseEvent) =>
             helpHoverStore

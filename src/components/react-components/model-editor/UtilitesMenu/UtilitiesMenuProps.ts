@@ -1,3 +1,4 @@
+import type { LoadingInt } from '../../../../services/global/Loading/LoadingInt';
 import type { ModelEditorPageStringsInt } from '../../../../services/global/StringProvider/ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { ModelVisualizationInt } from '../../../../services/model-editor/ModelVisualization/ModelVisualizationInt';
 import type { SearchAndFilterHelpersInt } from '../../../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
@@ -9,6 +10,7 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
 export type UtilitiesMenuProps = {
   modelVisualization: ModelVisualizationInt;
+  loadingServ: LoadingInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
 

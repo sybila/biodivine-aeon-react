@@ -272,6 +272,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
         modelVisualization={modelVisualization}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         pageStringProviderServ={pageStringProviderServ}
+        loadingServ={loadingServ}
         variablesStore={variablesStore}
         helpHoverStore={helpHoverStore}
         modelUndoRedoStore={modelUndoRedoStore}
