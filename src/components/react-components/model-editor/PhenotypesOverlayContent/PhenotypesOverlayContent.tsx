@@ -12,6 +12,8 @@ import TableRowWithName from '../../global/NameTableRow/TableRowWithName';
 
 import BlackDeleteIcon from '../../../../assets/icons/delete-24px.svg';
 import DeleteIcon from '../../../../assets/icons/white-delete.svg';
+import ComputationIcon from '../../../../assets/icons/arrow-spin.svg'
+
 import { isErr } from '../../../../types/result';
 
 const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
@@ -75,8 +77,8 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   ) => {
     const computationButton = {
       text: 'Comp',
-      icon: DeleteIcon,
-      iconAlt: 'Trash',
+      icon: ComputationIcon,
+      iconAlt: 'Computation',
       handleClick: () => {
         if (usedInComputation) {
           messageServ.showFromResult(
