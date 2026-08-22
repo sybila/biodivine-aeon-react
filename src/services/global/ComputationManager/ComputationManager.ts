@@ -467,7 +467,7 @@ class ComputationManager implements ComputationManagerInt {
   public startAttractorAnalysis(): void {
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentPhenotype.id
+      this.controlStore.getState().currentlyEditedPhenotype.id
     );
 
     try {
@@ -815,7 +815,7 @@ class ComputationManager implements ComputationManagerInt {
   public startControlComputation(): void {
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentPhenotype.id
+      this.controlStore.getState().currentlyEditedPhenotype.id
     );
 
     const oscillation =
@@ -869,7 +869,7 @@ class ComputationManager implements ComputationManagerInt {
   ): void {
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
-      this.controlStore.getState().currentPhenotype.id
+      this.controlStore.getState().currentlyEditedPhenotype.id
     );
 
     try {

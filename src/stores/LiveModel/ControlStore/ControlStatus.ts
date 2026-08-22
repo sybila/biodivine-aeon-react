@@ -16,8 +16,8 @@ export type ControlStatus = {
   /** Property containing control-enabled status information for each variable. */
   controlEnabled: Record<number, boolean>;
 
-  /** Property containing currently selected phenotype. */
-  currentPhenotype: Phenotype;
+  /** Property containing currently edited phenotype. */
+  currentlyEditedPhenotype: Phenotype;
   /** Property containing phenotype status information for each variable. */
   phenotypes: Record<number, PhenotypeNoId>;
 

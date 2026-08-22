@@ -16,7 +16,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     controlEnabled: {},
 
-    currentPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
+    currentlyEditedPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
 
     phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
 
@@ -34,10 +34,10 @@ function createControlStore(): ZustandStore<ControlStatus> {
             ...state.controlEnabled,
             [id]: controlInfo.controlEnabled,
           },
-          currentPhenotype: {
-            ...state.currentPhenotype,
+          currentlyEditedPhenotype: {
+            ...state.currentlyEditedPhenotype,
             variables: {
-              ...state.currentPhenotype.variables,
+              ...state.currentlyEditedPhenotype.variables,
               [id]: controlInfo.phenotype,
             },
           },
@@ -51,7 +51,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
         const newControlEnabled = { ...state.controlEnabled };
         const newPhenotypes = {
           ...state.phenotypes,
-          [state.currentPhenotype.id]: state.currentPhenotype,
+          [state.currentlyEditedPhenotype.id]: state.currentlyEditedPhenotype,
         };
 
         Object.keys(newPhenotypes).forEach(
@@ -63,9 +63,9 @@ function createControlStore(): ZustandStore<ControlStatus> {
         return {
           controlEnabled: newControlEnabled,
           phenotypes: newPhenotypes,
-          currentPhenotype: {
-            ...newPhenotypes[state.currentPhenotype.id],
-            id: state.currentPhenotype.id,
+          currentlyEditedPhenotype: {
+            ...newPhenotypes[state.currentlyEditedPhenotype.id],
+            id: state.currentlyEditedPhenotype.id,
           },
         };
       });
@@ -100,8 +100,8 @@ function createControlStore(): ZustandStore<ControlStatus> {
     // #region --- Multiple Phenotype Operations ---
 
     switchPhenotype: (id: number) => {
-      if (get().currentPhenotype.id === id) {
-        get().phenotypes[get().currentPhenotype.id] = get().currentPhenotype;
+      if (get().currentlyEditedPhenotype.id === id) {
+        get().phenotypes[get().currentlyEditedPhenotype.id] = get().currentlyEditedPhenotype;
         return id;
       }
 
@@ -112,10 +112,10 @@ function createControlStore(): ZustandStore<ControlStatus> {
       }
 
       set({
-        currentPhenotype: { ...newPhenotype, id: id },
+        currentlyEditedPhenotype: { ...newPhenotype, id: id },
         phenotypes: {
           ...get().phenotypes,
-          [get().currentPhenotype.id]: get().currentPhenotype,
+          [get().currentlyEditedPhenotype.id]: get().currentlyEditedPhenotype,
         },
       });
 
@@ -162,10 +162,10 @@ function createControlStore(): ZustandStore<ControlStatus> {
       const newState: Partial<ControlStatus> = {
         phenotypes: {
           ...get().phenotypes,
-          [get().currentPhenotype.id]: get().currentPhenotype,
+          [get().currentlyEditedPhenotype.id]: get().currentlyEditedPhenotype,
           [newPhenotypeId]: newPhenotype,
         },
-        currentPhenotype: newPhenotype,
+        currentlyEditedPhenotype: newPhenotype,
       };
 
       if (!newNoNamePhenNumber) {
@@ -182,7 +182,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
       }
 
       set(() => {
-        const isCurrentPhenotype = get().currentPhenotype.id === id;
+        const isCurrentPhenotype = get().currentlyEditedPhenotype.id === id;
         const newPhenotypes = { ...get().phenotypes };
 
         delete newPhenotypes[id];
@@ -190,7 +190,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
         if (isCurrentPhenotype) {
           return {
             phenotypes: newPhenotypes,
-            currentPhenotype: { ...newPhenotypes[-1], id: -1 },
+            currentlyEditedPhenotype: { ...newPhenotypes[-1], id: -1 },
           };
         }
 
@@ -213,14 +213,14 @@ function createControlStore(): ZustandStore<ControlStatus> {
         return err('Phenotype with this name already exists.');
       }
 
-      const currentPhenotype = get().currentPhenotype;
+      const currentPhenotype = get().currentlyEditedPhenotype;
       const newState: Partial<ControlStatus> = {};
 
       if (currentPhenotype.id === id) {
-        newState.currentPhenotype = { ...currentPhenotype, name: newName };
+        newState.currentlyEditedPhenotype = { ...currentPhenotype, name: newName };
         newState.phenotypes = {
           ...phenotypes,
-          [currentPhenotype.id]: newState.currentPhenotype,
+          [currentPhenotype.id]: newState.currentlyEditedPhenotype,
         };
       } else {
         newState.phenotypes = {
@@ -251,10 +251,10 @@ function createControlStore(): ZustandStore<ControlStatus> {
       const newTo = { ...toPhen, variables: fromPhen.variables };
       const newFrom = { ...fromPhen, variables: {} };
 
-      if (this.currentPhenotype.id === fromId) {
-        result.currentPhenotype = { ...newFrom, id: fromId };
-      } else if (this.currentPhenotype.id === toId) {
-        result.currentPhenotype = { ...newTo, id: toId };
+      if (this.currentlyEditedPhenotype.id === fromId) {
+        result.currentlyEditedPhenotype = { ...newFrom, id: fromId };
+      } else if (this.currentlyEditedPhenotype.id === toId) {
+        result.currentlyEditedPhenotype = { ...newTo, id: toId };
       }
 
       result.phenotypes = {
@@ -283,7 +283,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
     getAllPhenotypes() {
       return {
         ...this.phenotypes,
-        [this.currentPhenotype.id]: this.currentPhenotype,
+        [this.currentlyEditedPhenotype.id]: this.currentlyEditedPhenotype,
       };
     },
 
@@ -369,18 +369,18 @@ function createControlStore(): ZustandStore<ControlStatus> {
     // #region --- Phenotype Operations ---
 
     getAllCurrentPhenotype: () => {
-      return Object.values(get().currentPhenotype.variables);
+      return Object.values(get().currentlyEditedPhenotype.variables);
     },
 
     getAllCurrentPhenotypeIds: () =>
-      Object.entries(get().currentPhenotype.variables).map(
+      Object.entries(get().currentlyEditedPhenotype.variables).map(
         ([id, phenotype]) => [Number(id), phenotype]
       ),
 
     setPhenotype: (id, phenotypeStatus, phenotypeId) => {
       if (
         phenotypeId != undefined &&
-        phenotypeId != get().currentPhenotype.id
+        phenotypeId != get().currentlyEditedPhenotype.id
       ) {
         const phenotype = get().phenotypes[phenotypeId];
 
@@ -399,16 +399,16 @@ function createControlStore(): ZustandStore<ControlStatus> {
         });
       } else {
         set((state) => {
-          const currentPhenotypeStatus = state.currentPhenotype.variables[id];
+          const currentPhenotypeStatus = state.currentlyEditedPhenotype.variables[id];
           if (
             currentPhenotypeStatus != undefined ||
             currentPhenotypeStatus == null
           ) {
             return {
-              currentPhenotype: {
-                ...state.currentPhenotype,
+              currentlyEditedPhenotype: {
+                ...state.currentlyEditedPhenotype,
                 variables: {
-                  ...state.currentPhenotype.variables,
+                  ...state.currentlyEditedPhenotype.variables,
                   [id]: phenotypeStatus,
                 },
               },
@@ -425,7 +425,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
       let phenotypeStatus: PhenotypeStatus | undefined;
 
       if (!phenotypeId) {
-        phenotypeStatus = get().currentPhenotype.variables[id];
+        phenotypeStatus = get().currentlyEditedPhenotype.variables[id];
       } else {
         const phenotype = get().phenotypes[phenotypeId];
         phenotypeStatus = phenotype?.variables[id] ?? undefined;
@@ -435,7 +435,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
     },
 
     getPhenotypeIds: (phenotype) => {
-      return Object.entries(get().currentPhenotype.variables)
+      return Object.entries(get().currentlyEditedPhenotype.variables)
         .filter(([, phenotypeStatus]) => phenotypeStatus === phenotype)
         .map(([id]) => Number(id));
     },
@@ -447,7 +447,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
         notInPhenotype: 0,
       };
 
-      Object.values(get().currentPhenotype.variables).forEach(
+      Object.values(get().currentlyEditedPhenotype.variables).forEach(
         (phenotypeStatus) => {
           switch (phenotypeStatus) {
             case PHENOTYPE_STATUS.InPhenotypeTrue: {
@@ -472,12 +472,12 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
     isEmpty: () =>
       Object.keys(get().controlEnabled).length === 0 &&
-      Object.keys(get().currentPhenotype.variables).length === 0,
+      Object.keys(get().currentlyEditedPhenotype.variables).length === 0,
 
     clear: () => {
       set({
         controlEnabled: {},
-        currentPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
+        currentlyEditedPhenotype: { id: -1, name: 'Default Phenotype', variables: {} },
         phenotypes: { [-1]: { name: 'Default Phenotype', variables: {} } },
         noNamePhenotypeCounter: 0,
       });

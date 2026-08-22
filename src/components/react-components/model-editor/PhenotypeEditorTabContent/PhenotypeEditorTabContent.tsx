@@ -20,7 +20,7 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
   modelEditorStatusStore,
   helpHoverStore,
 }) => {
-  const currentPhenotype = controlStore((state) => state.currentPhenotype);
+  const currentPhenotype = controlStore((state) => state.currentlyEditedPhenotype);
   const [oscillationValue, setOscillationValue] = useState<Oscillation>(
     phenotypeEditorServ.getPhenotypeOscillation()
   );

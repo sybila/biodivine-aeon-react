@@ -26,7 +26,7 @@ const VariablePhenotypeInfo: React.FC<VariablePhenotypeInfoProps> = ({
   const controlEnabledStatuses: Record<number, boolean> = controlStore(
     (state) => state.controlEnabled
   );
-  const currentPhenotype = controlStore((state) => state.currentPhenotype);
+  const currentPhenotype = controlStore((state) => state.currentlyEditedPhenotype);
 
   const controlInfo = useMemo(() => {
     const variableControlEnabled = controlEnabledStatuses[id];

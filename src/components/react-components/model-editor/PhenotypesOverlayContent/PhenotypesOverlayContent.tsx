@@ -30,7 +30,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
   });
 
   const phenotypes = controlStore((state) => state.phenotypes);
-  const currentPhenotype = controlStore((state) => state.currentPhenotype);
+  const currentPhenotype = controlStore((state) => state.currentlyEditedPhenotype);
 
   const phenotypesWithId = useMemo(() => {
     return Object.entries(phenotypes)
