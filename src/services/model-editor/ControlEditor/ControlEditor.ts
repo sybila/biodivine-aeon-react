@@ -24,10 +24,6 @@ class ControlEditor implements ControlEditorInt {
 
   // #region --- Hover/Select Variable Functions ---
 
-  /** Toggles hover state on a variable in the ControlEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
-   */
   public hoverVariable(id: number, turnOnHover: boolean) {
     this.modelEditorStatusStore
       .getState()
@@ -38,12 +34,10 @@ class ControlEditor implements ControlEditorInt {
 
   // #region --- Variable Search ---
 
-  /** Returns last searched variable name in the ControlEditorTabContent.tsx component */
   public getVariableSearch(): string {
     return this.variableSearch;
   }
 
-  /** Sets currently searched variable name in the ControlEditorTabContent.tsx component */
   public setVariableSearch(name: string) {
     this.variableSearch = name;
   }
@@ -52,16 +46,10 @@ class ControlEditor implements ControlEditorInt {
 
   // #region --- Cytoscape Actions ---
 
-  /** Toggles hover state on a variable node in the CytoscapeMe canvas.
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
   public hoverVariableVisualization(id: number, turnOnHover: boolean) {
     this.modelVisualizationServ.hoverNode(id, turnOnHover);
   }
 
-  /** Toggles selection state on a variable node in the modelVisualizationServ canvas.
-   *  If `turnOnSelect` is true, it selects the node; if false, it unselects it.
-   */
   public selectVariableVisualization(id: number, turnOnSelect: boolean) {
     if (turnOnSelect) {
       this.modelVisualizationServ.selectNode(id);
@@ -70,7 +58,6 @@ class ControlEditor implements ControlEditorInt {
     }
   }
 
-  /** Unselects all items selected in the model visualization canvas. */
   public unselectAllVisualization() {
     this.modelVisualizationServ.unselectAll();
   }
