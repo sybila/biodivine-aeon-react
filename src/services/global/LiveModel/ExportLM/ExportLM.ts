@@ -247,11 +247,7 @@ class ExportLM implements ExportLMInt {
       .join('\n');
   }
 
-  /**
-   * Save the current state of the model to local storage and ModelsLM live model module.
-   * NOTE: This only triggers on structure change, not metadata changes.
-   */
-  public saveModel(): void {
+  public saveModel() {
     const modelString = this.exportAeon();
     const modelId = this.loadedModelStore.getState().loadedModelId;
 
@@ -277,7 +273,6 @@ class ExportLM implements ExportLMInt {
 
   // #region --- Export to File ---
 
-  /** Export current model to a file with the given file ending */
   public async exportToFile(
     fileEnding: fileType,
     conversionFunction?: (aeonString: string) => Promise<string>

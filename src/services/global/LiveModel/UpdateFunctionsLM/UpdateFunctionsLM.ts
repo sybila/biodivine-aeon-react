@@ -53,12 +53,6 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
 
   // #region --- Update Function Operations ---
 
-  /** Sets update function for a variable.
-   *  @param id ID of the variable to set the update function for.
-   *  @param functionString The update function as a string.
-   *  @param force If true, bypasses model modification checks. (Warning - Doesn't bypass update function validation checks)
-   *  @returns An error message if the operation fails, otherwise undefined.
-   */
   public setUpdateFunction(
     id: number,
     functionString: string,
@@ -116,10 +110,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     return undefined;
   }
 
-  /** Deletes the update function for a variable.
-   *  @param id ID of the variable to delete the update function for.
-   */
-  public deleteUpdateFunctionId(id: number): void {
+  public deleteUpdateFunctionId(id: number) {
     this.updateFunctionsStore.getState().deleteUpdateFunctionId(id);
   }
 
@@ -127,8 +118,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
 
   // #region --- Validation ---
 
-  /** Validates all update functions if the number of variables has changed since the last validation. */
-  public validateUpdateFunctionsIfNeeded(): void {
+  public validateUpdateFunctionsIfNeeded() {
     if (
       this.liveModel.disable_dynamic_validation ||
       !this.computationManagerServ.isComputeEngineConnected()
@@ -144,8 +134,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     }
   }
 
-  /** Validates all update functions and sets state of each update function in the ModelEditor tab. */
-  public validateAllUpdateFunctions(): void {
+  public validateAllUpdateFunctions() {
     if (this.liveModel.disable_dynamic_validation) return;
 
     this.updateFunctionsStore.getState().resetUpdateFunctionStatus();
@@ -154,11 +143,6 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     }
   }
 
-  /**  Validates the update function for a specific variable ID and sets its status in the ModelEditor tab.
-   *   @param id (number) id of variable whichs update function we want to validate
-   *   @param setStatusFunction ( (status: UpdateFunctionStatus) => void ) optional setter which is used for setting the new update function status (if not set defautlu sets update function status into the update function store)
-   *   @param updateFunction (string?) optional parameter which overwrites the current update function of variable specified by the id parameter (used for validation of update function before it was set)
-   */
   public validateUpdateFunction(
     id: number,
     setStatusFunction: (status: UpdateFunctionStatus) => void = (
@@ -190,11 +174,6 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
 
   // #region --- Create Metadata + Check Update Function Validity ---
 
-  /** Checks the validity of an update function and creates metadata about it.
-   *  @param id ID of the variable whose update function is to be checked.
-   *  @param functionString The update function as a string.
-   *  @returns An error message if the function is invalid, otherwise metadata about the function.
-   */
   public checkUpdateFunction(
     id: number,
     functionString: string

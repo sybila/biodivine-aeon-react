@@ -6,7 +6,6 @@ import type {
   NodeDataBE,
   StabilityAnalysisModes,
   VisualizationStatus,
-  VisualOptionsSwitchableABE,
 } from '../../../types/types';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
@@ -404,7 +403,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
     return this.precision;
   }
 
-  public getSwitchableOptionsState(): VisualOptionsSwitchableABE {
+  public getSwitchableOptionsState() {
     return this.cytoscape.getSwitchLayoutOptions();
   }
 
@@ -508,17 +507,17 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   // #region --- Visualization Operations ---
 
-  public setZoom(zoomLevel: number): void {
+  public setZoom(zoomLevel: number) {
     this.cytoscape.setZoom(zoomLevel);
 
     this.saveVisualizationStatus();
   }
 
-  public fitTree(): void {
+  public fitTree() {
     this.cytoscape.fit();
   }
 
-  public resetTreeLayout(): void {
+  public resetTreeLayout() {
     this.cytoscape.resetTreeLayout();
   }
 

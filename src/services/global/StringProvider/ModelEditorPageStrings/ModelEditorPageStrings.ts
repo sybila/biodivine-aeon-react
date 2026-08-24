@@ -92,7 +92,7 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
   }
 
   quickHelpHeaderModelEditor(): string {
-    return "Welcome to AEON!";
+    return 'Welcome to AEON!';
   }
 
   quickHelpModelEditor(): string {

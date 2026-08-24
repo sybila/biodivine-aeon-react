@@ -7,7 +7,6 @@ import {
   PHENOTYPE_STATUS,
   type ControlEnabledVars,
   type Oscillation,
-  type PhenotypeControlEnabledVars,
   type PhenotypeStatus,
   type PhenotypeVars,
 } from '../../../../types/types';
@@ -64,14 +63,12 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Phenotype and Control-Enabled callbacks ---
 
-  /** Add a callback to be executed when phenotype changes */
   public addOnPhenotypeChangeCallback(
     callback: (inputNodes?: [number, PhenotypeStatus][] | null) => void
   ): void {
     this.onPhenotypeChange.push(callback);
   }
 
-  /** Add a callback to be executed when control enabled changes */
   public addOnControlChangeCallback(
     callback: (inputNodes?: [number, boolean][] | null) => void
   ): void {
@@ -82,13 +79,11 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Oscillation ---
 
-  /** Sets the currently set phenotype oscillation state */
-  public setOscillation(oscillation: Oscillation): void {
+  public setOscillation(oscillation: Oscillation) {
     this.oscillation = oscillation;
   }
 
-  /** Returns the currently set phenotype oscillation state */
-  public getOscillation(): Oscillation {
+  public getOscillation() {
     return this.oscillation;
   }
 
@@ -341,8 +336,7 @@ class ControlLM implements ControlLMInt {
 
   // #region --- Get Formated Control Info ---
 
-  /** Get Phenotype and Control-Enabled variables formated into object { phenotypeVars: Record<VarName, Phenotype>, controlEnabledVars: Record<VarName, boolean> } */
-  public getPhenotypeControlEnabledVars(): PhenotypeControlEnabledVars {
+  public getPhenotypeControlEnabledVars() {
     const variables = this.variablesStore.getState().getAllVariables();
 
     const phenotypeVarsObj: PhenotypeVars = {};

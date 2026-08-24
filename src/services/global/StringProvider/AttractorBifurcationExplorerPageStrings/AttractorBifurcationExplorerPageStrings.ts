@@ -1,6 +1,6 @@
-import type { TooltipsInt } from './Tooltips/TooltipsInt';
 import type { AttractorBifurcationExplorerPageStringsInt } from './AttractorBifurcationExplorerPageStringsInt';
 import Tooltips from './Tooltips/Tooltips';
+import type { TooltipsInt } from './Tooltips/TooltipsInt';
 
 class AttractorBifurcationExplorerPageStrings implements AttractorBifurcationExplorerPageStringsInt {
   Tooltips: TooltipsInt;

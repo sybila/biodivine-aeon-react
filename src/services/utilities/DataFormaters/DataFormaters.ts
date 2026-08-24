@@ -3,10 +3,6 @@ import type { DataFormatersInt } from './DataFormatersInt';
 
 /** Utility class for formating data */
 class DataFormaters implements DataFormatersInt {
-  /** Converts a record of variable states to a string
-   *  The record maps variable ids to their states (0, 1, or * for free/unpercolated).
-   * @param variableStates - (Record<string, number | undefined>) An object mapping variable names to their states (0, 1, or undefined for free/unpercolated).
-   */
   public convertRecordOfVariableStatesToString(
     variableStates: Record<string, number | undefined>
   ): string {
@@ -16,8 +12,7 @@ class DataFormaters implements DataFormatersInt {
       .join('');
   }
 
-  /** Converts a robustness value from decimal fraction to a percentage string. */
-  public convertRobustnessToPercentage(robustness: number): string {
+  public convertRobustnessToPercentage(robustness: number) {
     if (robustness === undefined) {
       return 'unknown';
     }
@@ -25,9 +20,6 @@ class DataFormaters implements DataFormatersInt {
     return (robustness * 100).toFixed(2);
   }
 
-  /** Converts an array of perturbations to a CSV string.
-   *  Each perturbation is represented as a row in the CSV, with columns for id, perturbation, size, number of interpretations, and robustness percentage.
-   */
   public convertPerturbationsToCsvString(
     perturbations: Array<ControlResult>
   ): string {
@@ -51,8 +43,6 @@ class DataFormaters implements DataFormatersInt {
     return csvString;
   }
 
-  /** Converts a comma-separated string into an array of trimmed strings.
-   */
   public convertCommaSeparatedStringToArray(
     text: string,
     toLowerCase: boolean = false

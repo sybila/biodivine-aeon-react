@@ -25,11 +25,11 @@ class Loading implements LoadingInt {
     };
   }
 
-  public startLoading(): void {
+  public startLoading() {
     this.startLoadingFunction();
   }
 
-  public endLoading(): void {
+  public endLoading() {
     this.endLoadingFunction();
   }
 }

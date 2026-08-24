@@ -630,11 +630,11 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  public getNodePosition(id: number) {
+  public getNodePosition(id: number): [number, number] | undefined {
     let node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       let position = node.position();
-      return [position.x, position.y] as [number, number];
+      return [position.x, position.y];
     }
     return undefined;
   }

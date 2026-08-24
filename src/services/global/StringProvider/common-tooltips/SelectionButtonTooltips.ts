@@ -3,15 +3,15 @@ import type { SelectionButtonsTooltipsInt } from './SelectionButtonsTooltipsInt'
 class SelectionButtonsTooltips implements SelectionButtonsTooltipsInt {
   // #region Selection Buttons
 
-  public selectAllVariables(): string {
+  public selectAllVariables() {
     return 'Select all variables.';
   }
 
-  public deselectAllVariables(): string {
+  public deselectAllVariables() {
     return 'Deselect all variables.';
   }
 
-  public toggleSelectedVariables(): string {
+  public toggleSelectedVariables() {
     return 'Toggle selected variables.';
   }
 

@@ -23,7 +23,7 @@ class FileConvertors implements FileConvertorsInt {
     await this.wasmInitialized;
   }
 
-  public async aeonToSbml(aeonString: string): Promise<string> {
+  public async aeonToSbml(aeonString: string) {
     await this.ensureWasmInitialized();
     try {
       return aeon_to_sbml(aeonString);
@@ -32,7 +32,7 @@ class FileConvertors implements FileConvertorsInt {
     }
   }
 
-  public async sbmlToAeon(sbmlString: string): Promise<string> {
+  public async sbmlToAeon(sbmlString: string) {
     await this.ensureWasmInitialized();
     try {
       return sbml_to_aeon(sbmlString);
@@ -41,7 +41,7 @@ class FileConvertors implements FileConvertorsInt {
     }
   }
 
-  public async aeonToSbmlInstantiated(aeonString: string): Promise<string> {
+  public async aeonToSbmlInstantiated(aeonString: string) {
     await this.ensureWasmInitialized();
     try {
       return aeon_to_sbml_instantiated(aeonString);
@@ -50,7 +50,7 @@ class FileConvertors implements FileConvertorsInt {
     }
   }
 
-  public async aeonToBnet(aeonString: string): Promise<string> {
+  public async aeonToBnet(aeonString: string) {
     await this.ensureWasmInitialized();
     try {
       return aeon_to_bnet(aeonString);
@@ -59,7 +59,7 @@ class FileConvertors implements FileConvertorsInt {
     }
   }
 
-  public async bnetToAeon(bnetString: string): Promise<string> {
+  public async bnetToAeon(bnetString: string) {
     await this.ensureWasmInitialized();
     try {
       return bnet_to_aeon(bnetString);

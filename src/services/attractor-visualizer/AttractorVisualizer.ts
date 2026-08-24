@@ -47,8 +47,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   // #region --- Initialization ---
 
-  /** Initialize the visualizer with a container element. */
-  public init(container: HTMLElement): void {
+  public init(container: HTMLElement) {
     if (this.container != container) {
       this.container = container;
       this.reloadVisualizer();
@@ -105,14 +104,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   // #region --- Show Visualization ---
 
-  /** Open the attractor visualizer with the given input data.
-   * inputData depends on the part of the application from which the visualizer is opened.
-   * inputData types:
-   *  - { behavior: AttractorBehavior } - from the Attractor Analysis results
-   *  - { nodeId: number } - from the overview in the Bifurcation Explorer
-   *  - { nodeId: number, variableName: string, behavior: AttractorBehavior, vector: string[] } - from the Stability Analysis results in the Bifurcation Explorer
-   */
-  public openVisualizer(inputData: AttractorVisualizerInput): void {
+  public openVisualizer(inputData: AttractorVisualizerInput) {
     // todo - add if there is tab open with the same attractor
 
     if (inputData.nodeId === undefined || inputData.nodeId === null) {
@@ -138,7 +130,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
     }
   }
 
-  public insertAttractorData(result: any, newTab: boolean): void {
+  public insertAttractorData(result: any, newTab: boolean) {
     if (newTab) {
       result = this.processAttractorData(result);
       this.tabsStore
@@ -301,12 +293,11 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   // #region --- Get Data ---
 
-  /** Returns the list of state variable names, or undefined if no attractor data is loaded. */
-  public getStateVariables(): string[] | undefined {
+  public getStateVariables() {
     return this.attractorData?.variables;
   }
 
-  public getWitness(): Array<[string, string]> | undefined {
+  public getWitness() {
     return this.attractorData?.witness;
   }
 
@@ -314,7 +305,7 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
   // #region --- Clear ---
 
-  public clear(): void {
+  public clear() {
     this.attractorVisualizerStatusStore.getState().clear();
   }
 
@@ -331,12 +322,12 @@ class AttractorVisualizer implements AttractorVisualizerInt {
       .reverse();
   }
 
-  public witnessPanelVisible(show = true): void {
+  public witnessPanelVisible(show = true) {
     const panel = document.getElementById('explorer-witness-panel');
     if (panel) panel.style.display = show ? 'block' : 'none';
   }
 
-  public showState(string: string): void {
+  public showState(string: string) {
     for (let i = 0; i < string.length; i++) {
       console.log(
         this.attractorData?.variables[i],

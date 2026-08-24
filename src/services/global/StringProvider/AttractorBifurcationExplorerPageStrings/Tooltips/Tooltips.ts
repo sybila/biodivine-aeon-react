@@ -68,15 +68,15 @@ class Tooltips implements TooltipsInt {
 
   // #region Utilities Menu
 
-  public utilitiesMenu(): string {
+  public utilitiesMenu() {
     return 'Show/Hide Utilities Menu';
   }
 
-  public fit(): string {
+  public fit() {
     return 'Fit the bifurcation tree to the canvas';
   }
 
-  public resetLayout(): string {
+  public resetLayout() {
     return 'Reset the layout of the bifurcation tree to the default';
   }
 

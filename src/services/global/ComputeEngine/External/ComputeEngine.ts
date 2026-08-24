@@ -105,7 +105,6 @@ class ComputeEngine implements ComputeEngineInt {
 
   // #region --- Connection Management ---
 
-  /** Open or close connection connection, depending on current status. */
   public toggleConnection(
     succesfulConnectionCallback: (() => void) | undefined = undefined,
     pingCallback:
@@ -421,11 +420,11 @@ class ComputeEngine implements ComputeEngineInt {
     };
   }
 
-  public isWaitingForResults(): boolean {
+  public isWaitingForResults() {
     return this.waitingForResults;
   }
 
-  public computationCanStart(): void {
+  public computationCanStart() {
     if (!this.connected) {
       throw new Error(
         'Cannot start computation: Compute Engine is not connected.'
@@ -616,8 +615,6 @@ class ComputeEngine implements ComputeEngineInt {
     return undefined;
   }
 
-  /** Checks if update function is valid.
-   */
   public validateUpdateFunction(
     variableId: number,
     updateFunctionFragment: string,
@@ -705,7 +702,6 @@ class ComputeEngine implements ComputeEngineInt {
 
   // #region --- Bifurcation Tree ---
 
-  /** Fetches the bifurcation tree from the compute engine. */
   public getBifurcationTree(
     callback: (
       error: string | undefined,
@@ -721,9 +717,6 @@ class ComputeEngine implements ComputeEngineInt {
     );
   }
 
-  /** Sets the precision of the bifurcation tree in the compute engine.
-   *  Precision is % with up to two decimal places
-   */
   public setBifurcationTreePrecision(
     precision: number,
     callback: (error: string | undefined) => void
@@ -744,7 +737,6 @@ class ComputeEngine implements ComputeEngineInt {
     );
   }
 
-  /** Automatically expands the bifurcation tree at the given node and depth. */
   public autoExpandBifurcationTree(
     nodeId: number,
     depth: number,
@@ -787,7 +779,6 @@ class ComputeEngine implements ComputeEngineInt {
     );
   }
 
-  /** Deletes a bifurcation decision from the compute engine. */
   public deleteBifurcationDecision(
     nodeId: number,
     callback: (
@@ -810,7 +801,6 @@ class ComputeEngine implements ComputeEngineInt {
     );
   }
 
-  /** Gets decisions for a specific node from the compute engine. */
   public getDecisions(
     nodeId: number,
     callback: (
@@ -827,7 +817,6 @@ class ComputeEngine implements ComputeEngineInt {
     );
   }
 
-  /** Makes a decision for a specific node in the compute engine. */
   public makeDecision(
     nodeId: number,
     decisionId: number,
@@ -851,7 +840,6 @@ class ComputeEngine implements ComputeEngineInt {
 
   // #region --- Attractor Visualizer ---
 
-  /** Gets the attractor for a specific behavior. */
   public getAttractorByBehavior(
     behavior: string,
     callback: (
@@ -862,7 +850,6 @@ class ComputeEngine implements ComputeEngineInt {
     this.backendRequest('/get_attractors/' + behavior, callback, 'GET', null);
   }
 
-  /** Gets the attractor for a specific node in the AttractorBifurcationExplorer. */
   public getBifurcationExplorerAttractor(
     nodeId: number,
     callback: (

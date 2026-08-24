@@ -32,10 +32,7 @@ class ModelsLM implements ModelsLMInt {
 
   // #region --- Model Management ---
 
-  /** Adds a new model into LiveModel and returns its ID.
-   *  If the type is 'main', it will replace the existing main model (ID 0) and return ID 0.
-   */
-  public addModel(modelAeonString: string, type: ModelType): number {
+  public addModel(modelAeonString: string, type: ModelType) {
     const modelId = type === 'main' ? 0 : this.nextId;
 
     this.models[modelId] = {
@@ -51,8 +48,7 @@ class ModelsLM implements ModelsLMInt {
     return modelId;
   }
 
-  /** Updates an existing model and returns true if successful. */
-  public updateModel(id: number, modelAeonString: string): boolean {
+  public updateModel(id: number, modelAeonString: string) {
     if (!this.models[id]) return false;
 
     this.models[id] = {
@@ -62,10 +58,7 @@ class ModelsLM implements ModelsLMInt {
     return true;
   }
 
-  /** Removes a model by its ID.
-   *  If the ID is 0 (main model), it will not be removed.
-   */
-  public removeModel(id: number): void {
+  public removeModel(id: number) {
     if (id === 0) return; // cannot remove main model
 
     if (this.loadedModelStore.getState().loadedModelId === id) {
@@ -75,8 +68,7 @@ class ModelsLM implements ModelsLMInt {
     delete this.models[id];
   }
 
-  /** Function for switching between added models. */
-  public loadModel(id: number): boolean {
+  public loadModel(id: number) {
     const loadedModelId = this.loadedModelStore.getState().loadedModelId;
     if (loadedModelId === id) return true;
 

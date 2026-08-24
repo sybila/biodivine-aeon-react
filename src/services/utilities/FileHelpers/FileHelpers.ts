@@ -2,8 +2,7 @@ import type { FileHelpersInt } from './FileHelpersInt';
 
 /** Utility functions for file operations (eg. downloading files) */
 class FileHelpers implements FileHelpersInt {
-  /** Download a file with the given file name and content */
-  public downloadFile(fileName: string, content: string): void {
+  public downloadFile(fileName: string, content: string) {
     var el = document.createElement('a');
     el.setAttribute(
       'href',

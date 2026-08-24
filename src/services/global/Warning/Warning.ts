@@ -41,7 +41,6 @@ class Warning implements WarningInt {
 
   // #region --- Starting Computation Warning ---
 
-  /** Adds a warning about starting a new computation that will clear results and close tabs. */
   public addStartComputationResultsWarning(computationFunction: () => void) {
     this.warningStore
       .getState()
@@ -63,10 +62,7 @@ class Warning implements WarningInt {
 
   // #region --- Import Model Warnings ---
 
-  /** Adds a warning about importing a new model that will erase the current model.
-   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
-   */
-  public async addImportModelEraseModelWarning(): Promise<boolean> {
+  public async addImportModelEraseModelWarning() {
     return this.addWaiterFunctionWarning(
       'Importing a new model will erase the current model. Do you want to proceed?',
       () => {}
@@ -77,10 +73,6 @@ class Warning implements WarningInt {
 
   // #region --- Variable Warnings ---
 
-  /** Adds a warning about removing a variable and its associated regulations.
-   *  @param variableName - The name of the variable to be removed.
-   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
-   */
   public async addRemoveVariableWarning(
     variableName: string
   ): Promise<boolean> {
@@ -94,7 +86,6 @@ class Warning implements WarningInt {
 
   // #region --- Regulation Warnings ---
 
-  /** Adds a warning about creating a missing regulation. */
   public addCreateMissingRegulationWarning(
     regulatorName: string,
     targetName: string,
@@ -120,8 +111,7 @@ class Warning implements WarningInt {
 
   // #region --- Model Modification Warning ---
 
-  /** Adds a warning that modifying the model will clear the results and close all tabs except for the Model Editor tab. */
-  public addModelModificationRemoveAllResultsWarning(): void {
+  public addModelModificationRemoveAllResultsWarning() {
     this.warningStore
       .getState()
       .addWarning(
@@ -144,7 +134,6 @@ class Warning implements WarningInt {
       );
   }
 
-  /** Adds a warning that performing operation will clear the results and close all tabs connected with computation type. */
   public addRemoveComputationResultsWarning(
     operation: string,
     computationMode: ComputationModes
@@ -181,10 +170,7 @@ class Warning implements WarningInt {
 
   // #region --- Universal Warnings ---
 
-  /** Adds a warning that performing operation will clear the results and close all tabs except for the Model Editor tab.
-   *  Returns a promise that resolves to true if the user proceeds, false otherwise.
-   */
-  public async addRemoveResultsWarning(operation: string): Promise<boolean> {
+  public async addRemoveResultsWarning(operation: string) {
     return this.addWaiterFunctionWarning(
       operation +
         ' will clear the results and close all tabs except for the Model Editor tab. Do you want to proceed?',

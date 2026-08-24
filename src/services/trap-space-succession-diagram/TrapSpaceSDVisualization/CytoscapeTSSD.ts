@@ -5,7 +5,6 @@ import type {
   NodeDataTSSD,
   VisualizationNodeDataTSSD,
   VisualizationStatus,
-  VisualOptionsSwitchableABE,
 } from '../../../types/types';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
@@ -189,7 +188,6 @@ class CytoscapeTSSD {
   // #endregion
   // #region --- Cardinality ---
 
-  /** Returns total cardinality of the graph or -1 if not available */
   public getTotalCardinality() {
     return this.totalCardinality ?? -1;
   }
@@ -271,9 +269,6 @@ class CytoscapeTSSD {
     this.cytoscape.getElementById(nodeId).select();
   }
 
-  /** Triggers all necessary events to update UI after graph update.
-   * Selects/Unselects nodes as needed.
-   * If targetId is provided, it will be selected. */
   public refreshSelection(targetId?: string) {
     const selected = this.cytoscape.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {
@@ -376,7 +371,6 @@ class CytoscapeTSSD {
     return data;
   }
 
-  /** Checks if node exists, if it doesn't, creates it, else updates its data. */
   public ensureNode(treeData: NodeDataTSSD) {
     let node = this.cytoscape.getElementById(treeData.id);
     if (node !== undefined && node.length > 0) {
@@ -396,7 +390,6 @@ class CytoscapeTSSD {
     }
   }
 
-  /** Ensures that an edge exists between two nodes. */
   public ensureEdge(
     sourceId: number | undefined,
     targetId: number | undefined
@@ -426,13 +419,11 @@ class CytoscapeTSSD {
     }
   }
 
-  /** Removes all nodes from the visualization. */
   public removeAll() {
     this.cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
     this.cytoscape.elements().remove();
   }
 
-  /** Removes node from visualization. */
   public removeNode(nodeId: string) {
     let e = this.cytoscape.getElementById(nodeId);
     if (e.length > 0) {
@@ -481,13 +472,11 @@ class CytoscapeTSSD {
 
   // #region --- Tree Layout Management ---
 
-  /** Fit the whole diagram tree into view */
   public fit() {
     this.cytoscape.fit(undefined, this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
-  /**  Applies the tree layout to the Cytoscape instance */
   public applyTreeLayout(
     fit: boolean = false,
     animate: boolean = this.layoutSettings.animate
@@ -533,15 +522,13 @@ class CytoscapeTSSD {
       .run();
   }
 
-  /** Resets the tree layout to the initial state */
   public resetTreeLayout() {
     this.layoutSettings.extraVerticalSpacings = {};
     this.layoutSettings.switchChildren.clear();
     this.applyTreeLayout();
   }
 
-  /**  Gets the current layout options for the switchable options in CytoscapeABE. */
-  public getSwitchLayoutOptions(): VisualOptionsSwitchableABE {
+  public getSwitchLayoutOptions() {
     return {
       animate: this.layoutSettings.animate ?? false,
       snapLayers: this.layoutSettings.layered ?? false,
@@ -549,24 +536,17 @@ class CytoscapeTSSD {
     };
   }
 
-  /** Sets the nodes to snap to their respective layers.
-   *  @param snap - (boolean) Whether to snap nodes to layers or un-snap them.
-   */
-  public toggleSnapNodesToLayers(): void {
+  public toggleSnapNodesToLayers() {
     this.layoutSettings.layered = !this.layoutSettings.layered;
     this.applyTreeLayout();
   }
 
-  /** Animates layout changes in the Cytoscape instance.
-   *  @param animate - (boolean) Whether to animate layout changes or not.
-   */
-  public toggleAnimateLayoutChanges(): void {
+  public toggleAnimateLayoutChanges() {
     this.layoutSettings.animate = !this.layoutSettings.animate;
     this.applyTreeLayout();
   }
 
-  /** Toggles the positive class on the left side of the bifurcation tree. */
-  public togglePositiveOnLeft(): void {
+  public togglePositiveOnLeft() {
     this.layoutSettings.positiveOnLeft = !this.layoutSettings.positiveOnLeft;
     this.applyTreeLayout();
   }
@@ -689,16 +669,14 @@ class CytoscapeTSSD {
 
   // #region --- Visualization Status ---
 
-  /** Gets the current visualization status. */
-  public getVisualizationStatus(): VisualizationStatus {
+  public getVisualizationStatus() {
     return {
       zoom: this.cytoscape.zoom(),
       pan: this.cytoscape.pan(),
     };
   }
 
-  /** Loads the visualization status into the visualization. */
-  public loadVisualizationStatus(status: VisualizationStatus): void {
+  public loadVisualizationStatus(status: VisualizationStatus) {
     // Apply viewport directly to avoid triggering additional animated relayouts.
     if (status.zoom !== undefined || status.pan !== undefined) {
       this.cytoscape.viewport({

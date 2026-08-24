@@ -45,10 +45,6 @@ import type { VariablesLMInt } from './VariablesLM/VariablesLMInt';
 class LiveModel implements LiveModelInt {
   // #region --- Properties + Constructor ---
 
-  /** We use this to indicate that there is a batch of changes to the model that are being processed,
-	and we therefore shouldn't run intensive tasks (like function consistency checks on server).
-	It is the responsibility of the user of this flag to re-run these tasks AFTER the changes are done.
-	Currently we use this only in import. */
   public disable_dynamic_validation: boolean = false;
 
   private computationManagerServ: ComputationManagerInt;
@@ -216,14 +212,14 @@ class LiveModel implements LiveModelInt {
 
   // #region --- Global Live Model Functions ---
 
-  public isEmpty(): boolean {
+  public isEmpty() {
     return (
       this.Variables.isEmpty() &&
       Object.values(this.controlStore.getState().phenotypes).length < 2
     );
   }
 
-  public clear(): void {
+  public clear() {
     this.Variables.clear();
     this.modelEditorStatusStore.getState().clear();
     this.controlStore.getState().clear();

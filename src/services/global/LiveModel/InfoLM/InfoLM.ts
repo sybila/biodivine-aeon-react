@@ -31,7 +31,6 @@ class InfoLM implements InfoLMInt {
 
   // #region --- Setters ---
 
-  /** Set the model name and trigger UI update */
   public setModelName(
     name: string,
     addIntoUndoRedo: boolean,
@@ -56,7 +55,6 @@ class InfoLM implements InfoLMInt {
     }
   }
 
-  /** Set the model description and trigger UI update */
   public setModelDescription(
     description: string,
     addIntoUndoRedo: boolean,

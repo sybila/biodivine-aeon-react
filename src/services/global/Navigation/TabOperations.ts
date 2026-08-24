@@ -35,18 +35,15 @@ class TabOperations implements TabOperationsInt {
 
   // #endregion
 
-  /** Determines if more than one instance of a tab can be opened. */
-  public canOpenMoreThanOne(tabType: TabType): boolean {
+  public canOpenMoreThanOne(tabType: TabType) {
     return !this.singleTabTypes.has(tabType);
   }
 
-  /** Returns the icon for a given tab type */
-  public getTabTypeIcon(tabType: TabType): string {
+  public getTabTypeIcon(tabType: TabType) {
     return this.tabTypeToIcon[tabType] ?? '';
   }
 
-  /** Returns the tab types associated with a given computation mode */
-  public getTabTypeFromComputationMode(mode: ComputationModes): Array<TabType> {
+  public getTabTypeFromComputationMode(mode: ComputationModes): TabType[] {
     switch (mode) {
       case 'Attractor Analysis':
         return ['Attractor Bifurcation Explorer', 'Attractor Visualizer'];

@@ -8,7 +8,7 @@ import type { TooltipsInt } from './TooltipsInt';
 class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
   // #region Variable Info
 
-  public variableArity(arity: number): string {
+  public variableArity(arity: number) {
     return 'Arity: ' + arity + '.';
   }
 
@@ -16,27 +16,27 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Base Variable Operations
 
-  public changeVariableName(): string {
+  public changeVariableName() {
     return 'Change the name of the variable.';
   }
 
-  public changeVariableUpdateFunction(): string {
+  public changeVariableUpdateFunction() {
     return 'Change the update function of the variable.';
   }
 
-  public searchVariable(): string {
+  public searchVariable() {
     return 'Search for a variable.';
   }
 
-  public addNewVariable(): string {
+  public addNewVariable() {
     return 'Add a new variable.';
   }
 
-  public deleteVariable(): string {
+  public deleteVariable() {
     return 'Delete variable.';
   }
 
-  public findVariableInVisualization(): string {
+  public findVariableInVisualization() {
     return 'Find the variable in the visualization.';
   }
 
@@ -44,7 +44,7 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Model Operations
 
-  public changeModelName(): string {
+  public changeModelName() {
     return 'Change the name of the model.';
   }
 
@@ -52,19 +52,19 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Regulations
 
-  public createRegulation(): string {
+  public createRegulation() {
     return 'Create a new regulation.';
   }
 
-  public removeRegulation(): string {
+  public removeRegulation() {
     return 'Remove the selected regulation.';
   }
 
-  public changeMonotonicity(): string {
+  public changeMonotonicity() {
     return 'Change the monotonicity of the regulation.';
   }
 
-  public changeObservability(): string {
+  public changeObservability() {
     return 'Change the observability of the regulation.';
   }
 
@@ -72,7 +72,7 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Control-Enabled
 
-  public currentControlEnabled(controlEnabledValue: boolean): string {
+  public currentControlEnabled(controlEnabledValue: boolean) {
     return (
       'The variable is currently ' +
       (controlEnabledValue ? 'Control Enabled' : 'Not Control Enabled') +
@@ -80,7 +80,7 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     );
   }
 
-  public changeVariableControlEnabled(controlEnabledValue: boolean): string {
+  public changeVariableControlEnabled(controlEnabledValue: boolean) {
     const controlEnabledString = controlEnabledValue
       ? 'Control Enabled'
       : 'Not Control Enabled';
@@ -96,13 +96,13 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Phenotype
 
-  public changeOscillation(oscillationValue: string): string {
+  public changeOscillation(oscillationValue: string) {
     return (
       'Change the oscillation of the variable to "' + oscillationValue + '".'
     );
   }
 
-  public currentPhenotype(phenotypeValue: PhenotypeStatus): string {
+  public currentPhenotype(phenotypeValue: PhenotypeStatus) {
     if (phenotypeValue != undefined) {
       const phenotypeString =
         phenotypeValue === PHENOTYPE_STATUS.InPhenotypeTrue
@@ -121,11 +121,11 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'The variable is currently not part of the phenotype.';
   }
 
-  public changeVariablePhenotype(phenotypeValue: string): string {
+  public changeVariablePhenotype(phenotypeValue: string) {
     return 'Change the phenotype of the variable to "' + phenotypeValue + '".';
   }
 
-  public removeVariableFromPhenotype(): string {
+  public removeVariableFromPhenotype() {
     return 'Remove the variable from the phenotype.';
   }
 
@@ -137,7 +137,7 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'Rename currently active phenotype.';
   }
 
-  public deletePhenotypeButton(isDefaultPhenotype: boolean): string {
+  public deletePhenotypeButton(isDefaultPhenotype: boolean) {
     return isDefaultPhenotype
       ? 'Default phenotype cannot be deleted.'
       : 'Delete this phenotype.';
@@ -175,19 +175,19 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region General Operations
 
-  public showModelDescription(): string {
+  public showModelDescription() {
     return 'Show the description of the model.';
   }
 
-  public hideModelDescription(): string {
+  public hideModelDescription() {
     return 'Hide the description of the model.';
   }
 
-  public extendAllVariables(): string {
+  public extendAllVariables() {
     return 'Extend all variables.';
   }
 
-  public collapseAllVariables(): string {
+  public collapseAllVariables() {
     return 'Collapse all variables.';
   }
 
@@ -195,11 +195,11 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Variable Name Overlay
 
-  public ApplyNewName(): string {
+  public ApplyNewName() {
     return 'Apply new name of variable. (Enter)';
   }
 
-  public RevertToOldName(): string {
+  public RevertToOldName() {
     return 'Keep the original name of variable. (Esc)';
   }
 
@@ -207,15 +207,15 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Change Update Function Overlay
 
-  public ApplyUpdateFunction(): string {
+  public ApplyUpdateFunction() {
     return 'Apply new update function for  variable. (Enter)';
   }
 
-  public ValidateUpdateFunction(): string {
+  public ValidateUpdateFunction() {
     return 'Validate the new update function. (Ctrl + Enter)';
   }
 
-  public RevertUpdateFunction(): string {
+  public RevertUpdateFunction() {
     return 'Keep the original update function of variable. (Esc)';
   }
 
@@ -235,15 +235,15 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
 
   // #region Utilities Menu
 
-  public utilitiesMenu(): string {
+  public utilitiesMenu() {
     return 'Show/Hide Utilities Menu';
   }
 
-  public variableSearch(): string {
+  public variableSearch() {
     return 'Zoom on variables in model visualization.';
   }
 
-  public undoButton(): string {
+  public undoButton() {
     return 'Revert last modification.';
   }
 
@@ -251,7 +251,7 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
     return 'Reapply previously reverted modification.';
   }
 
-  public fit(): string {
+  public fit() {
     return 'Fit model into the canvas.';
   }
 

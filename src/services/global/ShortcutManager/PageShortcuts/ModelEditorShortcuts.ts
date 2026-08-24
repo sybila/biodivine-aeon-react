@@ -27,7 +27,7 @@ class ModelEditorShortcuts implements PageShortcutsInt {
     this.modelUndoRedoStore = modelUndoRedoStore;
   }
 
-  public applyShortcuts(event: KeyboardEvent): void {
+  public applyShortcuts(event: KeyboardEvent) {
     /** Open start computation menu */
     if (event.ctrlKey && event.shiftKey && event.key === 'S') {
       event.preventDefault();

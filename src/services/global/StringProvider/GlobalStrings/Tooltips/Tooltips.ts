@@ -1,6 +1,6 @@
-import type { TooltipsInt } from './TooltipsInt';
 import OverlayWindowTooltips from './OverlayWindowTooltips/OverlayWindowTooltips';
 import type { OverlayWindowTooltipsInt } from './OverlayWindowTooltips/OverlayWindowTooltipsInt';
+import type { TooltipsInt } from './TooltipsInt';
 
 class Tooltips implements TooltipsInt {
   // #region --- Sub-modules and Constructor ---
@@ -19,15 +19,15 @@ class Tooltips implements TooltipsInt {
 
   // #region Selection Buttons
 
-  public selectAllVariables(): string {
+  public selectAllVariables() {
     return 'Select all variables.';
   }
 
-  public deselectAllVariables(): string {
+  public deselectAllVariables() {
     return 'Deselect all variables.';
   }
 
-  public toggleSelectedVariables(): string {
+  public toggleSelectedVariables() {
     return 'Toggle selected variables.';
   }
 

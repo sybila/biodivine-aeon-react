@@ -24,9 +24,6 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     return false;
   }
 
-  /** Filters the variables by the search terms created from comma-separated search text string.
-   *  If last character of searchText is a comma, returns the original array.
-   */
   public filterVariablesBySearchTerms(
     variables: Variable[],
     searchText: string | undefined
@@ -70,9 +67,6 @@ class SearchAndFilterHelpers implements SearchAndFilterHelpersInt {
     );
   }
 
-  /** Filters an array of strings by the search terms created from comma-separated search text string.
-   *  If last character of searchText is a comma, returns the original array.
-   */
   public filterStringsBySearchTerms(
     strings: string[],
     searchText: string | undefined

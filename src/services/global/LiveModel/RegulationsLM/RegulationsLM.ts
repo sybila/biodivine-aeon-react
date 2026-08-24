@@ -150,7 +150,7 @@ class RegulationsLM implements RegulationsLMInt {
     return true;
   }
 
-  public regulationChanged(regulation: Regulation): void {
+  public regulationChanged(regulation: Regulation) {
     this.ensureInModelVisualizationFunction(regulation);
 
     this.liveModel.UpdateFunctions.validateUpdateFunction(regulation.target);
@@ -309,7 +309,7 @@ class RegulationsLM implements RegulationsLMInt {
 
   // #region --- Regulation formating ---
 
-  public regulationToString(regulation: Regulation): string {
+  public regulationToString(regulation: Regulation) {
     const regulatorName = this.variablesStore
       .getState()
       .getVariableName(regulation.regulator);

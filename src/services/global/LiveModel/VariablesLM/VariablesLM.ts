@@ -369,10 +369,7 @@ class VariablesLM implements VariablesLMInt {
 
   // #region --- Pruning ---
 
-  /** Remove all variables that are not used in any regulation.
-   *  Returns the number of removed variables.
-   */
-  public pruneConstants(force = false): number {
+  public pruneConstants(force = false) {
     const toRemove: number[] = [];
     const variables = this.variablesStore.getState().getAllVariables();
 
@@ -396,10 +393,7 @@ class VariablesLM implements VariablesLMInt {
     return toRemove.length;
   }
 
-  /** Remove all variables that have no outgoing regulations (no targets).
-   *  Returns the number of removed variables.
-   */
-  public pruneOutputs(): number {
+  public pruneOutputs() {
     const toRemove: number[] = [];
     const variables = this.variablesStore.getState().getAllVariables();
 
@@ -440,12 +434,10 @@ class VariablesLM implements VariablesLMInt {
 
   // #region --- Variables status ---
 
-  /** True if the model has no variables. */
-  public isEmpty(): boolean {
+  public isEmpty() {
     return this.variablesStore.getState().isEmpty();
   }
 
-  /** Removes all variables from the model. */
   public clear() {
     for (const variable of this.variablesStore.getState().getAllVariables()) {
       this.removeVariable(variable.id, false, true);

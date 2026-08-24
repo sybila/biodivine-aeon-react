@@ -35,14 +35,13 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
   }
 
-  public init(container: HTMLDivElement): void {
+  public init(container: HTMLDivElement) {
     this.visualization.init(container);
   }
 
   // #region --- Succession diagram management ---
 
-  /** Opens the succession diagram, loading it if necessary. */
-  public openSuccessionDiagram(): void {
+  public openSuccessionDiagram() {
     if (this.isEmpty) {
       const hasSavedVisualizationStatus =
         this.trapSpaceSDStatusStore.getState().visualizationStatus !== null;
@@ -83,7 +82,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #region --- Node Operations ---
 
-  public refreshSelection(): void {
+  public refreshSelection() {
     this.visualization.refreshSelection();
   }
 
@@ -108,7 +107,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     }
   }
 
-  public removeNode(nodeId: number): void {
+  public removeNode(nodeId: number) {
     this.computationManagerServ.deleteDecisionTSSD(nodeId, (node, removed) => {
       this.removeFromVisualization(node, removed);
     });
@@ -118,8 +117,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #region --- Make Decision ---
 
-  /** Gets decisions for a specific node. Decisions */
-  public getDecisions(nodeId: number): void {
+  public getDecisions(nodeId: number) {
     this.computationManagerServ.getDecisionsTSSD(
       nodeId,
       (decisions: DecisionsTSSD) => {
@@ -128,8 +126,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     );
   }
 
-  /** Make decision for a specific node. */
-  public makeDecision(nodeId: number, decisionId: number): void {
+  public makeDecision(nodeId: number, decisionId: number) {
     this.computationManagerServ.makeDecisionTSSD(
       nodeId,
       decisionId,

@@ -1,11 +1,6 @@
 /** Exported utility functions for time manipulation and formatting. */
 class Time {
-  /** Get the formatted time string from a timestamp.
-   * @param timestamp - The timestamp in milliseconds.
-   * @param UTC - If true, returns the time in UTC format; otherwise, returns local time.
-   * @returns A string representing the formatted time.
-   */
-  public static getTime(timestamp: number | undefined, UTC: boolean): string {
+  public static getTime(timestamp: number | undefined, UTC: boolean) {
     if (timestamp === undefined || timestamp < 0) return 'Not available';
 
     const date = new Date(timestamp);
@@ -33,9 +28,6 @@ class Time {
     );
   }
 
-  /** Returns the current time in local format.
-   *  @returns A string representing the current local time in HH:MM:SS 24-hour format.
-   */
   public static getCurrentTime() {
     return new Date().toLocaleTimeString([], { hour12: false });
   }

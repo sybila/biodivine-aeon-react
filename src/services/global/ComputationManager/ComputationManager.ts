@@ -114,8 +114,7 @@ class ComputationManager implements ComputationManagerInt {
     }
   }
 
-  /** Setter for the LiveModel reference */
-  public setLiveModel(liveModel: LiveModelInt): void {
+  public setLiveModel(liveModel: LiveModelInt) {
     this.liveModelServ = liveModel;
   }
 
@@ -123,14 +122,12 @@ class ComputationManager implements ComputationManagerInt {
 
   // #region --- External Compute Engine Adress Setters/Getters ---
 
-  /** Sets the URL of the compute engine */
-  public setComputeEngineAddress(address: string): void {
+  public setComputeEngineAddress(address: string) {
     if (address && this.computeEngine.setEngineAddress)
       this.computeEngine.setEngineAddress(address);
   }
 
-  /** Returns the URL of the compute engine */
-  public getComputeEngineAddress(): string | undefined {
+  public getComputeEngineAddress() {
     if (this.computeEngine.getEngineAddress)
       return this.computeEngine.getEngineAddress();
   }
@@ -139,26 +136,20 @@ class ComputationManager implements ComputationManagerInt {
 
   // #region --- Control Computation Parameters Setters/Getters ---
 
-  /** Sets maximum number of perturbations */
   public setMaxNumberOfResults(max: number | undefined) {
     if (!max) this.controlComputationParams.maxNumberOfResults = 1000000;
     else if (max < 1) this.controlComputationParams.maxNumberOfResults = 1;
     else this.controlComputationParams.maxNumberOfResults = max;
   }
 
-  /** Returns maximum number of perturbations */
   public getMaxNumberOfResults() {
     return this.controlComputationParams.maxNumberOfResults;
   }
 
-  /** Resets the maximum size of a perturbation.
-   * After calling this, the next call to getMaxSize() will set it to the current number of Control-Enabled variables in the model.
-   */
   public resetMaxSize() {
     this.controlComputationParams.maxSize = undefined;
   }
 
-  /** Sets maximum size of a perturbation */
   public setMaxSize(max: number | undefined) {
     const numberOfEnabled = this.controlStore
       .getState()
@@ -173,7 +164,6 @@ class ComputationManager implements ComputationManagerInt {
     }
   }
 
-  /** Returns maximum size of a perturbation */
   public getMaxSize() {
     if (this.controlComputationParams.maxSize === undefined) {
       this.controlComputationParams.maxSize = this.controlStore
@@ -184,13 +174,11 @@ class ComputationManager implements ComputationManagerInt {
     return this.controlComputationParams.maxSize;
   }
 
-  /** Sets minimum robustness for perturbations in %*/
   public setMinRobustness(min: number | undefined) {
     if (!min || min < 0) this.controlComputationParams.minRobustness = 0.01;
     else this.controlComputationParams.minRobustness = min;
   }
 
-  /** Returns minimum robustness for perturbations */
   public getMinRobustness() {
     return this.controlComputationParams.minRobustness;
   }
@@ -199,7 +187,7 @@ class ComputationManager implements ComputationManagerInt {
 
   // #region --- Connection Manager ---
 
-  public isComputeEngineConnected(): boolean {
+  public isComputeEngineConnected() {
     return this.computeEngine.isConnected();
   }
 
@@ -221,7 +209,7 @@ class ComputationManager implements ComputationManagerInt {
     this.getLiveModel()!.UpdateFunctions.validateAllUpdateFunctions();
   }
 
-  public toggleConnection(): void {
+  public toggleConnection() {
     this.computeEngine.toggleConnection(
       () => this.succesfulConnectionCallback(),
       (
@@ -236,7 +224,7 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
-  public computationIsRunning(): boolean {
+  public computationIsRunning() {
     return this.computeEngine.isWaitingForResults();
   }
 
@@ -357,7 +345,6 @@ class ComputationManager implements ComputationManagerInt {
     ];
   }
 
-  /** Validates the update function for a specific variable and sets the status in the store */
   public validateUpdateFunction(
     variableId: number,
     updateFunctionFragment: string,
@@ -418,8 +405,7 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
-  public openWitnessAttractorAnalysis(behaviorString: string): void {
+  public openWitnessAttractorAnalysis(behaviorString: string) {
     if (!behaviorString || behaviorString.length === 0) {
       this.messageServ.showError(
         'Cannot open witness: No behavior string provided for the attractor.'
@@ -434,8 +420,7 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
-  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
-  public openWitnessBifurcationExplorer(nodeId: number): void {
+  public openWitnessBifurcationExplorer(nodeId: number) {
     this.loadingServ.startLoading();
     this.computeEngine.getWitnessBifurcationExplorer(
       nodeId,
@@ -443,7 +428,6 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
-  /** Get witness for stability analysis and opens new witness tab */
   public openWitnessStabilityAnalysis(
     nodeId: number,
     variableName: string,
@@ -464,7 +448,7 @@ class ComputationManager implements ComputationManagerInt {
 
   // #region --- Attractor Analysis Computation ---
 
-  public startAttractorAnalysis(): void {
+  public startAttractorAnalysis() {
     // TODO - change when multiple phenotypes for computation are allowed
     const model = this.getLiveModel()!.Export.exportAeon(
       false,
@@ -514,10 +498,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Fetches the bifurcation tree from the compute engine.
-   * @param animate - (boolean) Determines whether the bifurcation tree should be loaded with animation (true) or without (false).
-   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
-   */
   public getBifurcationTree(
     fit: boolean,
     animate: boolean,
@@ -550,9 +530,6 @@ class ComputationManager implements ComputationManagerInt {
     this.getBifurcationTree(false, true, attractorBifurcationExplorerRef);
   }
 
-  /** Sets the precision of the bifurcation tree.
-   *  Precision is % with up to two decimal places
-   */
   public setBifurcationTreePrecision(
     precision: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
@@ -584,7 +561,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Automatically expands the bifurcation tree at the given node and depth. */
   public autoExpandBifurcationTree(
     nodeId: number,
     depth: number,
@@ -626,7 +602,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Deletes a bifurcation decision by node ID. */
   public deleteBifurcationDecision(
     nodeId: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
@@ -664,10 +639,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Fetches the stability data for a specific node and behaviour.
-   * @param nodeId - (number) The ID of the node to fetch stability data for.
-   * @param behaviour - (StabilityAnalysisModes) The behaviour mode to use for fetching stability data.
-   */
   public getStabilityData(
     nodeId: number,
     behaviour: StabilityAnalysisModes
@@ -680,7 +651,6 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
-  /** Callback for fetching decisions. */
   public getDecisionsCallback(
     error: string | undefined,
     decisions: Decisions | undefined,
@@ -701,7 +671,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Fetches the decisions for a specific node. */
   public getDecisions(
     nodeId: number,
     attractorBifurcationExplorerRef: AttractorBifurcationExplorerInt
@@ -766,7 +735,6 @@ class ComputationManager implements ComputationManagerInt {
     this.loadingServ.endLoading();
   }
 
-  /** Fetches an attractor by its behavior string. Used by the results window.*/
   public getAttractorByBehavior(
     behavior: string,
     attractorVisualizerRef: AttractorVisualizerInt
@@ -779,7 +747,6 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
-  /** Fetches an attractor for node in the AttractorBifurcationExplorer */
   public getBifurcationExplorerAttractor(
     nodeId: number,
     attractorVisualizerRef: AttractorVisualizerInt
@@ -814,7 +781,7 @@ class ComputationManager implements ComputationManagerInt {
 
   // #region --- Control Computation ---
 
-  public startControlComputation(): void {
+  public startControlComputation() {
     // TODO - change when multiple phenotypes for computation are allowed
     const model = this.getLiveModel()!.Export.exportAeon(
       false,

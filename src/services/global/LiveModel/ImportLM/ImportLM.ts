@@ -80,8 +80,7 @@ class ImportLM implements ImportLMInt {
     }
   }
 
-  /** Adds callback which runs after import is complete */
-  public addOnImportCallback(callback: () => void): void {
+  public addOnImportCallback(callback: () => void) {
     if (callback !== undefined) {
       this.onImport.push(callback);
     }
@@ -504,10 +503,6 @@ class ImportLM implements ImportLMInt {
     return this.importAeon(modelString);
   }
 
-  /**
-   * Import model from Aeon file, load it into the live model and save it as the main model.
-   * If the import is successful, return true.
-   */
   public importAeon(modelString: string) {
     this.loadingServ.startLoading();
     // Disable on-the-fly server checks.
@@ -606,8 +601,7 @@ class ImportLM implements ImportLMInt {
 
   // #region --- Import from local storage ---
 
-  /** Loads model saved in the local storage of the browser. */
-  public async loadFromLocalStorage(): Promise<void> {
+  public async loadFromLocalStorage() {
     try {
       const modelString = localStorage.getItem(
         config.localStorageModelName ?? 'lastModel'
