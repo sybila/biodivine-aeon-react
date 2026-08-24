@@ -500,7 +500,6 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Node Management ---
 
-  /** Add a new node to the graph at the given position. */
   public addNode(
     id: number,
     name: string,
@@ -579,7 +578,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Remove the node with the given ID from the graph. */
   public removeNode(id: number) {
     const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
@@ -594,7 +592,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Change name of the node to the given value. */
   public renameNode(id: number, newName: string) {
     let node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
@@ -604,7 +601,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Set the given node as selected. */
   public selectNode(id: number) {
     const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
@@ -612,7 +608,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Sets the given node as not selected */
   public unselectNode(id: number) {
     const node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
@@ -620,14 +615,12 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Return an id of the selected node, or undefined if nothing is selected. */
-  public getSelectedNodeId(): string | undefined {
+  public getSelectedNodeId() {
     let node = this.cytoscape.nodes(':selected');
     if (node.length == 0) return undefined; // nothing selected
     return node.id();
   }
 
-  /** Allow to externally set which node is hovered - make sure to unset it as well. */
   public hoverNode(id: number, isHover: boolean) {
     let node = this.cytoscape.getElementById(id);
     if (isHover) {
@@ -637,12 +630,11 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Get the position of the node with the given id, or undefined if the node does not exist. */
-  public getNodePosition(id: number): Position | undefined {
+  public getNodePosition(id: number) {
     let node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
       let position = node.position();
-      return [position.x, position.y];
+      return [position.x, position.y] as [number, number];
     }
     return undefined;
   }
@@ -720,7 +712,6 @@ class CytoscapeME implements ModelVisualizationInt {
     });
   }
 
-  /** Allow to externally set which edge is hovered - just make sure to unset it later. */
   public hoverEdge(regulatorId: number, targetId: number, isHover: boolean) {
     let edge = this.findRegulationEdge(regulatorId, targetId);
     if (edge !== undefined) {
@@ -750,8 +741,7 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Global Select ---
 
-  /** Unselects all items selected in the cytoscape editor. */
-  public unselectAll(): void {
+  public unselectAll() {
     this.cytoscape.elements(':selected').unselect();
   }
 
@@ -759,7 +749,6 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Regulation Management ---
 
-  /** Remove regulation between the two specified nodes. */
   public removeRegulation(regulatorId: number, targetId: number) {
     let edge = this.findRegulationEdge(regulatorId, targetId);
     if (edge !== undefined) {
@@ -768,7 +757,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Ensure that the graph contains edge which corresponds to the provided regulation. */
   public ensureRegulation(regulation: Regulation) {
     const currentEdge = this.findRegulationEdge(
       regulation.regulator,
@@ -806,8 +794,6 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Return a { regulator, target } object that describes currently selected regulation,
-   * or undefined if nothing is selected. */
   public getSelectedRegulationPair():
     | { regulator: string; target: string }
     | undefined {
@@ -820,7 +806,6 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Graph Actions ---
 
-  /** Zoom and pan the editor to ensure that given node is visible. */
   public showNode(id: number) {
     let node = this.cytoscape.getElementById(id);
     if (node !== undefined) {
@@ -842,10 +827,7 @@ class CytoscapeME implements ModelVisualizationInt {
     }
   }
 
-  /** Pan and zoom the graph to show the whole model.
-   *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
-   */
-  public fit(variables?: Variable[]): void {
+  public fit(variables?: Variable[]) {
     if (variables !== undefined && variables.length > 0) {
       const variableSet = new Set(variables.map((variable) => variable.id));
       const nodes = this.cytoscape
@@ -871,7 +853,7 @@ class CytoscapeME implements ModelVisualizationInt {
     }, 2000);
   }
 
-  public setZoom(zoomLevel: number): void {
+  public setZoom(zoomLevel: number) {
     const zoom = Math.min(
       this.cytoscape.maxZoom(),
       Math.max(this.cytoscape.minZoom(), zoomLevel)
@@ -1092,12 +1074,10 @@ class CytoscapeME implements ModelVisualizationInt {
     );
   }
 
-  /** Layout the nodes in a phenotype-aware manner. */
   public layoutPhenotype(layoutOnlySelected: boolean = false) {
     this.applyConcentricLayout(true, layoutOnlySelected);
   }
 
-  /** Layout the nodes in a control-enabled manner. */
   public layoutControlEnabled(layoutOnlySelected: boolean = false) {
     this.applyConcentricLayout(false, layoutOnlySelected);
   }
@@ -1136,7 +1116,6 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Node Highlighting ---
 
-  /** Changes colour of all nodes which are set as control-enabled. */
   public highlightControlEnabled(
     inputNodes: Array<[number, boolean]> | null = null
   ) {
@@ -1163,12 +1142,10 @@ class CytoscapeME implements ModelVisualizationInt {
     });
   }
 
-  /** Returns true if the control-enabled highlighting is currently active. */
-  public isControlEnabledHighlighted(): boolean {
+  public isControlEnabledHighlighted() {
     return this.controlEnabledShown ?? false;
   }
 
-  /** Changes borders of all nodes which are in the phenotype. */
   public highlightPhenotype(
     inputNodes: Array<[number, PhenotypeStatus]> | null = null
   ) {
@@ -1217,8 +1194,7 @@ class CytoscapeME implements ModelVisualizationInt {
     });
   }
 
-  /** Returns true if the phenotype highlighting is currently active. */
-  public isPhenotypeHighlighted(): boolean {
+  public isPhenotypeHighlighted() {
     return this.phenotypeShown ?? false;
   }
 
