@@ -34,7 +34,7 @@ class ControlEditor implements ControlEditorInt {
 
   // #region --- Variable Search ---
 
-  public getVariableSearch(): string {
+  public getVariableSearch() {
     return this.variableSearch;
   }
 
