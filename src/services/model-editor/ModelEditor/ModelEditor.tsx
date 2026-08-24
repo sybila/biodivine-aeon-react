@@ -74,12 +74,10 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Variable Search ---
 
-  /** Returns currently searched variable name in the ModelEditorTabContent.tsx component */
   public getVariableSearch(): string {
     return this.variableSearch;
   }
 
-  /** Sets currently searched variable name in the ModelEditorTabContent.tsx component */
   public setVariableSearch(name: string) {
     this.variableSearch = name;
   }
@@ -117,7 +115,6 @@ class ModelEditor implements ModelEditorInt {
     return ok(false);
   }
 
-  /** Removes a variable */
   public async removeVariable(id: number) {
     await this.liveModelServ.Variables.removeVariable(id, true);
   }
@@ -167,12 +164,10 @@ class ModelEditor implements ModelEditorInt {
     return this.liveModelServ.Export.stats();
   }
 
-  /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
     this.liveModelServ.Info.setModelDescription(description, true, false);
   }
 
-  /** Sets the model name in the LiveModel */
   public setModelName(name: string) {
     this.liveModelServ.Info.setModelName(name, true, false);
   }
@@ -181,16 +176,10 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Cytoscape Actions ---
 
-  /** Toggles hover state on a variable node in the ModelVisualization canvas.
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
   public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
     this.modelVisualizationServ.hoverNode(id, turnOnHover);
   }
 
-  /** Toggles hover state on a edge node in the ModelVisualization canvas.
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
   public hoverRegulationCytoscape(
     regulation: RegulationVariables,
     turnOnHover: boolean
@@ -202,7 +191,6 @@ class ModelEditor implements ModelEditorInt {
     );
   }
 
-  /** Finds variable in the ModelVisualization canvas nad zooms on it */
   public zoomOnVariable(id: number) {
     this.modelVisualizationServ.showNode(id);
   }
@@ -211,10 +199,6 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Menu Tab Actions ---
 
-  /** Opens a menu tab by its type.
-   *  @param tabType - The type of the menu tab to open.
-   *  @returns {boolean} - True if the tab was opened successfully, false otherwise.
-   */
   public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
     const button: MenuTabButton | undefined =
       this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
@@ -229,10 +213,6 @@ class ModelEditor implements ModelEditorInt {
     return false;
   }
 
-  /** Scrolls a variable into view in the variable table of the Model Editor menu tab.
-   *  Opens the Model Editor menu tab if it is not already open.
-   *  @param variableId - The id of the variable to scroll into view.
-   *  @returns {void} */
   public async scrollVariableIntoView(variableId: number): Promise<void> {
     if (!this.openMenuTab('Model Editor')) {
       console.warn(
@@ -284,9 +264,6 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Open Content Overlay Windows ---
 
-  /** Opens the "Change Variable Name" overlay window.
-   *  @param varId - The id of the variable to change the name of.
-   */
   public openChangeVarNameWindow(varId: number) {
     if (varId === undefined) return;
 
@@ -313,9 +290,6 @@ class ModelEditor implements ModelEditorInt {
     });
   }
 
-  /** Opens the "Change Update Function" overlay window.
-   *  @param varId - The id of the variable to change the update function of.
-   */
   public openChangeUpdateFunctionWindow(varId: number) {
     if (varId === undefined) return;
 
