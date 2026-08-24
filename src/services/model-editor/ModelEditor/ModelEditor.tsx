@@ -12,7 +12,6 @@ import type {
   ContentVisibleComponent,
   MenuTabButton,
   MenuTabTypeMENotNull,
-  ModelStats,
   RegulationVariables,
   UpdateFunctionStatus,
 } from '../../../types/types';
@@ -74,7 +73,7 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Variable Search ---
 
-  public getVariableSearch(): string {
+  public getVariableSearch() {
     return this.variableSearch;
   }
 
@@ -123,7 +122,7 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Regulation Actions ---
 
-  public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
+  public toggleRegulationMonocity(regulatorId: number, targetId: number) {
     this.liveModelServ.Regulations.toggleMonotonicity(
       regulatorId,
       targetId,
@@ -160,7 +159,7 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Model Info ---
 
-  public getModelStats(): ModelStats {
+  public getModelStats() {
     return this.liveModelServ.Export.stats();
   }
 
@@ -199,7 +198,7 @@ class ModelEditor implements ModelEditorInt {
 
   // #region --- Menu Tab Actions ---
 
-  public openMenuTab(tabType: MenuTabTypeMENotNull): boolean {
+  public openMenuTab(tabType: MenuTabTypeMENotNull) {
     const button: MenuTabButton | undefined =
       this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
 
@@ -213,7 +212,7 @@ class ModelEditor implements ModelEditorInt {
     return false;
   }
 
-  public async scrollVariableIntoView(variableId: number): Promise<void> {
+  public async scrollVariableIntoView(variableId: number) {
     if (!this.openMenuTab('Model Editor')) {
       console.warn(
         'Error: Could not open Model Editor menu tab to scroll variable into view. Missing menu tab button reference'
