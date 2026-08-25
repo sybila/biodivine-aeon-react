@@ -354,7 +354,7 @@ class ControlLM implements ControlLMInt {
   }
 
   // TODO - rewrite this function when multiple phenotypes in computation are allowed
-  includePhenotypeInComp(id: number) {
+  includePhenotypeInComp(id: number, addIntoUndoRedo: boolean) {
     if (!this.liveModel.modelCanBeModified('Control')) {
       return ok(false);
     }
@@ -365,18 +365,36 @@ class ControlLM implements ControlLMInt {
       return result;
     }
 
+    const oldPhenotypeIds: number[] = [];
+
     this.controlStore
       .getState()
       .phenotypesUsedInComputation.forEach((phenId) => {
         if (id != phenId) {
-          this.removePhenotypeFromComp(phenId);
+          oldPhenotypeIds.push(phenId);
+          this.removePhenotypeFromComp(phenId, false);
         }
       });
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          oldPhenotypeIds.forEach((phenId) =>
+            this.includePhenotypeInComp(phenId, false)
+          );
+
+          this.removePhenotypeFromComp(id, false);
+        },
+        redo: () => {
+          this.includePhenotypeInComp(id, false);
+        },
+      });
+    }
 
     return ok(true);
   }
 
-  removePhenotypeFromComp(id: number) {
+  removePhenotypeFromComp(id: number, addIntoUndoRedo: boolean) {
     if (!this.liveModel.modelCanBeModified('Control')) {
       return ok(false);
     }
@@ -387,7 +405,22 @@ class ControlLM implements ControlLMInt {
 
     const result = this.controlStore.getState().removePhenotypeFromComp(id);
 
-    return isErr(result) ? result : ok(true);
+    if (isErr(result)) {
+      return result;
+    }
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.includePhenotypeInComp(id, false);
+        },
+        redo: () => {
+          this.removePhenotypeFromComp(id, false);
+        },
+      });
+    }
+
+    return ok(true);
   }
 
   // #endregion

@@ -141,22 +141,30 @@ true.
   /**
    * Adds a phenotype to the set of phenotypes used in computation.
    * @param id (number) - ID of the phenotype to be added.
+   * @param addIntoUndoRedo (boolean) - Whether to add this change to the undo/redo stack.
    * @returns A `Result` object indicating the outcome of the operation.
    * - If the operation was successful, returns a `Success` object containing `true`.
    * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
    * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  includePhenotypeInComp: (id: number) => Result<boolean>;
+  includePhenotypeInComp: (
+    id: number,
+    addIntoUndoRedo: boolean
+  ) => Result<boolean>;
 
   /**
    * Removes a phenotype from the set of phenotypes used in computation.
    * @param id (number) - ID of the phenotype to be removed.
+   * @param addIntoUndoRedo (boolean) - Whether to add this change to the undo/redo stack.
    * @returns A `Result` object indicating the outcome of the operation.
    * - If the operation was successful, returns a `Success` object containing `true`.
    * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
    * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  removePhenotypeFromComp: (id: number) => Result<boolean>;
+  removePhenotypeFromComp: (
+    id: number,
+    addIntoUndoRedo: boolean
+  ) => Result<boolean>;
 
   // #endregion
 

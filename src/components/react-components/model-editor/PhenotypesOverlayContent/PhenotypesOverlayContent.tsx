@@ -82,12 +82,12 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       handleClick: () => {
         if (usedInComputation) {
           messageServ.showFromResult(
-            liveModelServ.Control.removePhenotypeFromComp(phenotype.id),
+            liveModelServ.Control.removePhenotypeFromComp(phenotype.id, true),
             'Failed to remove phenotype from computations'
           );
         } else {
           messageServ.showFromResult(
-            liveModelServ.Control.includePhenotypeInComp(phenotype.id),
+            liveModelServ.Control.includePhenotypeInComp(phenotype.id, true),
             'Failed to include phenotype in computations'
           );
         }
