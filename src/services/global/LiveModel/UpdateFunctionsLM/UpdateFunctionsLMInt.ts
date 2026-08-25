@@ -1,3 +1,4 @@
+import type { Result } from '../../../../types/result';
 import type {
   UpdateFunctionMetadata,
   UpdateFunctionStatus,
@@ -12,20 +13,28 @@ export interface UpdateFunctionsLMInt {
   /** Sets update function for a variable.
    *  @param id ID of the variable to set the update function for.
    *  @param functionString The update function as a string.
+   *  @param addIntoUndoRedo - Determines whether the regulation should be added to the undo/redo stack.
    *  @param force If true, bypasses model modification checks. (Warning - Doesn't bypass update function validation checks)
-   *  @returns An error message if the operation fails, otherwise undefined.
+   *  @returns A `Result` object detailing the outcome of the operation.
+   * - If the operation is successful, returns a `Success` object with `true`.
+   * - If the operation is blocked, returns a `Success` object with `false`.
+   * - If an error occurs, returns an `Err` object containing an error message.
    */
   setUpdateFunction(
     id: number,
     functionString: string,
     addIntoUndoRedo: boolean,
     force: boolean
-  ): string | undefined;
+  ): Result<boolean>;
 
   /** Deletes the update function for a variable.
    *  @param id ID of the variable to delete the update function for.
+   *  @returns A `Result` object detailing the outcome of the operation.
+   * - If the operation is successful, returns a `Success` object with `true`.
+   * - If the operation is blocked, returns a `Success` object with `false`.
+   * - If an error occurs, returns an `Err` object containing an error message.
    */
-  deleteUpdateFunctionId(id: number): void;
+  deleteUpdateFunctionId(id: number): Result<boolean>;
 
   // #endregion
 

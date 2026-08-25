@@ -306,7 +306,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
       set(result);
 
-      return ok(toId);
+      return ok(true);
     },
 
     getPhenotypeByName(name) {

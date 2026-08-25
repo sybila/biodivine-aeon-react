@@ -2,6 +2,7 @@ import type { RegulationsStatus } from '../../../../stores/LiveModel/Regulations
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { err, ok } from '../../../../types/result';
 import { EdgeMonotonicity, type Regulation } from '../../../../types/types';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { RegulationsLMInt } from './RegulationsLMInt';
@@ -72,17 +73,22 @@ class RegulationsLM implements RegulationsLMInt {
   // #region --- Regulation Actions ---
 
   public addRegulation(
-    modAllowed: boolean,
+    force: boolean,
     addIntoUndoRedo: boolean,
     regulatorId: number,
     targetId: number,
     isObservable: boolean,
     monotonicity: EdgeMonotonicity
-  ): boolean | void {
-    if (!modAllowed && !this.liveModel.modelCanBeModified()) return;
+  ) {
+    if (
+      this.regulationsStore.getState().getRegulationId(regulatorId, targetId)
+    ) {
+      return ok(true);
+    }
 
-    if (this.regulationsStore.getState().getRegulationId(regulatorId, targetId))
-      return false;
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(false);
+    }
 
     const regulation: Regulation = {
       regulator: regulatorId,
@@ -106,10 +112,14 @@ class RegulationsLM implements RegulationsLMInt {
             isObservable,
             monotonicity
           ),
+        onRedoSuccess: 'Regulation created succesfully.',
+        onUndoSuccess: 'Regulation removed succesfully.',
+        onRedoFailErrorPrefix: 'Failed to create regulation',
+        onUndoFailErrorPrefix: 'Failed to remove regulation',
       });
     }
 
-    return true;
+    return ok(true);
   }
 
   public removeRegulation(
@@ -117,15 +127,18 @@ class RegulationsLM implements RegulationsLMInt {
     regulatorId: number,
     targetId: number,
     force: boolean = false
-  ): boolean {
-    if (!force && !this.liveModel.modelCanBeModified()) {
-      return false;
-    }
-
+  ) {
     const exists = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
-    if (!exists) return false;
+
+    if (!exists) {
+      return ok(true);
+    }
+
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(false);
+    }
 
     this.removeFromModelVisualizationFunction(regulatorId, targetId);
 
@@ -144,10 +157,14 @@ class RegulationsLM implements RegulationsLMInt {
             exists.monotonicity
           ),
         redo: () => this.removeRegulation(false, regulatorId, targetId, false),
+        onRedoSuccess: 'Regulation removed succesfully.',
+        onUndoSuccess: 'Regulation created succesfully.',
+        onRedoFailErrorPrefix: 'Failed to remove regulation',
+        onUndoFailErrorPrefix: 'Failed to create regulation',
       });
     }
 
-    return true;
+    return ok(true);
   }
 
   public regulationChanged(regulation: Regulation) {
@@ -166,11 +183,16 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     isObservable: boolean,
     addIntoUndoRedo: boolean
-  ): void {
+  ) {
     const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
-    if (regulation && regulation.observable !== isObservable) {
+
+    if (!regulation) {
+      return err("This regulation doesn't exist.");
+    }
+
+    if (regulation.observable !== isObservable) {
       this.regulationsStore
         .getState()
         .setObservability(regulatorId, targetId, isObservable);
@@ -187,9 +209,15 @@ class RegulationsLM implements RegulationsLMInt {
             ),
           redo: () =>
             this.setObservability(regulatorId, targetId, isObservable, false),
+          onRedoSuccess: `Regulation successfully set as ${isObservable ? '' : 'not '}observable.`,
+          onUndoSuccess: `Regulation successfully set back to ${regulation.observable ? '' : 'not '}observable.`,
+          onRedoFailErrorPrefix: `Failed to set regulation to ${isObservable ? '' : 'not '}observable`,
+          onUndoFailErrorPrefix: `Failed to set regulation back to ${regulation.observable ? '' : 'not '}observable`,
         });
       }
     }
+
+    return ok(true);
   }
 
   public toggleObservability(
@@ -197,40 +225,52 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
-    if (!force && !this.liveModel.modelCanBeModified()) return;
+  ) {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(false);
+    }
 
     const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
-    if (regulation) {
-      this.regulationsStore
-        .getState()
-        .setObservability(regulatorId, targetId, !regulation.observable);
-      this.regulationChanged({
-        ...regulation,
-        observable: !regulation.observable,
-      });
 
-      if (addIntoUndoRedo) {
-        this.modelUndoRedoStore.getState().addOperation({
-          undo: () =>
-            this.setObservability(
-              regulatorId,
-              targetId,
-              regulation.observable,
-              false
-            ),
-          redo: () =>
-            this.setObservability(
-              regulatorId,
-              targetId,
-              !regulation.observable,
-              false
-            ),
-        });
-      }
+    if (!regulation) {
+      return err("This regulation doesn't exist.");
     }
+
+    this.regulationsStore
+      .getState()
+      .setObservability(regulatorId, targetId, !regulation.observable);
+
+    this.regulationChanged({
+      ...regulation,
+      observable: !regulation.observable,
+    });
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () =>
+          this.setObservability(
+            regulatorId,
+            targetId,
+            regulation.observable,
+            false
+          ),
+        redo: () =>
+          this.setObservability(
+            regulatorId,
+            targetId,
+            !regulation.observable,
+            false
+          ),
+        onRedoSuccess: `Regulation successfully set as ${!regulation.observable ? '' : 'not '}observable.`,
+        onUndoSuccess: `Regulation successfully set back to ${regulation.observable ? '' : 'not '}observable.`,
+        onRedoFailErrorPrefix: `Failed to set regulation to ${!regulation.observable ? '' : 'not '}observable`,
+        onUndoFailErrorPrefix: `Failed to set regulation back to ${regulation.observable ? '' : 'not '}observable`,
+      });
+    }
+
+    return ok(true);
   }
 
   // #endregion
@@ -242,14 +282,20 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     monotonicity: EdgeMonotonicity,
     addIntoUndoRedo: boolean
-  ): void {
+  ) {
     const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
-    if (regulation && regulation.monotonicity !== monotonicity) {
+
+    if (!regulation) {
+      return err("This regulation doesn't exist.");
+    }
+
+    if (regulation.monotonicity !== monotonicity) {
       this.regulationsStore
         .getState()
         .setMonotonicity(regulatorId, targetId, monotonicity);
+
       this.regulationChanged({ ...regulation, monotonicity: monotonicity });
 
       if (addIntoUndoRedo) {
@@ -263,9 +309,15 @@ class RegulationsLM implements RegulationsLMInt {
             ),
           redo: () =>
             this.setMonotonicity(regulatorId, targetId, monotonicity, false),
+          onRedoSuccess: `Regulation monotonicity successfully set to ${monotonicity}.`,
+          onUndoSuccess: `Regulation monotonicity successfully set back to ${regulation.monotonicity}.`,
+          onRedoFailErrorPrefix: `Failed to set regulation monotonicity to ${monotonicity}`,
+          onUndoFailErrorPrefix: `Failed to set regulation back monotonicity to ${regulation.monotonicity}`,
         });
       }
     }
+
+    return ok(true);
   }
 
   public toggleMonotonicity(
@@ -273,36 +325,50 @@ class RegulationsLM implements RegulationsLMInt {
     targetId: number,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
-    if (!force && !this.liveModel.modelCanBeModified()) return;
+  ) {
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(false);
+    }
 
     const regulation = this.regulationsStore
       .getState()
       .getRegulationId(regulatorId, targetId);
-    if (regulation) {
-      let next = EdgeMonotonicity.unspecified;
-      if (regulation.monotonicity === EdgeMonotonicity.unspecified)
-        next = EdgeMonotonicity.activation;
-      else if (regulation.monotonicity === EdgeMonotonicity.activation)
-        next = EdgeMonotonicity.inhibition;
-      this.regulationsStore
-        .getState()
-        .setMonotonicity(regulatorId, targetId, next);
-      this.regulationChanged({ ...regulation, monotonicity: next });
 
-      if (addIntoUndoRedo) {
-        this.modelUndoRedoStore.getState().addOperation({
-          undo: () =>
-            this.setMonotonicity(
-              regulatorId,
-              targetId,
-              regulation.monotonicity,
-              false
-            ),
-          redo: () => this.setMonotonicity(regulatorId, targetId, next, false),
-        });
-      }
+    if (!regulation) {
+      return err("This regulation doesn't exist.");
     }
+
+    let next = EdgeMonotonicity.unspecified;
+    if (regulation.monotonicity === EdgeMonotonicity.unspecified) {
+      next = EdgeMonotonicity.activation;
+    } else if (regulation.monotonicity === EdgeMonotonicity.activation) {
+      next = EdgeMonotonicity.inhibition;
+    }
+
+    this.regulationsStore
+      .getState()
+      .setMonotonicity(regulatorId, targetId, next);
+
+    this.regulationChanged({ ...regulation, monotonicity: next });
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () =>
+          this.setMonotonicity(
+            regulatorId,
+            targetId,
+            regulation.monotonicity,
+            false
+          ),
+        redo: () => this.setMonotonicity(regulatorId, targetId, next, false),
+        onRedoSuccess: `Regulation monotonicity successfully set to ${next}.`,
+        onUndoSuccess: `Regulation monotonicity successfully set back to ${regulation.monotonicity}.`,
+        onRedoFailErrorPrefix: `Failed to set regulation monotonicity to ${next}`,
+        onUndoFailErrorPrefix: `Failed to set regulation back monotonicity to ${regulation.monotonicity}`,
+      });
+    }
+
+    return ok(true);
   }
 
   // #endregion

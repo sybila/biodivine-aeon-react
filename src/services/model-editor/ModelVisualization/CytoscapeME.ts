@@ -10,6 +10,7 @@ import type { VariablePositionsState } from '../../../stores/LiveModel/VariableP
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { err, isErr, ok, type Result } from '../../../types/result';
 import {
   EdgeMonotonicity,
   PHENOTYPE_STATUS,
@@ -478,16 +479,16 @@ class CytoscapeME implements ModelVisualizationInt {
       },
       // Add the edge to the live model
       complete: (sourceNode: any, targetNode: any, addedEles: any) => {
-        if (
-          !this.liveModel.Regulations.addRegulation(
-            false,
-            true,
-            Number(sourceNode.id()),
-            Number(targetNode.id()),
-            true,
-            EdgeMonotonicity.unspecified
-          )
-        ) {
+        const result = this.liveModel.Regulations.addRegulation(
+          false,
+          true,
+          Number(sourceNode.id()),
+          Number(targetNode.id()),
+          true,
+          EdgeMonotonicity.unspecified
+        );
+
+        if (isErr(result) || !result.value) {
           addedEles.remove(); // if we can't create the regulation, remove new edge
         } else {
           this.initEdge(addedEles[0]);
@@ -548,12 +549,14 @@ class CytoscapeME implements ModelVisualizationInt {
         newPosition;
 
       this.modelUndoRedoStore.getState().addOperation({
-        undo: () => {
-          this.setNodePosition(id, oldPosition);
-        },
-        redo: () => {
-          this.setNodePosition(id, newPosition);
-        },
+        undo: () => this.setNodePosition(id, oldPosition),
+        redo: () => this.setNodePosition(id, newPosition),
+        onRedoSuccess: 'Variable was successfully moved to the new position.',
+        onUndoSuccess:
+          'Variable was successfully moved back to the old position.',
+        onRedoFailErrorPrefix: 'Failed to move variable to the new position',
+        onUndoFailErrorPrefix:
+          'Failed to move variable back to the old position',
       });
 
       this.variablePositionsStore
@@ -640,12 +643,17 @@ class CytoscapeME implements ModelVisualizationInt {
   }
 
   /** Function for setting the position of a node with the given id. */
-  private setNodePosition(id: number, position: Position): void {
+  private setNodePosition(id: number, position: Position): Result<boolean> {
     const currentNode = this.cytoscape.getElementById(id);
-    if (currentNode !== undefined && currentNode.length > 0) {
-      currentNode.position({ x: position[0], y: position[1] });
-      this.variablePositionsStore.getState().setVariablePosition(id, position);
+
+    if (currentNode === undefined || currentNode.length < 1) {
+      return err("This variable doesn't exist in the visualization.");
     }
+
+    currentNode.position({ x: position[0], y: position[1] });
+    this.variablePositionsStore.getState().setVariablePosition(id, position);
+
+    return ok(true);
   }
 
   /** Extracts position of all nodes and saves it into Record<number, Position> (number - node ID, Position - node position [x, y]). */
@@ -661,13 +669,17 @@ class CytoscapeME implements ModelVisualizationInt {
   }
 
   /** Sets position of all nodes from the provided record. */
-  private setPositionOfAllNodes(setFrom: Record<number, Position>) {
+  private setPositionOfAllNodes(
+    setFrom: Record<number, Position>
+  ): Result<boolean> {
     this.cytoscape.nodes().forEach((node: any) => {
       const position = setFrom[node.id()];
       if (position !== undefined) {
         node.position({ x: position[0], y: position[1] });
       }
     });
+
+    return ok(true);
   }
 
   // #endregion
@@ -1103,12 +1115,14 @@ class CytoscapeME implements ModelVisualizationInt {
     };
 
     this.modelUndoRedoStore.getState().addOperation({
-      undo: () => {
-        this.setPositionOfAllNodes(oldPositions);
-      },
-      redo: () => {
-        this.setPositionOfAllNodes(newPositions);
-      },
+      undo: () => this.setPositionOfAllNodes(oldPositions),
+      redo: () => this.setPositionOfAllNodes(newPositions),
+      onRedoSuccess: 'Variables were successfully reorganized into new layout.',
+      onUndoSuccess:
+        'Variables were successfully reorganized back into previous layout.',
+      onRedoFailErrorPrefix: 'Failed to reorganize variables into new layout',
+      onUndoFailErrorPrefix:
+        'Failed to reorganize variables back into previous layout',
     });
   }
 

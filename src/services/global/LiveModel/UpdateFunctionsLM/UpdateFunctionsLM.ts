@@ -3,6 +3,7 @@ import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFu
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { err, ok } from '../../../../types/result';
 import {
   EdgeMonotonicity,
   type UpdateFunctionMetadata,
@@ -58,19 +59,19 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     functionString: string,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): string | undefined {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      return 'Model cannot be modified at the moment.';
+      return ok(false);
     }
 
     const variable = this.variablesStore.getState().variableFromId(id);
     if (!variable) {
-      return `Unknown variable '${id}'.`;
+      return err(`Unknown variable '${id}'.`);
     }
 
     const check = this.checkUpdateFunction(id, functionString);
     if (typeof check === 'string') {
-      return check;
+      return err(check);
     }
 
     const existing = this.updateFunctionsStore
@@ -87,31 +88,48 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
     }
 
     if (addIntoUndoRedo) {
+      const safeName =
+        variable.name.length > 8
+          ? variable.name.slice(0, 8) + '...'
+          : variable.name;
+
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
           if (existing) {
-            this.setUpdateFunction(id, existing.functionString, false, false);
+            return this.setUpdateFunction(
+              id,
+              existing.functionString,
+              false,
+              false
+            );
           } else {
-            this.deleteUpdateFunctionId(id);
+            return this.deleteUpdateFunctionId(id);
           }
         },
         redo: () => {
           if (functionString.length === 0) {
-            this.deleteUpdateFunctionId(id);
+            return this.deleteUpdateFunctionId(id);
           } else {
-            this.setUpdateFunction(id, functionString, false, false);
+            return this.setUpdateFunction(id, functionString, false, false);
           }
         },
+        onRedoSuccess: `Update function for variable ${safeName} succesfully changed.`,
+        onUndoSuccess: `Update function for variable ${safeName} succesfully reverted to the original value.`,
+        onRedoFailErrorPrefix: `Failed to change the update function of variable ${safeName}`,
+        onUndoFailErrorPrefix: `Failed to change back the update function of variable ${safeName}`,
       });
     }
 
     this.validateUpdateFunction(id);
     this.liveModel.Export.saveModel();
-    return undefined;
+
+    return ok(true);
   }
 
   public deleteUpdateFunctionId(id: number) {
     this.updateFunctionsStore.getState().deleteUpdateFunctionId(id);
+
+    return ok(true);
   }
 
   // #endregion

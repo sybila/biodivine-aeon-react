@@ -1,3 +1,5 @@
+import type { Result } from './result';
+
 export type Variable = {
   id: number;
   name: string;
@@ -545,8 +547,12 @@ export type TimestampedResultsMode = {
  *  The `undo` function should revert the last operation, while the `redo` function should re-apply the last undone operation.
  */
 export type UndoRedoFunctions = {
-  undo: () => void;
-  redo: () => void;
+  undo: () => Result<boolean>;
+  redo: () => Result<boolean>;
+  onUndoSuccess: string;
+  onRedoSuccess: string;
+  onUndoFailErrorPrefix: string;
+  onRedoFailErrorPrefix: string;
 };
 
 // #endregion

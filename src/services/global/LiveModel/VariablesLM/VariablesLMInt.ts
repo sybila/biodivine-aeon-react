@@ -1,3 +1,4 @@
+import type { Result } from '../../../../types/result';
 import type { PhenotypeStatus, Position } from '../../../../types/types';
 
 /**
@@ -35,17 +36,32 @@ export interface VariablesLMInt {
 
   // #region --- Variable Actions ---
 
-  /** Add a variable to the model */
+  /**
+   * Adds a new variable to the model.
+   *
+   * @param force - A boolean indicating whether the operation should be executed, even if it would be blocked by another operation.
+   * @param addIntoUndoRedo - A boolean indicating whether to add this operation into the undo/redo stack.
+   * @param position - The position where the newly created variable should be placed in the visualization.
+   * @param id - The ID of the variable to be created.
+   * @param name - The name of the variable to be created.
+   * @param controlEnabled - The control-enabled value for the newly created variable.
+   * @param phenotype - The phenotype value of the new variable in the currently edited phenotype.
+   * @param fitVisualization - A boolean indicating whether to fit the visualization to the whole model after the variable is created.
+   * @returns A `Result` object detailing the outcome of the operation.
+   * - If the operation is successful, returns a `Success` object containing the ID of the newly created variable.
+   * - If the operation is blocked, returns a `Success` object with `undefined`.
+   * - If an error occurs, returns an `Err` object containing an error message.
+   */
   addVariable(
-    modAllowed: boolean,
+    force: boolean,
     addIntoUndoRedo: boolean,
     position?: Position,
     id?: number,
     name?: string,
-    controllable?: boolean,
+    controlEnabled?: boolean,
     phenotype?: PhenotypeStatus,
     fitVisualization?: boolean
-  ): number | undefined;
+  ): Result<number | undefined>;
 
   /** Removes variable and displays warnings if necessary
    *  Returns true if the variable was removed, false otherwise.
@@ -62,16 +78,33 @@ export interface VariablesLMInt {
    *  @param id - The ID of the variable to be removed.
    *  @param addIntoUndoRedo - Whether to add this operation into the undo/redo stack.
    *  @param force - Whether to force the removal.
+   *  @returns A `Result` object detailing the outcome of the operation.
+   * - If the operation is successful, returns a `Success` object with `true`.
+   * - If the operation is blocked, returns a `Success` object with `false`.
+   * - If an error occurs, returns an `Err` object containing an error message.
    */
-  removeVariable(id: number, addIntoUndoRedo: boolean, force?: boolean): void;
+  removeVariable(
+    id: number,
+    addIntoUndoRedo: boolean,
+    force?: boolean
+  ): Result<boolean>;
 
-  /** Rename a variable by its ID */
+  /** Rename a variable by its ID
+   *  @param id - The ID of the variable to be removed.
+   *  @param newName - The new name of the variable.
+   *  @param addIntoUndoRedo - Whether to add this operation into the undo/redo stack.
+   *  @param force - Whether to force the removal.
+   *  @returns A `Result` object detailing the outcome of the operation.
+   * - If the operation is successful, returns a `Success` object with `true`.
+   * - If the operation is blocked, returns a `Success` object with `false`.
+   * - If an error occurs, returns an `Err` object containing an error message.
+   */
   renameVariable(
     id: number,
     newName: string,
     addIntoUndoRedo: boolean,
     force: boolean
-  ): string | undefined;
+  ): Result<boolean>;
 
   // #endregion
 

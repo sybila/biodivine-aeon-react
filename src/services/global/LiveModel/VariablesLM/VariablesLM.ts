@@ -5,6 +5,7 @@ import type { VariablePositionsState } from '../../../../stores/LiveModel/Variab
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { err, isErr, ok } from '../../../../types/result';
 import {
   PHENOTYPE_STATUS,
   type ControlInfo,
@@ -146,17 +147,17 @@ class VariablesLM implements VariablesLMInt {
   // #region --- Variable Actions ---
 
   public addVariable(
-    modAllowed: boolean,
+    force: boolean,
     addIntoUndoRedo: boolean,
     position: Position = [0.0, 0.0],
     id?: number,
     name?: string,
-    controllable: boolean = true,
+    controlEnabled: boolean = true,
     phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype,
     fitVisualization: boolean = true
   ) {
-    if (!modAllowed && !this.liveModel.modelCanBeModified()) {
-      return;
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(undefined);
     }
 
     const variableId: number = id ?? this.idCounter++;
@@ -168,7 +169,7 @@ class VariablesLM implements VariablesLMInt {
     };
 
     const controlInfo: ControlInfo = {
-      controlEnabled: controllable,
+      controlEnabled: controlEnabled,
       phenotype: phenotype,
     };
 
@@ -191,22 +192,33 @@ class VariablesLM implements VariablesLMInt {
     this.liveModel.Export.saveModel();
 
     if (addIntoUndoRedo) {
+      const safeName =
+        variable.name.length > 8
+          ? variable.name.slice(0, 8) + '...'
+          : variable.name;
+
       this.undoRedoStore.getState().addOperation({
         undo: () => this.removeVariable(variableId, false),
-        redo: () =>
-          this.addVariable(
+        redo: () => {
+          const redoRes = this.addVariable(
             false,
             false,
             position,
             variableId,
             variableName,
-            controllable,
+            controlEnabled,
             phenotype
-          ),
+          );
+          return isErr(redoRes) ? redoRes : ok(redoRes.value != undefined);
+        },
+        onRedoSuccess: `A new variable ${safeName} was successfully created.`,
+        onUndoSuccess: `The variable ${safeName} was successfully removed.`,
+        onRedoFailErrorPrefix: `Failed to create the variable ${safeName}`,
+        onUndoFailErrorPrefix: `Failed to remove the variable ${safeName}`,
       });
     }
 
-    return variableId;
+    return ok(variableId);
   }
 
   public async removeVariableWithWarnings(
@@ -221,6 +233,7 @@ class VariablesLM implements VariablesLMInt {
     }
 
     this.removeVariable(id, addIntoUndoRedo, true);
+
     return true;
   }
 
@@ -229,10 +242,14 @@ class VariablesLM implements VariablesLMInt {
     addIntoUndoRedo: boolean,
     force: boolean = false
   ) {
-    if (!force && !this.liveModel.modelCanBeModified()) return;
-
     const variable = this.variablesStore.getState().variableFromId(id);
-    if (!variable) return;
+    if (!variable) {
+      return ok(true);
+    }
+
+    if (!force && !this.liveModel.modelCanBeModified()) {
+      return ok(false);
+    }
 
     const controlInfo = this.controlStore.getState().getVariableControlInfo(id);
     const position = this.getNodePositionFromVisualizationFunction(id);
@@ -281,9 +298,14 @@ class VariablesLM implements VariablesLMInt {
     }
 
     if (addIntoUndoRedo) {
+      const safeName =
+        variable.name.length > 8
+          ? variable.name.slice(0, 8) + '...'
+          : variable.name;
+
       this.undoRedoStore.getState().addOperation({
         undo: () => {
-          this.addVariable(
+          const addRes = this.addVariable(
             false,
             false,
             position ?? [0, 0],
@@ -292,6 +314,14 @@ class VariablesLM implements VariablesLMInt {
             controlInfo?.controlEnabled ?? true,
             controlInfo?.phenotype ?? PHENOTYPE_STATUS.NotInPhenotype
           );
+
+          if (isErr(addRes)) {
+            return addRes;
+          }
+
+          if (addRes.value === undefined) {
+            return ok(false);
+          }
 
           this.liveModel.Control.changeControlEnabledById(
             id,
@@ -319,10 +349,18 @@ class VariablesLM implements VariablesLMInt {
               );
             }
           }, 50);
+
+          return ok(true);
         },
         redo: () => this.removeVariable(id, false, false),
+        onRedoSuccess: `The variable ${safeName} was successfully removed.`,
+        onUndoSuccess: `A variable ${safeName} was successfully recreated.`,
+        onRedoFailErrorPrefix: `Failed to remove the variable ${safeName}`,
+        onUndoFailErrorPrefix: `Failed to recreate the variable ${safeName}`,
       });
     }
+
+    return ok(true);
   }
 
   public renameVariable(
@@ -332,15 +370,17 @@ class VariablesLM implements VariablesLMInt {
     force: boolean = false
   ) {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      return;
+      return ok(false);
     }
 
     const variable = this.variablesStore.getState().variableFromId(id);
-    if (!variable) return;
+    if (!variable) {
+      return err("This variable doesn't exist.");
+    }
 
     const error = this.checkVariableName(id, newName);
     if (error !== undefined) {
-      return error;
+      return err(error);
     }
 
     this.variablesStore.getState().renameVariable(id, newName);
@@ -356,13 +396,24 @@ class VariablesLM implements VariablesLMInt {
     this.liveModel.Export.saveModel();
 
     if (addIntoUndoRedo) {
+      const safeNewName =
+        newName.length > 8 ? newName.slice(0, 8) + '...' : newName;
+      const safeOldName =
+        variable.name.length > 8
+          ? variable.name.slice(0, 8) + '...'
+          : variable.name;
+
       this.undoRedoStore.getState().addOperation({
         undo: () => this.renameVariable(id, variable.name, false, false),
         redo: () => this.renameVariable(id, newName, false, false),
+        onRedoSuccess: `The variable was successfully renamed to ${safeNewName}.`,
+        onUndoSuccess: `A variable was successfully renamed back to ${safeOldName}.`,
+        onRedoFailErrorPrefix: `Failed to rename variable ${safeOldName}`,
+        onUndoFailErrorPrefix: `Failed to rename back the variable ${safeNewName}`,
       });
     }
 
-    return undefined;
+    return ok(true);
   }
 
   // #endregion

@@ -1,3 +1,4 @@
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { BifurcationExplorerStatusState } from '../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import createBifurcationExplorerStatusStore from '../../stores/AttractorBifurcationExplorer/createBifurcationExplorerStatusStore';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
@@ -110,6 +111,13 @@ class StoresProvider implements StoresProviderInt {
     this.controlStore = createControlStore();
 
     this.modelUndoRedoStore = createUndoRedoStore();
+  }
+
+  initializeUndoRedoStore(messageServ: MessageInt) {
+    this.modelUndoRedoStore.getState().setMessageFunctions(
+      (message: string) => messageServ.showSuccess(message),
+      (message: string) => messageServ.showError(message)
+    );
   }
 }
 

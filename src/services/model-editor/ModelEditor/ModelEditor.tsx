@@ -7,7 +7,7 @@ import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunct
 import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import { err, ok } from '../../../types/result';
+import { isErr, ok } from '../../../types/result';
 import type {
   ContentVisibleComponent,
   MenuTabButton,
@@ -87,8 +87,9 @@ class ModelEditor implements ModelEditorInt {
 
   public addVariable() {
     const newVariableId = this.liveModelServ.Variables.addVariable(true, true);
-    if (newVariableId !== undefined) {
-      this.zoomOnVariable(newVariableId);
+
+    if (!isErr(newVariableId) && newVariableId.value !== undefined) {
+      this.zoomOnVariable(newVariableId.value);
     }
   }
 
@@ -105,8 +106,8 @@ class ModelEditor implements ModelEditorInt {
         force
       );
 
-      if (!force && error) {
-        return err(error);
+      if (!force && isErr(error)) {
+        return error;
       }
 
       return ok(true);
@@ -145,14 +146,14 @@ class ModelEditor implements ModelEditorInt {
   // #region --- Update Functions ---
 
   public setUpdateFunction(id: number, updateFunction: string) {
-    const error = this.liveModelServ.UpdateFunctions.setUpdateFunction(
+    const result = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
       updateFunction,
       true,
       false
     );
 
-    return error ? err(error) : ok(true);
+    return result;
   }
 
   // #endregion

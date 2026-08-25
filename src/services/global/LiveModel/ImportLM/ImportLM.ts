@@ -101,25 +101,26 @@ class ImportLM implements ImportLMInt {
       return variable.id;
     }
 
-    if (control == undefined) {
-      return this.liveModel.Variables.addVariable(
-        true,
-        false,
-        position,
-        undefined,
-        name
-      );
-    }
+    const res =
+      control == undefined
+        ? this.liveModel.Variables.addVariable(
+            true,
+            false,
+            position,
+            undefined,
+            name
+          )
+        : this.liveModel.Variables.addVariable(
+            true,
+            false,
+            position,
+            undefined,
+            name,
+            control[0],
+            control[1]
+          );
 
-    return this.liveModel.Variables.addVariable(
-      true,
-      false,
-      position,
-      undefined,
-      name,
-      control[0],
-      control[1]
-    );
+    return isErr(res) || res.value === undefined ? undefined : res.value;
   }
 
   /** Adds variables which are not connected to any other variable. */

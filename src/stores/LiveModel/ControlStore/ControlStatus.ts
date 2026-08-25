@@ -98,9 +98,9 @@ export type ControlStatus = {
 
   /** Shifts variables from phenotype to the other phenotype.
    *  Phenotype specified by fromId should be empty after this, and phenotype specified by toId should contain only the variables previouslu present in fromId Phenotype.
-   *  @returns If succesful returns toId, else returns error message.
+   *  @returns If succesful returns true, else returns error message.
    */
-  shiftPhenotype: (fromId: number, toId: number) => Result<number>;
+  shiftPhenotype: (fromId: number, toId: number) => Result<boolean>;
 
   /** Returns all existing phenotypes. */
   getAllPhenotypes: () => Record<number, PhenotypeNoId>;

@@ -1,6 +1,7 @@
 import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
 import type { UndoRedoState } from '../../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import { ok } from '../../../../types/result';
 import type { LiveModelInt } from '../LiveModelInt';
 import type { InfoLMInt } from './InfoLMInt';
 
@@ -35,9 +36,9 @@ class InfoLM implements InfoLMInt {
     name: string,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      return;
+      return ok(false);
     }
 
     const modelName = this.modelInfoStore.getState().getModelName();
@@ -50,18 +51,24 @@ class InfoLM implements InfoLMInt {
         this.modelUndoRedoStore.getState().addOperation({
           undo: () => this.setModelName(modelName, false, true),
           redo: () => this.setModelName(name, false, true),
+          onRedoSuccess: 'Model name changed successfully.',
+          onUndoSuccess: 'Model name changed back successfully.',
+          onRedoFailErrorPrefix: 'Failed to change model name',
+          onUndoFailErrorPrefix: 'Failed to change model name back',
         });
       }
     }
+
+    return ok(true);
   }
 
   public setModelDescription(
     description: string,
     addIntoUndoRedo: boolean,
     force: boolean = false
-  ): void {
+  ) {
     if (!force && !this.liveModel.modelCanBeModified()) {
-      return;
+      return ok(false);
     }
 
     const modelDescription = this.modelInfoStore
@@ -75,9 +82,15 @@ class InfoLM implements InfoLMInt {
         this.modelUndoRedoStore.getState().addOperation({
           undo: () => this.setModelDescription(modelDescription, false, true),
           redo: () => this.setModelDescription(description, false, true),
+          onRedoSuccess: 'Model description changed successfully.',
+          onUndoSuccess: 'Model description changed back successfully.',
+          onRedoFailErrorPrefix: 'Failed to change model description',
+          onUndoFailErrorPrefix: 'Failed to change model description back',
         });
       }
     }
+
+    return ok(true);
   }
 
   // #endregion

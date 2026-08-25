@@ -133,7 +133,7 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.changePhenotypeById(
+          return this.changePhenotypeById(
             id,
             oldPhenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
             false,
@@ -141,13 +141,21 @@ class ControlLM implements ControlLMInt {
           );
         },
         redo: () => {
-          this.changePhenotypeById(
+          return this.changePhenotypeById(
             id,
             phenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
             false,
             false
           );
         },
+        onRedoSuccess:
+          'Phenotype status successfully changed for the variable.',
+        onUndoSuccess:
+          'Phenotype status successfully changed for the variable.',
+        onRedoFailErrorPrefix:
+          'Failed to change phenotype status for the variable.',
+        onUndoFailErrorPrefix:
+          'Failed to change phenotype status for the variable.',
       });
     }
 
@@ -179,11 +187,29 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.changeControlEnabledById(id, !controlEnabled, false, false);
+          return this.changeControlEnabledById(
+            id,
+            !controlEnabled,
+            false,
+            false
+          );
         },
         redo: () => {
-          this.changeControlEnabledById(id, controlEnabled, false, false);
+          return this.changeControlEnabledById(
+            id,
+            controlEnabled,
+            false,
+            false
+          );
         },
+        onRedoSuccess:
+          'Control-Enabled status successfully changed for the variable.',
+        onUndoSuccess:
+          'Control-Enabled status successfully changed for the variable.',
+        onRedoFailErrorPrefix:
+          'Control-Enabled to change phenotype status for the variable.',
+        onUndoFailErrorPrefix:
+          'Control-Enabled to change phenotype status for the variable.',
       });
     }
 
@@ -235,11 +261,24 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.removePhenotype(result.value, false);
+          return this.removePhenotype(result.value, false);
         },
         redo: () => {
-          this.createNewPhenotype(false, phenName, result.value, false);
+          const createdPhen = this.createNewPhenotype(
+            false,
+            phenName,
+            result.value,
+            false
+          );
+
+          return isErr(createdPhen)
+            ? createdPhen
+            : ok(createdPhen.value != undefined);
         },
+        onRedoSuccess: 'Phenotype successfully created.',
+        onUndoSuccess: 'Phenotype successfully removed.',
+        onRedoFailErrorPrefix: 'Failed to create phenotype.',
+        onUndoFailErrorPrefix: 'Failed to remove phenotype.',
       });
     }
 
@@ -258,10 +297,14 @@ class ControlLM implements ControlLMInt {
     }
 
     let undoFunction = () => {
-      this.controlStore.getState().renamePhenotype(id, oldName);
+      const renRes = this.controlStore.getState().renamePhenotype(id, oldName);
+
+      return isErr(renRes) ? renRes : ok(true);
     };
     let redoFunction = () => {
-      this.controlStore.getState().renamePhenotype(id, newName);
+      const renRes = this.controlStore.getState().renamePhenotype(id, newName);
+
+      return isErr(renRes) ? renRes : ok(true);
     };
 
     if (id === -1) {
@@ -289,14 +332,32 @@ class ControlLM implements ControlLMInt {
       );
 
       undoFunction = () => {
-        this.controlStore.getState().shiftPhenotype(createdPhenotype.value, id);
-        this.removePhenotype(createdPhenotype.value, false);
+        const shiftRes = this.controlStore
+          .getState()
+          .shiftPhenotype(createdPhenotype.value, id);
+
+        if (isErr(shiftRes)) {
+          return shiftRes;
+        }
+
+        return this.removePhenotype(createdPhenotype.value, false);
       };
       redoFunction = () => {
-        this.controlStore
+        const createRes = this.controlStore
           .getState()
           .createPhenotype(newName, createdPhenotype.value);
-        this.controlStore.getState().shiftPhenotype(id, createdPhenotype.value);
+
+        if (isErr(createRes)) {
+          return createRes;
+        }
+
+        if (createRes.value === undefined) {
+          return ok(false);
+        }
+
+        return this.controlStore
+          .getState()
+          .shiftPhenotype(id, createdPhenotype.value);
       };
     } else {
       const result = this.controlStore.getState().renamePhenotype(id, newName);
@@ -309,11 +370,15 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          undoFunction();
+          return undoFunction();
         },
         redo: () => {
-          redoFunction();
+          return redoFunction();
         },
+        onRedoSuccess: 'Phenotype successfully renamed.',
+        onUndoSuccess: 'Phenotype name successfully restored.',
+        onRedoFailErrorPrefix: 'Failed to rename phenotype.',
+        onUndoFailErrorPrefix: 'Failed to restore phenotype name.',
       });
     }
 
@@ -340,13 +405,23 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.controlStore
+          const createRes = this.controlStore
             .getState()
             .createPhenotype(phenotypeSave.name, id, phenotypeSave.variables);
+
+          return isErr(createRes)
+            ? createRes
+            : ok(createRes.value != undefined);
         },
         redo: () => {
-          this.removePhenotype(id, false);
+          return this.removePhenotype(id, false);
         },
+        onRedoSuccess: 'Phenotype successfully removed.',
+        onUndoSuccess: 'Phenotype successfully restored.',
+        onRedoFailErrorPrefix:
+          'An error occurred while removing the phenotype.',
+        onUndoFailErrorPrefix:
+          'An error occurred while restoring the phenotype.',
       });
     }
 
@@ -383,11 +458,15 @@ class ControlLM implements ControlLMInt {
             this.includePhenotypeInComp(phenId, false)
           );
 
-          this.removePhenotypeFromComp(id, false);
+          return this.removePhenotypeFromComp(id, false);
         },
         redo: () => {
-          this.includePhenotypeInComp(id, false);
+          return this.includePhenotypeInComp(id, false);
         },
+        onRedoSuccess: 'Phenotype successfully allowed for computations.',
+        onUndoSuccess: 'Phenotype successfully forbidden in computations.',
+        onRedoFailErrorPrefix: 'Failed to allow phenotype for computations',
+        onUndoFailErrorPrefix: 'Failed to forbid phenotype for computations',
       });
     }
 
@@ -412,11 +491,15 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.includePhenotypeInComp(id, false);
+          return this.includePhenotypeInComp(id, false);
         },
         redo: () => {
-          this.removePhenotypeFromComp(id, false);
+          return this.removePhenotypeFromComp(id, false);
         },
+        onRedoSuccess: 'Phenotype successfully forbidden in computations.',
+        onUndoSuccess: 'Phenotype successfully allowed for computations.',
+        onRedoFailErrorPrefix: 'Failed to forbid phenotype for computations',
+        onUndoFailErrorPrefix: 'Failed to allow phenotype for computations',
       });
     }
 

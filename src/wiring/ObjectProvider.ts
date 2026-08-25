@@ -83,6 +83,10 @@ class ObjectProviderClass implements ObjectProviderInt {
       this.StoresProvider.modelEditorStatusStore,
       this.StoresProvider.modelUndoRedoStore
     );
+
+    this.StoresProvider.initializeUndoRedoStore(
+      this.GlobalServicesProvider.messageServ
+    );
   }
 }
 

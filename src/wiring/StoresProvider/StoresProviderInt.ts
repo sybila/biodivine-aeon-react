@@ -1,3 +1,4 @@
+import type { MessageInt } from '../../services/global/Message/MessageInt';
 import type { BifurcationExplorerStatusState } from '../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { ComputeEngineStatusState } from '../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
@@ -62,6 +63,12 @@ export interface StoresProviderInt {
   // #region --- Undo/Redo stores ---
 
   modelUndoRedoStore: ZustandStore<UndoRedoState>;
+
+  // #endregion
+
+  // #region --- Additional init functions ---
+
+  initializeUndoRedoStore(messageServ: MessageInt): void;
 
   // #endregion
 }
