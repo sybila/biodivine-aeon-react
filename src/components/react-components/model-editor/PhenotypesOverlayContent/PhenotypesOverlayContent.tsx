@@ -123,7 +123,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
       handleClick: () => {
         if (!isDefaultPhenotype) {
           messageServ.showFromResult(
-            liveModelServ.Control.removePhenotype(phenotype.id),
+            liveModelServ.Control.removePhenotype(phenotype.id, true),
             'Failed to remove phenotype'
           );
         }

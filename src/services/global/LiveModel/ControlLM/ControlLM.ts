@@ -235,7 +235,7 @@ class ControlLM implements ControlLMInt {
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({
         undo: () => {
-          this.removePhenotype(result.value);
+          this.removePhenotype(result.value, false);
         },
         redo: () => {
           this.createNewPhenotype(false, phenName, result.value, false);
@@ -290,7 +290,7 @@ class ControlLM implements ControlLMInt {
 
       undoFunction = () => {
         this.controlStore.getState().shiftPhenotype(createdPhenotype.value, id);
-        this.removePhenotype(createdPhenotype.value);
+        this.removePhenotype(createdPhenotype.value, false);
       };
       redoFunction = () => {
         this.controlStore
@@ -320,14 +320,37 @@ class ControlLM implements ControlLMInt {
     return ok(true);
   }
 
-  removePhenotype(id: number) {
+  removePhenotype(id: number, addIntoUndoRedo: boolean) {
     if (!this.liveModel.modelCanBeModified('Control')) {
       return ok(false);
     }
 
+    const phenotypeSave = this.controlStore.getState().phenotypes[id];
+
+    if (!phenotypeSave) {
+      return err("Phenotype with this Id doesn't exist.");
+    }
+
     const result = this.controlStore.getState().removePhenotype(id);
 
-    return isErr(result) ? result : ok(true);
+    if (isErr(result)) {
+      return result;
+    }
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          this.controlStore
+            .getState()
+            .createPhenotype(phenotypeSave.name, id, phenotypeSave.variables);
+        },
+        redo: () => {
+          this.removePhenotype(id, false);
+        },
+      });
+    }
+
+    return ok(true);
   }
 
   // TODO - rewrite this function when multiple phenotypes in computation are allowed

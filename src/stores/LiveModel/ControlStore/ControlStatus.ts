@@ -60,9 +60,14 @@ export type ControlStatus = {
    * Creates a new empty phenotype and makes it currently active.
    * @param name (string | undefined) - optional name for the phenotype. If not provided, a default name will be generated.
    * @param id (number | undefined) - optional ID for the phenotype. If not provided, a new ID will be generated.
+   * @param variables (Record<number, PhenotypeStatus> | undefined) -  optional variables for the newlu created phenotype.
    * @returns Returns a Result object. If successful value property is set to the ID of the new phenotype. Otherwise, the error property contains an error message string.
    */
-  createPhenotype: (name?: string, id?: number) => Result<number>;
+  createPhenotype: (
+    name?: string,
+    id?: number,
+    variables?: Record<number, PhenotypeStatus>
+  ) => Result<number>;
 
   /** Removes phenotype and makes it currently active.
    *  @param id (number) - id of the phenotype which should be removed

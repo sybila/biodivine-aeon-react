@@ -120,7 +120,11 @@ function createControlStore(): ZustandStore<ControlStatus> {
 
       return id;
     },
-    createPhenotype: (name?: string, id?: number) => {
+    createPhenotype: (
+      name?: string,
+      id?: number,
+      variables?: Record<number, PhenotypeStatus>
+    ) => {
       let currentName = name;
       let newPhenotypeCounterValue = undefined;
 
@@ -160,11 +164,11 @@ function createControlStore(): ZustandStore<ControlStatus> {
         ? get().checkNoNamePhenotype(currentName)
         : undefined;
 
-      const newPhenotypeId = highestId + 1;
+      const newPhenotypeId = id ?? highestId + 1;
       const newPhenotype = {
         id: newPhenotypeId,
         name: currentName,
-        variables: {},
+        variables: variables ?? {},
       };
 
       const newState: Partial<ControlStatus> = {

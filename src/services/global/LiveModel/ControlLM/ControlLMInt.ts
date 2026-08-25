@@ -129,12 +129,13 @@ true.
 
   /** Deletes phenotype by id.
    *  @param id (number) => id of the phenotype, which should be deleted
-   * @returns A `Result` object indicating the outcome of the operation.
+   *  @param addIntoUndoRedo (boolean) - Whether to add this change to the undo/redo stack.
+   *  @returns A `Result` object indicating the outcome of the operation.
    * - If the operation was successful, returns a `Success` object containing `true`.
    * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
    * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  removePhenotype(id: number): Result<boolean>;
+  removePhenotype(id: number, addIntoUndoRedo: boolean): Result<boolean>;
 
   // TODO - currently only one phenotype in computation is allowed -- because of that includePhenotypeInComp adds the new phenotype as in computation and removes other phenotypes which were previously included in computations
   /**
