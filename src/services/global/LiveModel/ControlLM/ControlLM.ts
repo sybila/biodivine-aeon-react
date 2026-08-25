@@ -246,10 +246,23 @@ class ControlLM implements ControlLMInt {
     return ok(result.value);
   }
 
-  renamePhenotype(id: number, newName: string) {
+  renamePhenotype(id: number, newName: string, addIntoUndoRedo: boolean) {
     if (!this.liveModel.modelCanBeModified('Control')) {
       return ok(false);
     }
+
+    const oldName = this.controlStore.getState().phenotypes[id].name;
+
+    if (oldName === undefined) {
+      return err("Phenotype with this Id doesn't exist.");
+    }
+
+    let undoFunction = () => {
+      this.controlStore.getState().renamePhenotype(id, oldName);
+    };
+    let redoFunction = () => {
+      this.controlStore.getState().renamePhenotype(id, newName);
+    };
 
     if (id === -1) {
       const createdPhenotype = this.controlStore
@@ -274,12 +287,34 @@ class ControlLM implements ControlLMInt {
       this.messageServ.showSuccess(
         'Cannot rename default phenotype => Created new phenotype containing variables of default phenotype.'
       );
+
+      undoFunction = () => {
+        this.controlStore.getState().shiftPhenotype(createdPhenotype.value, id);
+        this.removePhenotype(createdPhenotype.value);
+      };
+      redoFunction = () => {
+        this.controlStore
+          .getState()
+          .createPhenotype(newName, createdPhenotype.value);
+        this.controlStore.getState().shiftPhenotype(id, createdPhenotype.value);
+      };
     } else {
       const result = this.controlStore.getState().renamePhenotype(id, newName);
 
       if (isErr(result)) {
         return result;
       }
+    }
+
+    if (addIntoUndoRedo) {
+      this.modelUndoRedoStore.getState().addOperation({
+        undo: () => {
+          undoFunction();
+        },
+        redo: () => {
+          redoFunction();
+        },
+      });
     }
 
     return ok(true);

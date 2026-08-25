@@ -167,7 +167,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
     }
 
     const result = messageServ.showFromResult(
-      liveModelServ.Control.renamePhenotype(id, newName),
+      liveModelServ.Control.renamePhenotype(id, newName, true),
       'Failed to rename phenotype'
     );
 

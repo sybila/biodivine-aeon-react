@@ -115,13 +115,17 @@ true.
    *
    * @param id (number) - The ID of the phenotype to be renamed.
    * @param newName (string) - The new name for the phenotype.
-   *
+   * @param addIntoUndoRedo (boolean) - Whether to add this change to the undo/redo stack.
    * @returns A `Result` object indicating the outcome of the operation.
    * - If the operation was successful, returns a `Success` object containing `true`.
    * - If the operation was blocked by another operation, returns a `Success` object containing `false`.
    * - If an error occurs during the process, returns an `Err` object containing an error message.
    */
-  renamePhenotype(id: number, newName: string): Result<boolean>;
+  renamePhenotype(
+    id: number,
+    newName: string,
+    addIntoUndoRedo: boolean
+  ): Result<boolean>;
 
   /** Deletes phenotype by id.
    *  @param id (number) => id of the phenotype, which should be deleted
