@@ -11,7 +11,7 @@ export interface AeonFormatInt {
   getRegexPosition(): RegExp;
   // #endregion
 
-    // #region --- Regulation  ---
+  // #region --- Regulation  ---
   getRegexRegulation(): RegExp;
   // #endregion
 
@@ -26,10 +26,6 @@ export interface AeonFormatInt {
   // #region --- Phenotype  ---
   getRegexPhenotypePrefix(): RegExp;
   getRegexPhenotypeVariable(): RegExp;
-  // #endregion
-
-  // #region --- Results  ---
-  getRegexResults(): RegExp;
   // #endregion
 
   // #region --- Comment ---

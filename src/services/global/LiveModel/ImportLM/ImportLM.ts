@@ -30,7 +30,6 @@ type ModelObject = {
   updateFunctions: Record<string, string>;
   control: Record<string, [boolean, PhenotypeStatus]>;
   phenotypes: Array<Phenotype>;
-  results: Record<string, any>;
 };
 
 class ImportLM implements ImportLMInt {
@@ -275,7 +274,6 @@ class ImportLM implements ImportLMInt {
       updateFunctions: {},
       control: {},
       phenotypes: [],
-      results: {},
     };
 
     const lines = modelString.split('\n');
@@ -293,8 +291,7 @@ class ImportLM implements ImportLMInt {
         this.parsePosition(line) ||
         this.parseUpdateFunction(line) ||
         this.parseControl(line) ||
-        this.parsePhenotype(line) ||
-        this.parseResults(line);
+        this.parsePhenotype(line);
 
       if (parsed) {
         // Apply the parsed data to the result object
@@ -310,10 +307,6 @@ class ImportLM implements ImportLMInt {
           result.control[parsed.data.name] = parsed.data.values;
         else if (parsed.type === 'phenotype')
           result.phenotypes.push(parsed.data);
-        else if (parsed.type === 'results') {
-          result.results.type = parsed.data.type;
-          result.results.data = parsed.data.data;
-        }
         continue;
       }
 
@@ -450,27 +443,6 @@ class ImportLM implements ImportLMInt {
         variables,
       },
     };
-  }
-
-  private parseResults(
-    line: string
-  ): { type: 'results'; data: { type: string; data: unknown } } | null {
-    const regex = this.aeonFormatServ.getRegexResults();
-    const match = line.match(regex);
-    if (!match) return null;
-
-    try {
-      return {
-        type: 'results',
-        data: {
-          type: match[1],
-          data: JSON.parse(match[2]),
-        },
-      };
-    } catch (e) {
-      console.log('Results are invalid: ' + e);
-      return null;
-    }
   }
 
   private isComment(line: string): boolean {

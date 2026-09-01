@@ -47,12 +47,6 @@ class AeonFormat implements AeonFormatInt {
   }
   // #endregion
 
-  // #region --- Results  ---
-  public getRegexResults() {
-    return /^\s*#!results:\s*(attractor|control)\s*:\s*(.+)\s*$/;
-  }
-  // #endregion
-
   // #region --- Comment ---
   public getRegexComment() {
     return /^\s*#.*?$/;
