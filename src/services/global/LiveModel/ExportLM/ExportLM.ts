@@ -13,6 +13,7 @@ import {
   type Position,
   type Variable,
 } from '../../../../types/types';
+import type { AeonFormatInt } from '../../../utilities/AeonFormat/AeonFormatInt';
 import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { LiveModelInt } from '../LiveModelInt';
@@ -33,6 +34,7 @@ class ExportLM implements ExportLMInt {
   private liveModel: LiveModelInt;
   private fileHelpersServ: FileHelpersInt;
   private messageServ: MessageInt;
+  private aeonFormatServ: AeonFormatInt;
 
   private controlStore: ZustandStore<ControlStatus>;
   private modelInfoStore: ZustandStore<ModelInfoState>;
@@ -45,6 +47,7 @@ class ExportLM implements ExportLMInt {
     liveModel: LiveModelInt,
     fileHelpersServ: FileHelpersInt,
     messageServ: MessageInt,
+    aeonFormatServ: AeonFormatInt,
 
     controlStore: ZustandStore<ControlStatus>,
     modelInfoStore: ZustandStore<ModelInfoState>,
@@ -56,6 +59,7 @@ class ExportLM implements ExportLMInt {
     this.liveModel = liveModel;
     this.fileHelpersServ = fileHelpersServ;
     this.messageServ = messageServ;
+    this.aeonFormatServ = aeonFormatServ;
 
     this.controlStore = controlStore;
     this.modelInfoStore = modelInfoStore;

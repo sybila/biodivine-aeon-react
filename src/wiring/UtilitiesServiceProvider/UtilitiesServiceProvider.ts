@@ -1,3 +1,5 @@
+import AeonFormat from '../../services/utilities/AeonFormat/AeonFormat';
+import type { AeonFormatInt } from '../../services/utilities/AeonFormat/AeonFormatInt';
 import BehaviorClassOperations from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperations';
 import type { BehaviorClassOperationsInt } from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import DataFormaters from '../../services/utilities/DataFormaters/DataFormaters';
@@ -13,6 +15,7 @@ import type { WaiterFunctionInt } from '../../services/utilities/WaiterFunction/
 import type { UtilitiesServiceProviderInt } from './UtilitiesServiceProviderInt';
 
 class UtilitiesServiceProvider implements UtilitiesServiceProviderInt {
+  aeonFormatServ: AeonFormatInt;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
   dataFormatersServ: DataFormatersInt;
   fileConvertorsServ: FileConvertorsInt;
@@ -21,6 +24,7 @@ class UtilitiesServiceProvider implements UtilitiesServiceProviderInt {
   waiterFunctionServ: WaiterFunctionInt;
 
   constructor() {
+    this.aeonFormatServ = new AeonFormat();
     this.behaviorClassOperationsServ = new BehaviorClassOperations();
     this.dataFormatersServ = new DataFormaters();
     this.fileConvertorsServ = new FileConvertors();

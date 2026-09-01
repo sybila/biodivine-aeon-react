@@ -1,3 +1,4 @@
+import type { AeonFormatInt } from '../../services/utilities/AeonFormat/AeonFormatInt';
 import type { BehaviorClassOperationsInt } from '../../services/utilities/BehaviorClassOperations/BehaviorClassOperationsInt';
 import type { DataFormatersInt } from '../../services/utilities/DataFormaters/DataFormatersInt';
 import type { FileConvertorsInt } from '../../services/utilities/FileConvertors/FileConvertorsInt';
@@ -8,6 +9,7 @@ import type { WaiterFunctionInt } from '../../services/utilities/WaiterFunction/
 // TODO - Add time
 /** Interface which defines provider of utility services. */
 export interface UtilitiesServiceProviderInt {
+  aeonFormatServ: AeonFormatInt;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
   dataFormatersServ: DataFormatersInt;
   fileConvertorsServ: FileConvertorsInt;

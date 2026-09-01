@@ -10,6 +10,7 @@ import {
   type PhenotypeStatus,
   type Variable,
 } from '../../../../types/types';
+import type { AeonFormatInt } from '../../../utilities/AeonFormat/AeonFormatInt';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { WarningInt } from '../../Warning/WarningInt';
@@ -41,6 +42,7 @@ class ImportLM implements ImportLMInt {
   private warningServ: WarningInt;
   private messageServ: MessageInt;
   private loadingServ: LoadingInt;
+  private aeonFormatServ: AeonFormatInt;
 
   private resultsStatusStore: ZustandStore<ResultsStatus>;
   private variablesStore: ZustandStore<VariablesStatus>;
@@ -51,6 +53,7 @@ class ImportLM implements ImportLMInt {
     warningServ: WarningInt,
     messageServ: MessageInt,
     loadingServ: LoadingInt,
+    aeonFormatServ: AeonFormatInt,
 
     resultsStatusStore: ZustandStore<ResultsStatus>,
     variablesStore: ZustandStore<VariablesStatus>,
@@ -60,6 +63,7 @@ class ImportLM implements ImportLMInt {
     this.warningServ = warningServ;
     this.messageServ = messageServ;
     this.loadingServ = loadingServ;
+    this.aeonFormatServ = aeonFormatServ;
 
     this.resultsStatusStore = resultsStatusStore;
     this.variablesStore = variablesStore;
@@ -334,8 +338,7 @@ class ImportLM implements ImportLMInt {
       observable: boolean;
     };
   } | null {
-    const regex =
-      /^\s*([a-zA-Z0-9_{}]+)\s*-([>|?])(\??)\s*([a-zA-Z0-9_{}]+)\s*$/;
+    const regex = this.aeonFormatServ.getRegexRegulation();
     const match = line.match(regex);
     if (!match) return null;
 
@@ -355,7 +358,7 @@ class ImportLM implements ImportLMInt {
   }
 
   private parseModelName(line: string): { type: 'name'; data: string } | null {
-    const regex = /^\s*#name:(.+)$/;
+    const regex = this.aeonFormatServ.getRegexModelName();
     const match = line.match(regex);
     return match ? { type: 'name', data: match[1] } : null;
   }
@@ -363,7 +366,7 @@ class ImportLM implements ImportLMInt {
   private parseModelDescription(
     line: string
   ): { type: 'description'; data: string } | null {
-    const regex = /^\s*#description:(.+)$/;
+    const regex = this.aeonFormatServ.getRegexModelDescription();
     const match = line.match(regex);
     return match ? { type: 'description', data: match[1] } : null;
   }
@@ -372,7 +375,7 @@ class ImportLM implements ImportLMInt {
     type: 'position';
     data: { name: string; coords: [number, number] };
   } | null {
-    const regex = /^\s*#position:([a-zA-Z0-9_{}]+):(.+?),(.+?)\s*$/;
+    const regex = this.aeonFormatServ.getRegexPosition();
     const match = line.match(regex);
     if (!match) return null;
 
@@ -394,7 +397,7 @@ class ImportLM implements ImportLMInt {
   private parseUpdateFunction(
     line: string
   ): { type: 'updateFunction'; data: { name: string; func: string } } | null {
-    const regex = /^\s*\$\s*([a-zA-Z0-9_{}]+)\s*:\s*(.+)\s*$/;
+    const regex = this.aeonFormatServ.getRegexUpdateFunction();
     const match = line.match(regex);
     return match
       ? { type: 'updateFunction', data: { name: match[1], func: match[2] } }
@@ -405,8 +408,7 @@ class ImportLM implements ImportLMInt {
     type: 'control';
     data: { name: string; values: [boolean, PhenotypeStatus] };
   } | null {
-    const regex =
-      /^\s*#!control:([a-zA-Z0-9_{}]+):(true|false),(true|false|null)\s*$/;
+    const regex = this.aeonFormatServ.getRegexControl();
     const match = line.match(regex);
     if (!match) return null;
 
@@ -425,8 +427,8 @@ class ImportLM implements ImportLMInt {
   private parsePhenotype(
     line: string
   ): { type: 'phenotype'; data: Phenotype } | null {
-    const prefixRegex = /^\s*#!phen:([a-zA-Z0-9_{}]+)/;
-    const varRegex = /([a-zA-Z0-9_{}]+)\s+(true|false|null)/g;
+    const prefixRegex = this.aeonFormatServ.getRegexPhenotypePrefix();
+    const varRegex = this.aeonFormatServ.getRegexPhenotypeVariable();
 
     const prefixMatch = line.match(prefixRegex);
     if (!prefixMatch) return null;
@@ -453,7 +455,7 @@ class ImportLM implements ImportLMInt {
   private parseResults(
     line: string
   ): { type: 'results'; data: { type: string; data: unknown } } | null {
-    const regex = /^\s*#!results:\s*(attractor|control)\s*:\s*(.+)\s*$/;
+    const regex = this.aeonFormatServ.getRegexResults();
     const match = line.match(regex);
     if (!match) return null;
 
@@ -472,7 +474,9 @@ class ImportLM implements ImportLMInt {
   }
 
   private isComment(line: string): boolean {
-    return /^\s*#.*?$/.test(line);
+    const regex = this.aeonFormatServ.getRegexComment();
+
+    return regex.test(line);
   }
 
   // #endregion

@@ -96,6 +96,7 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
       this.tabOperationsServ,
       this.messageServ,
       this.loadingServ,
+      utilitiesServiceProvider.aeonFormatServ,
       storesProvider.loadedModelStore,
       storesProvider.tabsStore,
       storesProvider.resultsStatusStore,

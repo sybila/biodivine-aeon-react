@@ -11,6 +11,7 @@ import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { ComputationModes } from '../../../types/types';
+import type { AeonFormatInt } from '../../utilities/AeonFormat/AeonFormatInt';
 import type { FileHelpersInt } from '../../utilities/FileHelpers/FileHelpersInt';
 import type { ComputationManagerInt } from '../ComputationManager/ComputationManagerInt';
 import type { LoadingInt } from '../Loading/LoadingInt';
@@ -65,6 +66,7 @@ class LiveModel implements LiveModelInt {
     tabOperationsServ: TabOperationsInt,
     messageServ: MessageInt,
     loadingServ: LoadingInt,
+    aeonFormatServ: AeonFormatInt,
 
     loadedModelStore: ZustandStore<ModelState>,
     tabStore: ZustandStore<TabsState>,
@@ -92,7 +94,8 @@ class LiveModel implements LiveModelInt {
     this.intializeSubmodules(
       fileHelpersServ,
       loadingServ,
-
+      aeonFormatServ,
+      
       variablesStore,
       regulationsStore,
       updateFunctionsStore,
@@ -141,6 +144,7 @@ class LiveModel implements LiveModelInt {
   private intializeSubmodules(
     fileHelpersServ: FileHelpersInt,
     loadingServ: LoadingInt,
+    aeonFormatServ: AeonFormatInt,
 
     variablesStore: ZustandStore<VariablesStatus>,
     regulationsStore: ZustandStore<RegulationsStatus>,
@@ -191,6 +195,7 @@ class LiveModel implements LiveModelInt {
       this.warningServ,
       this.messageServ,
       loadingServ,
+      aeonFormatServ,
       this.resultsStatusStore,
       variablesStore,
       this.tabStore
@@ -199,6 +204,7 @@ class LiveModel implements LiveModelInt {
       this,
       fileHelpersServ,
       this.messageServ,
+      aeonFormatServ,
       controlStore,
       modelInfoStore,
       regulationsStore,
