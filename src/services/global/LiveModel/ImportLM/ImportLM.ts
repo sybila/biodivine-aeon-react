@@ -3,13 +3,8 @@ import type { ResultsStatus } from '../../../../stores/ComputationManager/Result
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import { err, isErr, ok, type Result } from '../../../../types/result';
-import {
-  EdgeMonotonicity,
-  PHENOTYPE_STATUS,
-  type PhenotypeStatus,
-  type Variable,
-} from '../../../../types/types';
+import { err, isErr, ok } from '../../../../types/result';
+import { type PhenotypeStatus, type Variable } from '../../../../types/types';
 import type { AeonFormatInt } from '../../../utilities/AeonFormat/AeonFormatInt';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
@@ -20,16 +15,6 @@ import type { ImportLMInt } from './ImportLMInt';
 type Phenotype = {
   phenName: string;
   variables: Array<{ varName: string; phenValue: PhenotypeStatus }>;
-};
-
-type ModelObject = {
-  modelName: string;
-  modelDescription: string;
-  varPositions: Record<string, any>;
-  regulations: any[];
-  updateFunctions: Record<string, string>;
-  control: Record<string, [boolean, PhenotypeStatus]>;
-  phenotypes: Array<Phenotype>;
 };
 
 class ImportLM implements ImportLMInt {
@@ -215,9 +200,10 @@ class ImportLM implements ImportLMInt {
         false,
         true
       );
-      if (error !== undefined) {
+
+      if (isErr(error)) {
         this.messageServ.showError(
-          'Error while setting update function: ' + error
+          'Error while setting update function: ' + error.error
         );
       }
     }
@@ -259,198 +245,6 @@ class ImportLM implements ImportLMInt {
     });
   }
 
-  /**
-   * Parses model into intermediate objects.
-   * Returns model name and model description.
-   * modelString is model in the form of Aeon string
-   * All the other parameters are empty objects to be filled with data from the parsed Aeon string
-   */
-  private parseAeonFile(modelString: string): Result<ModelObject> {
-    const result: ModelObject = {
-      modelName: '',
-      modelDescription: '',
-      regulations: [],
-      varPositions: {},
-      updateFunctions: {},
-      control: {},
-      phenotypes: [],
-    };
-
-    const lines = modelString.split('\n');
-
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-
-      if (line.length === 0) continue; // skip whitespace
-
-      // Try to match against specific parsers in order
-      const parsed =
-        this.parseRegulation(line) ||
-        this.parseModelName(line) ||
-        this.parseModelDescription(line) ||
-        this.parsePosition(line) ||
-        this.parseUpdateFunction(line) ||
-        this.parseControl(line) ||
-        this.parsePhenotype(line);
-
-      if (parsed) {
-        // Apply the parsed data to the result object
-        if (parsed.type === 'regulation') result.regulations.push(parsed.data);
-        else if (parsed.type === 'name') result.modelName = parsed.data;
-        else if (parsed.type === 'description')
-          result.modelDescription += parsed.data;
-        else if (parsed.type === 'position')
-          result.varPositions[parsed.data.name] = parsed.data.coords;
-        else if (parsed.type === 'updateFunction')
-          result.updateFunctions[parsed.data.name] = parsed.data.func;
-        else if (parsed.type === 'control')
-          result.control[parsed.data.name] = parsed.data.values;
-        else if (parsed.type === 'phenotype')
-          result.phenotypes.push(parsed.data);
-        continue;
-      }
-
-      // If no parser matched, check if it's a comment
-      if (!this.isComment(line)) {
-        return err('Unexpected line in file: ' + line);
-      }
-    }
-
-    // Post-processing
-    result.modelDescription = result.modelDescription.replace(/\\n/g, '\n');
-
-    return ok(result);
-  }
-
-  private parseRegulation(line: string): {
-    type: 'regulation';
-    data: {
-      regulatorName: string;
-      targetName: string;
-      monotonicity: EdgeMonotonicity;
-      observable: boolean;
-    };
-  } | null {
-    const regex = this.aeonFormatServ.getRegexRegulation();
-    const match = line.match(regex);
-    if (!match) return null;
-
-    let monotonicity: EdgeMonotonicity = EdgeMonotonicity.unspecified;
-    if (match[2] === '>') monotonicity = EdgeMonotonicity.activation;
-    if (match[2] === '|') monotonicity = EdgeMonotonicity.inhibition;
-
-    return {
-      type: 'regulation',
-      data: {
-        regulatorName: match[1],
-        targetName: match[4],
-        monotonicity,
-        observable: match[3].length === 0,
-      },
-    };
-  }
-
-  private parseModelName(line: string): { type: 'name'; data: string } | null {
-    const regex = this.aeonFormatServ.getRegexModelName();
-    const match = line.match(regex);
-    return match ? { type: 'name', data: match[1] } : null;
-  }
-
-  private parseModelDescription(
-    line: string
-  ): { type: 'description'; data: string } | null {
-    const regex = this.aeonFormatServ.getRegexModelDescription();
-    const match = line.match(regex);
-    return match ? { type: 'description', data: match[1] } : null;
-  }
-
-  private parsePosition(line: string): {
-    type: 'position';
-    data: { name: string; coords: [number, number] };
-  } | null {
-    const regex = this.aeonFormatServ.getRegexPosition();
-    const match = line.match(regex);
-    if (!match) return null;
-
-    const x = parseFloat(match[2]);
-    const y = parseFloat(match[3]);
-
-    // Check for NaN
-    if (x !== x || y !== y) return null;
-
-    return {
-      type: 'position',
-      data: {
-        name: match[1],
-        coords: [x, y],
-      },
-    };
-  }
-
-  private parseUpdateFunction(
-    line: string
-  ): { type: 'updateFunction'; data: { name: string; func: string } } | null {
-    const regex = this.aeonFormatServ.getRegexUpdateFunction();
-    const match = line.match(regex);
-    return match
-      ? { type: 'updateFunction', data: { name: match[1], func: match[2] } }
-      : null;
-  }
-
-  private parseControl(line: string): {
-    type: 'control';
-    data: { name: string; values: [boolean, PhenotypeStatus] };
-  } | null {
-    const regex = this.aeonFormatServ.getRegexControl();
-    const match = line.match(regex);
-    if (!match) return null;
-
-    return {
-      type: 'control',
-      data: {
-        name: match[1],
-        values: [
-          match[2] === 'true',
-          this.convertStringToPhenotypeStatus(match[3]),
-        ],
-      },
-    };
-  }
-
-  private parsePhenotype(
-    line: string
-  ): { type: 'phenotype'; data: Phenotype } | null {
-    const prefixRegex = this.aeonFormatServ.getRegexPhenotypePrefix();
-    const varRegex = this.aeonFormatServ.getRegexPhenotypeVariable();
-
-    const prefixMatch = line.match(prefixRegex);
-    if (!prefixMatch) return null;
-
-    const variables: { varName: string; phenValue: PhenotypeStatus }[] = [];
-    let varMatch: RegExpExecArray | null;
-
-    while ((varMatch = varRegex.exec(line)) !== null) {
-      variables.push({
-        varName: varMatch[1],
-        phenValue: this.convertStringToPhenotypeStatus(varMatch[2]),
-      });
-    }
-
-    return {
-      type: 'phenotype',
-      data: {
-        phenName: prefixMatch[1],
-        variables,
-      },
-    };
-  }
-
-  private isComment(line: string): boolean {
-    const regex = this.aeonFormatServ.getRegexComment();
-
-    return regex.test(line);
-  }
-
   // #endregion
 
   // #region --- Import Aeon ---
@@ -485,7 +279,7 @@ class ImportLM implements ImportLMInt {
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
 
-    const parsingResult = this.parseAeonFile(modelString);
+    const parsingResult = this.aeonFormatServ.parseAeonFile(modelString);
 
     if (isErr(parsingResult)) {
       this.loadingServ.endLoading();
@@ -599,25 +393,6 @@ class ImportLM implements ImportLMInt {
         'Import Error: Failed to load model from local storage. '
       );
     }
-  }
-
-  // #endregion
-
-  // #region --- Utilities ----
-
-  /**
-   * Converts a string representation of a phenotype status into the corresponding
-   * `PhenotypeStatus` enum.
-   *
-   * @param value The string value to convert.
-   * @returns The `PhenotypeStatus` enum value representing the input string.
-   */
-  private convertStringToPhenotypeStatus(value: string): PhenotypeStatus {
-    return value == 'true'
-      ? PHENOTYPE_STATUS.InPhenotypeTrue
-      : value == 'false'
-        ? PHENOTYPE_STATUS.InPhenotypeFalse
-        : PHENOTYPE_STATUS.NotInPhenotype;
   }
 
   // #endregion
