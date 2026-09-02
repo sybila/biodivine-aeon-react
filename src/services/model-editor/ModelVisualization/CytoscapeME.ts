@@ -501,9 +501,9 @@ class CytoscapeME implements ModelVisualizationInt {
     position: [number, number] = [0, 0],
     fit: boolean = true
   ) {
-    let node = this.cytoscape.add({
+    const node = this.cytoscape.add({
       group: 'nodes',
-      data: { id: id, name: name },
+      data: { id: id.toString(), name: name },
       position: { x: position[0], y: position[1] },
     });
 
@@ -573,6 +573,9 @@ class CytoscapeME implements ModelVisualizationInt {
           duration: 1,
         }
       );
+    } else {
+      // When this line is removed and there are multiple added variables in the row, the nodes do not appear in the canvas
+      node.boundingBox();
     }
   }
 

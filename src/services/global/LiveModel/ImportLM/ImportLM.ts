@@ -92,11 +92,11 @@ class ImportLM implements ImportLMInt {
     const res =
       control == undefined
         ? this.liveModel.Variables.addVariable(
-            { force: true, addIntoUndoRedo: false, fitVisualization: true },
+            { force: true, addIntoUndoRedo: false, fitVisualization: false },
             { name: name, position: position }
           )
         : this.liveModel.Variables.addVariable(
-            { force: true, addIntoUndoRedo: false, fitVisualization: true },
+            { force: true, addIntoUndoRedo: false, fitVisualization: false },
             {
               name: name,
               position: position,
