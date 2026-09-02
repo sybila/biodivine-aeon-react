@@ -29,9 +29,9 @@ class VariablesLM implements VariablesLMInt {
   private addNodeFromVisualizationFunction: (
     id: number,
     variableName: string,
-    fit?: boolean,
-    position?: Position
-  ) => void = (_: number, __: string, ___?: boolean, ____?: Position) => {
+    position?: Position,
+    fit?: boolean
+  ) => void = (_: number, __: string, ___?: Position, ____?: boolean) => {
     console.warn(
       'VariablesLM: No function set to add node from model visualization'
     );
@@ -109,8 +109,8 @@ class VariablesLM implements VariablesLMInt {
     func: (
       id: number,
       variableName: string,
-      fit?: boolean,
-      position?: Position
+      position?: Position,
+      fit?: boolean
     ) => void
   ): void {
     if (func != undefined) {
@@ -147,15 +147,33 @@ class VariablesLM implements VariablesLMInt {
   // #region --- Variable Actions ---
 
   public addVariable(
-    force: boolean,
-    addIntoUndoRedo: boolean,
-    position: Position = [0.0, 0.0],
-    id?: number,
-    name?: string,
-    controlEnabled: boolean = true,
-    phenotype: PhenotypeStatus = PHENOTYPE_STATUS.NotInPhenotype,
-    fitVisualization: boolean = true
+    options: {
+      force: boolean;
+      addIntoUndoRedo: boolean;
+      fitVisualization?: boolean;
+    },
+    varInfo?: {
+      id?: number;
+      name?: string;
+      position?: Position;
+      controlEnabled?: boolean;
+      phenotype?: PhenotypeStatus;
+    }
   ) {
+    const {
+      force = false,
+      addIntoUndoRedo = false,
+      fitVisualization = true,
+    } = options;
+
+    const {
+      id = undefined,
+      name = undefined,
+      position = [0.0, 0.0],
+      controlEnabled = true,
+      phenotype = PHENOTYPE_STATUS.NotInPhenotype,
+    } = varInfo || {};
+
     if (!force && !this.liveModel.modelCanBeModified()) {
       return ok(undefined);
     }
@@ -182,8 +200,8 @@ class VariablesLM implements VariablesLMInt {
     this.addNodeFromVisualizationFunction(
       variableId,
       variableName,
-      fitVisualization,
-      position
+      position,
+      fitVisualization
     );
 
     this.computationManagerServ.resetMaxSize();
@@ -201,13 +219,14 @@ class VariablesLM implements VariablesLMInt {
         undo: () => this.removeVariable(variableId, false),
         redo: () => {
           const redoRes = this.addVariable(
-            false,
-            false,
-            position,
-            variableId,
-            variableName,
-            controlEnabled,
-            phenotype
+            { force: false, addIntoUndoRedo: false },
+            {
+              id: variableId,
+              name: variableName,
+              position,
+              controlEnabled,
+              phenotype,
+            }
           );
           return isErr(redoRes) ? redoRes : ok(redoRes.value != undefined);
         },
@@ -306,13 +325,15 @@ class VariablesLM implements VariablesLMInt {
       this.undoRedoStore.getState().addOperation({
         undo: () => {
           const addRes = this.addVariable(
-            false,
-            false,
-            position ?? [0, 0],
-            variable.id,
-            variable.name,
-            controlInfo?.controlEnabled ?? true,
-            controlInfo?.phenotype ?? PHENOTYPE_STATUS.NotInPhenotype
+            { force: false, addIntoUndoRedo: false },
+            {
+              id: variable.id,
+              name: variable.name,
+              position: position ?? [0, 0],
+              controlEnabled: controlInfo?.controlEnabled ?? true,
+              phenotype:
+                controlInfo?.phenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
+            }
           );
 
           if (isErr(addRes)) {

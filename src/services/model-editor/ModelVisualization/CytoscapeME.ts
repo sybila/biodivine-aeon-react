@@ -132,14 +132,8 @@ class CytoscapeME implements ModelVisualizationInt {
         now - this.lastClickTimestamp < DOUBLE_CLICK_DELAY
       ) {
         this.liveModel.Variables.addVariable(
-          false,
-          true,
-          [e.position['x'], e.position['y']],
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          false
+          { force: false, addIntoUndoRedo: true, fitVisualization: false },
+          { position: [e.position['x'], e.position['y']] }
         );
       }
       this.lastClickTimestamp = now;
@@ -180,8 +174,8 @@ class CytoscapeME implements ModelVisualizationInt {
     );
 
     this.liveModel.Variables.setAddNodeFromVisualizationFunction(
-      (id: number, name: string, fit?: boolean, position?: Position) => {
-        this.addNode(id, name, position, fit ?? true);
+      (id: number, name: string, position?: Position, fit?: boolean) => {
+        this.addNode(id, name, position ?? [0, 0], fit ?? true);
       }
     );
     this.liveModel.Variables.setRemoveNodeFromVisualizationFunction(
@@ -508,6 +502,7 @@ class CytoscapeME implements ModelVisualizationInt {
     fit: boolean = true
   ) {
     let node = this.cytoscape.add({
+      group: 'nodes',
       data: { id: id, name: name },
       position: { x: position[0], y: position[1] },
     });
@@ -848,7 +843,7 @@ class CytoscapeME implements ModelVisualizationInt {
       this.fitHighlightSubset(nodes);
       this.cytoscape.fit(nodes, 100);
     } else {
-      this.cytoscape.fit();
+      this.cytoscape.fit(undefined, 5);
     }
 
     //this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding

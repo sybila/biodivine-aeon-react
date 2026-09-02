@@ -12,8 +12,8 @@ export interface VariablesLMInt {
     func: (
       id: number,
       variableName: string,
-      fit?: boolean,
-      position?: Position
+      position?: Position,
+      fit?: boolean
     ) => void
   ): void;
 
@@ -37,30 +37,37 @@ export interface VariablesLMInt {
   // #region --- Variable Actions ---
 
   /**
-   * Adds a new variable to the model.
-   *
-   * @param force - A boolean indicating whether the operation should be executed, even if it would be blocked by another operation.
-   * @param addIntoUndoRedo - A boolean indicating whether to add this operation into the undo/redo stack.
-   * @param position - The position where the newly created variable should be placed in the visualization.
-   * @param id - The ID of the variable to be created.
-   * @param name - The name of the variable to be created.
-   * @param controlEnabled - The control-enabled value for the newly created variable.
-   * @param phenotype - The phenotype value of the new variable in the currently edited phenotype.
-   * @param fitVisualization - A boolean indicating whether to fit the visualization to the whole model after the variable is created.
-   * @returns A `Result` object detailing the outcome of the operation.
-   * - If the operation is successful, returns a `Success` object containing the ID of the newly created variable.
-   * - If the operation is blocked, returns a `Success` object with `undefined`.
-   * - If an error occurs, returns an `Err` object containing an error message.
-   */
+ * Adds a new variable to the model.
+ *
+ * @param options - An object containing options for the operation.
+ * @param options.force - A boolean indicating whether the operation should be executed, even if it would be blocked by another operation.
+ * @param options.addIntoUndoRedo - A boolean indicating whether to add this operation into the undo/redo stack.
+ * @param options.fitVisualization (optional) - A boolean indicating whether to fit the visualization to the whole model after the variable is created. If not provided, defaults to `true`.
+ * @param varInfo (optional) - An object containing information about the variable to be created.
+ * @param varInfo.id - The ID of the variable to be created. If not provided, a new unique ID will be generated.
+ * @param varInfo.name - The name of the variable to be created. If not provided, a default name will be generated.
+ * @param varInfo.position - The position where the newly created variable should be placed in the visualization. If not provided, the variable will be positioned based on the model's layout rules.
+ * @param varInfo.controlEnabled - The control-enabled value for the newly created variable. If not provided, defaults to `true`.
+ * @param varInfo.phenotype - The phenotype value of the new variable in the currently edited phenotype. If not provided, defaults to 
+`PhenotypeStatus.Default`.
+ * @returns A `Result` object detailing the outcome of the operation.
+ * - If the operation is successful, returns a `Success` object containing the ID of the newly created variable.
+ * - If the operation is blocked, returns a `Success` object with `undefined`.
+ * - If an error occurs, returns an `Err` object containing an error message.
+ */
   addVariable(
-    force: boolean,
-    addIntoUndoRedo: boolean,
-    position?: Position,
-    id?: number,
-    name?: string,
-    controlEnabled?: boolean,
-    phenotype?: PhenotypeStatus,
-    fitVisualization?: boolean
+    options: {
+      force: boolean;
+      addIntoUndoRedo: boolean;
+      fitVisualization?: boolean;
+    },
+    varInfo?: {
+      id?: number;
+      name?: string;
+      position?: Position;
+      controlEnabled?: boolean;
+      phenotype?: PhenotypeStatus;
+    }
   ): Result<number | undefined>;
 
   /** Removes variable and displays warnings if necessary

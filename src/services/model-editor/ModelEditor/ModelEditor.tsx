@@ -86,7 +86,10 @@ class ModelEditor implements ModelEditorInt {
   // #region --- Variable Actions ---
 
   public addVariable() {
-    const newVariableId = this.liveModelServ.Variables.addVariable(true, true);
+    const newVariableId = this.liveModelServ.Variables.addVariable({
+      force: true,
+      addIntoUndoRedo: true,
+    });
 
     if (!isErr(newVariableId) && newVariableId.value !== undefined) {
       this.zoomOnVariable(newVariableId.value);
