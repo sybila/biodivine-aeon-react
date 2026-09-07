@@ -15,7 +15,7 @@ import type {
   ControlResults,
   Decisions,
   DecisionsTSSD,
-  ModelObject,
+  WrappedModelString,
   NodeDataBE,
   NodeDataTSSD,
   StabilityAnalysisModes,
@@ -380,7 +380,7 @@ class ComputationManager implements ComputationManagerInt {
 
   public openWitnessCallback(
     error: string | undefined,
-    response: ModelObject | undefined
+    response: WrappedModelString | undefined
   ): void {
     if (error || !response || !response.model) {
       this.messageServ.showError(

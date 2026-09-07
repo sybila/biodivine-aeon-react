@@ -11,7 +11,7 @@ import type {
   ControlResults,
   Decisions,
   DecisionsTSSD,
-  ModelObject,
+  WrappedModelString,
   NodeDataBE,
   NodeDataTSSD,
   StabilityAnalysisModes,
@@ -446,12 +446,12 @@ class ComputeEngine implements ComputeEngineInt {
     behaviorString: string,
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void {
     this.backendRequest(
       '/get_witness/' + behaviorString,
-      (error: string | undefined, response: ModelObject | undefined) => {
+      (error: string | undefined, response: WrappedModelString | undefined) => {
         if (callback !== undefined) {
           callback(error, response);
         }
@@ -464,12 +464,12 @@ class ComputeEngine implements ComputeEngineInt {
     nodeId: number,
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void {
     this.backendRequest(
       '/get_tree_witness/' + nodeId,
-      (error: string | undefined, response: ModelObject | undefined) => {
+      (error: string | undefined, response: WrappedModelString | undefined) => {
         if (callback !== undefined) {
           callback(error, response);
         }
@@ -485,7 +485,7 @@ class ComputeEngine implements ComputeEngineInt {
     vector: string[],
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void {
     this.backendRequest(
@@ -497,7 +497,7 @@ class ComputeEngine implements ComputeEngineInt {
         encodeURI(variableName) +
         '/' +
         encodeURI('[' + vector + ']'),
-      (error: string | undefined, response: ModelObject | undefined) => {
+      (error: string | undefined, response: WrappedModelString | undefined) => {
         if (callback !== undefined) {
           callback(error, response);
         }

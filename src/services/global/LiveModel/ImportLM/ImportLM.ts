@@ -276,7 +276,8 @@ class ImportLM implements ImportLMInt {
     // Disable on-the-fly server checks.
     this.liveModel.disable_dynamic_validation = true;
 
-    const parsingResult = this.aeonFormatServ.parseAeonFile(modelString);
+    const parsingResult =
+      this.aeonFormatServ.Parsers.parseAeonFile(modelString);
 
     if (isErr(parsingResult)) {
       this.loadingServ.endLoading();

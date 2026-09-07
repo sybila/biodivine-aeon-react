@@ -7,9 +7,7 @@ import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFu
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import {
-  PHENOTYPE_STATUS,
   type fileType,
-  type PhenotypeStatus,
   type Position,
   type Variable,
 } from '../../../../types/types';
@@ -155,100 +153,37 @@ class ExportLM implements ExportLMInt {
       return undefined;
     }
 
-    return [
-      this.exportName(),
-      this.exportDescription(),
-      this.exportVariables(defaultPhenotypeId),
-      this.exportPhenotypes(),
-    ].join('');
-  }
+    return this.aeonFormatServ.Serializers.serializeAeonIntoString({
+      getModelName: () => this.modelInfoStore.getState().getModelName(),
+      getModelDescription: () =>
+        this.modelInfoStore.getState().getModelDescription(),
 
-  private exportName(): string {
-    const modelName = this.modelInfoStore.getState().getModelName();
-    return modelName ? `#name:${modelName}\n` : '';
-  }
+      getModelVariables: () => variables,
+      getModelVariableName: (varId: number) =>
+        this.variablesStore.getState().getVariableName(varId),
+      getVariablePosition: (varId: number) =>
+        this.getNodePositionFunction(varId),
+      getVariableControlEnabled: (varId: number) =>
+        this.controlStore.getState().getVariableControlEnabled(varId),
+      getVariableDefaultPhenStatus: (varId: number) =>
+        this.controlStore
+          .getState()
+          .getVariablePhenotype(varId, defaultPhenotypeId),
+      getVariableUpdateFunction: (varId: number) =>
+        this.updateFunctionsStore.getState().getUpdateFunctionId(varId),
+      getVariableRegulators: (varId: number) =>
+        this.regulationsStore.getState().regulationsOf(varId),
 
-  private exportDescription(): string {
-    const modelDescription = this.modelInfoStore
-      .getState()
-      .getModelDescription();
-    return modelDescription
-      ? `#description:${modelDescription.replace(/\n/g, '\\n')}\n`
-      : '';
-  }
+      getModelPhenotypes: () => {
+        const phenotypes = {
+          ...this.controlStore.getState().getAllPhenotypes(),
+        };
 
-  private exportVariables(defaultPhenotypeId: number): string {
-    const variables = this.variablesStore.getState().getAllVariables();
-    return variables
-      .map((variable) => this.exportVariable(variable, defaultPhenotypeId))
-      .join('');
-  }
+        delete phenotypes[defaultPhenotypeId];
 
-  private exportVariable(
-    variable: Variable,
-    defaultPhenotypeId: number
-  ): string {
-    let result = '';
-
-    const variableName = variable?.name;
-    const position = this.getNodePositionFunction(variable.id);
-    if (position !== undefined) {
-      result += `#position:${variableName}:${position}\n`;
-    }
-
-    const controlEnabled = this.controlStore
-      .getState()
-      .getVariableControlEnabled(variable.id);
-    const phenotypeStatus =
-      this.controlStore
-        .getState()
-        .getVariablePhenotype(variable.id, defaultPhenotypeId) ??
-      PHENOTYPE_STATUS.NotInPhenotype;
-
-    result += `#!control:${variableName}:${controlEnabled ?? true},${
-      phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeTrue
-        ? true
-        : phenotypeStatus === PHENOTYPE_STATUS.InPhenotypeFalse
-          ? false
-          : null
-    }\n`;
-
-    const fun = this.updateFunctionsStore
-      .getState()
-      .getUpdateFunctionId(variable.id);
-    if (fun !== undefined) {
-      result += `$${variableName}:${fun.functionString}\n`;
-    }
-
-    const regulations = this.regulationsStore
-      .getState()
-      .regulationsOf(variable.id);
-    regulations.forEach((reg) => {
-      result += this.liveModel.Regulations.regulationToString(reg) + '\n';
+        return phenotypes;
+      },
     });
-
-    return result;
-  }
-
-  private exportPhenotypes(): string {
-    const phenotypes = Object.entries(
-      this.controlStore.getState().getAllPhenotypes()
-    );
-
-    return phenotypes
-      .map(([id, phen]) => {
-        if (id === '-1') {
-          return '';
-        }
-
-        return `#!phen:${phen.name},${Object.entries(phen.variables)
-          .map(
-            ([varId, phenStatus]) =>
-              `${this.variablesStore.getState().getVariableName(Number(varId))} ${this.convertPhenotypeStatusToString(phenStatus)}`
-          )
-          .join(' ')}`;
-      })
-      .join('\n');
   }
 
   public saveModel() {
@@ -308,24 +243,6 @@ class ExportLM implements ExportLMInt {
     }
 
     this.fileHelpersServ.downloadFile(`${fileName}${fileEnding}`, modelString);
-  }
-
-  // #endregion
-
-  // #region --- Utilities ---
-
-  /**
-   * Converts a PhenotypeStatus value to a string based on predefined mappings.
-   *
-   * @param value - The PhenotypeStatus value to be converted.
-   * @returns A string representation of the PhenotypeStatus value. Returns 'true' if the value is 'InPhenotypeTrue', 'false' if it is 'InPhenotypeFalse', and 'null' otherwise.
-   */
-  private convertPhenotypeStatusToString(value: PhenotypeStatus): string {
-    return value == PHENOTYPE_STATUS.InPhenotypeTrue
-      ? 'true'
-      : value == PHENOTYPE_STATUS.InPhenotypeFalse
-        ? 'false'
-        : 'null';
   }
 
   // #endregion

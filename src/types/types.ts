@@ -102,7 +102,7 @@ export type ModelSave = {
   modelAeonString: string;
 };
 
-export type ModelObject = {
+export type WrappedModelString = {
   model: string;
 };
 

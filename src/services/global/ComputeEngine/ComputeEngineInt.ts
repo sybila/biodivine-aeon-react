@@ -4,7 +4,7 @@ import type {
   ControlPreComputationInfo,
   Decisions,
   DecisionsTSSD,
-  ModelObject,
+  WrappedModelString,
   NodeDataBE,
   NodeDataTSSD,
   StabilityAnalysisModes,
@@ -70,7 +70,7 @@ export interface ComputeEngineInt {
     behaviorString: string,
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void;
 
@@ -78,7 +78,7 @@ export interface ComputeEngineInt {
     nodeId: number,
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void;
 
@@ -89,7 +89,7 @@ export interface ComputeEngineInt {
     vector: string[],
     callback: (
       error: string | undefined,
-      response: ModelObject | undefined
+      response: WrappedModelString | undefined
     ) => void
   ): void;
 
