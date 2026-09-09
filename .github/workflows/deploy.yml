@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v7
+        - name: Set up Node.js
+          uses: actions/setup-node@v7
+          with:
+            node-version: 24
+        - name: Install dependencies
+          run: npm ci
+        - name: Run build
+          env:
+            BASE_URL: "aeon/snapshots/${{ github.ref_name }}"
+          run: npm run build
+        # Rename dist to the tag name and zip it
+        - name: Package dist
+          run: |
+            TAG="${GITHUB_REF_NAME}"
+            cp -r dist "$TAG"
+            zip -r "${TAG}.zip" "$TAG"
+        # Create a GitHub release and upload the zip as an asset
+        - name: Create release and upload asset
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            TAG: ${{ github.ref_name }}
+          run: |
+            gh release create "$TAG" "${TAG}.zip" \
+                --title "$TAG" \
+                --generate-notes \
+                --verify-tag
+        # Connect to the internal network.
+        - name: Tailscale
+          uses: tailscale/github-action@v4
+          with:
+            oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+            oauth-secret:    ${{ secrets.TS_OAUTH_SECRET }}
+            tags: tag:ci
+        - name: Deploy
+          env:
+            TS_HOST: sybila-infra
+            DEPLOY_DIR: /root/sybila-infra/stratus/infra/biodivine/aeon/snapshots
+            TAG: ${{ github.ref_name }}
+          run: |
+            ssh -o StrictHostKeyChecking=accept-new root@"$TS_HOST" true
+            scp "${TAG}.zip" root@"$TS_HOST:/tmp/${TAG}.zip"
+            ssh root@"$TS_HOST" "
+                rm -rf '$DEPLOY_DIR/${TAG}'
+                unzip -o /tmp/${TAG}.zip -d '$DEPLOY_DIR'
+                rm /tmp/${TAG}.zip"
