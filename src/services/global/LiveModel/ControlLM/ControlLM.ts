@@ -182,7 +182,7 @@ class ControlLM implements ControlLMInt {
       this.runCallbacks(this.onControlChange, [[id, newControlEnabled]]);
     }
 
-    this.computationManager.resetMaxSize();
+    this.computationManager.Control.resetMaxSize();
 
     if (addIntoUndoRedo) {
       this.modelUndoRedoStore.getState().addOperation({

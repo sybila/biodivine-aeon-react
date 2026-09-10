@@ -31,22 +31,22 @@ const ControlCompParams: React.FC<ControlCompParamsProps> = ({
     [() => number, (value: number | undefined) => void, number, number, number]
   > = [
     [
-      () => computationManagerServ.getMinRobustness(),
-      (v) => computationManagerServ.setMinRobustness(v),
+      () => computationManagerServ.Control.getMinRobustness(),
+      (v) => computationManagerServ.Control.setMinRobustness(v),
       0,
       100,
       0.1,
     ],
     [
-      () => computationManagerServ.getMaxSize(),
-      (v) => computationManagerServ.setMaxSize(v),
+      () => computationManagerServ.Control.getMaxSize(),
+      (v) => computationManagerServ.Control.setMaxSize(v),
       1,
       numberOfEnabled,
       1,
     ],
     [
-      () => computationManagerServ.getMaxNumberOfResults(),
-      (v) => computationManagerServ.setMaxNumberOfResults(v),
+      () => computationManagerServ.Control.getMaxNumberOfResults(),
+      (v) => computationManagerServ.Control.setMaxNumberOfResults(v),
       1,
       100,
       1,

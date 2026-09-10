@@ -51,7 +51,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
         computationName="Control"
         startComputationFunction={() =>
           showResultsWarningIfNeeded('Control', () =>
-            computationManagerServ.startControlComputation()
+            computationManagerServ.Control.startControlComputation()
           )
         }
       >

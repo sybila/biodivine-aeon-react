@@ -11,12 +11,20 @@ import type {
 import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
+import type { ControlInt } from './Control/ControlInt';
 
 /**
  * Interface for ComputationManagerClass. All public functions are included with their documentation and types.
  * Types are kept as in the class, even if there are syntax errors due to dependencies.
  */
 export interface ComputationManagerInt {
+  // #region --- Modules ---
+
+  /** Module responsible for running computation of control and setting of parameters needed for this computation. */
+  Control: ControlInt;
+
+  // #endregion
+
   // #region --- LiveModel Reference ---
 
   /** Setter for the LiveModel reference */
@@ -31,33 +39,6 @@ export interface ComputationManagerInt {
 
   /** Returns the URL of the compute engine */
   getComputeEngineAddress(): string | undefined;
-
-  // #endregion
-
-  // #region --- Control Computation Parameters Setters/Getters ---
-
-  /** Sets maximum number of perturbations */
-  setMaxNumberOfResults(max: number | undefined): void;
-
-  /** Returns maximum number of perturbations */
-  getMaxNumberOfResults(): number;
-
-  /** Resets the maximum size of a perturbation.
-   * After calling this, the next call to getMaxSize() will set it to the current number of Control-Enabled variables in the model.
-   */
-  resetMaxSize(): void;
-
-  /** Sets maximum size of a perturbation */
-  setMaxSize(max: number | undefined): void;
-
-  /** Returns maximum size of a perturbation */
-  getMaxSize(): number;
-
-  /** Sets minimum robustness for perturbations in %*/
-  setMinRobustness(min: number | undefined): void;
-
-  /** Returns minimum robustness for perturbations */
-  getMinRobustness(): number;
 
   // #endregion
 
@@ -200,12 +181,6 @@ export interface ComputationManagerInt {
     vector: string[],
     attractorVisualizerRef: AttractorVisualizerInt
   ): void;
-
-  // #endregion
-
-  // #region --- Control Computation ---
-
-  startControlComputation(): void;
 
   // #endregion
 

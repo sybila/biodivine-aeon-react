@@ -204,7 +204,7 @@ class VariablesLM implements VariablesLMInt {
       fitVisualization
     );
 
-    this.computationManagerServ.resetMaxSize();
+    this.computationManagerServ.Control.resetMaxSize();
 
     this.liveModel.UpdateFunctions.validateUpdateFunction(variableId);
     this.liveModel.Export.saveModel();
@@ -289,7 +289,7 @@ class VariablesLM implements VariablesLMInt {
       updateTargets.push(reg.target);
     }
 
-    this.computationManagerServ.resetMaxSize();
+    this.computationManagerServ.Control.resetMaxSize();
 
     this.variablesStore.getState().removeVariable(id);
     this.liveModel.Control.removeControlInfo(id, force);
