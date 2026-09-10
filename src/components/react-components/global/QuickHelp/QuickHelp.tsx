@@ -23,6 +23,7 @@ const QuickHelp: React.FC<QuickHelpProps> = ({
       windMaxWidth={windowMaxWidth}
       windMinWidth={windowMinWidth}
       windPad='25px'
+      compZIndex='1'
     >
       <MarkdownText
         height="fit-content"
