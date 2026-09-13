@@ -181,7 +181,7 @@ class UpdateFunctionsLM implements UpdateFunctionsLMInt {
       return;
     }
 
-    this.computationManagerServ.validateUpdateFunction(
+    this.computationManagerServ.Model.validateUpdateFunction(
       id,
       modelFragment,
       setStatusFunction

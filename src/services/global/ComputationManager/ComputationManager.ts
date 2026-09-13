@@ -13,7 +13,6 @@ import type {
   ControlResults,
   DecisionsTSSD,
   NodeDataTSSD,
-  UpdateFunctionStatus,
 } from '../../../types/types';
 import type { ComputeEngineInt } from '../ComputeEngine/ComputeEngineInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
@@ -26,6 +25,8 @@ import type { AttractorAnalysisInt } from './AttractorAnalysis/AttractorAnalysis
 import type { ComputationManagerInt } from './ComputationManagerInt';
 import Control from './Control/Control';
 import type { ControlInt } from './Control/ControlInt';
+import Model from './Model/Model';
+import type { ModelInt } from './Model/ModelInt';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -36,6 +37,8 @@ class ComputationManager implements ComputationManagerInt {
   public Control: ControlInt;
 
   public AttractorAnalysis: AttractorAnalysisInt;
+
+  public Model: ModelInt;
 
   /** Currently used compute engine comunicator */
   private computeEngine: ComputeEngineInt;
@@ -127,6 +130,17 @@ class ComputationManager implements ComputationManagerInt {
           computationStatus,
           color
         )
+    );
+
+    this.Model = new Model(
+      messageServ,
+      this.computeEngine,
+      variablesStore,
+      (operationName: string, value: string) =>
+        (this.computationBlockingOperations[operationName] = value),
+      (operationName: string) =>
+        delete this.computationBlockingOperations[operationName],
+      () => this.isComputeEngineConnected()
     );
   }
 
@@ -296,63 +310,6 @@ class ComputationManager implements ComputationManagerInt {
       this.messageServ.showInfo(warning);
     }
   };
-
-  // #endregion
-
-  // #region --- Update Functions ---
-
-  private validateUpdateFunctionCallback(
-    variableId: number,
-    response: UpdateFunctionStatus | undefined,
-    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
-  ): void {
-    if (!response) {
-      this.messageServ.showError(
-        `Error validating update function for variable ${this.variablesStore
-          .getState()
-          .getVariableName(variableId)}`
-      );
-      setUpdateFunctionStatus({
-        status: 'Error validating update function',
-        isError: true,
-      });
-    } else {
-      setUpdateFunctionStatus(response);
-    }
-
-    delete this.computationBlockingOperations[
-      'Validating update function ' + variableId
-    ];
-  }
-
-  public validateUpdateFunction(
-    variableId: number,
-    updateFunctionFragment: string,
-    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
-  ): void {
-    if (this.isComputeEngineConnected()) {
-      this.computationBlockingOperations[
-        'Validating update function ' + variableId
-      ] = "'Validating update function'";
-
-      this.computeEngine.validateUpdateFunction(
-        variableId,
-        updateFunctionFragment,
-        (variableId, response) =>
-          this.validateUpdateFunctionCallback(
-            variableId,
-            response,
-            setUpdateFunctionStatus
-          )
-      );
-    } else {
-      setUpdateFunctionStatus({
-        status:
-          'Cannot validate update function:\n Compute engine not connected',
-        isError: true,
-      });
-    }
-  }
 
   // #endregion
 

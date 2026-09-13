@@ -5,14 +5,11 @@ import type {
   ControlResults,
   DecisionsTSSD,
   NodeDataTSSD,
-  StabilityAnalysisModes,
-  UpdateFunctionStatus,
 } from '../../../types/types';
-import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
-import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import type { AttractorAnalysisInt } from './AttractorAnalysis/AttractorAnalysisInt';
 import type { ControlInt } from './Control/ControlInt';
+import type { ModelInt } from './Model/ModelInt';
 
 /**
  * Interface for ComputationManagerClass. All public functions are included with their documentation and types.
@@ -26,6 +23,9 @@ export interface ComputationManagerInt {
 
   /** Module responsible for performing attractor analysis computation and visualization of its results */
   AttractorAnalysis: AttractorAnalysisInt;
+
+  /** Module responsible for performing operations over models (eg. validation of models update functions) */
+  Model: ModelInt;
 
   // #endregion
 
@@ -64,24 +64,6 @@ export interface ComputationManagerInt {
     computeEngineStatus?: string | undefined,
     computationStatus?: ComputationStatus | undefined,
     color?: string | undefined
-  ): void;
-
-  // #endregion
-
-  // #region --- Update Functions ---
-
-  /** Validates the update function fragment for the specified variable and updates
-   * the validation status using the provided callback.
-   *
-   * @param variableId The unique identifier of the variable whose update function
-   * is being validated.
-   * @param updateFunctionFragment The fragment of the model which contains all the data required for the validation of the function.
-   * @param setUpdateFunctionStatus Callback which sets the status of update function (for example this.updateFunctionStore.getState().setUpdateFunctionStatus())
-   */
-  validateUpdateFunction(
-    variableId: number,
-    updateFunctionFragment: string,
-    setUpdateFunctionStatus: (status: UpdateFunctionStatus) => void
   ): void;
 
   // #endregion
