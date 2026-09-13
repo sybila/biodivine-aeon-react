@@ -71,6 +71,8 @@ class AttractorAnalysis implements AttractorAnalysisInt {
     this.setComputationStatus = setComputationStatus;
   }
 
+  // #endregion
+
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis() {

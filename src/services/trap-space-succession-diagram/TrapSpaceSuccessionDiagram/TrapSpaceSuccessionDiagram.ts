@@ -45,7 +45,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     if (this.isEmpty) {
       const hasSavedVisualizationStatus =
         this.trapSpaceSDStatusStore.getState().visualizationStatus !== null;
-      this.computationManagerServ.getTrapSpaceSuccessionDiagram(
+      this.computationManagerServ.TrapSpaceSuccessionDiagram.getTrapSpaceSuccessionDiagram(
         (nodeList: NodeDataTSSD[]) => {
           this.insertSuccessionDiagram(
             nodeList,
@@ -108,7 +108,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   }
 
   public removeNode(nodeId: number) {
-    this.computationManagerServ.deleteDecisionTSSD(nodeId, (node, removed) => {
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(nodeId, (node, removed) => {
       this.removeFromVisualization(node, removed);
     });
   }
@@ -118,7 +118,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   // #region --- Make Decision ---
 
   public getDecisions(nodeId: number) {
-    this.computationManagerServ.getDecisionsTSSD(
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.getDecisionsTSSD(
       nodeId,
       (decisions: DecisionsTSSD) => {
         this.trapSpaceSDStatusStore.getState().setAvailableDecisions(decisions);
@@ -127,7 +127,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   }
 
   public makeDecision(nodeId: number, decisionId: number) {
-    this.computationManagerServ.makeDecisionTSSD(
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.makeDecisionTSSD(
       nodeId,
       decisionId,
       (nodes) => {

@@ -11,8 +11,6 @@ import type {
   ComputationModes,
   ComputationStatus,
   ControlResults,
-  DecisionsTSSD,
-  NodeDataTSSD,
 } from '../../../types/types';
 import type { ComputeEngineInt } from '../ComputeEngine/ComputeEngineInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
@@ -27,6 +25,8 @@ import Control from './Control/Control';
 import type { ControlInt } from './Control/ControlInt';
 import Model from './Model/Model';
 import type { ModelInt } from './Model/ModelInt';
+import TrapSpaceSuccessionDiagram from './TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagram';
+import type { TrapSpaceSuccessionDiagramInt } from './TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
@@ -37,6 +37,8 @@ class ComputationManager implements ComputationManagerInt {
   public Control: ControlInt;
 
   public AttractorAnalysis: AttractorAnalysisInt;
+
+  public TrapSpaceSuccessionDiagram: TrapSpaceSuccessionDiagramInt;
 
   public Model: ModelInt;
 
@@ -88,6 +90,15 @@ class ComputationManager implements ComputationManagerInt {
       this.loadingServ
     );
 
+    // TODO - change when multiple phenotypes for computation are allowed
+    const getModelString = () => {
+      return this.getLiveModel()!.Export.exportAeon(
+        false,
+        this.controlStore.getState().phenotypesUsedInComputation.values().next()
+          .value ?? -1
+      );
+    };
+
     this.Control = new Control(
       this.messageServ,
       this.computeEngine,
@@ -108,16 +119,7 @@ class ComputationManager implements ComputationManagerInt {
       this.messageServ,
       this.loadingServ,
       this.computeEngine,
-      // TODO - change when multiple phenotypes for computation are allowed
-      () => {
-        return this.getLiveModel()!.Export.exportAeon(
-          false,
-          this.controlStore
-            .getState()
-            .phenotypesUsedInComputation.values()
-            .next().value ?? -1
-        );
-      },
+      getModelString,
       () => this.getLiveModel(),
       bifurcationExplorerStatusStore,
       tabsStore,
@@ -130,6 +132,14 @@ class ComputationManager implements ComputationManagerInt {
           computationStatus,
           color
         )
+    );
+
+    this.TrapSpaceSuccessionDiagram = new TrapSpaceSuccessionDiagram(
+      messageServ,
+      loadingServ,
+      this.computeEngine,
+      getModelString,
+      (model) => this.computationCanStart(model, 'Attractor Analysis')
     );
 
     this.Model = new Model(
@@ -310,156 +320,6 @@ class ComputationManager implements ComputationManagerInt {
       this.messageServ.showInfo(warning);
     }
   };
-
-  // #endregion
-
-  // #region --- Trap Space Succession Diagram ---
-
-  private getSuccessionDiagramCallback(
-    error: string | undefined,
-    nodes: NodeDataTSSD[] | undefined,
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
-  ): void {
-    if (error || !nodes) {
-      this.messageServ.showError(
-        `Error fetching trap space succession diagram: ${error ?? 'Internal error'}`
-      );
-    } else {
-      insertSuccessionDiagramFunction(nodes);
-    }
-
-    this.loadingServ.endLoading();
-  }
-
-  public getTrapSpaceSuccessionDiagram(
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
-  ): void {
-    // TODO - change when multiple phenotypes for computation are allowed
-    const model = this.getLiveModel()!.Export.exportAeon(
-      false,
-      this.controlStore.getState().phenotypesUsedInComputation.values().next()
-        .value ?? -1
-    );
-
-    try {
-      // Todo - change the mode string to a specific one for TSSD when we have more computations using TSSD
-      this.computationCanStart(model, 'Attractor Analysis');
-    } catch (error: unknown) {
-      this.messageServ.showError((error as Error).message);
-      return;
-    }
-
-    this.computeEngine.getTrapSpaceSuccessionDiagram(
-      model,
-      (error: string | undefined, nodes: NodeDataTSSD[] | undefined) =>
-        this.getSuccessionDiagramCallback(
-          error,
-          nodes,
-          insertSuccessionDiagramFunction
-        )
-    );
-  }
-
-  private getDecisionsTSSDCallback(
-    error: string | undefined,
-    decisions: DecisionsTSSD | undefined,
-    setDecisionsFunction: (decisions: DecisionsTSSD) => void
-  ) {
-    if (error || !decisions) {
-      this.messageServ.showError(
-        `Error fetching decisions: ${error ?? 'Internal error'}`
-      );
-    } else {
-      setDecisionsFunction(decisions);
-    }
-
-    this.loadingServ.endLoading();
-  }
-
-  public getDecisionsTSSD(
-    nodeId: number,
-    setDecisionsFunction: (decisions: DecisionsTSSD) => void
-  ): void {
-    this.loadingServ.startLoading();
-    this.computeEngine.getDecisionsTSSD(nodeId, (error, decisions) =>
-      this.getDecisionsTSSDCallback(error, decisions, setDecisionsFunction)
-    );
-  }
-
-  private makeDecisionTSSDCallback(
-    error: string | undefined,
-    node: NodeDataTSSD[] | undefined,
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
-  ): void {
-    if (error || !node) {
-      this.messageServ.showError(
-        `Error making decision: ${error ?? 'Internal error'}`
-      );
-    } else {
-      insertSuccessionDiagramFunction(node);
-    }
-
-    this.loadingServ.endLoading();
-  }
-
-  public makeDecisionTSSD(
-    nodeId: number,
-    decisionId: number,
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD[]) => void
-  ): void {
-    this.loadingServ.startLoading();
-    this.computeEngine.makeDecisionTSSD(nodeId, decisionId, (error, node) =>
-      this.makeDecisionTSSDCallback(
-        error,
-        node,
-        insertSuccessionDiagramFunction
-      )
-    );
-  }
-
-  private deleteDecisionTSSDCallback(
-    error: string | undefined,
-    node: NodeDataTSSD | undefined,
-    removed: number[] | undefined,
-    removeNodesFromVisualizationFunction: (
-      node: NodeDataTSSD,
-      removedNodes: number[]
-    ) => void
-  ): void {
-    if (error || !node) {
-      this.messageServ.showError(
-        `Error deleting decision: ${error ?? 'Internal error'}`
-      );
-      return;
-    }
-
-    if (!removed || removed.length === 0) {
-      this.messageServ.showInfo(
-        `Decision for node ${node.id} was deleted, but no nodes were removed.`
-      );
-      return;
-    }
-
-    removeNodesFromVisualizationFunction(node, removed);
-  }
-
-  public deleteDecisionTSSD(
-    nodeId: number,
-    removeNodesFromVisualizationFunction: (
-      node: NodeDataTSSD,
-      removedNodes: number[]
-    ) => void
-  ): void {
-    this.loadingServ.startLoading();
-    this.computeEngine.deleteDecisionTSSD(nodeId, (error, node, removed) => {
-      this.deleteDecisionTSSDCallback(
-        error,
-        node,
-        removed,
-        removeNodesFromVisualizationFunction
-      );
-    });
-  }
 
   // #endregion
 
