@@ -143,6 +143,8 @@ class AttractorVisualizer implements AttractorVisualizerInt {
           );
           this.clear();
         });
+
+      return;
     }
 
     this.attractorData = result;
