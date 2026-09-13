@@ -1,6 +1,6 @@
-import type { StabilityAnalysisModes } from "../../../../types/types";
-import type { AttractorBifurcationExplorerInt } from "../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt";
-import type { AttractorVisualizerInt } from "../../../attractor-visualizer/AttractorVisualizerInt";
+import type { StabilityAnalysisModes } from '../../../../types/types';
+import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorVisualizerInt } from '../../../attractor-visualizer/AttractorVisualizerInt';
 
 export interface AttractorAnalysisInt {
   // #region --- Attractor Analysis Computation ---
@@ -83,6 +83,24 @@ export interface AttractorAnalysisInt {
     behavior: string,
     vector: string[],
     attractorVisualizerRef: AttractorVisualizerInt
+  ): void;
+
+  // #endregion
+
+  // #region --- Open Witness ---
+
+  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
+  openWitnessAttractorAnalysis(behaviorString: string): void;
+
+  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
+  openWitnessBifurcationExplorer(nodeId: number): void;
+
+  /** Get witness for stability analysis and opens new witness tab */
+  openWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
   ): void;
 
   // #endregion

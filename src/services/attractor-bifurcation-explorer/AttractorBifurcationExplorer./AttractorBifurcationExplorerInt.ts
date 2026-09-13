@@ -246,4 +246,5 @@ global stability analysis.
   clear(): void;
 
   // #endregion
+  
 }

@@ -14,7 +14,6 @@ import type {
   DecisionsTSSD,
   NodeDataTSSD,
   UpdateFunctionStatus,
-  WrappedModelString,
 } from '../../../types/types';
 import type { ComputeEngineInt } from '../ComputeEngine/ComputeEngineInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
@@ -116,7 +115,9 @@ class ComputationManager implements ComputationManagerInt {
             .next().value ?? -1
         );
       },
+      () => this.getLiveModel(),
       bifurcationExplorerStatusStore,
+      tabsStore,
       (model) => this.computationCanStart(model, 'Attractor Analysis'),
       (warning, error, computeEngineStatus, computationStatus, color) =>
         this.setComputationStatus(
@@ -351,76 +352,6 @@ class ComputationManager implements ComputationManagerInt {
         isError: true,
       });
     }
-  }
-
-  // #endregion
-
-  // #region --- Open Witness ---
-
-  public openWitnessCallback(
-    error: string | undefined,
-    response: WrappedModelString | undefined
-  ): void {
-    if (error || !response || !response.model) {
-      this.messageServ.showError(
-        `Error opening witness: "${error ?? 'Unknown error'}"`
-      );
-    } else {
-      const modelId = this.getLiveModel()!.Models.addModel(
-        response.model,
-        'witness'
-      );
-      this.getLiveModel()!.Models.loadModel(modelId);
-      this.tabsStore.getState().addTab(
-        `/witness`,
-        'Witness',
-        () => {
-          this.getLiveModel()!.Models.loadModel(modelId);
-        },
-        () => this.getLiveModel()!.Models.removeModel(modelId)
-      );
-    }
-
-    this.loadingServ.endLoading();
-  }
-
-  public openWitnessAttractorAnalysis(behaviorString: string) {
-    if (!behaviorString || behaviorString.length === 0) {
-      this.messageServ.showError(
-        'Cannot open witness: No behavior string provided for the attractor.'
-      );
-      return;
-    }
-
-    this.loadingServ.startLoading();
-    this.computeEngine.getWitnessAttractorAnalysis(
-      behaviorString,
-      this.openWitnessCallback.bind(this)
-    );
-  }
-
-  public openWitnessBifurcationExplorer(nodeId: number) {
-    this.loadingServ.startLoading();
-    this.computeEngine.getWitnessBifurcationExplorer(
-      nodeId,
-      this.openWitnessCallback.bind(this)
-    );
-  }
-
-  public openWitnessStabilityAnalysis(
-    nodeId: number,
-    variableName: string,
-    behavior: string,
-    vector: string[]
-  ): void {
-    this.loadingServ.startLoading();
-    this.computeEngine.getWitnessStabilityAnalysis(
-      nodeId,
-      variableName,
-      behavior,
-      vector,
-      this.openWitnessCallback.bind(this)
-    );
   }
 
   // #endregion

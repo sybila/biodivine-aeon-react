@@ -437,7 +437,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       return err('Internal error (Missing node ID).');
     }
 
-    this.computationManagerServ.openWitnessBifurcationExplorer(nodeId);
+    this.computationManagerServ.AttractorAnalysis.openWitnessBifurcationExplorer(nodeId);
 
     return ok(true);
   }
@@ -458,7 +458,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       return err('Internal error (Missing parameters).');
     }
 
-    this.computationManagerServ.openWitnessStabilityAnalysis(
+    this.computationManagerServ.AttractorAnalysis.openWitnessStabilityAnalysis(
       nodeId,
       variable,
       behaviour,

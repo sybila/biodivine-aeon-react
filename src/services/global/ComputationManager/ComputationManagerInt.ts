@@ -86,24 +86,6 @@ export interface ComputationManagerInt {
 
   // #endregion
 
-  // #region --- Open Witness ---
-
-  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
-  openWitnessAttractorAnalysis(behaviorString: string): void;
-
-  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
-  openWitnessBifurcationExplorer(nodeId: number): void;
-
-  /** Get witness for stability analysis and opens new witness tab */
-  openWitnessStabilityAnalysis(
-    nodeId: number,
-    variableName: string,
-    behavior: string,
-    vector: string[]
-  ): void;
-
-  // #endregion
-
   // #region --- Trap Space Succession Diagram ---
 
   /** Fetches succession diagram for the  */

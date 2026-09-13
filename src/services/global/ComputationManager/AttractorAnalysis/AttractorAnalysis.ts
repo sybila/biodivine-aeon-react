@@ -1,4 +1,5 @@
 import type { BifurcationExplorerStatusState } from '../../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
+import type { TabsState } from '../../../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type {
   AttractorData,
@@ -7,10 +8,12 @@ import type {
   NodeDataBE,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
+  WrappedModelString,
 } from '../../../../types/types';
 import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputeEngineInt } from '../../ComputeEngine/ComputeEngineInt';
+import type { LiveModelInt } from '../../LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { MessageInt } from '../../Message/MessageInt';
 import type { AttractorAnalysisInt } from './AttractorAnalysisInt';
@@ -22,8 +25,10 @@ class AttractorAnalysis implements AttractorAnalysisInt {
   private loadingServ: LoadingInt;
   private computeEngine: ComputeEngineInt;
   private getModelString: () => string | undefined;
+  private getLiveModel: () => LiveModelInt | undefined;
 
   private bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
+  private tabsStore: ZustandStore<TabsState>;
 
   private computationCanStart: (
     model: string | undefined
@@ -41,7 +46,9 @@ class AttractorAnalysis implements AttractorAnalysisInt {
     loadingServ: LoadingInt,
     computeEngine: ComputeEngineInt,
     getModelString: () => string | undefined,
+    getLiveModel: () => LiveModelInt | undefined,
     bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>,
+    tabsStore: ZustandStore<TabsState>,
     computationCanStart: (model: string | undefined) => asserts model is string,
     setComputationStatus: (
       warning: string | undefined,
@@ -55,8 +62,10 @@ class AttractorAnalysis implements AttractorAnalysisInt {
     this.loadingServ = loadingServ;
     this.computeEngine = computeEngine;
     this.getModelString = getModelString;
+    this.getLiveModel = getLiveModel;
 
     this.bifurcationExplorerStatusStore = bifurcationExplorerStatusStore;
+    this.tabsStore = tabsStore;
 
     this.computationCanStart = computationCanStart;
     this.setComputationStatus = setComputationStatus;
@@ -65,7 +74,6 @@ class AttractorAnalysis implements AttractorAnalysisInt {
   // #region --- Attractor Analysis Computation ---
 
   public startAttractorAnalysis() {
-    
     const model = this.getModelString();
 
     try {
@@ -386,6 +394,76 @@ class AttractorAnalysis implements AttractorAnalysisInt {
       vector,
       (error, attractorData) =>
         this.getAttractorCallback(error, attractorData, attractorVisualizerRef)
+    );
+  }
+
+  // #endregion
+
+  // #region --- Open Witness ---
+
+  public openWitnessCallback(
+    error: string | undefined,
+    response: WrappedModelString | undefined
+  ): void {
+    if (error || !response || !response.model) {
+      this.messageServ.showError(
+        `Error opening witness: "${error ?? 'Unknown error'}"`
+      );
+    } else {
+      const modelId = this.getLiveModel()!.Models.addModel(
+        response.model,
+        'witness'
+      );
+      this.getLiveModel()!.Models.loadModel(modelId);
+      this.tabsStore.getState().addTab(
+        `/witness`,
+        'Witness',
+        () => {
+          this.getLiveModel()!.Models.loadModel(modelId);
+        },
+        () => this.getLiveModel()!.Models.removeModel(modelId)
+      );
+    }
+
+    this.loadingServ.endLoading();
+  }
+
+  public openWitnessAttractorAnalysis(behaviorString: string) {
+    if (!behaviorString || behaviorString.length === 0) {
+      this.messageServ.showError(
+        'Cannot open witness: No behavior string provided for the attractor.'
+      );
+      return;
+    }
+
+    this.loadingServ.startLoading();
+    this.computeEngine.getWitnessAttractorAnalysis(
+      behaviorString,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  public openWitnessBifurcationExplorer(nodeId: number) {
+    this.loadingServ.startLoading();
+    this.computeEngine.getWitnessBifurcationExplorer(
+      nodeId,
+      this.openWitnessCallback.bind(this)
+    );
+  }
+
+  public openWitnessStabilityAnalysis(
+    nodeId: number,
+    variableName: string,
+    behavior: string,
+    vector: string[]
+  ): void {
+    this.loadingServ.startLoading();
+    this.computeEngine.getWitnessStabilityAnalysis(
+      nodeId,
+      variableName,
+      behavior,
+      vector,
+      this.openWitnessCallback.bind(this)
     );
   }
 

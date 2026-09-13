@@ -27,7 +27,7 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   };
 
   const openWitness = () => {
-    computationManagerServ.openWitnessAttractorAnalysis(
+    computationManagerServ.AttractorAnalysis.openWitnessAttractorAnalysis(
       behaviourString ? behaviourString : ''
     );
   };
