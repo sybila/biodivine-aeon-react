@@ -42,7 +42,7 @@ const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
         computationName="Attractor Analysis"
         startComputationFunction={() =>
           showResultsWarningIfNeeded('Attractor Analysis', () =>
-            computationManagerServ.startAttractorAnalysis()
+            computationManagerServ.AttractorAnalysis.startAttractorAnalysis()
           )
         }
       />

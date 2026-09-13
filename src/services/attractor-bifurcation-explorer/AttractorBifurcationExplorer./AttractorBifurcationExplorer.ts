@@ -248,7 +248,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   public loadBifurcationTree(fit: boolean = true, animate: boolean = true) {
-    this.computationManagerServ.getBifurcationTree(fit, animate, this);
+    this.computationManagerServ.AttractorAnalysis.getBifurcationTree(
+      fit,
+      animate,
+      this
+    );
   }
 
   public autoExpandBifurcationTreeFromSelected(depth: number, nodeId?: number) {
@@ -260,13 +264,13 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
         return err('No node selected.');
       }
 
-      this.computationManagerServ.autoExpandBifurcationTree(
+      this.computationManagerServ.AttractorAnalysis.autoExpandBifurcationTree(
         newNodeID.id,
         depth ?? 1,
         this
       );
     } else {
-      this.computationManagerServ.autoExpandBifurcationTree(
+      this.computationManagerServ.AttractorAnalysis.autoExpandBifurcationTree(
         nodeId,
         depth ?? 1,
         this
@@ -306,7 +310,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   public removeNode(nodeId: number) {
-    this.computationManagerServ.deleteBifurcationDecision(nodeId, this);
+    this.computationManagerServ.AttractorAnalysis.deleteBifurcationDecision(nodeId, this);
   }
 
   public getNodeNecessaryConditions(nodeId: number) {
@@ -323,7 +327,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   public getStabilityData(nodeId: number, behavior: StabilityAnalysisModes) {
     this.bifurcationExplorerStatusStore.getState().loadStabilityData(null);
-    this.computationManagerServ.getStabilityData(nodeId, behavior);
+    this.computationManagerServ.AttractorAnalysis.getStabilityData(nodeId, behavior);
   }
 
   // #endregion
@@ -359,11 +363,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   public getDecisions(nodeId: number) {
-    this.computationManagerServ.getDecisions(nodeId, this);
+    this.computationManagerServ.AttractorAnalysis.getDecisions(nodeId, this);
   }
 
   public makeDecision(nodeId: number, decisionId: number) {
-    this.computationManagerServ.makeDecision(nodeId, decisionId, this);
+    this.computationManagerServ.AttractorAnalysis.makeDecision(nodeId, decisionId, this);
   }
 
   // #endregion
@@ -409,7 +413,7 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   public setPrecision(precision: number) {
     this.precision = precision;
-    this.computationManagerServ.setBifurcationTreePrecision(precision, this);
+    this.computationManagerServ.AttractorAnalysis.setBifurcationTreePrecision(precision, this);
   }
 
   public toggleSnapNodesToLayers() {

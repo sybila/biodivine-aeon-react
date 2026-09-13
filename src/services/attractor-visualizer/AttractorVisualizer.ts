@@ -109,18 +109,18 @@ class AttractorVisualizer implements AttractorVisualizerInt {
 
     if (inputData.nodeId === undefined || inputData.nodeId === null) {
       if (inputData.behavior) {
-        this.computationManagerServ.getAttractorByBehavior(
+        this.computationManagerServ.AttractorAnalysis.getAttractorByBehavior(
           inputData.behavior,
           this
         );
       }
     } else if (!inputData.variableName || !inputData.vector) {
-      this.computationManagerServ.getBifurcationExplorerAttractor(
+      this.computationManagerServ.AttractorAnalysis.getBifurcationExplorerAttractor(
         inputData.nodeId,
         this
       );
     } else if (inputData.variableName && inputData.vector) {
-      this.computationManagerServ.getStabilityAnalysisAttractor(
+      this.computationManagerServ.AttractorAnalysis.getStabilityAnalysisAttractor(
         inputData.nodeId,
         inputData.variableName,
         inputData.behavior ?? '',
