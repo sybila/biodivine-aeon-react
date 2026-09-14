@@ -1,42 +1,57 @@
 import type { JSX } from 'react';
-import usePerturbationFilterSortStore from '../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
 import {
   PertVariableFilterStatus,
   type ControlResult,
   type PertTableSort,
   type Perturbation,
-} from '../../types';
+  type PhenotypeStatus,
+} from '../../types/types';
+import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
 
-class ControlPerturbationsTable {
-  // #region --- Properties ---
+class ControlPerturbationsTable implements ControlPerturbationsTableInt {
+  // #region --- Properties + Constructor ---
 
   /** Current max number of perturbations on a page in the Perturbations Table */
-  private static pageSize: number = 100;
+  private pageSize: number = 100;
+
+  private perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;
+
+  constructor(
+    perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>
+  ) {
+    this.perturbationFilterSortStore = perturbationFilterSortStore;
+  }
 
   // #endregion
 
   // #region --- Getters ---
 
-  public static getPageSize(): number {
+  public getPageSize(): number {
     return this.pageSize;
   }
 
   // #endregion
 
-  // #region --- Format Perturbation ---
+  // #region --- Format ---
 
-  /** Formats perturbation in a from of array into tuple of two JSX element.
-   *  On index 0 the element contains perturbation variables colored (green for positive, red for negative),
-   *  on index 1 the element contains perturbation variables and their values in text (VariableName: true, VariableName2: false).
-   *  Each tuple represents one variable in the perturbation.
-   */
-  public static formatPerturbation(
-    perturbationArray: Array<[string, boolean]>
+  public formatPerturbation(
+    perturbationArray: Array<[string, boolean]>,
+    baseTextColor: string
   ): [JSX.Element, JSX.Element] {
     if (perturbationArray.length === 0) {
       return [
-        <span className="flex flex-row h-full w-fit text-black">{'{ }'}</span>,
-        <span className="flex flex-row h-full w-fit text-black">
+        <span
+          className="flex flex-row h-full w-fit"
+          style={{ color: baseTextColor }}
+        >
+          {'{ }'}
+        </span>,
+        <span
+          className="flex flex-row h-full w-fit "
+          style={{ color: baseTextColor }}
+        >
           No Perturbation
         </span>,
       ];
@@ -50,7 +65,7 @@ class ControlPerturbationsTable {
         <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
           <span
             style={{
-              color: `${value ? 'var(--color-green)' : 'var(--color-red)'}`,
+              color: `${value ? 'var(--color-positive)' : 'var(--color-negative)'}`,
             }}
           >
             {key}
@@ -71,8 +86,70 @@ class ControlPerturbationsTable {
       <div className="flex flex-row h-full w-fit gap-1">
         {coloredPerturbation}
       </div>,
-      <div className="flex flex-row h-full w-fit gap-1 text-black">
+      <div
+        className="flex flex-row h-full w-fit gap-1 "
+        style={{ color: baseTextColor }}
+      >
         {textPerturbation}
+      </div>,
+    ];
+  }
+
+  public formatPhenotype(
+    phenotypeArray: Array<[string, PhenotypeStatus]>,
+    baseTextColor: string
+  ): [JSX.Element, JSX.Element] {
+    if (phenotypeArray.length === 0) {
+      return [
+        <span
+          className="flex flex-row h-full w-fit"
+          style={{ color: baseTextColor }}
+        >
+          {'{ }'}
+        </span>,
+        <span
+          className="flex flex-row h-full w-fit "
+          style={{ color: baseTextColor }}
+        >
+          Empty Phenotype
+        </span>,
+      ];
+    }
+
+    const coloredPhenotype: Array<JSX.Element> = [];
+    const textPhenotype: Array<JSX.Element> = [];
+
+    phenotypeArray.forEach(([key, value], index) => {
+      coloredPhenotype.push(
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
+          <span
+            style={{
+              color: `${value ? 'var(--color-positive)' : 'var(--color-negative)'}`,
+            }}
+          >
+            {key}
+          </span>
+          {index < phenotypeArray.length - 1 && <span>,</span>}
+        </div>
+      );
+
+      textPhenotype.push(
+        <div key={key} className="flex flex-row h-full w-fit whitespace-nowrap">
+          <span className="">{`${key}: ${value ? 'true' : 'false'}`}</span>
+          {index < phenotypeArray.length - 1 && <span>,</span>}
+        </div>
+      );
+    });
+
+    return [
+      <div className="flex flex-row h-full w-fit gap-1">
+        {coloredPhenotype}
+      </div>,
+      <div
+        className="flex flex-row h-full w-fit gap-1"
+        style={{ color: baseTextColor }}
+      >
+        {textPhenotype}
       </div>,
     ];
   }
@@ -82,7 +159,7 @@ class ControlPerturbationsTable {
   // #region --- Perturbations Filtering ---
 
   /** Filters perturbations by variables they contain and their perturbation status. */
-  private static filterOutPertByVariables(
+  private filterOutPertByVariables(
     perturbation: Perturbation,
     perturbationFilterVariables: Record<string, PertVariableFilterStatus>
   ): boolean {
@@ -110,7 +187,7 @@ class ControlPerturbationsTable {
   /** Filters perturbation by different criteria.
    *  Returns true if the perturbation passes the filter, false otherwise.
    */
-  public static filterPerturbation = (
+  public filterPerturbation = (
     pertInfo: ControlResult,
     minNumInterp: number | undefined,
     minRobust: number | undefined,
@@ -128,14 +205,14 @@ class ControlPerturbationsTable {
     );
   };
 
-  /** Filters perturbations by filter criteria form usePerturbationFilterSortStore.
+  /** Filters perturbations by filter criteria form this.perturbationFilterSortStore.
    *  Returns tuple where on index 0 is the array of filtered perturbations
    *  and on index 1 is boolean indicating if there is next page === there are more perturbations that pass the filter
    */
-  public static filterPerturbations(
+  public filterPerturbations(
     perturbations: Array<ControlResult>
   ): [Array<ControlResult>, boolean] {
-    const filterState = usePerturbationFilterSortStore.getState();
+    const filterState = this.perturbationFilterSortStore.getState();
     const startingIndex = (filterState.pageNumber - 1) * this.pageSize;
     const minNumberOfInterpretations = filterState.minNumberOfInterpretations;
     const minRobustness = filterState.minRobustness;
@@ -169,7 +246,7 @@ class ControlPerturbationsTable {
   // #region --- Perturbations Sorting ---
 
   /** Compares two perturbations by their ID. */
-  private static compareById = (
+  private compareById = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
@@ -179,7 +256,7 @@ class ControlPerturbationsTable {
   /** Compares two perturbations by their size (number of variables in the perturbation).
    *  Used for sorting perturbations.
    */
-  private static compareBySize = (
+  private compareBySize = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
@@ -190,14 +267,14 @@ class ControlPerturbationsTable {
   };
 
   /** Compares two perturbations by their number of interpretations. */
-  private static compareByInterpretations = (
+  private compareByInterpretations = (
     pertA: ControlResult,
     pertB: ControlResult
   ): number => {
     return pertA.color_count - pertB.color_count;
   };
 
-  private static comparePerturbations = (
+  private comparePerturbations = (
     pertA: ControlResult,
     pertB: ControlResult,
     sort: PertTableSort
@@ -212,13 +289,13 @@ class ControlPerturbationsTable {
     }
   };
 
-  /** Sorts perturbations by primary and secondary sort criteria from usePerturbationFilterSortStore.
+  /** Sorts perturbations by primary and secondary sort criteria from this.perturbationFilterSortStore.
    *  Returns new array of sorted perturbations.
    */
-  public static sortPerturbations(
+  public sortPerturbations(
     perturbations: Array<ControlResult>
   ): Array<ControlResult> {
-    const sortState = usePerturbationFilterSortStore.getState();
+    const sortState = this.perturbationFilterSortStore.getState();
     const primarySort = sortState.primarySort ?? {
       field: 'id',
       direction: 'asc',
@@ -247,8 +324,8 @@ class ControlPerturbationsTable {
 
   // #region --- Clear ---
 
-  public static clear(): void {
-    usePerturbationFilterSortStore.getState().clear();
+  public clear(): void {
+    this.perturbationFilterSortStore.getState().clear();
   }
 
   // #endregion

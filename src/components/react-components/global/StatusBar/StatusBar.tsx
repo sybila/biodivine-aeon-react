@@ -1,14 +1,20 @@
+import React from 'react';
 import Time from '../../../../services/utilities/Time';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
+import type { StatusBarProps } from './StatusBarProps';
 
-const StatusBar: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const computeEngineStatus: string = useComputeEngineStatus(
+const StatusBar: React.FC<StatusBarProps> = ({
+  onClick,
+  setHelpHover,
+  clearHelpHover,
+  computeEngineStatusStore,
+}) => {
+  const computeEngineStatus: string = computeEngineStatusStore(
     (state) => state.computeEngineStatus
   );
-  const computationStatus = useComputeEngineStatus(
+  const computationStatus = computeEngineStatusStore(
     (state) => state.computationStatus
   );
-  const color: string = useComputeEngineStatus((state) => state.statusColor);
+  const color: string = computeEngineStatusStore((state) => state.statusColor);
 
   const getStatusText = () => {
     if (computationStatus.status != 'No computation') {
@@ -25,9 +31,13 @@ const StatusBar: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
   return (
     <span
-      className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-[var(--color-secondary)] rounded-md px-3 truncate font-[var(--base-font-family)] text-[21px] select-none pointer-events-auto cursor-pointer"
+      className="flex flex-row items-center justify-center-safe h-full max-w-[20vw] xl:max-w-[30vw] 2xl:max-w-[40vw] bg-(--color-primary) rounded-md px-3 truncate font-(--base-font-family) text-[21px] select-none pointer-events-auto cursor-pointer"
       style={{ color: color, fontWeight: 'bold' }}
       onClick={onClick}
+      onMouseEnter={(e: React.MouseEvent<HTMLSpanElement>) =>
+        setHelpHover(e.nativeEvent)
+      }
+      onMouseLeave={() => clearHelpHover()}
     >
       {getStatusText()}
     </span>

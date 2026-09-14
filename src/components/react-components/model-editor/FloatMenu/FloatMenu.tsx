@@ -1,14 +1,21 @@
 import { useState } from 'react';
-import useModelEditorStatus from '../../../../stores/ModelEditor/useModelEditorStatus';
-import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
+import type { FloatMenuProps } from './FloatMenuProps';
 import RegulationMenuButtons from './RegulationMenuButtons/RegulationMenuButtons';
+import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 
-const FloatMenu = () => {
+const FloatMenu: React.FC<FloatMenuProps> = ({
+  liveModelServ,
+  modelEditorServ,
+  modelEditorStatusStore,
+  regulationsStore,
+}) => {
   const [currentHint, setCurrentHint] = useState<string>('');
 
-  const modelStatus = useModelEditorStatus((state) => state);
+  const floatingMenuInfo = modelEditorStatusStore(
+    (state) => state.floatingMenuInfo
+  );
 
-  if (!modelStatus.floatingMenuInfo || !modelStatus.selectedItemInfo) {
+  if (!floatingMenuInfo) {
     return null;
   }
 
@@ -17,32 +24,31 @@ const FloatMenu = () => {
       className="flex flex-col h-auto w-auto gap-2 justify-around items-center z-8 select-none pointer-events-none"
       style={{
         position: 'absolute',
-        left: modelStatus.floatingMenuInfo.position[0] + 'px',
-        top:
-          modelStatus.floatingMenuInfo.position[1] +
-          52 * modelStatus.floatingMenuInfo.zoom +
-          'px',
+        left: floatingMenuInfo.position[0] + 'px',
+        top: floatingMenuInfo.position[1] + 52 * floatingMenuInfo.zoom + 'px',
         transform:
-          'translate(-50%, -50%) scale(' +
-          modelStatus.floatingMenuInfo.zoom * 0.75 +
-          ')',
+          'translate(-50%, -50%) scale(' + floatingMenuInfo.zoom * 0.75 + ')',
         transformOrigin: 'top top',
       }}
     >
-      <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-[var(--color-grey-blue-ultra-light)] pointer-events-auto">
-        {modelStatus.selectedItemInfo.type === 'regulation' ? (
+      <div className="flex flex-col h-auto max-w-[153px] rounded-[24px] bg-(--color-model-float-menu) pointer-events-auto">
+        {floatingMenuInfo.itemInfo.type === 'regulation' ? (
           <RegulationMenuButtons
             setHint={setCurrentHint}
-            selectedRegulationIds={modelStatus.selectedItemInfo.regulationIds}
+            selectedRegulationIds={floatingMenuInfo.itemInfo.regulationIds}
+            liveModelServ={liveModelServ}
+            regulationsStore={regulationsStore}
           />
         ) : (
           <VariableMenuButtons
             setHint={setCurrentHint}
-            selectedVariableId={modelStatus.selectedItemInfo.id}
+            selectedVariableId={floatingMenuInfo.itemInfo.id}
+            liveModelServ={liveModelServ}
+            modelEditorServ={modelEditorServ}
           />
         )}
       </div>
-      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-[--var(--base-font-family)] text-center font-bold select-none pointer-none text-black">
+      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-(--base-font-family) text-center font-bold select-none pointer-none text-(--color-model-float-menu-hint-text)">
         {currentHint}
       </span>
     </div>

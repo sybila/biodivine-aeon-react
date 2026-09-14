@@ -1,21 +1,28 @@
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import { type ControlResults } from '../../../../types';
+import { type ControlResults } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
+import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
-import usePerturbationFilterSortStore from '../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import type { FilterTabContentProps } from './FilterTabContentProps';
+import SelectVarFilterTable from './SelectVarFilterTable/SelectVarFilterTable';
 
-const FilterTabContent: React.FC<{
-  setStartFilter: (value: boolean) => void;
-  startFilter: boolean;
-}> = ({ setStartFilter, startFilter }) => {
+const FilterTabContent: React.FC<FilterTabContentProps> = ({
+  setStartFilter,
+  startFilter,
+
+  searchAndFilterHelpersServ,
+  pageStringProviderServ,
+  loadingServ,
+
+  resultsStatusStore,
+  perturbationFilterSortStore,
+  helpHoverStore,
+}) => {
   // We know that when type is 'Control', results is ControlResults
-  const controlInfo: ControlResults | undefined = useResultsStatus((state) =>
-    state.type === 'Control' ? (state.results as ControlResults) : undefined
+  const controlInfo: ControlResults | undefined = resultsStatusStore(
+    (state) => (state.results.Control as ControlResults) ?? undefined
   );
 
   if (!controlInfo) {
@@ -23,7 +30,7 @@ const FilterTabContent: React.FC<{
   }
 
   const getCurrentMinRobustness = () => {
-    const currentRob = usePerturbationFilterSortStore.getState().minRobustness;
+    const currentRob = perturbationFilterSortStore.getState().minRobustness;
     return currentRob != undefined ? currentRob * 100 : undefined;
   };
 
@@ -40,11 +47,9 @@ const FilterTabContent: React.FC<{
       min: 1,
       max: 100,
       step: 1,
-      value: usePerturbationFilterSortStore.getState().maxSize,
+      value: perturbationFilterSortStore.getState().maxSize,
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
-          .getState()
-          .setMaxSize(value ?? undefined);
+        perturbationFilterSortStore.getState().setMaxSize(value ?? undefined);
       },
     },
     {
@@ -52,10 +57,9 @@ const FilterTabContent: React.FC<{
       min: 1,
       max: 100,
       step: 1,
-      value:
-        usePerturbationFilterSortStore.getState().minNumberOfInterpretations,
+      value: perturbationFilterSortStore.getState().minNumberOfInterpretations,
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
+        perturbationFilterSortStore
           .getState()
           .setMinNumberOfInterpretations(value ?? undefined);
       },
@@ -67,7 +71,7 @@ const FilterTabContent: React.FC<{
       step: 0.1,
       value: getCurrentMinRobustness(),
       handleUpdate: (value: number | undefined) => {
-        usePerturbationFilterSortStore
+        perturbationFilterSortStore
           .getState()
           .setMinRobustness(value != undefined ? value / 100 : undefined);
       },
@@ -81,6 +85,7 @@ const FilterTabContent: React.FC<{
         compWidth="100%"
         justifyHeader="start"
         headerText="Number Filters"
+        textColor="var(--color-primary-text)"
       />
       {numberInputs.map((input, index) => (
         <div
@@ -92,6 +97,7 @@ const FilterTabContent: React.FC<{
             compHeight="80%"
             compWidth="40%"
             textFontSize="18px"
+            textColor="var(--color-primary-text)"
           />
           <NumberInputReact
             compHeight="70%"
@@ -103,6 +109,9 @@ const FilterTabContent: React.FC<{
             }
             step={input.step}
             handleChange={input.handleUpdate}
+            textColor="var(--color-secondary-text)"
+            inputColor="var(--color-secondary-text-inputs)"
+            inputBorderColor="var(--color-secondary-text-inputs-border)"
           />
         </div>
       ))}
@@ -113,9 +122,15 @@ const FilterTabContent: React.FC<{
         compWidth="100%"
         justifyHeader="start"
         headerText="Perturbed Variable Filter"
+        textColor="var(--color-primary-text)"
       />
       <SelectVarFilterTable
         variableNames={controlInfo.preComputationInfo.controlEnabledVars}
+        searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+        loadingServ={loadingServ}
+        perturbationFilterSortStore={perturbationFilterSortStore}
+        pageStringProviderServ={pageStringProviderServ}
+        helpHoverStore={helpHoverStore}
       />
 
       <SeparatorLine />
@@ -125,10 +140,24 @@ const FilterTabContent: React.FC<{
         compHeight="40px"
         textFontWeight="bold"
         text="Apply Filters"
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         onClick={() => {
-          usePerturbationFilterSortStore.getState().setPageNumber(1);
+          perturbationFilterSortStore.getState().setPageNumber(1);
           setStartFilter(!startFilter);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.applyFilters(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );

@@ -1,17 +1,23 @@
-import useTabsStore from '../../../../stores/Navigation/useTabsStore';
-import IconButtonReact from '../../lit-wrappers/IconButtonReact';
-import TabButton from './TabButton/TabButton';
 import { useState } from 'react';
+import IconButtonReact from '../../lit-wrappers/IconButtonReact';
 
 import DeleteIcon from '../../../../assets/icons/delete-24px.svg';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import PageTabs from './PageTabs/PageTabs';
+import ResultTabs from './ResultTabs/ResultTabs';
+import type { TabBarProps } from './TabBarProps';
 
-const TabBar: React.FC<{
-  setTabBarHelpHover: (event: MouseEvent, text: string) => void;
-}> = ({ setTabBarHelpHover }) => {
+const TabBar: React.FC<TabBarProps> = ({
+  setTabBarHelpHover,
+  setActiveWindow,
+  tabOperationsServ,
+  resultsOperationsServ,
+  warningServ,
+
+  helpHoverStore,
+  tabsStore,
+  resultsStatusStore,
+}) => {
   const [deleteModeOn, setDeleteModeOn] = useState(false);
-
-  const tabs = useTabsStore((state) => state.openedTabs);
 
   return (
     <div className="flex flex-row h-full w-fit gap-3 justify-start items-center">
@@ -21,31 +27,49 @@ const TabBar: React.FC<{
           iconSrc={DeleteIcon}
           iconAlt="Delete"
           isActive={deleteModeOn}
-          buttonColor={deleteModeOn ? 'var(--color-red-light)' : undefined}
-          buttonHoverColor={deleteModeOn ? 'var(--color-red)' : undefined}
+          buttonColor={
+            deleteModeOn
+              ? 'var(--color-delete)'
+              : 'var(--color-secondary-buttons)'
+          }
+          buttonHoverColor={
+            deleteModeOn
+              ? 'var(--color-delete-hover)'
+              : 'var(--color-secondary-buttons-hover)'
+          }
           buttonActiveColor={
-            deleteModeOn ? 'var(--color-darker-red)' : undefined
+            deleteModeOn ? 'var(--color-delete-active)' : 'var(--color-secondary-buttons-active)'
           }
           onClick={() => setDeleteModeOn(!deleteModeOn)}
           onMouseOver={(e) =>
             setTabBarHelpHover(e.nativeEvent, 'Delete Tab Mode')
           }
-          onMouseLeave={(e) => useHelpHoverStore.getState().clear()}
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
 
-      <div className="h-[90%] w-1 bg-black" />
+      <div className="h-[90%] w-1 bg-(--color-primary-separator-dark)" />
 
-      <div className="h-full min-w-[100px] max-w-[500px] overflow-x-auto flex items-center justify-start gap-2 px-2">
-        {Object.values(tabs).map((tab) => (
-          <TabButton
-            key={tab.id}
-            {...tab}
-            deleteMode={deleteModeOn}
-            setHelpHover={setTabBarHelpHover}
-          />
-        ))}
-      </div>
+      <ResultTabs
+        deleteModeOn={deleteModeOn}
+        setTabBarHelpHover={setTabBarHelpHover}
+        openResultsWindow={() => setActiveWindow('Results')}
+        closeResultsWindow={() => setActiveWindow(null)}
+        clearHelpHover={() => helpHoverStore.getState().clear()}
+        resultsOperationsServ={resultsOperationsServ}
+        warningServ={warningServ}
+        resultsStatusStore={resultsStatusStore}
+      />
+
+      <div className="h-[90%] w-1 bg-(--color-primary-separator-dark)" />
+
+      <PageTabs
+        deleteModeOn={deleteModeOn}
+        setTabBarHelpHover={setTabBarHelpHover}
+        clearHelpHover={() => helpHoverStore.getState().clear()}
+        tabOperationsServ={tabOperationsServ}
+        tabsStore={tabsStore}
+      />
     </div>
   );
 };

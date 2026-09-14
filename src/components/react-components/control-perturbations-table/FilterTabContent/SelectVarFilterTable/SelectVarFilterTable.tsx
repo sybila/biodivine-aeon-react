@@ -1,43 +1,53 @@
 import { useMemo, useState } from 'react';
-import { PertVariableFilterStatus } from '../../../../../types';
-import TextInputReact from '../../../lit-wrappers/TextInputReact';
-import { Loading } from '../../../../lit-components/loading-wrapper';
-import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
-import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
-import usePerturbationFilterSortStore from '../../../../../stores/ControlPerturbationsTable/usePerturbationsFilterSortStore';
+import { PertVariableFilterStatus } from '../../../../../types/types';
 import SelectionButtons from '../../../global/SelectionButtons/SelectionButtons';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import TextInputReact from '../../../lit-wrappers/TextInputReact';
+import type { SelectVarFilterTableProps } from './SelectVarFilterTableProps';
+import SelectVarFilterTableRow from './SelectVarFilterTableRow/SelectVarFilterTableRow';
 
-const SelectVarFilterTable: React.FC<{
-  variableNames: Array<string>;
-}> = ({ variableNames }) => {
-  const [selectedVariables, setSelectedVariables] = useState<
-    Record<string, boolean>
-  >({});
+const SelectVarFilterTable: React.FC<SelectVarFilterTableProps> = ({
+  variableNames,
+
+  searchAndFilterHelpersServ,
+  pageStringProviderServ,
+  loadingServ,
+
+  perturbationFilterSortStore,
+  helpHoverStore,
+}) => {
+  const [selectedVariables, setSelectedVariables] = useState<Set<string>>(
+    new Set()
+  );
 
   const [searchText, setSearchText] = useState('');
 
-  const filterVariables = usePerturbationFilterSortStore(
+  const filterVariables = perturbationFilterSortStore(
     (state) => state.perturbationVariables
   );
 
   const toggleVariableSelect = (variableName: string) => {
-    Loading.startLoading();
-    setSelectedVariables((prev) => ({
-      ...prev,
-      [variableName]: !prev[variableName],
-    }));
-    Loading.endLoading();
+    loadingServ.startLoading();
+    setSelectedVariables((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(variableName)) {
+        newSet.delete(variableName);
+      } else {
+        newSet.add(variableName);
+      }
+      return newSet;
+    });
+    loadingServ.endLoading();
   };
 
   const changeSelectedFilterStat = (
     newStatus: PertVariableFilterStatus | null
   ) => {
-    Loading.startLoading();
+    loadingServ.startLoading();
     const newFilterVariables = { ...filterVariables };
 
     variableNames.forEach((name) => {
-      if (selectedVariables[name]) {
+      if (selectedVariables.has(name)) {
         if (newStatus === null) {
           delete newFilterVariables[name];
         } else {
@@ -46,10 +56,10 @@ const SelectVarFilterTable: React.FC<{
       }
     });
 
-    usePerturbationFilterSortStore
+    perturbationFilterSortStore
       .getState()
       .setPerturbationVariables(newFilterVariables);
-    Loading.endLoading();
+    loadingServ.endLoading();
   };
 
   /** Array of buttons for changing the filter status of selected variables.
@@ -58,34 +68,60 @@ const SelectVarFilterTable: React.FC<{
    * - The button color (string)
    * - The onClick handler function (() => void)
    */
-  const statusButtons: Array<[string, string, () => void]> = [
-    ['N', 'var(--color-grey)', () => changeSelectedFilterStat(null)],
+  const statusButtons: Array<
+    [string, string, string, () => void, () => string]
+  > = [
+    [
+      'N',
+      'var(--color-not-in-phenotype)',
+      'var(--color-not-in-phenotype-highlight)',
+      () => changeSelectedFilterStat(null),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Not In Filter'
+        ),
+    ],
     [
       'P',
-      'var(--color-violet)',
+      'var(--color-present-in-perturbation)',
+      'var(--color-present-in-perturbation-highlight)',
       () =>
         changeSelectedFilterStat(PertVariableFilterStatus.IN_FILTER_PERTURBED),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Perturbed (Positively or Negatively)'
+        ),
     ],
     [
       'T',
-      'var(--color-green)',
+      'var(--color-in-phenotype-true)',
+      'var(--color-in-phenotype-true-highlight)',
       () =>
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_POSITIVELY_PERTURBED
         ),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Positively Perturbed'
+        ),
     ],
     [
       'F',
-      'var(--color-red)',
+      'var(--color-in-phenotype-false)',
+      'var(--color-in-phenotype-true-false)',
       () =>
         changeSelectedFilterStat(
           PertVariableFilterStatus.IN_FILTER_NEGATIVELY_PERTURBED
+        ),
+      () =>
+        pageStringProviderServ.Tooltips.changeVariableFilterStatus(
+          'Negatively Perturbed'
         ),
     ],
   ];
 
   const filteredVariableNames = useMemo(() => {
-    return SearchAndFilterHelpers.filterStringsBySearchTerms(
+    return searchAndFilterHelpersServ.filterStringsBySearchTerms(
       variableNames,
       searchText
     );
@@ -95,22 +131,39 @@ const SelectVarFilterTable: React.FC<{
     <div className="h-fit w-[95%] flex flex-col justify-start items-center gap-2">
       <section className="h-[30px] w-full flex flex-row justify-between items-center px-2">
         <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(([label, color, onClick], index) => (
-            <TextButtonReact
-              key={index}
-              compHeight="29px"
-              compWidth="29px"
-              text={label}
-              handleClick={onClick}
-              buttonColor={color}
-            />
-          ))}
+          {statusButtons.map(
+            ([label, color, hoverColor, onClick, tooltipTextProviderFunction], index) => (
+              <TextButtonReact
+                key={index}
+                compHeight="29px"
+                compWidth="29px"
+                text={label}
+                handleClick={onClick}
+                buttonColor={color}
+                buttonHoverColor={hoverColor}
+                onMouseEnter={(e: React.MouseEvent) =>
+                  helpHoverStore
+                    .getState()
+                    .setHelpHoverAtMouse(
+                      e.nativeEvent,
+                      tooltipTextProviderFunction(),
+                      true,
+                      -50,
+                      300
+                    )
+                }
+                onMouseLeave={() => helpHoverStore.getState().clear()}
+              />
+            )
+          )}
         </div>
 
-        <SelectionButtons
+        <SelectionButtons<string>
           keys={variableNames}
           selectedVariables={selectedVariables}
           setSelectedVariables={setSelectedVariables}
+          tooltips={pageStringProviderServ.Tooltips}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
@@ -118,14 +171,17 @@ const SelectVarFilterTable: React.FC<{
         compWidth="100%"
         placeholder="Search Control Enabled variables..."
         onWrite={(value) => setSearchText(value)}
+        textColor="var(--color-secondary-text)"
+        inputColor="var(--color-secondary-text-inputs)"
+        inputBorderColor="var(--color-secondary-text-inputs-border)"
       />
 
-      <section className="h-[150px] w-full overflow-y-auto overflow-x-hidden">
+      <section className="h-[150px] w-full overflow-y-auto overflow-x-hidden rounded-md bg-(--color-secondary-light) border-(--color-secondary-ultra-light-border) border">
         {filteredVariableNames.map((name) => (
           <SelectVarFilterTableRow
             key={name}
             varName={name}
-            isSelected={!!selectedVariables[name]}
+            isSelected={selectedVariables.has(name)}
             toggleSelect={toggleVariableSelect}
             pertStatus={filterVariables[name]}
           />

@@ -1,18 +1,10 @@
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
-import useUpdateFunctionsStore from '../../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
+import { useEffect, useRef } from 'react';
+import type { InvisibleInput } from '../../../lit-components/invisible-input';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
+import UpdateFunctionValidation from '../UpdateFunctionValidation/UpdateFunctionValidation';
+import type { ChangeUpdateFunctionInputProps } from './ChangeUpdateFunctionInputProps';
 
-const ChangeUpdateFunctionInput: React.FC<{
-  compHeight: string;
-  compWidth: string;
-  inputHeight: string;
-  inputWidth: string;
-  inputFontSize: string;
-  validationMinHeight: string;
-  validationMaxHeight: string;
-  varId: number;
-}> = ({
+const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
   compHeight,
   compWidth,
   inputHeight,
@@ -20,24 +12,33 @@ const ChangeUpdateFunctionInput: React.FC<{
   inputFontSize,
   validationMinHeight,
   validationMaxHeight,
-  varId,
+  varName,
+  updateFunction,
+  updateFunctionStatus,
+  setUpdateFunction,
+  exposeInputRef,
+
+  pageStringProviderServ,
+
+  helpHoverStore,
 }) => {
-  const varName = useVariablesStore(
-    (state) => state.variables[varId].name ?? 'Unknown'
-  );
+  const inputReference = useRef<InvisibleInput | null>(null);
 
-  const updateFunction = useUpdateFunctionsStore(
-    (state) => state.getUpdateFunctionId(varId)?.functionString ?? ''
-  );
-  const updateFunctionStatus = useUpdateFunctionsStore(
-    (state) => state.updateFunctionStatus[varId] ?? ''
-  );
+  const handleUpdateFunctionMouseEnter = (e: React.MouseEvent) =>
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtMouse(
+        e.nativeEvent,
+        pageStringProviderServ.Tooltips.changeVariableUpdateFunction(),
+        true,
+        -150
+      );
+  const handleUpdateFunctionMouseLeave = () =>
+    helpHoverStore.getState().clear();
 
-  const changeUpdateFunction = (newFunction: string) => {
-    const updateFunction: string = newFunction ?? '';
-
-    ModelEditor.setUpdateFunction(varId, updateFunction);
-  };
+  useEffect(() => {
+    exposeInputRef(inputReference.current as HTMLElement);
+  }, [inputReference]);
 
   return (
     <div
@@ -45,24 +46,30 @@ const ChangeUpdateFunctionInput: React.FC<{
       className="flex flex-col justify-center items-center"
     >
       <InvisibleInputReact
+        ref={inputReference}
         compHeight={inputHeight}
         compWidth={inputWidth}
-        multiFontSize={inputFontSize}
+        fontSize={inputFontSize}
         multiLine={true}
-        placeholder={`$f_${varName}(...)`}
+        placeholder={pageStringProviderServ.OtherStrings.updateFunctionInputPlaceholder(
+          varName
+        )}
         value={updateFunction}
-        handleChange={changeUpdateFunction}
+        handleKeyUp={(fun) => setUpdateFunction(fun)}
+        contBgColor='transparent'
+        textColor="var(--color-secondary-text)"
+        contFocusBgColor="transparent"
+        placeholderColor="var(--color-secondary-placeholder-text)"
+        onMouseEnter={handleUpdateFunctionMouseEnter}
+        onMouseLeave={handleUpdateFunctionMouseLeave}
       />
-      <span
-        className="min-h-[20px] w-[95%] mt-1.5 overflow-x-auto overflow-y-auto font-(family-name:--font-family-fira-mono) select-none leading-[18px] text-[15px] whitespace-pre-line"
-        style={{
-          color: updateFunctionStatus.isError ? 'var(--color-red)' : 'black',
-          minHeight: validationMinHeight,
-          maxHeight: validationMaxHeight,
-        }}
-      >
-        {updateFunctionStatus.status}
-      </span>
+      <UpdateFunctionValidation
+        compMinHeight={validationMinHeight}
+        compMaxHeight={validationMaxHeight}
+        compWidth={'95%'}
+        textColor='var(--color-secondary-text)'
+        updateFunctionStatus={updateFunctionStatus}
+      />
     </div>
   );
 };

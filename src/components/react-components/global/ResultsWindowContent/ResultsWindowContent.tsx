@@ -1,18 +1,30 @@
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
 import type {
   AttractorResults,
   ComputationModes,
   ControlResults,
-} from '../../../../types';
+} from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import AttractorResultsTable from './AttractorResultsTable/AttractorResultsTable';
 import ControlResultsStats from './ControlResultsStats/ControlResultsStats';
+import type { ResultsWindowContentProps } from './ResultsWindowContentProps';
 
-const ResultsWindowContent: React.FC = () => {
-  const resultsType: ComputationModes | undefined = useResultsStatus(
-    (state) => state.type
+const ResultsWindowContent: React.FC<ResultsWindowContentProps> = ({
+  computationManagerServ,
+  attractorVisualizerServ,
+  attractorBifurcationExplorerServ,
+  controlPerturbationsTableServ,
+  resultsOperationsServ,
+  dataFormatersServ,
+  pageStringProviderServ,
+  modelInfoStore,
+
+  tabsStore,
+  resultsStatusStore,
+  helpHoverStore,
+}) => {
+  const selectedResultsMode = resultsStatusStore(
+    (state) => state.selectedResults
   );
-  const results = useResultsStatus((state) => state.results);
 
   const renderEmptyResults = () => {
     return (
@@ -27,16 +39,42 @@ const ResultsWindowContent: React.FC = () => {
     );
   };
 
-  if (!resultsType || !results) {
-    return renderEmptyResults();
-  }
+  const getResultsComponent = (resultsType: ComputationModes | undefined) => {
+    if (resultsType == undefined) {
+      return renderEmptyResults();
+    }
 
-  const getResultsComponent = () => {
+    const results = resultsStatusStore.getState().results[resultsType];
+
     switch (resultsType) {
       case 'Attractor Analysis':
-        return <AttractorResultsTable results={results as AttractorResults} />;
+        return (
+          <AttractorResultsTable
+            results={results as AttractorResults}
+            computationManagerServ={computationManagerServ}
+            attractorVisualizerServ={attractorVisualizerServ}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            pageStringProviderServ={pageStringProviderServ}
+            tabsStore={tabsStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       case 'Control':
-        return <ControlResultsStats results={results as ControlResults} />;
+        return (
+          <ControlResultsStats
+            results={results as ControlResults}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            resultsOperationsServ={resultsOperationsServ}
+            dataFormatersServ={dataFormatersServ}
+            tooltips={
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips
+                .ResultsTooltips.ControlResults
+            }
+            modelInfoStore={modelInfoStore}
+            tabsStore={tabsStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       default:
         return renderEmptyResults();
     }
@@ -44,8 +82,7 @@ const ResultsWindowContent: React.FC = () => {
 
   return (
     <section className="flex flex-col h-fit w-fit items-center justify-start gap-2">
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
-      {getResultsComponent()}
+      {getResultsComponent(selectedResultsMode)}
     </section>
   );
 };

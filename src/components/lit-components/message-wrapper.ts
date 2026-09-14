@@ -1,7 +1,44 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+type StyleProperty =
+  | 'compHeight'
+  | 'compWidth'
+  | 'compZindex'
+  | 'wrapperHeight'
+  | 'wrapperWidth'
+  | 'wrapperOverflowX'
+  | 'wrapperOverflowY'
+  | 'contentHeight'
+  | 'contentWidth'
+  | 'contentZindex'
+  | 'messageHeight'
+  | 'messageWidth'
+  | 'messageLineHeight'
+  | 'messagePad'
+  | 'messageTop'
+  | 'messageBottom'
+  | 'messageLeft'
+  | 'messageRight'
+  | 'messageColor'
+  | 'messageShadow'
+  | 'messageFontSize'
+  | 'messageFontWeight'
+  | 'messageFontFamily'
+  | 'messageTransform'
+  | 'messageAlign'
+  | 'infoColor'
+  | 'successColor'
+  | 'errorColor';
+
 type MessageType = 'info' | 'success' | 'error';
+
+interface QueuedMessage {
+  type: MessageType;
+  message: string;
+  duration: number;
+  floodedDuration: number;
+}
 
 class MessageHandler {
   instance: MessageWrapper | null = null;
@@ -9,7 +46,7 @@ class MessageHandler {
   findGlobalMessage(): MessageWrapper | null {
     if (this.instance) return this.instance;
 
-    let el = document.querySelector('message-wrapper') as MessageWrapper;
+    const el = document.querySelector('message-wrapper') as MessageWrapper;
 
     if (!el) return null;
 
@@ -17,34 +54,46 @@ class MessageHandler {
     return el;
   }
 
-  showSuccess(message: string, duration: number = 3000): void {
+  showSuccess(
+    message: string,
+    duration: number = 3000,
+    floodedDuration: number = 1000
+  ): void {
     const el = this.findGlobalMessage();
 
     if (!el) {
       return;
     }
 
-    el.show('success', message, duration);
+    el.show('success', message, duration, floodedDuration);
   }
 
-  showError(message: string, duration: number = 3000): void {
+  showError(
+    message: string,
+    duration: number = 3000,
+    floodedDuration: number = 3000
+  ): void {
     const el = this.findGlobalMessage();
 
     if (!el) {
       return;
     }
 
-    el.show('error', message, duration);
+    el.show('error', message, duration, floodedDuration);
   }
 
-  showInfo(message: string, duration: number = 3000): void {
+  showInfo(
+    message: string,
+    duration: number = 3000,
+    floodedDuration: number = 1000
+  ): void {
     const el = this.findGlobalMessage();
 
     if (!el) {
       return;
     }
 
-    el.show('info', message, duration);
+    el.show('info', message, duration, floodedDuration);
   }
 }
 
@@ -87,9 +136,17 @@ export class MessageWrapper extends LitElement {
   @property({ type: String }) declare contentWidth?: string;
   @property({ type: String }) declare contentZindex?: string;
 
+  @property({ type: Number }) declare floodedQueueLength?: number;
+  @property({ type: Number }) declare maxQueueSize?: number;
+
   @state() declare type?: MessageType;
   @state() declare message?: string;
   @state() declare visible?: boolean;
+
+  @state() declare flood?: boolean;
+
+  private queue: QueuedMessage[] = [];
+  private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   static styles = css`
     :host {
@@ -126,7 +183,9 @@ export class MessageWrapper extends LitElement {
       border-radius: 24px;
       box-shadow: var(--message-wrapper-message-shadow, 0px 2px 5px #d0d0d0);
       background-color: var(--message-wrapper-message-color, #eceff1);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
       pointer-events: none;
       transform: translate(-50%);
       z-index: var(--message-wrapper-z-index, 1000000000);
@@ -177,27 +236,111 @@ export class MessageWrapper extends LitElement {
     }
   `;
 
-  public show(type: MessageType, message: string, duration: number = 3000) {
-    this.type = type;
-    this.message = message;
+  private makeNotNeg(numb: number) {
+    return numb < 0 ? 0 : numb;
+  }
+
+  private cutQueue(maxSize: number) {
+    const toRemove = this.queue.length - maxSize;
+    let index = 0;
+
+    // Remove all the non error messages from the queue so that it fits into the maxSize limit
+    while (toRemove > 0 && this.queue.length > 0 && index < this.queue.length) {
+      if (this.queue[index].type != 'error') {
+        this.queue.shift();
+      } else {
+        index += 1;
+      }
+    }
+
+    // If there is too many errors cut also the errors
+    while (this.queue.length > maxSize) {
+      this.queue.shift();
+    }
+  }
+
+  public show(
+    type: MessageType,
+    msg: string,
+    duration: number = 3000,
+    floodedDuration: number
+  ): void {
+    this.queue.push({ type, message: msg, duration, floodedDuration });
+
+    const safeMaxQueueSize =
+      this.maxQueueSize && this.maxQueueSize > 0 ? this.maxQueueSize : 10;
+
+    if (this.queue.length > safeMaxQueueSize) {
+      this.cutQueue(safeMaxQueueSize);
+    }
+
+    // If nothing is currently showing, start processing
+    if (!this.visible && this.type === undefined) {
+      this.processQueue();
+    }
+  }
+
+  private isFlood(): boolean {
+    const safeFloodQueueLength = this.makeNotNeg(this.floodedQueueLength ?? 3);
+
+    return this.flood || this.queue.length >= safeFloodQueueLength;
+  }
+
+  private processQueue(): void {
+    if (this.queue.length === 0) {
+      this.flood = false;
+      return;
+    }
+
+    const next = this.queue.shift();
+    if (!next) {
+      this.flood = false;
+      return;
+    }
+
+    // Set state to show the message
+    this.type = next.type;
+    this.message = next.message;
     this.visible = true;
 
-    setTimeout(() => {
-      this.visible = false;
+    this.flood = this.isFlood();
+
+    const notNegDur = this.makeNotNeg(next.duration);
+    const notNegFloodDur = this.makeNotNeg(next.floodedDuration);
+
+    const duration = this.flood
+      ? Math.min(notNegDur, notNegFloodDur)
+      : notNegDur;
+
+    const hideGap = this.flood ? 200 : 400;
+
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+
+    this.timeoutId = setTimeout(() => {
+      this.hideMessage(hideGap);
     }, duration);
   }
 
+  private hideMessage(hideGap: number = 400): void {
+    this.visible = false;
+    this.type = undefined;
+
+    setTimeout(() => {
+      this.processQueue();
+    }, hideGap);
+  }
+
   private updateStyleVariable(
-    propertyName: string,
+    propertyName: StyleProperty,
     cssVar: string,
     fallback: string
   ) {
-    const value = (this as any)[propertyName] ?? fallback;
+    const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
   }
 
-  updated(changed: Map<string, any>) {
-    const update = (prop: string, cssVar: string, fallback: string) =>
+  updated(changed: Map<string, StyleProperty>) {
+    const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--message-wrapper-comp-height', '100%');

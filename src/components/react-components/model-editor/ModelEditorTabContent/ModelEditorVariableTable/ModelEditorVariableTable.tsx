@@ -1,83 +1,114 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import type { RegulationVariables, Variable } from '../../../../../types';
-import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
-import useVariablesStore from '../../../../../stores/LiveModel/useVariablesStore';
+import { useEffect, useMemo, useRef } from 'react';
+import type {
+  ModelEditorItem,
+  ModelEditorItems,
+  Variable,
+} from '../../../../../types/types';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { ModelEditorVariableTableProps } from './ModelEditorVariableTableProps';
 import VariableInfo from './VariableInfo/VariableInfo';
-import useModelEditorStatus from '../../../../../stores/ModelEditor/useModelEditorStatus';
-import SearchAndFilterHelpers from '../../../../../services/utilities/SearchAndFilterHelpers';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
   searchText,
+  exposeSetExtend,
+
+  modelEditorServ,
+  searchAndFilterHelpersServ,
+  pageStringProviderServ,
+
+  regulationsStore,
+  variablesStore,
+  modelEditorStatusStore,
+  updateFunctionsStore,
+  helpHoverStore,
 }) => {
-  const [hoverVariableId, setHoverVariableId] = useState<number | null>(null);
-  const modelEditorState = useModelEditorStatus((state) => state);
+  const scrollToVariableId = modelEditorStatusStore(
+    (state) => state.scrollToVariable
+  );
 
-  const [hoverRegulation, setHoverRegulation] =
-    useState<RegulationVariables | null>(null);
-  const [selectedRegulation, setSelectedRegulation] =
-    useState<RegulationVariables | null>(null);
+  const VariableListRef = useRef<HTMLDivElement>(null);
+  const variableInfoRefs = useRef<Record<number, HTMLElement | null>>({});
 
-  const variablesObj = useVariablesStore((state) => state.variables);
+  const selectedItemsInfo: ModelEditorItems = modelEditorStatusStore(
+    (state) => state.selectedItemsInfo
+  );
+  const hoverItemInfo: ModelEditorItem | null = modelEditorStatusStore(
+    (state) => state.hoverItemInfo
+  );
+
+  const hoverVariableId =
+    hoverItemInfo?.type === 'variable' ? hoverItemInfo.id : null;
+
+  const hoverRegulation =
+    hoverItemInfo?.type === 'regulation' ? hoverItemInfo.regulationIds : null;
+
+  const variablesObj = variablesStore((state) => state.variables);
   const variables = Object.values(variablesObj);
 
-  const hoverVariableInfo = useCallback((id: number, turnOnHover: boolean) => {
-    setHoverVariableId(turnOnHover ? id : null);
-  }, []);
-
-  const hoverRegulationInfo = useCallback(
-    (regulation: RegulationVariables, turnOnHover: boolean) => {
-      setHoverRegulation(turnOnHover ? regulation : null);
-    },
-    []
-  );
-
-  const selectRegulationInfo = useCallback(
-    (regulation: RegulationVariables, select: boolean) => {
-      setSelectedRegulation(select ? regulation : null);
-    },
-    []
-  );
-
-  useEffect(() => {
-    ModelEditor.setHoverVariableFunction(hoverVariableInfo);
-    ModelEditor.setSelectRegulationFunction(selectRegulationInfo);
-    ModelEditor.setHoverRegulationFunction(hoverRegulationInfo);
-  }, [hoverVariableInfo, hoverRegulationInfo, selectRegulationInfo]);
-
   const filteredVariables = useMemo(() => {
-    return SearchAndFilterHelpers.filterVariablesBySearchTerms(
+    return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
       variables,
       searchText
     );
   }, [variables, searchText]);
 
+  useEffect(() => {
+    if (scrollToVariableId == null) return;
+
+    const container = VariableListRef.current;
+    const element = variableInfoRefs.current[scrollToVariableId];
+
+    if (container && element) {
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const top =
+        container.scrollTop +
+        (elementRect.top - containerRect.top) -
+        container.clientHeight / 2 +
+        element.clientHeight / 2;
+
+      container.scrollTo({
+        top: Math.max(0, top),
+        behavior: 'smooth',
+      });
+    }
+
+    modelEditorStatusStore.getState().clearScrollToVariable();
+  }, [scrollToVariableId, filteredVariables, modelEditorStatusStore]);
+
   return !filteredVariables || filteredVariables.length === 0 ? (
     <section className="flex h-[200px] w-[98%] justify-center items-center">
-      <SimpleHeaderReact headerText="No Variables" textFontWeight="normal" />
+      <SimpleHeaderReact textColor='var(--color-primary-text)' headerText="No Variables" textFontWeight="normal" />
     </section>
   ) : (
-    <section className="flex flex-col min-h-[50px] h-auto max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
+    <section
+      ref={VariableListRef}
+      className="flex flex-col min-h-[50px] h-auto max-h-[100px] md:max-h-[200px] lg:max-h-[280px] xl:max-h-[290px] 2xl:max-h-[470px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1"
+    >
       {filteredVariables.map((variable: Variable) => (
         <VariableInfo
           key={variable.id}
           {...variable}
-          hoverVariable={hoverVariableId === variable.id}
-          selectedVariable={
-            modelEditorState.selectedItemInfo?.type === 'variable' &&
-            modelEditorState.selectedItemInfo?.id === variable.id
+          hoverVariable={
+            hoverVariableId !== null && hoverVariableId === variable.id
           }
+          selectedVariable={selectedItemsInfo.variables.has(variable.id)}
           hoverRegulation={
             hoverRegulation && hoverRegulation.target === variable.id
               ? hoverRegulation
               : undefined
           }
-          selectedRegulation={
-            selectedRegulation && selectedRegulation.target === variable.id
-              ? selectedRegulation
-              : undefined
-          }
+          selectedRegulatorIds={selectedItemsInfo.regulations[variable.id]}
+          exposeSetExtend={exposeSetExtend}
+          setVariableInfoRef={(id: number, element: HTMLElement | null) => {
+            variableInfoRefs.current[id] = element;
+          }}
+          modelEditorServ={modelEditorServ}
+          pageStringProviderServ={pageStringProviderServ}
+          regulationsStore={regulationsStore}
+          variablesStore={variablesStore}
+          updateFunctionsStore={updateFunctionsStore}
+          helpHoverStore={helpHoverStore}
         />
       ))}
     </section>

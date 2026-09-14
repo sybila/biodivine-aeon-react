@@ -1,11 +1,17 @@
-import AttractorVisualizer from '../../../../../../services/attractor-visualizer/AttractorVisualizer';
-import ComputationManager from '../../../../../../services/global/ComputationManager/ComputationManager';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { AttractorResultsTableRowProps } from './AttractorResultsTableRowProps';
 
 const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
   interpretationCount,
   behaviorClassList,
+  textColor = 'var(--color-primary-text)',
+  textHoverColor = 'var(--color-primary-interactive-text)',
+
+  computationManagerServ,
+  attractorVisualizerServ,
+  pageStringProviderServ,
+
+  helpHoverStore,
 }) => {
   const behaviourString: string | undefined = !behaviorClassList
     ? undefined
@@ -16,19 +22,29 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
 
   const openAttractor = () => {
     if (behaviourString && behaviourString.length > 0) {
-      AttractorVisualizer.openVisualizer({ behavior: behaviourString });
+      attractorVisualizerServ.openVisualizer({ behavior: behaviourString });
     }
   };
 
   const openWitness = () => {
-    ComputationManager.openWitnessAttractorAnalysis(
+    computationManagerServ.AttractorAnalysis.openWitnessAttractorAnalysis(
       behaviourString ? behaviourString : ''
     );
   };
 
-  const buttonsContent: Array<[string, () => void]> = [
-    ['Witness', () => openWitness()],
-    ['Attractor', () => openAttractor()],
+  const buttonsContent: Array<[string, () => void, () => string]> = [
+    [
+      'Witness',
+      () => openWitness(),
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips.ResultsTooltips
+        .AttractorAnalysisResults.openWitness,
+    ],
+    [
+      'Attractor',
+      () => openAttractor(),
+      pageStringProviderServ.Tooltips.OverlayWindowTooltips.ResultsTooltips
+        .AttractorAnalysisResults.openAttractorVisualization,
+    ],
   ];
 
   return (
@@ -40,6 +56,7 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
           compWidth="fit-content"
           lineHeight="30px"
           textFontSize="18px"
+          textColor={textColor}
           headerText={
             !behaviourString || behaviourString.length === 0
               ? 'unclassified'
@@ -49,16 +66,35 @@ const AttractorResultsTableRow: React.FC<AttractorResultsTableRowProps> = ({
         />
       </div>
 
-      <span className="flex flex-row items-center justify-center-safe h-full mx-[5%] w-[30%] overflow-x-auto overflow-y-hidden font-[var(--base-font-family)] text-black text-[18px] select-none">
+      <span className="flex flex-row items-center justify-center-safe h-full mx-[5%] w-[30%] overflow-x-auto overflow-y-hidden font-(--base-font-family) text-(--color-primary-text) text-[18px] select-none">
         {!interpretationCount ? 'unknown' : interpretationCount.toString()}
       </span>
 
       <div className="flex flex-row h-full w-[30%] items-center justify-end gap-2">
-        {buttonsContent.map(([text, onClick], index) => (
+        {buttonsContent.map(([text, onClick, tooltipTextFunction], index) => (
           <span
             key={index}
-            className="decoration-solid underline cursor-pointer hover:text-gray-700"
+            className="decoration-solid underline cursor-pointer"
+            style={{ color: textColor }}
             onClick={onClick}
+            onMouseEnter={(e: React.MouseEvent) => {
+              {
+                helpHoverStore
+                  .getState()
+                  .setHelpHoverAtMouse(
+                    e.nativeEvent,
+                    tooltipTextFunction(),
+                    true,
+                    -50
+                  );
+                (e.currentTarget as HTMLSpanElement).style.color =
+                  textHoverColor;
+              }
+            }}
+            onMouseLeave={(e: React.MouseEvent) => {
+              helpHoverStore.getState().clear();
+              (e.currentTarget as HTMLSpanElement).style.color = textColor;
+            }}
           >
             {text}
           </span>

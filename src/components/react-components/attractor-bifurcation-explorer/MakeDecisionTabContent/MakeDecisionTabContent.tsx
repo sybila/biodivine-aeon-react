@@ -1,15 +1,23 @@
-import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import type { DecisionMixedNode, LeafNode } from '../../../../types';
+import type { DecisionMixedNode, LeafNode } from '../../../../types/types';
+import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import NoDataText from '../../global/NoDataText/NoDataText';
 
 import AutoExpandSection from './AutoExpandSection/AutoExpandSection';
 import DecisionTable from './DecisionTable/DecisionTable';
+import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps';
 
-const MakeDecisionTabContent: React.FC = () => {
+const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  messageServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
+}) => {
   const selectedNode: DecisionMixedNode | LeafNode | null =
-    useBifurcationExplorerStatus((state) => state.selectedNode);
+    bifurcationExplorerStatusStore((state) => state.selectedNode);
 
   if (!selectedNode) {
     return <NoDataText text="No selected node" />;
@@ -27,9 +35,15 @@ const MakeDecisionTabContent: React.FC = () => {
           compWidth="100%"
           justifyHeader="start"
           headerText="Auto-Expand"
+          textColor='var(--color-primary-text)'
         />
 
-        <AutoExpandSection />
+        <AutoExpandSection
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          pageStringProviderServ={pageStringProviderServ}
+          messageServ={messageServ}
+          helpHoverStore={helpHoverStore}
+        />
       </section>
 
       <SeparatorLine />
@@ -40,10 +54,16 @@ const MakeDecisionTabContent: React.FC = () => {
           compWidth="100%"
           justifyHeader="start"
           headerText="Decisions"
+          textColor='var(--color-primary-text)'
         />
         <DecisionTable
           nodeId={selectedNode.id}
           nodeCardinality={selectedNode.cardinality}
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          behaviorClassOperationsServ={behaviorClassOperationsServ}
+          pageStringProviderServ={pageStringProviderServ}
+          bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+          helpHoverStore={helpHoverStore}
         />
       </section>
     </div>

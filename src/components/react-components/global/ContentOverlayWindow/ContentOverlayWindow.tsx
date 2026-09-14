@@ -1,31 +1,35 @@
-import useOverlayWindowStore from '../../../../stores/ContentOverlayWindow/useOverlayWindowStore';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
+import type { ContentOverlayWindowProps } from './ContentOverlayWindowProps';
 
-const ContentOverlayWindow: React.FC<{ zIndex: string }> = ({ zIndex }) => {
-  const currentContent = useOverlayWindowStore((state) => state.currentContent);
+const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
+  zIndex,
+  overlayWindowStore,
+}) => {
+  const currentContent = overlayWindowStore((state) => state.currentContent);
+
+  const closeOverlay = () => {
+    overlayWindowStore.getState().setCurrentContent(null);
+  };
 
   if (!currentContent) {
     return null;
   }
 
-  const closeOverlay = () => {
-    useOverlayWindowStore.getState().setCurrentContent(null);
-  };
-
   return (
     <OverlayWindowReact
-      showCloseButton={true}
+      headerTextColor="var(--color-primary-text)"
+      windColor="var(--color-primary)"
+      closeHoverColor="var(--color-secondary-buttons-hover)"
+      showCloseButton={currentContent.showCloseButton}
       showHeader={true}
       headerText={currentContent.header}
-      handleBackgroundClick={() => closeOverlay()}
+      handleBackgroundClick={() =>
+        currentContent.closeOnBgClick ? closeOverlay() : null
+      }
       handleCloseClick={() => closeOverlay()}
       compZIndex={zIndex}
-      windWidth="auto"
-      windMaxWidth="80%"
-      windHeight="auto"
-      windMaxHeight="80%"
-      windOverflowX="auto"
-      windOverflowY="auto"
+      windMaxWidth="90vw"
+      windMaxHeight="90vh"
     >
       {currentContent.content}
     </OverlayWindowReact>

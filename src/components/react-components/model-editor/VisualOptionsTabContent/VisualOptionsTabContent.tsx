@@ -1,22 +1,139 @@
 import { useState } from 'react';
-import CytoscapeME from '../../../../services/model-editor/CytoscapeME/CytoscapeME';
+import type { VisualOptionsButtonSection } from '../../../../types/types';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import type { VisualOptionsButtonSection } from '../../../../types';
+import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';
 
-const VisualOptionsTabContent = () => {
+const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
+  modelVisualization,
+
+  pageStringProviderServ,
+
+  helpHoverStore,
+}) => {
   const [activeButtons, setActiveButtons] = useState<Record<string, boolean>>({
-    Phenotype: CytoscapeME.isPhenotypeHighlighted(),
-    'Control-Enabled': CytoscapeME.isControlEnabledHighlighted(),
+    Phenotype: modelVisualization.isPhenotypeHighlighted(),
+    'Control-Enabled': modelVisualization.isControlEnabledHighlighted(),
   });
 
   const layouts: VisualOptionsButtonSection = {
     headerText: 'Variable Layouts',
     buttons: [
-      ['Organic', () => CytoscapeME.layoutCose(), false],
-      ['Hierarchical', () => CytoscapeME.layoutDagre(), false],
-      ['Phenotype', () => CytoscapeME.layoutPhenotype(), false],
-      ['Control-Enabled', () => CytoscapeME.layoutControlEnabled(), false],
+      [
+        'Organic',
+        () => modelVisualization.layoutCose(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableLayout('Cose'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Hierarchical',
+        () => modelVisualization.layoutDagre(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableLayout('Dagre'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Phenotype',
+        () => modelVisualization.layoutPhenotype(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableLayout('Phenotype'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Control-Enabled',
+        () => modelVisualization.layoutControlEnabled(),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableLayout('Control-Enabled'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+    ],
+  };
+
+  const selectedLayouts: VisualOptionsButtonSection = {
+    headerText: 'Selected Variable Layouts',
+    buttons: [
+      [
+        'Hierarchical',
+        () => modelVisualization.layoutDagre(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableSelectedLayout('Dagre'),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Phenotype',
+        () => modelVisualization.layoutPhenotype(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableSelectedLayout(
+                'Phenotype'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
+      [
+        'Control-Enabled',
+        () => modelVisualization.layoutControlEnabled(true),
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.variableSelectedLayout(
+                'Control-Enabled'
+              ),
+              true,
+              -50,
+              150
+            ),
+        false,
+      ],
     ],
   };
 
@@ -26,23 +143,45 @@ const VisualOptionsTabContent = () => {
       [
         'Phenotype',
         () => {
-          CytoscapeME.highlightPhenotype();
+          modelVisualization.highlightPhenotype();
           setActiveButtons((prev) => ({
             ...prev,
             Phenotype: !prev['Phenotype'],
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.highlightVariable('Phenotype'),
+              true,
+              -50,
+              150
+            ),
         activeButtons['Phenotype'] ?? false,
       ],
       [
         'Control-Enabled',
         () => {
-          CytoscapeME.highlightControlEnabled();
+          modelVisualization.highlightControlEnabled();
           setActiveButtons((prev) => ({
             ...prev,
             'Control-Enabled': !prev['Control-Enabled'],
           }));
         },
+        (e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.highlightVariable(
+                'Control-Enabled'
+              ),
+              true,
+              -50,
+              150
+            ),
         activeButtons['Control-Enabled'] ?? false,
       ],
     ],
@@ -60,30 +199,35 @@ const VisualOptionsTabContent = () => {
     return (
       <>
         <DotHeaderReact
+          textColor="var(--color-primary-text)"
           headerText={section.headerText}
           compWidth="100%"
           justifyHeader="start"
         />
         <section className="flex flex-row items-center justify-between w-full h-fit gap-1 mb-2 overflow-visible">
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
-            {firstHalf.map(([label, onClick, isActive]) => (
-              <TextButtonReact
+            {firstHalf.map(([label, onClick, onMouseEnter, isActive]) => (
+              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
-            {secondHalf.map(([label, onClick, isActive]) => (
-              <TextButtonReact
+            {secondHalf.map(([label, onClick, onMouseEnter, isActive]) => (
+              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
                 key={label}
                 text={label}
                 handleClick={onClick}
                 compWidth="100%"
                 active={isActive}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={() => helpHoverStore.getState().clear()}
               />
             ))}
           </div>
@@ -95,6 +239,7 @@ const VisualOptionsTabContent = () => {
   return (
     <div className="flex flex-col items-center w-full h-fit max-h-[400px] overflow-auto gap-3">
       {renderButtonSection(layouts)}
+      {renderButtonSection(selectedLayouts)}
       {renderButtonSection(highlight)}
     </div>
   );

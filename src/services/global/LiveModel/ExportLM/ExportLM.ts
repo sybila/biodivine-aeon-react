@@ -1,0 +1,251 @@
+import config from '../../../../config';
+import type { ControlStatus } from '../../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { ModelState } from '../../../../stores/LiveModel/LoadedModelStore/ModelState';
+import type { ModelInfoState } from '../../../../stores/LiveModel/ModelInfoStore/ModelInfoState';
+import type { RegulationsStatus } from '../../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { UpdateFunctionsState } from '../../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+import {
+  type fileType,
+  type Position,
+  type Variable,
+} from '../../../../types/types';
+import type { AeonFormatInt } from '../../../utilities/AeonFormat/AeonFormatInt';
+import type { FileHelpersInt } from '../../../utilities/FileHelpers/FileHelpersInt';
+import type { MessageInt } from '../../Message/MessageInt';
+import type { LiveModelInt } from '../LiveModelInt';
+import type { ExportLMInt } from './ExportLMInt';
+
+class ExportLM implements ExportLMInt {
+  // #region --- Properties + Constructor ---
+
+  /** Function which returns Position of a node in ModelVisualization */
+  private getNodePositionFunction: (
+    variableId: number
+  ) => Position | undefined = (_) => undefined;
+
+  /** Indicates whether local storage is available. */
+  private hasLocalStorage: boolean;
+
+  /** Reference to the parent LiveModel class. */
+  private liveModel: LiveModelInt;
+  private fileHelpersServ: FileHelpersInt;
+  private messageServ: MessageInt;
+  private aeonFormatServ: AeonFormatInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private modelInfoStore: ZustandStore<ModelInfoState>;
+  private regulationsStore: ZustandStore<RegulationsStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private loadedModelStore: ZustandStore<ModelState>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+
+  constructor(
+    liveModel: LiveModelInt,
+    fileHelpersServ: FileHelpersInt,
+    messageServ: MessageInt,
+    aeonFormatServ: AeonFormatInt,
+
+    controlStore: ZustandStore<ControlStatus>,
+    modelInfoStore: ZustandStore<ModelInfoState>,
+    regulationsStore: ZustandStore<RegulationsStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    loadedModelStore: ZustandStore<ModelState>,
+    variablesStore: ZustandStore<VariablesStatus>
+  ) {
+    this.liveModel = liveModel;
+    this.fileHelpersServ = fileHelpersServ;
+    this.messageServ = messageServ;
+    this.aeonFormatServ = aeonFormatServ;
+
+    this.controlStore = controlStore;
+    this.modelInfoStore = modelInfoStore;
+    this.regulationsStore = regulationsStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.loadedModelStore = loadedModelStore;
+    this.variablesStore = variablesStore;
+
+    try {
+      const testKey = '__storage_test__';
+      window.localStorage.setItem(testKey, 'test');
+      window.localStorage.removeItem(testKey);
+      this.hasLocalStorage = true;
+    } catch (e) {
+      this.hasLocalStorage = false;
+    }
+  }
+
+  // #endregion
+
+  // #region --- Setters ---
+
+  public setGetNodePositionFunction(
+    func: (variableId: number) => Position | undefined
+  ): void {
+    if (func != undefined) {
+      this.getNodePositionFunction = func;
+    }
+  }
+
+  // #endregion
+
+  // #region --- Model Stats ---
+
+  public stats() {
+    let maxInDegree = 0;
+    let maxOutDegree = 0;
+    let variables: Variable[] = this.variablesStore
+      .getState()
+      .getAllVariables();
+    let explicitParameterNames = new Set<string>();
+    let parameterVars = 0;
+
+    for (const variable of variables) {
+      let regulators = 0;
+      let targets = 0;
+
+      for (let r of this.regulationsStore.getState().getAllRegulations()) {
+        if (r.target == variable.id) regulators += 1;
+        if (r.regulator == variable.id) targets += 1;
+      }
+
+      if (regulators > maxInDegree) maxInDegree = regulators;
+      if (targets > maxOutDegree) maxOutDegree = targets;
+
+      const updateFunction = this.updateFunctionsStore
+        .getState()
+        .getUpdateFunctionId(variable.id);
+      if (updateFunction === undefined) {
+        parameterVars += 1 << regulators;
+      } else {
+        const metadata = updateFunction.metadata;
+        for (let parameter of metadata.parameters) {
+          const p_key = `${parameter.name}(${parameter.cardinality})`;
+          if (!explicitParameterNames.has(p_key)) {
+            explicitParameterNames.add(p_key);
+            parameterVars += 1 << parameter.cardinality;
+          }
+        }
+      }
+    }
+
+    const explicitParameters = Array.from(explicitParameterNames).sort();
+
+    return {
+      maxInDegree,
+      maxOutDegree,
+      variableCount: variables.length,
+      parameterVariables: parameterVars,
+      regulationCount: this.regulationsStore.getState().getAllRegulations()
+        .length,
+      explicitParameters,
+    };
+  }
+
+  // #endregion
+
+  // #region --- Export/Save Model ---
+
+  public exportAeon(emptyPossible = false, defaultPhenotypeId = -1) {
+    const variables = this.variablesStore.getState().getAllVariables();
+    if (!emptyPossible && variables.length === 0) {
+      return undefined;
+    }
+
+    return this.aeonFormatServ.Serializers.serializeAeonIntoString({
+      getModelName: () => this.modelInfoStore.getState().getModelName(),
+      getModelDescription: () =>
+        this.modelInfoStore.getState().getModelDescription(),
+
+      getModelVariables: () => variables,
+      getModelVariableName: (varId: number) =>
+        this.variablesStore.getState().getVariableName(varId),
+      getVariablePosition: (varId: number) =>
+        this.getNodePositionFunction(varId),
+      getVariableControlEnabled: (varId: number) =>
+        this.controlStore.getState().getVariableControlEnabled(varId),
+      getVariableDefaultPhenStatus: (varId: number) =>
+        this.controlStore
+          .getState()
+          .getVariablePhenotype(varId, defaultPhenotypeId),
+      getVariableUpdateFunction: (varId: number) =>
+        this.updateFunctionsStore.getState().getUpdateFunctionId(varId),
+      getVariableRegulators: (varId: number) =>
+        this.regulationsStore.getState().regulationsOf(varId),
+
+      getModelPhenotypes: () => {
+        const phenotypes = {
+          ...this.controlStore.getState().getAllPhenotypes(),
+        };
+
+        delete phenotypes[defaultPhenotypeId];
+
+        return phenotypes;
+      },
+    });
+  }
+
+  public saveModel() {
+    const modelString = this.exportAeon();
+    const modelId = this.loadedModelStore.getState().loadedModelId;
+
+    if (modelString === undefined || modelId === null) {
+      return;
+    }
+    this.liveModel.Models.updateModel(modelId, modelString);
+
+    if (!this.hasLocalStorage || modelId !== 0) return;
+    try {
+      if (!this.liveModel.isEmpty()) {
+        localStorage.setItem(
+          config.localStorageModelName ?? 'last_model',
+          modelString
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // #endregion
+
+  // #region --- Export to File ---
+
+  public async exportToFile(
+    fileEnding: fileType,
+    conversionFunction?: (aeonString: string) => Promise<string>
+  ): Promise<void> {
+    let modelString = this.exportAeon(true);
+    const modelName = this.modelInfoStore.getState().getModelName();
+    const fileName = !this.modelInfoStore.getState().getModelName()
+      ? 'model'
+      : modelName;
+
+    if (!modelString) {
+      this.messageServ.showError('Export Error: No variables in the model.');
+      return;
+    }
+
+    if (conversionFunction) {
+      try {
+        modelString = await conversionFunction(modelString);
+
+        if (!modelString) {
+          throw new Error(
+            `Conversion function returned empty string for ${fileEnding} format`
+          );
+        }
+      } catch (error: any) {
+        this.messageServ.showError(`Export Error: ${error.message}`);
+        return;
+      }
+    }
+
+    this.fileHelpersServ.downloadFile(`${fileName}${fileEnding}`, modelString);
+  }
+
+  // #endregion
+}
+
+export default ExportLM;

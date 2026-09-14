@@ -1,28 +1,44 @@
 import { useEffect, useState } from 'react';
 import ComputeEngineWindowContent from '../../global/ComputeEngineWindowContent/ComputeEngineWindowContent';
+import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 import ResultsWindowContent from '../../global/ResultsWindowContent/ResultsWindowContent';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
 import PopUpBarReact from '../../lit-wrappers/PopUpBarReact';
-import NavigationDockContent from '../../global/NavigationDockContent/NavigationDockContent';
 
-import DockIcon from '../../../../assets/icons/dock-arrow.svg';
-import StatusBar from '../../global/StatusBar/StatusBar';
-import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
-import TabBar from '../../global/TabBar/TabBar';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
+import DockIcon from '../../../../assets/icons/dock-arrow.svg';
 import ContentOverlayWindow from '../../global/ContentOverlayWindow/ContentOverlayWindow';
 import HelpHover from '../../global/HelpHover/HelpHover';
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import StatusBar from '../../global/StatusBar/StatusBar';
+import TabBar from '../../global/TabBar/TabBar';
+import WarningOverlay from '../../global/WarningOverlay/WarningOverlay';
+import TwoSidedTextReact from '../../lit-wrappers/TwoSidedTextReact';
+import type { BaseLayoutProps } from './BaseLayoutProps';
 
-type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
+export type OverlayWindowTypeME = 'Compute Engine' | 'Results' | null;
 
-const BaseLayout = () => {
+const BaseLayout: React.FC<BaseLayoutProps> = ({
+  attractorVisualizerServ,
+  attractorBifurcationExplorerServ,
+  controlPerturbationsTableServ,
+  computationManagerServ,
+  resultsOperationsServ,
+  openCloseOperationsServ,
+  tabOperationsServ,
+  dataFormatersServ,
+  warningServ,
+  pageStringProviderServ,
+
+  computeEngineStatusStore,
+  resultsStatusStore,
+  modelInfoStore,
+  tabsStore,
+  helpHoverStore,
+  overlayWindowStore,
+  warningStore,
+}) => {
   const [activeOverlayWindow, setActiveOverlayWindow] =
     useState<OverlayWindowTypeME | null>(null);
-
-  const loadedResults = useResultsStatus((state) => state.results);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,32 +56,91 @@ const BaseLayout = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (loadedResults) {
-      setActiveOverlayWindow('Results');
-    }
-  }, [loadedResults]);
-
   const renderOverlayWindowContent = () => {
     switch (activeOverlayWindow) {
       case 'Compute Engine':
-        return <ComputeEngineWindowContent />;
+        return (
+          <ComputeEngineWindowContent
+            computationManagerServ={computationManagerServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
+            computeEngineStatusStore={computeEngineStatusStore}
+          />
+        );
       case 'Results':
-        return <ResultsWindowContent />;
+        return (
+          <ResultsWindowContent
+            computationManagerServ={computationManagerServ}
+            attractorVisualizerServ={attractorVisualizerServ}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            controlPerturbationsTableServ={controlPerturbationsTableServ}
+            resultsOperationsServ={resultsOperationsServ}
+            dataFormatersServ={dataFormatersServ}
+            pageStringProviderServ={pageStringProviderServ}
+            modelInfoStore={modelInfoStore}
+            tabsStore={tabsStore}
+            resultsStatusStore={resultsStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       default:
         return null;
     }
   };
 
+  const getOnCloseFunctionForOverlayWindow = (
+    windowType: OverlayWindowTypeME
+  ) => {
+    switch (windowType) {
+      case 'Compute Engine':
+        return () => setActiveOverlayWindow(null);
+      case 'Results':
+        return () => {
+          setActiveOverlayWindow(null);
+          resultsStatusStore.getState().setSelectedResults(undefined);
+        };
+      default:
+        return () => {};
+    }
+  };
+
+  openCloseOperationsServ.setOpenComputeEngineMenu(() => {
+    getOnCloseFunctionForOverlayWindow(activeOverlayWindow)();
+    setActiveOverlayWindow('Compute Engine');
+  });
+
   const setNavBarHelpHover = (event: MouseEvent, text: string) => {
-    useHelpHoverStore.getState().setHelpHover(event, text, -85);
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtElementCenter(event, text, false, -85);
   };
 
   return (
     <div className="h-full w-full">
       <section className="flex flex-row h-[40px] overflow-visible w-fit max-w-[calc(100% - 578px)] justify-end items-center gap-5 absolute top-1 right-3 z-10 select-none pointer-events-none">
-        <StatusBar onClick={() => setActiveOverlayWindow('Compute Engine')} />
-        <TwoSidedTextReact rightText="Aeon/" leftText="BIODIVINE" />
+        <StatusBar
+          onClick={() => setActiveOverlayWindow('Compute Engine')}
+          setHelpHover={(e: MouseEvent) => {
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.computeEngineStatus(),
+                true,
+                50
+              );
+          }}
+          clearHelpHover={() => {
+            helpHoverStore.getState().clear();
+          }}
+          computeEngineStatusStore={computeEngineStatusStore}
+        />
+        <TwoSidedTextReact
+          rightText="Aeon/"
+          leftText="BIODIVINE"
+          rightColor="var(--color-aeon-logo-right-part)"
+          leftColor="var(--color-aeon-logo-left-part)"
+        />
       </section>
 
       {activeOverlayWindow !== null ? (
@@ -73,37 +148,60 @@ const BaseLayout = () => {
           compZIndex="999999990"
           compWidth="100%"
           compHeight="100%"
-          windWidth="fit-content"
+          headerTextColor="var(--color-primary-text)"
+          windColor="var(--color-primary)"
+          closeHoverColor="var(--color-secondary-buttons-hover)"
           windMaxWidth="80%"
           showHeader={true}
           showCloseButton={true}
           headerText={activeOverlayWindow}
-          handleCloseClick={() => setActiveOverlayWindow(null)}
-          handleBackgroundClick={() => setActiveOverlayWindow(null)}
+          handleCloseClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
+          handleBackgroundClick={getOnCloseFunctionForOverlayWindow(
+            activeOverlayWindow
+          )}
         >
           {renderOverlayWindowContent()}
         </OverlayWindowReact>
       ) : null}
 
-      <WarningOverlay zIndex="999999993" />
+      <WarningOverlay zIndex="999999993" warningStore={warningStore} />
 
-      <ContentOverlayWindow zIndex="999999991" />
+      <ContentOverlayWindow
+        zIndex="999999991"
+        overlayWindowStore={overlayWindowStore}
+      />
 
-      <HelpHover zIndex={999999992} />
+      <HelpHover zIndex={999999992} helpHoverStore={helpHoverStore} />
 
       <PopUpBarReact
         className="absolute max-w-full bottom-[25px] left-1/2 -translate-x-1/2 z-999999990"
         iconSrc={DockIcon}
         iconAlt="Dock"
+        butColor="var(--color-primary-buttons)"
+        butHoverColor="var(--color-primary-buttons-hover)"
+        barColor="var(--color-primary)"
       >
         <NavigationDockContent
+          helpHoverStore={helpHoverStore}
           handleComputeEngineClick={() =>
-            setActiveOverlayWindow('Compute Engine')
+            setActiveOverlayWindow(
+              activeOverlayWindow === 'Compute Engine' ? null : 'Compute Engine'
+            )
           }
-          handleResultsClick={() => setActiveOverlayWindow('Results')}
           setNavBarHelpHover={setNavBarHelpHover}
         >
-          <TabBar setTabBarHelpHover={setNavBarHelpHover} />
+          <TabBar
+            setTabBarHelpHover={setNavBarHelpHover}
+            setActiveWindow={(windowType) => setActiveOverlayWindow(windowType)}
+            tabOperationsServ={tabOperationsServ}
+            resultsOperationsServ={resultsOperationsServ}
+            warningServ={warningServ}
+            helpHoverStore={helpHoverStore}
+            tabsStore={tabsStore}
+            resultsStatusStore={resultsStatusStore}
+          />
         </NavigationDockContent>
       </PopUpBarReact>
 

@@ -1,22 +1,53 @@
-import useHelpHoverStore from '../../../../stores/HelpHover/useHelpHoverStore';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import type { Position } from '../../../../types/types';
+import type { HelpHoverProps } from './HelpHoverProps';
 
-const HelpHover: React.FC<{ zIndex: number }> = ({ zIndex }) => {
-  const helpHoverPosition = useHelpHoverStore((state) => state.position);
-  const helpHoverText = useHelpHoverStore((state) => state.helpText);
+const HelpHover: React.FC<HelpHoverProps> = ({ zIndex, helpHoverStore }) => {
+  const [visible, setVisible] = useState<boolean>(false);
 
-  if (!helpHoverPosition || !helpHoverText) {
+  const helpHoverPosition: Position | null = helpHoverStore(
+    (state) => state.position
+  );
+  const helpHoverText: string | null = helpHoverStore(
+    (state) => state.helpText
+  );
+  const isTooltip: boolean = helpHoverStore((state) => state.isTooltip);
+
+  const shouldRender = helpHoverPosition && helpHoverText;
+
+  useEffect(() => {
+    if (shouldRender) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [helpHoverPosition, helpHoverText]);
+
+  if (!shouldRender) {
     return null;
   }
 
-  return (
+  const tooltipClasses =
+    'h-[30px] text-[16px] px-3 py-2 bg-[var(--color-tooltip)] text-[var(--color-tooltip-text)]';
+
+  const defaultClasses =
+    'h-[50px] text-[20px] p-5 bg-[var(--color-secondary)] text-[var(--color-secondary-text)]';
+
+  return createPortal(
     <div
-      className="h-[50px] min-w-[100px] max-w-[20%] text-[20px] rounded-[24px] bg-[var(--color-secondary)] p-5 absolute flex items-center justify-center shadow-lg transition-all duration-200 ease-in-out"
+      className={`absolute flex items-center justify-center shadow-lg transition-all duration-300 min-w-[100px] max-w-[80%] rounded-[24px] select-none pointer-events-none ${
+        isTooltip ? tooltipClasses : defaultClasses
+      }`}
       style={{
-        top: helpHoverPosition.y,
-        left: helpHoverPosition.x,
-        transform: 'translate(-50%, -50%)',
+        top: helpHoverPosition[1],
+        left: helpHoverPosition[0],
+        transform: visible
+          ? 'translate(-50%, -50%) scale(1)'
+          : 'translate(-50%, -50%) scale(0.8)',
         zIndex: zIndex,
         boxShadow: '0px 2px 5px #d0d0d0',
+        opacity: visible ? 1 : 0,
       }}
     >
       <span
@@ -25,7 +56,8 @@ const HelpHover: React.FC<{ zIndex: number }> = ({ zIndex }) => {
       >
         {helpHoverText}
       </span>
-    </div>
+    </div>,
+    document.body
   );
 };
 

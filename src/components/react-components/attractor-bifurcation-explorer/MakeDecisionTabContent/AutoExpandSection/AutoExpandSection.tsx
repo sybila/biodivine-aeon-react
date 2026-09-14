@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 import ValueSliderReact from '../../../lit-wrappers/ValueSliderReact';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 
 import GraphIcon from '../../../../../assets/icons/graph.svg';
+import type { AutoExpandSectionProps } from './AutoExpandSectionProps';
 
-const AutoExpandSection: React.FC = () => {
+const AutoExpandSection: React.FC<AutoExpandSectionProps> = ({
+  attractorBifurcationExplorerServ,
+  messageServ,
+  pageStringProviderServ,
+
+  helpHoverStore,
+}) => {
   const [depth, setDepth] = useState<number>(1);
 
   return (
@@ -16,11 +22,28 @@ const AutoExpandSection: React.FC = () => {
         text={`Auto-Expand (${depth} level${depth === 1 ? '' : 's'})`}
         iconAlt="Graph Icon"
         iconSrc={GraphIcon}
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         handleClick={() =>
-          AttractorBifurcationExplorer.autoExpandBifurcationTreeFromSelected(
-            depth
+          messageServ.showFromResult(
+            attractorBifurcationExplorerServ.autoExpandBifurcationTreeFromSelected(
+              depth
+            ),
+            'Error Auto-Expanding Bifurcation Tree'
           )
         }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.autoExpandButton(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
       <ValueSliderReact
         compWidth="25%"
@@ -29,6 +52,17 @@ const AutoExpandSection: React.FC = () => {
         step={1}
         minValue={1}
         maxValue={10}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeAutoExpandDepth(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </section>
   );

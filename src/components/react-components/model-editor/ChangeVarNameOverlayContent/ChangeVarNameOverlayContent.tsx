@@ -1,22 +1,137 @@
-import useVariablesStore from '../../../../stores/LiveModel/useVariablesStore';
+import { useEffect, useState } from 'react';
+import { isErr } from '../../../../types/result';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import VariableNameInput from '../VariableNameInput/VariableNameInput';
+import type { ChangeVariableNameOverlayContentProps } from './ChangeVariableNameOverlayContentProps';
 
-const ChangeVarNameOverlayContent: React.FC<{ varId: number }> = ({
+const ChangeVarNameOverlayContent: React.FC<
+  ChangeVariableNameOverlayContentProps
+> = ({
   varId,
+  originalName,
+  closeFunction,
+
+  modelEditorServ,
+  pageStringProviderServ,
+  messageServ,
+
+  helpHoverStore,
 }) => {
-  const varName = useVariablesStore.getState().variables[varId]?.name ?? '';
+  const [inputReference, setInputReference] = useState<HTMLElement | null>(
+    null
+  );
+
+  const [currentName, setCurrentName] = useState(originalName);
+
+  const [nameError, setNameError] = useState<boolean>(
+    !currentName || currentName === ''
+  );
+
+  const revertFunction = () => {
+    modelEditorServ.changeVariableName(varId, originalName, true);
+    closeFunction();
+  };
+
+  const applyFunction = () => {
+    if (currentName === originalName) {
+      closeFunction();
+      return;
+    }
+
+    const result = messageServ.showFromResult(
+      modelEditorServ.changeVariableName(varId, currentName, false),
+      'Failed to change variable name'
+    );
+
+    if (!isErr(result)) {
+      closeFunction();
+    } else {
+      setNameError(true);
+    }
+  };
+
+  useEffect(() => {
+    inputReference?.focus();
+  }, [inputReference]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        revertFunction();
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applyFunction();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentName]);
+
+  useEffect(() => {
+    return () => helpHoverStore.getState().clear();
+  });
 
   return (
-    <div className="flex justify-center items-center h-[90px] w-[300px]">
-      <div className="flex flex-row justify-center items-center h-[35px] w-[99%] bg-gray-200 rounded-[15px]">
-        <VariableNameInput
-          height="90%"
-          width="90%"
-          singleFontSize="25px"
-          varId={varId}
-          varName={varName}
+    <div className="flex flex-col justify-around items-center h-[20vh] w-[50vw] gap-2">
+      <VariableNameInput
+        height="80%"
+        width="99%"
+        fontSize="25px"
+        varName={currentName}
+        nameError={nameError}
+        exposeInputRef={(ref) => setInputReference(ref)}
+        onKeyUp={(newName: string) => setCurrentName(newName)}
+      />
+
+      <section className="flex flex-row justify-around items-center w-full h-[12%]">
+        <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
+          compHeight="90%"
+          compWidth="40%"
+          text="Revert"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.RevertToOldName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+          onClick={() => {
+            revertFunction();
+          }}
         />
-      </div>
+        <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
+          compHeight="90%"
+          compWidth="40%"
+          text="Apply"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.ApplyNewName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+          onClick={() => applyFunction()}
+        />
+      </section>
     </div>
   );
 };

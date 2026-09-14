@@ -1,10 +1,13 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { NecessaryConditionTableProps } from './NecessaryConditionTableProps';
 
-const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
+const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
+  nodeId,
+  attractorBifurcationExplorerServ,
+}) => {
   const necessaryConditions =
-    AttractorBifurcationExplorer.getNodeNecessaryConditions(nodeId);
+    attractorBifurcationExplorerServ.getNodeNecessaryConditions(nodeId);
 
   return (
     <section className="flex flex-col justify-center items-center h-fit w-full gap-1 mb-2">
@@ -14,7 +17,7 @@ const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
         justifyHeader="start"
         headerText="Necessary Conditions"
       />
-      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-[var(--color-grey-blue-ultra-light)] rounded-md p-2">
+      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-(--color-secondary) rounded-md p-2">
         {necessaryConditions.map((condition, index) => (
           <div
             key={index}
@@ -26,10 +29,10 @@ const NecessaryConditionsTable: React.FC<{ nodeId: number }> = ({ nodeId }) => {
               compWidth="fit-content"
               textColor={
                 condition.positive === true
-                  ? 'var(--color-green)'
+                  ? 'var(--color-positive)'
                   : condition.positive === false
-                  ? 'var(--color-red)'
-                  : 'black'
+                    ? 'var(--color-negative)'
+                    : 'var(--color-secondary-text)'
               }
               className="text-nowrap"
             />

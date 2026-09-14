@@ -1,15 +1,16 @@
+import React, { useMemo } from 'react';
+import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
+import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
+import type { UpdateFunctionStatus } from '../../../../../../types/types';
+import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
 import IconButtonReact from '../../../../lit-wrappers/IconButtonReact';
-
-import ModelEditor from '../../../../../../services/model-editor/ModelEditor/ModelEditor';
-
-import SearchIcon from '../../../../../../assets/icons/search-24px.svg';
-import DeleteIcon from '../../../../../../assets/icons/delete-24px.svg';
-import type { VariableInfoProps } from './VariableInfoProps';
-import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
-import VariableNameInput from '../../../VariableNameInput/VariableNameInput';
-import ChangeUpdateFunctionInput from '../../../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
+import MultilineTextReact from '../../../../lit-wrappers/MultilineTextReact';
+import NonScrollableTextReact from '../../../../lit-wrappers/NonScrollableTextReact';
+import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfoList from '../../../RegulationInfoList/RegulationInfoList';
+import UpdateFunctionValidation from '../../../UpdateFunctionValidation/UpdateFunctionValidation';
+import type { VariableInfoProps } from './VariableInfoProps';
 
 const VariableInfo: React.FC<VariableInfoProps> = ({
   id,
@@ -17,27 +18,110 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
   hoverVariable,
   selectedVariable,
   hoverRegulation,
-  selectedRegulation,
+  selectedRegulatorIds,
+  exposeSetExtend,
+  setVariableInfoRef,
+
+  modelEditorServ,
+  pageStringProviderServ,
+
+  regulationsStore,
+  variablesStore,
+  updateFunctionsStore,
+  helpHoverStore,
 }) => {
+  const regulationsObj = regulationsStore((state) => state.regulations);
+  const updateFunction: string | undefined = updateFunctionsStore(
+    (state) => state.updateFunctions[id]?.functionString ?? undefined
+  );
+  const updateFunctionStatusNotSafe: UpdateFunctionStatus =
+    updateFunctionsStore((state) => state.updateFunctionStatus[id]);
+
+  const updateFunctionStatus = updateFunctionStatusNotSafe ?? {
+    status:
+      'Unvalidated function: Try to reset the update funtion to force revalidation.',
+    isError: true,
+  };
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === id),
+    [regulationsObj, id]
+  );
+
   return (
     <ExtendableContentReact
-      compWidth="100%"
-      topOverflowX="visible"
-      topOverflowY="visible"
+      ref={(el) => setVariableInfoRef(id, el)}
+      contWidth="100%"
       topContentOverflowX="visible"
       topContentOverflowY="visible"
+      contColor="var(--color-secondary-light)"
+      contHoverColor="var(--color-secondary-light-highlight)"
+      contActiveColor="var(--color-secondary-active)"
+      contActiveBorder="2px var(--color-secondary-border) solid"
+      contHoverBorder="2px var(--color-secondary-border) dashed"
+      contBorder="2px var(--color-secondary-light) solid"
+      buttonColor='var(--color-tertiary-buttons)'
+      buttonHoverColor='var(--color-tertiary-buttons-hover)'
       hover={hoverVariable}
       active={selectedVariable}
-      handleMouseEnter={() => ModelEditor.hoverVariableCytoscape(id, true)}
-      handleMouseLeave={() => ModelEditor.hoverVariableCytoscape(id, false)}
+      handleMouseEnter={() => modelEditorServ.hoverVariableCytoscape(id, true)}
+      handleMouseLeave={() => modelEditorServ.hoverVariableCytoscape(id, false)}
+      exposeSetExtend={(func: (extend: boolean) => void) =>
+        exposeSetExtend(func)
+      }
     >
-      <section slot="top-content" className="h-full w-[60%]">
-        <VariableNameInput
-          height="100%"
-          width="100%"
-          singleFontSize="16px"
-          varId={id}
-          varName={name}
+      <section
+        slot="top-content"
+        className="h-full w-[80%] flex flex-row justify-between items-center shrink-0"
+      >
+        <NonScrollableTextReact
+          compHeight="28px"
+          compWidth="200px"
+          textFontSize="16px"
+          textFontFamily="var(--font-family-fira-mono)"
+          textAlign="start"
+          textJustify="center"
+          textColor="var(--color-secondary-text)"
+          text={name ? name : ''}
+          className="cursor-pointer"
+          onClick={() => modelEditorServ.openChangeVarNameWindow(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                name.length > 0
+                  ? name
+                  : pageStringProviderServ.Tooltips.changeVariableName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={helpHoverStore.getState().clear}
+        />
+
+        <SimpleHeaderReact
+          compHeight="28px"
+          compWidth="100px"
+          textFontSize="16px"
+          lineHeight="28px"
+          textFontWeight="normal"
+          textFontFamily="var(--font-family-fira-mono)"
+          textColor="var(--color-secondary-text)"
+          headerText={`#↓ ${regulations.length}`}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.variableArity(
+                  regulations.length
+                ),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </section>
 
@@ -51,7 +135,20 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={SearchIcon}
           iconAlt="find"
-          handleClick={() => ModelEditor.zoomOnVariable(id)}
+          buttonColor="var(--color-tertiary-buttons)"
+          buttonHoverColor="var(--color-tertiary-buttons-hover)"
+          handleClick={() => modelEditorServ.zoomOnVariable(id)}
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.findVariableInVisualization(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
 
         <IconButtonReact
@@ -60,29 +157,48 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
           iconSize="90%"
           iconSrc={DeleteIcon}
           iconAlt="delete"
-          handleClick={async () => await ModelEditor.removeVariable(id)}
+          handleClick={async () => await modelEditorServ.removeVariable(id)}
+          buttonColor="var(--color-tertiary-buttons)"
+          buttonHoverColor="var(--color-tertiary-buttons-hover)"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.deleteVariable(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         ></IconButtonReact>
       </section>
 
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
         slot="extended-content"
         headerText="Regulators"
         compWidth="100%"
         justifyHeader="start"
         textFontSize="12px"
-      ></DotHeaderReact>
+      />
 
       <section slot="extended-content" className="h-fit w-full">
         <RegulationInfoList
-          varId={id}
-          height="77px"
+          height="100px"
           width="100%"
+          variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
-          selectedRegulation={selectedRegulation}
+          selectedRegulatorIds={selectedRegulatorIds}
+          modelEditorServ={modelEditorServ}
+          pageStringProviderServ={pageStringProviderServ}
+          variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
         />
       </section>
 
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
         slot="extended-content"
         headerText="Update Function"
         compWidth="100%"
@@ -91,15 +207,40 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
       ></DotHeaderReact>
 
       <section slot="extended-content" className="h-fit w-full">
-        <ChangeUpdateFunctionInput
-          varId={id}
-          compHeight="fit-content"
+        <MultilineTextReact
+          compHeight="70px"
           compWidth="100%"
-          inputFontSize="16px"
-          inputHeight="28px"
-          inputWidth="100%"
-          validationMinHeight="20px"
-          validationMaxHeight="40px"
+          textFontSize="18px"
+          textAlign="center"
+          overflowY="auto"
+          textFontFamily="var(--font-family-fira-mono)"
+          textColor="var(--color-secondary-text)"
+          placeholderColor="var(--color-secondary-placeholder-text)"
+          text={updateFunction}
+          placeholder={pageStringProviderServ.OtherStrings.updateFunctionInputPlaceholder(
+            name ?? undefined
+          )}
+          handleClick={() => modelEditorServ.openChangeUpdateFunctionWindow(id)}
+          cursor="pointer"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.changeVariableUpdateFunction(),
+                true,
+                -80
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+        />
+
+        <UpdateFunctionValidation
+          compMinHeight={'20px'}
+          compMaxHeight={'50px'}
+          compWidth={'90%'}
+          textColor="var(--color-secondary-text)"
+          updateFunctionStatus={updateFunctionStatus}
         />
       </section>
     </ExtendableContentReact>

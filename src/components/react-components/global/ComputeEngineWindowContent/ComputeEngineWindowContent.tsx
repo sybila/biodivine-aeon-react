@@ -1,26 +1,32 @@
 import config from '../../../../config';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import useComputeEngineStatus from '../../../../stores/ComputationManager/useComputeEngineStatus';
-import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
 import TextIconButtonReact from '../../lit-wrappers/TextIconButtonReact';
 
 import CloudIcon from '../../../../assets/icons/cloud-24px.svg';
-import type { ComputationStatus } from '../../../../types';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import Time from '../../../../services/utilities/Time';
-import SeparatorLine from '../SeparatorLine/SeparatorLine';
+import type { ComputationStatus } from '../../../../types/types';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import useOverlayWindowStore from '../../../../stores/ContentOverlayWindow/useOverlayWindowStore';
+import SeparatorLine from '../SeparatorLine/SeparatorLine';
+import type { ComputeEngineWindowContentProps } from './ComputeEngineWindowContentProps';
 
-const ComputeEngineWindowContent = () => {
-  const computeEngineStatus: string = useComputeEngineStatus(
+const ComputeEngineWindowContent: React.FC<ComputeEngineWindowContentProps> = ({
+  computationManagerServ,
+  pageStringProviderServ,
+
+  computeEngineStatusStore,
+  helpHoverStore,
+}) => {
+  const computeEngineStatus: string = computeEngineStatusStore(
     (state) => state.computeEngineStatus
   );
-  const color: string = useComputeEngineStatus((state) => state.statusColor);
-  const computationStatus: ComputationStatus = useComputeEngineStatus(
+  const color: string = computeEngineStatusStore((state) => state.statusColor);
+  const computationStatus: ComputationStatus = computeEngineStatusStore(
     (state) => state.computationStatus
   );
+
+  const isComputeEngineConnected: boolean = computeEngineStatus === 'Connected';
 
   const renderStatus = () => {
     const compStatusInfo: Array<{
@@ -56,21 +62,35 @@ const ComputeEngineWindowContent = () => {
           <DotHeaderReact
             textColor={color}
             headerText={computeEngineStatus}
-            textFontFamily="Helvetica, Arial, sans-serif"
+            textFontFamily="var(--base-font-family)"
             textFontWeight="bold"
           />
           <TextIconButtonReact
-            text={
-              computeEngineStatus === 'Connected' ? 'Disconnect' : 'Connect'
-            }
+            text={isComputeEngineConnected ? 'Disconnect' : 'Connect'}
             compHeight="100%"
             compWidth="150px"
+            buttonColor="var(--color-secondary-buttons)"
+            buttonHoverColor="var(--color-secondary-buttons-hover)"
+            textColor="var(--color-secondary-text)"
             iconSrc={CloudIcon}
-            handleClick={() => ComputationManager.toggleConnection()}
+            handleClick={() => computationManagerServ.toggleConnection()}
+            onMouseEnter={(e: React.MouseEvent) =>
+              helpHoverStore
+                .getState()
+                .setHelpHoverAtMouse(
+                  e.nativeEvent,
+                  pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.connectComputeEngineButton(
+                    isComputeEngineConnected
+                  ),
+                  true,
+                  -50
+                )
+            }
+            onMouseLeave={() => helpHoverStore.getState().clear()}
           />
         </section>
 
-        <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+        <SeparatorLine />
         <section className="h-fit w-[96%] flex flex-col items-start justify-center gap-1">
           {compStatusInfo.map((info) => (
             <section
@@ -82,15 +102,16 @@ const ComputeEngineWindowContent = () => {
                 compHeight="100%"
                 textFontSize="19px"
                 textFontWeight="normal"
-                textFontFamily="FiraMono, monospace"
+                textFontFamily="var(--font-family-fira-mono)"
+                textColor="var(--color-primary-text)"
               />
               <SimpleHeaderReact
                 headerText={info.value}
                 compHeight="100%"
                 textFontSize="19px"
                 textFontWeight="normal"
-                textFontFamily="FiraMono, monospace"
-                textColor={info.color ?? 'black'}
+                textFontFamily="var(--font-family-fira-mono)"
+                textColor={info.color ?? 'var(--color-primary-text)'}
               />
             </section>
           ))}
@@ -105,7 +126,8 @@ const ComputeEngineWindowContent = () => {
                   lineHeight="22px"
                   textFontSize="19px"
                   textFontWeight="normal"
-                  textFontFamily="FiraMono, monospace"
+                  textFontFamily="var(--font-family-fira-mono)"
+                  textColor="var(--color-primary-text)"
                   textAlign="start"
                 />
               ))
@@ -116,7 +138,11 @@ const ComputeEngineWindowContent = () => {
   };
 
   const openComputeEngineOverlay = () => {
-    window.open(config.computeEngine.downloadLink, '_blank', 'noopener,noreferrer');
+    window.open(
+      config.computeEngine.downloadLink,
+      '_blank',
+      'noopener,noreferrer'
+    );
   };
 
   return (
@@ -125,9 +151,21 @@ const ComputeEngineWindowContent = () => {
         compHeight="20px"
         compWidth="100%"
         placeholder="Compute Engine URL"
-        singleTextAlign="center"
-        handleChange={ComputationManager.setComputeEngineAddress}
-        value={ComputationManager.getComputeEngineAddress()}
+        textAlign="center"
+        textColor="var(--color-primary-text)"
+        handleChange={computationManagerServ.setComputeEngineAddress}
+        value={computationManagerServ.getComputeEngineAddress()}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.changeComputeEngineAddress(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
 
       {renderStatus()}
@@ -139,7 +177,21 @@ const ComputeEngineWindowContent = () => {
         compHeight="30px"
         compWidth="95%"
         text="Download Compute Engine"
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         handleClick={openComputeEngineOverlay}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.OverlayWindowTooltips.ComputeEngineTooltips.downloadComputeEngine(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );

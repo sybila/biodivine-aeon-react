@@ -13,22 +13,25 @@
     "@lit/react": "^1.0.7",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-router": "^1.131.2",
-    "cytoscape": "^3.33.1",
+    "cytoscape": "^3.34.0",
     "cytoscape-dagre": "^2.5.0",
     "cytoscape-edgehandles": "^3.6.0",
-    "cytoscape-tidytree": "^0.2.0",
+    "cytoscape-tidytree": "^0.2.1",
     "dagre": "^0.8.5",
     "lit": "^3.3.0",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-activation": "^0.13.4",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "tailwindcss": "^4.1.11",
+    "vis-network": "^10.1.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@types/cytoscape": "^3.21.9",
+    "@types/cytoscape-dagre": "^2.3.4",
     "@types/cytoscape-edgehandles": "^4.0.4",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.6.2",
@@ -39,8 +42,12 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true
   }
 }

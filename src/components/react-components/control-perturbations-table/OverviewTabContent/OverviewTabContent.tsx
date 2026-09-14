@@ -1,46 +1,47 @@
 import { useMemo, useState } from 'react';
-import ControlPerturbationsTable from '../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import type { ControlResults } from '../../../../types';
+import type { ControlResults } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
 import ContentWindowReact from '../../lit-wrappers/ContentWindowReact';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../lit-wrappers/StatEntryReact';
-import DataFormaters from '../../../../services/utilities/DataFormaters';
+import type { OverviewTabContentProps } from './OverviewTabContentProps';
 
-const OverviewTabContent: React.FC = () => {
+const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
+  liveModelServ,
+  controlPerturbationsTableServ,
+  dataFormatersServ,
+  resultsStatusStore,
+}) => {
   const [phenAsText, setPhenotypeAsText] = useState<boolean>(false);
 
   // We know that when type is 'Control', results is ControlResults
-  const controlStats = useResultsStatus((state) =>
-    state.type === 'Control'
-      ? (state.results as ControlResults).stats
-      : undefined
+  const controlResult: ControlResults | undefined = resultsStatusStore(
+    (state) => state.results.Control as ControlResults
   );
 
-  const controlPrecomputation = useResultsStatus((state) =>
-    state.type === 'Control'
-      ? (state.results as ControlResults).preComputationInfo
-      : undefined
+  const controlStats = controlResult ? controlResult.stats : undefined;
+
+  const controlPrecomputation = controlResult
+    ? controlResult.preComputationInfo
+    : undefined;
+
+  const controlEnabledPhenotypeVars = useMemo(() => {
+    return liveModelServ.Control.getPhenotypeControlEnabledVars();
+  }, [controlStats]);
+
+  const formatedPhenotype = useMemo(
+    () =>
+      controlPerturbationsTableServ.formatPhenotype(
+        Object.entries(controlEnabledPhenotypeVars.phenotypeVars),
+        'var(--color-secondary-text)'
+      ),
+    [controlEnabledPhenotypeVars]
   );
 
   if (!controlStats || !controlPrecomputation) {
     return <NoDataText text="No control computation results available." />;
   }
-
-  const controlEnabledPhenotypeVars = useMemo(() => {
-    return LiveModel.Control.getPhenotypeControlEnabledVars();
-  }, [controlStats]);
-
-  const formatedPhenotype = useMemo(
-    () =>
-      ControlPerturbationsTable.formatPerturbation(
-        Object.entries(controlEnabledPhenotypeVars.phenotypeVars)
-      ),
-    [controlEnabledPhenotypeVars]
-  );
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pt-2 pb-2">
@@ -52,6 +53,8 @@ const OverviewTabContent: React.FC = () => {
         valueMaxWidth="45%"
         valNameGap="1%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Number of Interpretations"
@@ -61,10 +64,12 @@ const OverviewTabContent: React.FC = () => {
         valueMaxWidth="40%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Maximal Robustness (%)"
-        statValue={DataFormaters.convertRobustnessToPercentage(
+        statValue={dataFormatersServ.convertRobustnessToPercentage(
           controlStats.maximalPerturbationRobustness
         )}
         compWidth="99%"
@@ -72,6 +77,8 @@ const OverviewTabContent: React.FC = () => {
         valueMaxWidth="47%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Minimal Size"
@@ -81,6 +88,8 @@ const OverviewTabContent: React.FC = () => {
         valueMaxWidth="68%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
       <StatEntryReact
         statName="Phenotype Oscillation"
@@ -90,6 +99,8 @@ const OverviewTabContent: React.FC = () => {
         valueMaxWidth="48%"
         valNameGap="2%"
         addColon={true}
+        contBgColor="var(--color-secondary-darker)"
+        textColor="var(--color-secondary-text)"
       />
 
       <SeparatorLine width="99%" />
@@ -98,6 +109,7 @@ const OverviewTabContent: React.FC = () => {
         compWidth="100%"
         justifyHeader="start"
         headerText="Control-Enabled Variables"
+        textColor="var(--color-primary-text)"
       />
 
       <ContentWindowReact
@@ -106,8 +118,9 @@ const OverviewTabContent: React.FC = () => {
         contentAlignI="safe center"
         contentJustifyC="center"
         windOverflowY="hidden"
+        windColor="var(--color-secondary-light)"
       >
-        <div className="flex flex-row h-full w-auto font-[var(--base-font-family)] text-black select-none px-2">
+        <div className="flex flex-row h-full w-auto font-(--base-font-family) text-(--color-secondary-text) select-none px-2">
           {controlEnabledPhenotypeVars.controlEnabledVars.map(
             (varName, index) => (
               <span key={index} className="mx-1">
@@ -128,6 +141,7 @@ const OverviewTabContent: React.FC = () => {
         compWidth="100%"
         justifyHeader="start"
         headerText="Phenotype"
+        textColor="var(--color-primary-text)"
       />
 
       <ContentWindowReact
@@ -137,6 +151,7 @@ const OverviewTabContent: React.FC = () => {
         contentAlignI="safe center"
         contentJustifyC="center"
         windOverflowY="hidden"
+        windColor="var(--color-secondary-light)"
         onClick={() => setPhenotypeAsText(!phenAsText)}
       >
         <div className="flex flex-row h-full w-auto px-2">

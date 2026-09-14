@@ -1,10 +1,17 @@
-import useBifurcationExplorerStatus from '../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { StabilityAnalysisTableProps } from './StabilityAnalysisTableProps';
 import StabilityAnalysisTableRow from './StabilityAnalysisTableRow/StabilityAnalysisTableRow';
 
-const StabilityAnalysisTable = () => {
-  const stabilityResults = useBifurcationExplorerStatus(
+const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
+  attractorBifurcationExplorerServ,
+  messageServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
+}) => {
+  const stabilityResults = bifurcationExplorerStatusStore(
     (state) => state.stabilityData
   );
 
@@ -13,6 +20,7 @@ const StabilityAnalysisTable = () => {
       <div className="max-h-[100px] h-[100px] md:max-h-[150px] md:h-[150px] w-full flex justify-center items-center">
         <SimpleHeaderReact
           headerText="No Computed Data"
+          textColor="var(--color-primary-text)"
           textFontWeight="normal"
         />
       </div>
@@ -28,6 +36,13 @@ const StabilityAnalysisTable = () => {
               key={index}
               {...variableStabilityData}
               computedBehavior={stabilityResults.computedBehavior}
+              attractorBifurcationExplorerServ={
+                attractorBifurcationExplorerServ
+              }
+              messageServ={messageServ}
+              pageStringProviderServ={pageStringProviderServ}
+              bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+              helpHoverStore={helpHoverStore}
             />
           )
         )}
@@ -39,6 +54,7 @@ const StabilityAnalysisTable = () => {
     <div className="h-fit w-full flex flex-col justify-center items-start gap-1">
       <DotHeaderReact
         headerText="Stability Analysis Results"
+        textColor="var(--color-primary-text)"
         compHeight="30px"
         compWidth="100%"
         justifyHeader="start"

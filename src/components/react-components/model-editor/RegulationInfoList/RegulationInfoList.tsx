@@ -1,24 +1,23 @@
 import { useMemo } from 'react';
-import useRegulationsStore from '../../../../stores/LiveModel/useRegulationsStore';
+import type { Regulation } from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
-import type { Regulation, RegulationVariables } from '../../../../types';
+import type { RegulationInfoListProps } from './RegulationInfoListProps';
 
-const RegulationInfoList: React.FC<{
-  varId: number;
-  height: string;
-  width: string;
-  hoverRegulation: RegulationVariables | undefined;
-  selectedRegulation: RegulationVariables | undefined;
-}> = ({ varId, height, width, hoverRegulation, selectedRegulation }) => {
-  const regulationsObj = useRegulationsStore((state) => state.regulations);
+const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
+  height,
+  width,
+  variableRegulations,
+  hoverRegulation,
+  selectedRegulatorIds,
 
-  const regulations = useMemo(
-    () => Object.values(regulationsObj).filter((r) => r.target === varId),
-    [regulationsObj, varId]
-  );
+  modelEditorServ,
+  pageStringProviderServ,
 
-  if (regulations.length === 0) {
+  variablesStore,
+  helpHoverStore,
+}) => {
+  if (variableRegulations.length === 0) {
     return (
       <section
         className="flex justify-center items-center"
@@ -37,7 +36,7 @@ const RegulationInfoList: React.FC<{
 
   return (
     <section className="overflow-auto" style={{ height: height, width: width }}>
-      {regulations.map((regulation: Regulation) => (
+      {variableRegulations.map((regulation: Regulation) => (
         <RegulationInfo
           key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
           hover={
@@ -46,10 +45,17 @@ const RegulationInfoList: React.FC<{
             false
           }
           selected={
-            (selectedRegulation &&
-              selectedRegulation.regulator === regulation.regulator) ??
+            (selectedRegulatorIds &&
+              selectedRegulatorIds.has(regulation.regulator)) ??
             false
           }
+          modelEditorServ={modelEditorServ}
+          pageStringProviderServ={pageStringProviderServ}
+          variablesStore={variablesStore}
+          helpHoverStore={helpHoverStore}
+          normalTextColor='var(--color-primary-text)'
+          hoverColor='var(--color-secondary-light-highlight)'
+          selectedColor='var(--color-secondary-highlight)'
           {...regulation}
         ></RegulationInfo>
       ))}

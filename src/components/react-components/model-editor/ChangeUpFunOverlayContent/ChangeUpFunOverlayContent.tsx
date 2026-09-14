@@ -1,29 +1,122 @@
 import type React from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import type { ChangeUpFunOverlayContentProps } from './ChangeUpFunOverlayContentProps';
 
-const ChangeUpFunOverlayContent: React.FC<{ varId: number }> = ({ varId }) => {
+const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
+  varId,
+  varName,
+  originalUpdateFunction,
+  originalUpdateFunctionStatus,
+  validateUpdateFunctionFun,
+  closeFunction,
+
+  modelEditorServ,
+  messageServ,
+  pageStringProviderServ,
+
+  regulationsStore,
+  variablesStore,
+  helpHoverStore,
+}) => {
+  const [inputReference, setInputReference] = useState<HTMLElement | null>(
+    null
+  );
+
+  const [updateFunction, setUpdateFunction] = useState(originalUpdateFunction);
+  const [updateFunctionStatus, setUpdateFunctionStatus] = useState(
+    originalUpdateFunctionStatus
+  );
+
+  const regulationsObj = regulationsStore((state) => state.regulations);
+
+  const regulations = useMemo(
+    () => Object.values(regulationsObj).filter((r) => r.target === varId),
+    [regulationsObj, varId]
+  );
+
+  const revertFunction = () => {
+    closeFunction();
+  };
+
+  const validateFunction = () =>
+    validateUpdateFunctionFun(setUpdateFunctionStatus, updateFunction);
+
+  const applyFunction = () => {
+    if (originalUpdateFunction != updateFunction) {
+      messageServ.showFromResult(
+        modelEditorServ.setUpdateFunction(varId, updateFunction),
+        'Failed to change update function'
+      );
+    }
+
+    closeFunction();
+  };
+
+  useEffect(() => {
+    inputReference?.focus();
+  }, [inputReference]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        revertFunction();
+        return;
+      }
+
+      if (event.ctrlKey && event.key === 'Enter') {
+        event.preventDefault();
+        validateFunction();
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applyFunction();
+        return;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [updateFunction]);
+
+  useEffect(() => {
+    return () => helpHoverStore.getState().clear();
+  });
+
   return (
-    <div className="flex flex-col gap-1 justify-center items-center h-fit w-[450px]">
+    <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
       <DotHeaderReact
+        textColor="var(--color-primary-text)"
         headerText="Regulators"
         compHeight="15px"
         compWidth="100%"
         justifyHeader="start"
         textFontSize="12px"
       />
-      <div className="h-fit w-full">
-        <RegulationInfoList
-          varId={varId}
-          height="77px"
-          width="100%"
-          hoverRegulation={undefined}
-          selectedRegulation={undefined}
-        />
-      </div>
+
+      <RegulationInfoList
+        height="77px"
+        width="100%"
+        variableRegulations={regulations}
+        hoverRegulation={undefined}
+        selectedRegulatorIds={undefined}
+        modelEditorServ={modelEditorServ}
+        pageStringProviderServ={pageStringProviderServ}
+        variablesStore={variablesStore}
+        helpHoverStore={helpHoverStore}
+      />
 
       <DotHeaderReact
+        textColor="var(--color-primary-text)"
         headerText="Update Function"
         compHeight="15px"
         compWidth="100%"
@@ -31,18 +124,86 @@ const ChangeUpFunOverlayContent: React.FC<{ varId: number }> = ({ varId }) => {
         textFontSize="12px"
       />
 
-      <div className="h-fit w-fit bg-gray-200 rounded-[15px] p-2">
+      <div className="h-fit w-full bg-[var(--color-secondary)] rounded-[15px] p-2">
         <ChangeUpdateFunctionInput
-          varId={varId}
+          varName={varName}
+          updateFunction={updateFunction}
+          updateFunctionStatus={updateFunctionStatus}
           compHeight="fit-content"
-          compWidth="350px"
+          compWidth="95%"
           inputFontSize="20px"
-          inputHeight="30px"
-          inputWidth="350px"
+          inputHeight="100px"
+          inputWidth="100%"
           validationMinHeight="40px"
           validationMaxHeight="50px"
+          setUpdateFunction={(fun: string) => setUpdateFunction(fun)}
+          exposeInputRef={(ref) => setInputReference(ref)}
+          modelEditorServ={modelEditorServ}
+          pageStringProviderServ={pageStringProviderServ}
+          helpHoverStore={helpHoverStore}
         />
       </div>
+
+      <section className="flex flex-row justify-around items-center w-full h-[12%]">
+        <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
+          compHeight="90%"
+          compWidth="20%"
+          text="Revert"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.RevertToOldName(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+          onClick={() => {
+            revertFunction();
+          }}
+        />
+        <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
+          compHeight="90%"
+          compWidth="20%"
+          text="Validate"
+          onMouseEnter={(event: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                event.nativeEvent,
+                pageStringProviderServ.Tooltips.ValidateUpdateFunction(),
+                true,
+                -50
+              )
+          }
+          onClick={() => validateFunction()}
+        />
+        <TextButtonReact
+          buttonColor="var(--color-secondary-buttons)"
+          textColor="var(--color-secondary-text)"
+          compHeight="90%"
+          compWidth="20%"
+          text="Apply"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                pageStringProviderServ.Tooltips.ApplyUpdateFunction(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
+          onClick={() => applyFunction()}
+        />
+      </section>
     </div>
   );
 };

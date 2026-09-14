@@ -1,12 +1,18 @@
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import type { ArrowSelectButtonProps } from './ArrowSelectButtonProps';
 
-import RightArrow from '../../../../assets/icons/arrow-right.svg';
 import LeftArrow from '../../../../assets/icons/arrow-left.svg';
+import RightArrow from '../../../../assets/icons/arrow-right.svg';
 
 const ArrowSelectButton: React.FC<ArrowSelectButtonProps> = ({
   active,
   onClick,
+  onMouseEnter = () => {},
+  onMouseLeave = () => {},
+  buttonColor,
+  buttonHoverColor,
+  buttonActiveColor,
+  textColor,
   text,
 }) => {
   return (
@@ -21,9 +27,15 @@ const ArrowSelectButton: React.FC<ArrowSelectButtonProps> = ({
       <TextButtonReact
         compHeight="100%"
         compWidth="70%"
+        buttonColor={buttonColor}
+        buttonHoverColor={buttonHoverColor}
+        buttonActiveColor={buttonActiveColor}
+        textColor={textColor}
         text={text}
         handleClick={onClick}
         active={active}
+        onMouseEnter={(e: React.MouseEvent) => onMouseEnter(e)}
+        onMouseLeave={(e: React.MouseEvent) => onMouseLeave(e)}
       />
       {active ? (
         <img

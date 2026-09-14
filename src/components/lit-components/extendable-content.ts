@@ -1,17 +1,44 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
+type StyleProperty =
+  | 'contWidth'
+  | 'contBorder'
+  | 'contBorderRadius'
+  | 'contColor'
+  | 'contShadow'
+  | 'contPadding'
+  | 'contHoverBorder'
+  | 'contHoverColor'
+  | 'contActiveBorder'
+  | 'contActiveColor'
+  | 'topBottomGap'
+  | 'topHeight'
+  | 'topWidth'
+  | 'topContentHeight'
+  | 'topContentWidth'
+  | 'topContentJustifyC'
+  | 'topContentAlignI'
+  | 'topContentOverflowX'
+  | 'topContentOverflowY'
+  | 'extendContentHeight'
+  | 'extendContentWidth'
+  | 'extendContentJustifyC'
+  | 'extendContentAlignI'
+  | 'extendContentOverflowX'
+  | 'extendContentOverflowY'
+  | 'buttonHeight'
+  | 'buttonWidth'
+  | 'buttonBorderRadius'
+  | 'buttonColor'
+  | 'buttonHoverColor'
+  | 'buttonIconSrc'
+  | 'buttonIconHeight'
+  | 'buttonIconWidth';
 
 @customElement('extendable-content')
 export class ExtendableContent extends LitElement {
-  @property({ type: String }) declare compHeight?: string;
-  @property({ type: String }) declare compWidth?: string;
-
-  @property({ type: String }) declare contHeight?: string;
   @property({ type: String }) declare contWidth?: string;
-  @property({ type: String }) declare contMaxHeight?: string;
-  @property({ type: String }) declare contMaxWidth?: string;
-  @property({ type: String }) declare contOverflowX?: string;
-  @property({ type: String }) declare contOverflowY?: string;
   @property({ type: String }) declare contBorder?: string;
   @property({ type: String }) declare contBorderRadius?: string;
   @property({ type: String }) declare contColor?: string;
@@ -24,24 +51,13 @@ export class ExtendableContent extends LitElement {
   @property({ type: String }) declare contActiveBorder?: string;
   @property({ type: String }) declare contActiveColor?: string;
 
-  @property({ type: String }) declare contExtendedHeight?: string;
-  @property({ type: String }) declare contExtendedMaxHeight?: string;
-
   @property({ type: String }) declare topBottomGap?: string;
 
   @property({ type: String }) declare topHeight?: string;
   @property({ type: String }) declare topWidth?: string;
-  @property({ type: String }) declare topMaxHeight?: string;
-  @property({ type: String }) declare topMaxWidth?: string;
-  @property({ type: String }) declare topJustifyC?: string;
-  @property({ type: String }) declare topAlignI?: string;
-  @property({ type: String }) declare topOverflowX?: string;
-  @property({ type: String }) declare topOverflowY?: string;
 
   @property({ type: String }) declare topContentHeight?: string;
   @property({ type: String }) declare topContentWidth?: string;
-  @property({ type: String }) declare topContentMaxHeight?: string;
-  @property({ type: String }) declare topContentMaxWidth?: string;
   @property({ type: String }) declare topContentJustifyC?: string;
   @property({ type: String }) declare topContentAlignI?: string;
   @property({ type: String }) declare topContentOverflowX?: string;
@@ -49,8 +65,6 @@ export class ExtendableContent extends LitElement {
 
   @property({ type: String }) declare extendContentHeight?: string;
   @property({ type: String }) declare extendContentWidth?: string;
-  @property({ type: String }) declare extendContentMaxHeight?: string;
-  @property({ type: String }) declare extendContentMaxWidth?: string;
   @property({ type: String }) declare extendContentJustifyC?: string;
   @property({ type: String }) declare extendContentAlignI?: string;
   @property({ type: String }) declare extendContentOverflowX?: string;
@@ -58,8 +72,6 @@ export class ExtendableContent extends LitElement {
 
   @property({ type: String }) declare buttonHeight?: string;
   @property({ type: String }) declare buttonWidth?: string;
-  @property({ type: String }) declare buttonMaxHeight?: string;
-  @property({ type: String }) declare buttonMaxWidth?: string;
   @property({ type: String }) declare buttonBorderRadius?: string;
   @property({ type: String }) declare buttonColor?: string;
 
@@ -76,13 +88,15 @@ export class ExtendableContent extends LitElement {
   @property({ type: Function }) declare handleMouseEnter: () => void;
   @property({ type: Function }) declare handleMouseLeave: () => void;
 
+  @property({ type: Function }) declare exposeSetExtend?: (
+    extendFunctionSetter: (extend: boolean) => void
+  ) => void;
+
   static styles = css`
     :host {
       display: inline-block;
-      height: var(--extendable-content-comp-height, fit-content);
-      width: var(--extendable-content-comp-width, 500px);
-      max-height: var(--extendable-content-comp-height, fit-content);
-      max-width: var(--extendable-content-comp-width, 500px);
+      height: fit-content;
+      width: var(--extendable-content-cont-width, 500px);
     }
 
     #container {
@@ -91,13 +105,11 @@ export class ExtendableContent extends LitElement {
       justify-content: start;
       align-items: center;
 
-      height: var(--extendable-content-cont-height, fit-content);
-      width: var(--extendable-content-cont-width, 100%);
-      max-height: var(--extendable-content-cont-max-height, fit-content);
-      max-width: var(--extendable-content-cont-max-width, 100%);
+      height: fit-content;
+      width: var(--extendable-content-cont-width, 500px);
 
-      overflow-x: var(--extendable-content-cont-overflow-x, hidden);
-      overflow-y: var(--extendable-content-cont-overflow-y, hidden);
+      overflow-x: visible;
+      overflow-y: visible;
 
       border: var(--extendable-content-cont-border, 2px #fafafa solid);
       border-radius: var(--extendable-content-cont-border-radius, 8px);
@@ -120,27 +132,17 @@ export class ExtendableContent extends LitElement {
       background-color: var(--extendable-content-active-bg-color, #add8e6);
     }
 
-    #container.extended {
-      height: var(--extendable-content-cont-extended-height, 200px);
-      max-height: var(--extendable-content-cont-extended-max-height, 200px);
-    }
-
     #top-container {
       display: flex;
 
-      justify-content: var(
-        --extendable-content-top-justify-content,
-        space-between
-      );
-      align-items: var(--extendable-content-top-align-items, center);
+      justify-content: space-between;
+      align-items: center;
 
       height: var(--extendable-content-top-height, 25px);
       width: var(--extendable-content-top-width, 100%);
-      max-height: var(--extendable-content-top-max-height, 25px);
-      max-width: var(--extendable-content-top-max-width, 100%);
 
-      overflow-x: var(--extendable-content-top-overflow-x, hidden);
-      overflow-y: var(--extendable-content-top-overflow-y, hidden);
+      overflow-x: visible;
+      overflow-y: visible;
     }
 
     #top-content {
@@ -154,11 +156,6 @@ export class ExtendableContent extends LitElement {
 
       height: var(--extendable-content-top-content-height, 100%);
       width: var(--extendable-content-top-content-width, calc(100% - 30px));
-      max-height: var(--extendable-content-top-content-max-height, 100%);
-      max-width: var(
-        --extendable-content-top-content-max-width,
-        calc(100% - 30px)
-      );
 
       overflow-x: var(--extendable-content-top-content-overflow-x, hidden);
       overflow-y: var(--extendable-content-top-content-overflow-y, hidden);
@@ -177,16 +174,8 @@ export class ExtendableContent extends LitElement {
         center
       );
 
-      height: var(
-        --extendable-content-extended-content-height,
-        calc(100% - 30px)
-      );
+      height: var(--extendable-content-extended-content-height, fit-content);
       width: var(--extendable-content-extended-content-width, 100%);
-      max-height: var(
-        --extendable-content-extended-content-max-height,
-        calc(100% - 30px)
-      );
-      max-width: var(--extendable-content-extended-content-max-width, 100%);
 
       overflow-x: var(--extendable-content-extended-content-overflow-x, hidden);
       overflow-y: var(--extendable-content-extended-content-overflow-y, hidden);
@@ -232,31 +221,19 @@ export class ExtendableContent extends LitElement {
   `;
 
   private updateStyleVariable(
-    propertyName: string,
+    propertyName: StyleProperty,
     cssVar: string,
     fallback: string
   ) {
-    const value = (this as any)[propertyName] ?? fallback;
+    const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
   }
 
-  updated(changed: Map<string, any>) {
-    const update = (prop: string, cssVar: string, fallback: string) =>
+  updated(changed: Map<string, StyleProperty>) {
+    const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
-    update('compHeight', '--extendable-content-comp-height', 'fit-content');
-    update('compWidth', '--extendable-content-comp-width', '500px');
-
-    update('contHeight', '--extendable-content-cont-height', 'fit-content');
-    update('contWidth', '--extendable-content-cont-width', '100%');
-    update(
-      'contMaxHeight',
-      '--extendable-content-cont-max-height',
-      'fit-content'
-    );
-    update('contMaxWidth', '--extendable-content-cont-max-width', '100%');
-    update('contOverflowX', '--extendable-content-cont-overflow-x', 'hidden');
-    update('contOverflowY', '--extendable-content-cont-overflow-y', 'hidden');
+    update('contWidth', '--extendable-content-cont-width', '500px');
     update(
       'contBorder',
       '--extendable-content-cont-border',
@@ -293,31 +270,10 @@ export class ExtendableContent extends LitElement {
       '#add8e6'
     );
 
-    update(
-      'contExtendedHeight',
-      '--extendable-content-cont-extended-height',
-      '200px'
-    );
-    update(
-      'contExtendedMaxHeight',
-      '--extendable-content-cont-extended-max-height',
-      '200px'
-    );
-
     update('topBottomGap', '--extendable-content-top-bottom-gap', '5px');
 
     update('topHeight', '--extendable-content-top-height', '25px');
     update('topWidth', '--extendable-content-top-width', '100%');
-    update('topMaxHeight', '--extendable-content-top-max-height', '25px');
-    update('topMaxWidth', '--extendable-content-top-max-width', '100%');
-    update(
-      'topJustifyC',
-      '--extendable-content-top-justify-content',
-      'space-between'
-    );
-    update('topAlignI', '--extendable-content-top-align-items', 'center');
-    update('topOverflowX', '--extendable-content-top-overflow-x', 'hidden');
-    update('topOverflowY', '--extendable-content-top-overflow-y', 'hidden');
 
     update(
       'topContentHeight',
@@ -327,16 +283,6 @@ export class ExtendableContent extends LitElement {
     update(
       'topContentWidth',
       '--extendable-content-top-content-width',
-      'calc(100% - 30px)'
-    );
-    update(
-      'topContentMaxHeight',
-      '--extendable-content-top-content-max-height',
-      '100%'
-    );
-    update(
-      'topContentMaxWidth',
-      '--extendable-content-top-content-max-width',
       'calc(100% - 30px)'
     );
     update(
@@ -363,21 +309,11 @@ export class ExtendableContent extends LitElement {
     update(
       'extendContentHeight',
       '--extendable-content-extended-content-height',
-      'calc(100% - 30px)'
+      'fit-content'
     );
     update(
       'extendContentWidth',
       '--extendable-content-extended-content-width',
-      '100%'
-    );
-    update(
-      'extendContentMaxHeight',
-      '--extendable-content-extended-content-max-height',
-      'calc(100% - 30px)'
-    );
-    update(
-      'extendContentMaxWidth',
-      '--extendable-content-extended-content-max-width',
       '100%'
     );
     update(
@@ -403,8 +339,6 @@ export class ExtendableContent extends LitElement {
 
     update('buttonHeight', '--extendable-content-button-height', '24px');
     update('buttonWidth', '--extendable-content-button-width', '24px');
-    update('buttonMaxHeight', '--extendable-content-button-max-height', '24px');
-    update('buttonMaxWidth', '--extendable-content-button-max-width', '24px');
     update(
       'buttonBorderRadius',
       '--extendable-content-button-border-radius',
@@ -426,6 +360,10 @@ export class ExtendableContent extends LitElement {
     update('buttonIconWidth', '--extendable-content-button-icon-width', '12px');
   }
 
+  private setExtendFunction(extend: boolean) {
+    this.extended = extend;
+  }
+
   private toggleExtend = () => {
     this.extended = !this.extended;
   };
@@ -434,6 +372,10 @@ export class ExtendableContent extends LitElement {
     'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgLTQuNSAyMCAyMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4NCiAgICANCiAgICA8dGl0bGU+YXJyb3dfZG93biBbIzMzOF08L3RpdGxlPg0KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPg0KICAgIDxkZWZzPg0KDQo8L2RlZnM+DQogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSJEcmliYmJsZS1MaWdodC1QcmV2aWV3IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjIwLjAwMDAwMCwgLTY2ODQuMDAwMDAwKSIgZmlsbD0iIzAwMDAwMCI+DQogICAgICAgICAgICA8ZyBpZD0iaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDU2LjAwMDAwMCwgMTYwLjAwMDAwMCkiPg0KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xNjQuMjkyMzA4LDY1MjQuMzY1ODMgTDE2NC4yOTIzMDgsNjUyNC4zNjU4MyBDMTYzLjkwMjU2NCw2NTI0Ljc3MDcxIDE2My45MDI1NjQsNjUyNS40MjYxOSAxNjQuMjkyMzA4LDY1MjUuODMwMDQgTDE3Mi41NTU4NzMsNjUzNC4zOTI2NyBDMTczLjMzNjM2LDY1MzUuMjAyNDQgMTc0LjYwMjUyOCw2NTM1LjIwMjQ0IDE3NS4zODMwMTQsNjUzNC4zOTI2NyBMMTgzLjcwNzU0LDY1MjUuNzY3OTEgQzE4NC4wOTMyODYsNjUyNS4zNjcxNiAxODQuMDk4MjgzLDY1MjQuNzE5OTcgMTgzLjcxNzUzMyw2NTI0LjMxNDA1IEMxODMuMzI4Nzg5LDY1MjMuODk5ODUgMTgyLjY4ODIxLDY1MjMuODk0NjcgMTgyLjI5MzQ3LDY1MjQuMzAyNjYgTDE3NC42NzY0NzksNjUzMi4xOTYzNiBDMTc0LjI4NTczNiw2NTMyLjYwMTI0IDE3My42NTMxNTIsNjUzMi42MDEyNCAxNzMuMjYyNDA5LDY1MzIuMTk2MzYgTDE2NS43MDUzNzksNjUyNC4zNjU4MyBDMTY1LjMxNTYzNSw2NTIzLjk2MDk0IDE2NC42ODMwNTEsNjUyMy45NjA5NCAxNjQuMjkyMzA4LDY1MjQuMzY1ODMiIGlkPSJhcnJvd19kb3duLVsjMzM4XSI+DQoNCjwvcGF0aD4NCiAgICAgICAgICAgIDwvZz4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg==';
 
   render() {
+    if (this.exposeSetExtend) {
+      this.exposeSetExtend(this.setExtendFunction.bind(this));
+    }
+
     const extended = this.extended ? 'extended' : '';
     const active = this.active ? 'active' : '';
     const hover = this.hover ? 'hover' : '';
@@ -441,7 +383,7 @@ export class ExtendableContent extends LitElement {
     return html`<div
       id="container"
       part="container"
-      class="${extended} ${active} ${hover}"
+      class="${active} ${hover}"
       @mouseenter=${this.handleMouseEnter}
       @mouseleave=${this.handleMouseLeave}
     >

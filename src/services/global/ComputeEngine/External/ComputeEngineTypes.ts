@@ -2,7 +2,7 @@ import type {
   AttractorVisualizerAttractor,
   ComputationStatus,
   NodeDataBE,
-} from '../../../../types';
+} from '../../../../types/types';
 
 export type AttractorResponse = {
   timestamp: number | undefined;

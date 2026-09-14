@@ -1,36 +1,56 @@
 import { useMemo } from 'react';
-import ModelEditor from '../../../../../services/model-editor/ModelEditor/ModelEditor';
-import useModelInfoStore from '../../../../../stores/LiveModel/useModelInfoStore';
-import useTabsStore from '../../../../../stores/Navigation/useTabsStore';
 import InvisibleInputReact from '../../../lit-wrappers/InvisibleInputReact';
-import { Message } from '../../../../lit-components/message-wrapper';
+import type { ModelNameProps } from './ModelNameProps';
 
-const ModelName: React.FC = () => {
-  const modelName = useModelInfoStore((state) => state.modelName);
-  const tabStore = useTabsStore((state) => state);
+const ModelName: React.FC<ModelNameProps> = ({
+  modelEditorServ,
+  messageServ,
+  pageStringProviderServ,
 
-  const isActiveWittness = useMemo(() => {
-    const activeTab = tabStore.getActiveTab();
+  tabStore,
+  modelInfoStore,
+  helpHoverStore,
+}) => {
+  const modelName = modelInfoStore((state) => state.modelName);
+  const tabState = tabStore((state) => state);
+
+  const isActiveWitness = useMemo(() => {
+    const activeTab = tabState.getActiveTab();
     return activeTab?.type === 'Witness';
-  }, [tabStore]);
+  }, [tabState]);
 
   return (
     <InvisibleInputReact
       compHeight="35px"
-      compWidth="99%"
-      singleFontSize="22px"
+      compWidth="488px"
+      textColor='var(--color-primary-text)'
+      placeholderColor='var(--color-primary-placeholder-text)'
+      fontSize="22px"
       placeholder="Model Name"
-      singleTextAlign="center"
+      textAlign="center"
       value={modelName ?? undefined}
       handleChange={(value) => {
-        if (isActiveWittness) {
-          Message.showError(
+        if (isActiveWitness) {
+          messageServ.showError(
             'Cannot change model name while on Witness tab. Change to Model Editor tab and try again.'
           );
         } else {
-          ModelEditor.setModelName(value);
+          modelEditorServ.setModelName(value);
         }
       }}
+      onMouseEnter={(e: React.MouseEvent) =>
+        helpHoverStore
+          .getState()
+          .setHelpHoverAtMouse(
+            e.nativeEvent,
+            modelName.length > 0
+              ? modelName
+              : pageStringProviderServ.Tooltips.changeModelName(),
+            true,
+            40
+          )
+      }
+      onMouseLeave={() => helpHoverStore.getState().clear()}
     />
   );
 };

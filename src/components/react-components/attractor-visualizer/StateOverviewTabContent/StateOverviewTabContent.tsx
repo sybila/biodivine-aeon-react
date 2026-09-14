@@ -1,11 +1,13 @@
-import AttractorVisualizer from '../../../../services/attractor-visualizer/AttractorVisualizer';
-import useAttractorVisualizerStatus from '../../../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
-import { Message } from '../../../lit-components/message-wrapper';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import type { StateOverviewTabContentProps } from './StateOverviewTabContentProps';
 
-const StateOverviewTabContent = () => {
-  const selectedState = useAttractorVisualizerStatus(
+const StateOverviewTabContent: React.FC<StateOverviewTabContentProps> = ({
+  attractorVisualizerServ,
+  attractorVisualizerStatusStore,
+  messageServ,
+}) => {
+  const selectedState = attractorVisualizerStatusStore(
     (state) => state.selectedNodeState
   );
 
@@ -28,9 +30,9 @@ const StateOverviewTabContent = () => {
         textColor={
           isDynamic
             ? isFalse
-              ? 'var(--color-red)'
-              : 'var(--color-green)'
-            : 'var(--color-grey)'
+              ? 'var(--color-negative)'
+              : 'var(--color-positive)'
+            : 'var(--color-neutral)'
         }
         textFontWeight={isDynamic ? 'bold' : 'normal'}
       />
@@ -39,17 +41,17 @@ const StateOverviewTabContent = () => {
 
   const insertState = () => {
     if (!selectedState) {
-      Message.showError(
+      messageServ.showError(
         'Cannot show state overview: Internal Error (No selected state)'
       );
       return;
     }
 
     const variableNames: string[] | undefined =
-      AttractorVisualizer.getStateVariables();
+      attractorVisualizerServ.getStateVariables();
 
     if (!variableNames) {
-      Message.showError(
+      messageServ.showError(
         'Cannot show state overview: Internal Error (No available variable names)'
       );
       return;

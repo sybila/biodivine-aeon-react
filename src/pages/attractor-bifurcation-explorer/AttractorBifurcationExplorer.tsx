@@ -1,66 +1,155 @@
-import { useState } from 'react';
-import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
-import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
-import KeepAlive from 'react-activation';
-import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
+import { useEffect, useRef, useState } from 'react';
 import BifurcationExplorerCanvas from '../../components/react-components/attractor-bifurcation-explorer/BifurcationExplorerCanvas/BifurcationExplorerCanvas';
 import MakeDecisionTabContent from '../../components/react-components/attractor-bifurcation-explorer/MakeDecisionTabContent/MakeDecisionTabContent';
+import OverviewTabContent from '../../components/react-components/attractor-bifurcation-explorer/OverviewTabContent/OverviewTabContent';
 import StabilityAnalysisTabContent from '../../components/react-components/attractor-bifurcation-explorer/StabilityAnalysisTabContent/StabilityAnalysisTabContent';
 import VisualOptionsTabContent from '../../components/react-components/attractor-bifurcation-explorer/VisualOptionsTabContent/VisualOptionsTabContent';
-import AttractorBifurcationExplorerServices from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
+import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
+import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
+import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
 
-import StateIcon from '../../assets/icons/state_overview.svg';
-import StabilityIcon from '../../assets/icons/stability_analysis.svg';
-import DecisionIcon from '../../assets/icons/make_decision.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
+import HelpIcon from '../../assets/icons/help.svg';
+import DecisionIcon from '../../assets/icons/make_decision.svg';
+import StabilityIcon from '../../assets/icons/stability_analysis.svg';
+import StateIcon from '../../assets/icons/state_overview.svg';
 
-type TabTypeME =
-  | 'Overview'
-  | 'Stability Analysis'
-  | 'Make Decision'
-  | 'Visual Options'
-  | null;
+import UtilitiesMenu from '../../components/react-components/attractor-bifurcation-explorer/UtilitiesMenu/UtilitiesMenu';
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
+import type {
+  DecisionMixedNode,
+  LeafNode,
+  MenuTabTypeABE,
+} from '../../types/types';
+import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
-const AttractorBifurcationExplorer: React.FC = () => {
+const AttractorBifurcationExplorer: React.FC<
+  AttractorBifurcationExplorerProps
+> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  pageStringProviderServ,
+  messageServ,
+  shortcutManagerServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
+}) => {
   /** Check if the BifurcationExplorerCanvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<TabTypeME>(null);
+
+  const prevSelectedNodeRef = useRef<LeafNode | DecisionMixedNode | null>(null);
+
+  const activeTab: MenuTabTypeABE = bifurcationExplorerStatusStore(
+    (state) => state.activeMenuTab
+  );
+
+  const selectedNode = bifurcationExplorerStatusStore(
+    (state) => state.selectedNode
+  );
+
+  useEffect(() => {
+    const prev = prevSelectedNodeRef.current;
+    const justSelectedNode = selectedNode != null && prev == null;
+
+    const noTabOpen = !activeTab;
+
+    if (justSelectedNode && noTabOpen) {
+      bifurcationExplorerStatusStore.getState().setActiveMenuTab('Overview');
+    }
+
+    prevSelectedNodeRef.current = selectedNode;
+  }, [selectedNode, activeTab]);
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Attractor Bifurcation Explorer');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      attractorBifurcationExplorerServ.openBifurcationTree();
+    }
+  }, [initialized]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
-        return <OverviewTabContent />;
+        return (
+          <OverviewTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            messageServ={messageServ}
+            pageStringProviderServ={pageStringProviderServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       case 'Stability Analysis':
-        return <StabilityAnalysisTabContent />;
+        return (
+          <StabilityAnalysisTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            messageServ={messageServ}
+            pageStringProviderServ={pageStringProviderServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       case 'Make Decision':
-        return <MakeDecisionTabContent />;
+        return (
+          <MakeDecisionTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            messageServ={messageServ}
+            pageStringProviderServ={pageStringProviderServ}
+            bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       case 'Visual Options':
-        return <VisualOptionsTabContent />;
+        return (
+          <VisualOptionsTabContent
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
+        );
+      case 'Help':
+        return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
         return null;
     }
   };
 
-  const showHideTab = (tabType: TabTypeME) => {
+  const showHideTab = (tabType: MenuTabTypeABE) => {
     if (activeTab === tabType) {
-      setActiveTab(null);
+      bifurcationExplorerStatusStore.getState().setActiveMenuTab(null);
       return;
     }
 
-    setActiveTab(tabType);
+    bifurcationExplorerStatusStore.getState().setActiveMenuTab(tabType);
   };
-
-  if (initialized) {
-    AttractorBifurcationExplorerServices.openBifurcationTree();
-  }
 
   return (
     <>
+      <UtilitiesMenu
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        pageStringProviderServ={pageStringProviderServ}
+        helpHoverStore={helpHoverStore}
+        bifurcationExplorerStatusStore={bifurcationExplorerStatusStore}
+      />
+
       <SideButtonMenu>
         <IconButtonReact
           isActive={activeTab === 'Overview'}
           onClick={() => showHideTab('Overview')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={StateIcon}
           iconAlt="State"
           showTag={true}
@@ -69,6 +158,10 @@ const AttractorBifurcationExplorer: React.FC = () => {
         <IconButtonReact
           isActive={activeTab === 'Stability Analysis'}
           onClick={() => showHideTab('Stability Analysis')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={StabilityIcon}
           iconAlt="Stability"
           showTag={true}
@@ -77,6 +170,10 @@ const AttractorBifurcationExplorer: React.FC = () => {
         <IconButtonReact
           isActive={activeTab === 'Make Decision'}
           onClick={() => showHideTab('Make Decision')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={DecisionIcon}
           iconAlt="Decision"
           iconSize="88%"
@@ -86,11 +183,27 @@ const AttractorBifurcationExplorer: React.FC = () => {
         <IconButtonReact
           isActive={activeTab === 'Visual Options'}
           onClick={() => showHideTab('Visual Options')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
           iconSrc={EyeIcon}
           iconAlt="Visual"
           showTag={true}
           tagText="Visual Options"
         ></IconButtonReact>
+        <IconButtonReact
+          isActive={activeTab === 'Help'}
+          onClick={() => showHideTab('Help')}
+          buttonColor="var(--color-primary-buttons)"
+          buttonHoverColor="var(--color-primary-buttons-hover)"
+          buttonActiveColor="var(--color-primary-buttons-active)"
+          tagTextColor="var(--color-primary-text)"
+          iconSrc={HelpIcon}
+          iconAlt="Help"
+          showTag={true}
+          tagText="Help"
+        />
       </SideButtonMenu>
 
       <ContentTab
@@ -101,12 +214,11 @@ const AttractorBifurcationExplorer: React.FC = () => {
         {renderTabContent()}
       </ContentTab>
 
-      <KeepAlive>
-        <BifurcationExplorerCanvas
-          initialized={initialized}
-          setInitialized={setInitialized}
-        />
-      </KeepAlive>
+      <BifurcationExplorerCanvas
+        initialized={initialized}
+        setInitialized={setInitialized}
+        attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+      />
     </>
   );
 };

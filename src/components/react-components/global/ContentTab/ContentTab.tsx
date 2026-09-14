@@ -20,8 +20,11 @@ const ContentTab: React.FC<ContentTabProps> = ({
         top: `${spaceOnTop ? '75px' : '6px'}`,
         left: `${spaceOnTop ? '6px' : '85px'}`,
       }}
-      compMaxHeight="98%"
+      compMaxHeight="90vh"
       windHeight="auto"
+      windColor='var(--color-primary)'
+      headerTextColor='var(--color-primary-text)'
+      closeHoverColor='var(--color-secondary-buttons-hover)'
       windOverflowY={overflowY}
       headerText={headerText ?? ''}
       showHeader={true}

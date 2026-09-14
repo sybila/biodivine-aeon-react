@@ -1,9 +1,27 @@
-export type SelectionButtonsProps = {
-  keys: string[];
-  selectedVariables: Record<string, boolean>;
-  setSelectedVariables: (selectedVariables: Record<string, boolean>) => void;
+import type { SelectionButtonsTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/SelectionButtonsTooltipsInt';
+import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
+import type { ZustandStore } from '../../../../stores/ZustandStoreType';
+
+export type SelectionButtonsProps<T extends string | number> = {
+  keys: T[];
+  selectedVariables: Set<T>;
+  setSelectedVariables: (selectedVariables: Set<T>) => void;
   /** Size of the buttons border radius in the form of Css length (e.g. '8px', '0.5rem') */
   buttonBorderRadius?: string;
   /** Size of the buttons in the form of Css length (e.g. '29px', '1.5rem') */
   buttonSize?: string;
+
+  buttonColor?: string;
+
+  buttonHoverColor?: string;
+
+  buttonGap?: string;
+
+  componentHeight?: string;
+
+  componentWidth?: string;
+
+  tooltips: SelectionButtonsTooltipsInt;
+
+  helpHoverStore: ZustandStore<HelpHoverState>;
 };

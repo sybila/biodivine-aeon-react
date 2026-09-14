@@ -1,4 +1,3 @@
-import BehaviorClassOperations from '../../../../../../services/utilities/BehaviorClassOperations';
 import SimpleHeaderReact from '../../../../lit-wrappers/SimpleHeaderReact';
 import type { BehaviorClassTableRowProps } from './BehaviorClassTableRowProps';
 
@@ -6,10 +5,14 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
   distribution,
   interpretationCount,
   behaviorClassJSON,
+  behaviorClassOperationsServ,
+  textColor = 'var(--color-primary-text)',
 }) => {
   const behaviorClass =
-    BehaviorClassOperations.normalizeClasses(undefined, behaviorClassJSON) ??
-    'unclassified';
+    behaviorClassOperationsServ.normalizeClasses(
+      undefined,
+      behaviorClassJSON
+    ) ?? 'unclassified';
 
   const createDistributionString = () => {
     if (distribution[0] < 0 || distribution[1] < 0) return 'unknown';
@@ -26,6 +29,7 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
           compWidth="fit-content"
           lineHeight="30px"
           textFontSize="18px"
+          textColor={textColor}
           headerText={
             !behaviorClass || behaviorClass.length === 0
               ? 'unclassified'
@@ -39,7 +43,10 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
         />
       </div>
 
-      <span className="flex flex-row items-center justify-center-safe h-full overflow-x-auto overflow-y-hidden mx-[5%] w-[30%] font-[var(--base-font-family)] text-black text-[18px] select-none">
+      <span
+        className="flex flex-row items-center justify-center-safe h-full overflow-x-auto overflow-y-hidden mx-[5%] w-[30%] font-(--base-font-family) text-[18px] select-none"
+        style={{ color: textColor }}
+      >
         {!interpretationCount ? 'unknown' : interpretationCount.toString()}
       </span>
 
@@ -47,6 +54,7 @@ const BehaviorClassTableRow: React.FC<BehaviorClassTableRowProps> = ({
         <SimpleHeaderReact
           compHeight="100%"
           compWidth="fit-content"
+          textColor={textColor}
           lineHeight="30px"
           textFontSize="18px"
           textFontWeight="normal"

@@ -1,34 +1,42 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import type { DecisionMixedNode, LeafNode } from '../../../../../types';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import StatEntryReact from '../../../lit-wrappers/StatEntryReact';
+import type { NodeStatTableProps } from './NodeStatTableProps';
 
-const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
-  const totalCardinality = AttractorBifurcationExplorer.getTotalCardinality();
+const NodeStatTable: React.FC<NodeStatTableProps> = ({
+  nodeData,
+  attractorBifurcationExplorerServ,
+}) => {
+  const totalCardinality =
+    attractorBifurcationExplorerServ.getTotalCardinality();
 
   return (
     <section className="flex flex-col justify-end items-center h-fit w-full gap-1">
       <DotHeaderReact
         compHeight="30px"
         compWidth="100%"
+        textColor="var(--color-primary-text)"
         justifyHeader="start"
         headerText="Statistics"
       />
       <div className="flex flex-col justify-between items-center w-[95%] min-h-[22px] max-h-[90px] gap-1">
         <StatEntryReact
           compWidth="100%"
+          contBgColor="var(--color-secondary-darker)"
+          textColor="var(--color-secondary-text)"
           statName="Node Type"
           statValue={
             nodeData.type === 'unprocessed'
               ? 'mixed'
               : nodeData.type === 'leaf'
-              ? 'phenotype'
-              : nodeData.type ?? 'unknown'
+                ? 'phenotype'
+                : (nodeData.type ?? 'unknown')
           }
         />
         {nodeData.classes ? (
           <StatEntryReact
             compWidth="100%"
+            contBgColor="var(--color-secondary-darker)"
+            textColor="var(--color-secondary-text)"
             statName="Number of Classes"
             statValue={nodeData.classes.length.toString() ?? 'unknown'}
           />
@@ -46,22 +54,24 @@ const NodeStatTable: React.FC<LeafNode | DecisionMixedNode> = (nodeData) => {
               valueMaxWidth="40%"
               valueJustify="end"
               valNameGap="2%"
+              contBgColor="var(--color-secondary-darker)"
+              textColor="var(--color-secondary-text)"
               statValue={nodeData.cardinality.toString() ?? 'unknown'}
             />
 
             <StatEntryReact
               compWidth="100%"
               statName="Distribution"
+              contBgColor="var(--color-secondary-darker)"
+              textColor="var(--color-secondary-text)"
               statValue={
                 !totalCardinality || !nodeData.cardinality
                   ? 'unknown'
-                  : `${AttractorBifurcationExplorer.mathPercent(
-                      nodeData.cardinality,
-                      totalCardinality
-                    ).toString()}% / ${AttractorBifurcationExplorer.mathDimPercent(
-                      nodeData.cardinality,
-                      totalCardinality
-                    ).toString()}%`
+                  : `${attractorBifurcationExplorerServ
+                      .mathPercent(nodeData.cardinality, totalCardinality)
+                      .toString()}% / ${attractorBifurcationExplorerServ
+                      .mathDimPercent(nodeData.cardinality, totalCardinality)
+                      .toString()}%`
               }
             />
           </>

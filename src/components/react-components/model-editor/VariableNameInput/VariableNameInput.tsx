@@ -1,36 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { InvisibleInput } from '../../../lit-components/invisible-input';
 import InvisibleInputReact from '../../lit-wrappers/InvisibleInputReact';
-import ModelEditor from '../../../../services/model-editor/ModelEditor/ModelEditor';
+import type { VariableNameInputProps } from './VariableNameInputProps';
 
-const VariableNameInput: React.FC<{
-  height: string;
-  width: string;
-  singleFontSize: string;
-  varId: number;
-  varName: string;
-}> = ({ height, width, singleFontSize, varId, varName }) => {
-  const [nameError, setNameError] = useState<boolean>(
-    !varName || varName === ''
-  );
-  const updateVariableName = (newName: string) => {
-    if (!newName || newName === '') {
-      setNameError(true);
-      return;
-    }
+const VariableNameInput: React.FC<VariableNameInputProps> = ({
+  height,
+  width,
+  fontSize,
+  varName,
+  nameError,
+  exposeInputRef,
+  onKeyUp,
+}) => {
+  const inputRef = useRef<InvisibleInput | null>(null);
 
-    const success = ModelEditor.changeVariableName(varId, newName);
-    setNameError(!success);
-  };
+  useEffect(() => {
+    exposeInputRef(inputRef.current as HTMLElement);
+  }, [inputRef]);
 
   return (
     <InvisibleInputReact
+      ref={inputRef}
       compHeight={height}
       compWidth={width}
-      singleFontSize={singleFontSize}
+      contBgColor="var(--color-secondary)"
+      placeholderColor="var(--color-secondary-placeholder-text)"
+      contFocusBgColor="var(--color-secondary-highlight)"
+      contBorderRadius="10px"
+      contPadX="2px"
+      contPadY="2px"
+      multiLine={true}
+      fontSize={fontSize}
+      textColor="var(--color-secondary-text)"
       value={varName}
       placeholder="(variable name)"
       error={nameError}
-      handleChange={updateVariableName}
+      handleKeyUp={(newName: string) => onKeyUp(newName)}
     />
   );
 };

@@ -1,9 +1,12 @@
-import useWarningStore from '../../../../stores/Warning/useWarningStore';
 import OverlayWindowReact from '../../lit-wrappers/OverlayWindowReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+import type { WarningOverlayProps } from './WarningOverlayProps';
 
-const WarningOverlay: React.FC<{ zIndex: string }> = ({ zIndex }) => {
-  const warningLinkedList = useWarningStore((state) => state.warningLinkedList);
+const WarningOverlay: React.FC<WarningOverlayProps> = ({
+  zIndex,
+  warningStore,
+}) => {
+  const warningLinkedList = warningStore((state) => state.warningLinkedList);
 
   if (!warningLinkedList) {
     return null;
@@ -12,10 +15,8 @@ const WarningOverlay: React.FC<{ zIndex: string }> = ({ zIndex }) => {
   return (
     <OverlayWindowReact
       compZIndex={zIndex}
-      windHeight="auto"
-      windMaxHeight="80%"
-      windWidth="auto"
-      windMaxWidth="40%"
+      windMaxWidth="90vw"
+      windMaxHeight="90vh"
       contentJustifyC="center"
       contentAlignI="center"
       contentGap="50px"
@@ -33,7 +34,7 @@ const WarningOverlay: React.FC<{ zIndex: string }> = ({ zIndex }) => {
             key={index}
             onClick={() => {
               button.action();
-              useWarningStore.getState().popWarning();
+              warningStore.getState().popWarning();
             }}
             text={button.text}
           />

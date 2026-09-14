@@ -1,101 +1,65 @@
-import { useState } from 'react';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import type { ComputationModes } from '../../../../types';
-import ComputationManager from '../../../../services/global/ComputationManager/ComputationManager';
+import type { ComputationModes } from '../../../../types/types';
+import SeparatorLine from '../../global/SeparatorLine/SeparatorLine';
+import ComputationExtendableContent from './ComputationExtendableContent/ComputationExtendableContent';
 import ControlCompParams from './ControlCompParams/ControlCompParams';
-import TextButtonReact from '../../lit-wrappers/TextButtonReact';
-import ArrowSelectButton from '../../global/ArrowsSelectButton/ArrowsSelectButton';
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
-import useResultsStatus from '../../../../stores/ComputationManager/useResultsStatus';
-import useTabsStore from '../../../../stores/Navigation/useTabsStore';
-import Warning from '../../../../services/global/Warning/Warning';
+import type { StartCompTabContentProps } from './StartCompTabContentsProps';
 
-const StartCompTabContent: React.FC = () => {
-  const [computationMode, setComputationMode] = useState<ComputationModes>(
-    ComputationManager.getComputationMode()
-  );
+const StartCompTabContent: React.FC<StartCompTabContentProps> = ({
+  liveModelServ,
+  computationManagerServ,
+  openCloseOperationsServ,
+  warningServ,
+  messageServ,
 
-  const changeComputationMode = (mode: ComputationModes) => {
-    ComputationManager.setComputationMode(mode);
-    setComputationMode(mode);
-  };
-
-  const getComputationFunction = () => {
-    switch (computationMode) {
-      case 'Attractor Analysis':
-        return () => ComputationManager.startAttractorAnalysis();
-      case 'Control':
-        return () => ComputationManager.startControlComputation();
-    }
-  };
-
-  const showResultsWarningIfNeeded = () => {
-    const currentComputationFunction = getComputationFunction();
-
-    if (
-      useResultsStatus.getState().results ||
-      !useTabsStore.getState().isEmpty()
+  tabStore,
+  resultsStatusStore,
+  controlStore,
+}) => {
+  const showResultsWarningIfNeeded = (
+    computationMode: ComputationModes,
+    computationFunction: () => void
+  ) => {
+    if (!computationManagerServ.isComputeEngineConnected()) {
+      messageServ.showError(
+        'Cannot start computation: Compute Engine is not connected.'
+      );
+      openCloseOperationsServ.openComputeEngineMenu();
+    } else if (
+      resultsStatusStore.getState().isResultsConflict(computationMode) ||
+      !tabStore.getState().isEmpty()
     ) {
-      Warning.addStartComputationResultsWarning(currentComputationFunction);
+      warningServ.addStartComputationResultsWarning(computationFunction);
     } else {
-      currentComputationFunction();
+      computationFunction();
     }
   };
-
-  const renderButtons = () => {
-    const firstCol: Array<ComputationModes> = ['Attractor Analysis'];
-    const secondCol: Array<ComputationModes> = ['Control'];
-
-    const renderButton = (mode: ComputationModes) => (
-      <ArrowSelectButton
-        key={mode}
-        active={computationMode === mode}
-        text={mode}
-        onClick={() => changeComputationMode(mode)}
-      />
-    );
-    return (
-      <section className="flex flex-row w-full">
-        <div className="w-1/2">
-          {firstCol.map((mode: ComputationModes) => renderButton(mode))}
-        </div>
-
-        <div className="w-1/2">
-          {secondCol.map((mode: ComputationModes) => renderButton(mode))}
-        </div>
-      </section>
-    );
-  };
-
-  const renderParams = () => {
-    switch (computationMode) {
-      case 'Control':
-        return <ControlCompParams />;
-      default:
-        return null;
-    }
-  };
-
-  LiveModel.UpdateFunctions.validateUpdateFunctionsIfNeeded();
 
   return (
-    <div className="flex flex-col items-center w-full h-fit gap-5">
-      <DotHeaderReact
-        headerText="Computation Mode"
-        compWidth="100%"
-        justifyHeader="start"
-      ></DotHeaderReact>
+    <div className="flex flex-col items-center w-full max-h-[70vh] gap-4 overflow-x-hidden overflow-y-auto pb-[4px]">
+      <SeparatorLine width="98%" />
 
-      {renderButtons()}
-
-      {renderParams()}
-
-      <TextButtonReact
-        text="Start Computation"
-        onClick={() => showResultsWarningIfNeeded()}
-        compHeight="40px"
-        compWidth="100%"
+      <ComputationExtendableContent
+        computationName="Attractor Analysis"
+        startComputationFunction={() =>
+          showResultsWarningIfNeeded('Attractor Analysis', () =>
+            computationManagerServ.AttractorAnalysis.startAttractorAnalysis()
+          )
+        }
       />
+
+      <ComputationExtendableContent
+        computationName="Control"
+        startComputationFunction={() =>
+          showResultsWarningIfNeeded('Control', () =>
+            computationManagerServ.Control.startControlComputation()
+          )
+        }
+      >
+        <ControlCompParams
+          computationManagerServ={computationManagerServ}
+          controlStore={controlStore}
+        />
+      </ComputationExtendableContent>
     </div>
   );
 };

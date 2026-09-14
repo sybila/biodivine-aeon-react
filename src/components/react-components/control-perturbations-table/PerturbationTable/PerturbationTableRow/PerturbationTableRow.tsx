@@ -1,7 +1,5 @@
 import { memo, useMemo, useState } from 'react';
 import type { PerturbationTableRowProps } from './PerturbationTableRowProps';
-import ControlPerturbationsTable from '../../../../../services/control-perturbations-table/ControlPerturbationsTable';
-import DataFormaters from '../../../../../services/utilities/DataFormaters';
 
 const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
   ({
@@ -11,6 +9,8 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     perturbation,
     cellSizes,
     useTextVisualization = false,
+    controlPerturbationsTableServ,
+    dataFormatersServ,
   }) => {
     const [textVisualization, setTextVisualization] =
       useState<boolean>(useTextVisualization);
@@ -21,7 +21,10 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
 
     /** Memoized formatted perturbation in the form of JSX elements [coloredFormat, textFormat] */
     const formatedPerturbation = useMemo(() => {
-      return ControlPerturbationsTable.formatPerturbation(perturbationArray);
+      return controlPerturbationsTableServ.formatPerturbation(
+        perturbationArray,
+        'var(--color-primary-text)'
+      );
     }, [perturbationArray]);
 
     /** Data for each cell inside the row */
@@ -32,7 +35,7 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
         : formatedPerturbation[0],
       perturbationArray.length,
       numberOfInterpretations,
-      DataFormaters.convertRobustnessToPercentage(robustness),
+      dataFormatersServ.convertRobustnessToPercentage(robustness),
     ];
 
     /** Handles click events for each cell */
@@ -45,13 +48,13 @@ const PerturbationTableRow: React.FC<PerturbationTableRowProps> = memo(
     ];
 
     return (
-      <section className="flex flex-row min-h-[32px] max-h-[45px] w-full items-center rounded-md bg-white hover:bg-blue-50 transition-shadow shadow-sm border-b border-gray-200">
+      <section className="flex flex-row min-h-[32px] max-h-[45px] w-full items-center rounded-md bg-(--color-primary-light) hover:bg-(--color-primary-light-highlight) transition-shadow shadow-sm border-b border-(--color-primary-light-border)">
         {cells.map((cell, index) => (
           <div
             key={index}
             onClick={handleClick[index]}
             style={{ width: cellSizes[index] }}
-            className="flex min-h-[25px] max-h-[45px] justify-center-safe px-2 py-1 overflow-x-auto overflow-y-hidden select-none font-[var(--base-font-family)] text-sm text-gray-700 whitespace-nowrap"
+            className="flex min-h-[25px] max-h-[45px] justify-center-safe px-2 py-1 overflow-x-auto overflow-y-hidden select-none font-(--base-font-family) text-sm text-(--color-primary-text) whitespace-nowrap"
           >
             {cell}
           </div>

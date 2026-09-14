@@ -1,155 +1,234 @@
+import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
+import type { ComputeEngineStatusState } from '../../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
+import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
+import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { TabsState } from '../../../stores/Navigation/TabState';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
-  AttractorData,
   AttractorResults,
   ComputationModes,
   ComputationStatus,
-  ControlComputationParams,
   ControlResults,
-  Decisions,
-  ModelObject,
-  NodeDataBE,
-  StabilityAnalysisModes,
-  StabilityAnalysisVariable,
-  UpdateFunctionStatus,
-} from '../../../types';
+} from '../../../types/types';
+import type { ComputeEngineInt } from '../ComputeEngine/ComputeEngineInt';
 import ComputeEngine from '../ComputeEngine/External/ComputeEngine';
-import { LiveModel } from '../LiveModel/LiveModel';
-import useComputeEngineStatus from '../../../stores/ComputationManager/useComputeEngineStatus';
-import { Message } from '../../../components/lit-components/message-wrapper';
-import useResultsStatus from '../../../stores/ComputationManager/useResultsStatus';
-import AttractorBifurcationExplorer from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import { Loading } from '../../../components/lit-components/loading-wrapper';
-import useBifurcationExplorerStatus from '../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import AttractorVisualizer from '../../attractor-visualizer/AttractorVisualizer';
-import useTabsStore from '../../../stores/Navigation/useTabsStore';
-import useUpdateFunctionsStore from '../../../stores/LiveModel/useUpdateFunctionsStore';
-import useVariablesStore from '../../../stores/LiveModel/useVariablesStore';
+import type { LiveModelInt } from '../LiveModel/LiveModelInt';
+import type { LoadingInt } from '../Loading/LoadingInt';
+import type { MessageInt } from '../Message/MessageInt';
+import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
+import AttractorAnalysis from './AttractorAnalysis/AttractorAnalysis';
+import type { AttractorAnalysisInt } from './AttractorAnalysis/AttractorAnalysisInt';
+import type { ComputationManagerInt } from './ComputationManagerInt';
+import Control from './Control/Control';
+import type { ControlInt } from './Control/ControlInt';
+import Model from './Model/Model';
+import type { ModelInt } from './Model/ModelInt';
+import TrapSpaceSuccessionDiagram from './TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagram';
+import type { TrapSpaceSuccessionDiagramInt } from './TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 
 /**
 	Responsible for managing computation inside AEON. (start computation, stop computation, computation parameters...)
 */
-class ComputationManagerClass {
-  // #region --- Properties ---
+class ComputationManager implements ComputationManagerInt {
+  // #region --- Properties + Constructor ---
+
+  public Control: ControlInt;
+
+  public AttractorAnalysis: AttractorAnalysisInt;
+
+  public TrapSpaceSuccessionDiagram: TrapSpaceSuccessionDiagramInt;
+
+  public Model: ModelInt;
 
   /** Currently used compute engine comunicator */
-  private computeEngine = new ComputeEngine(this.setResults);
-
-  /** Saves currently set computation mode */
-  private computationMode: ComputationModes = 'Attractor Analysis';
-
-  /** Control computation parameters
-   * - minRobustness: Minimum robustness for perturbations in %.
-   * - maxSize: Maximum size of a perturbation (max number of perturbed variables).
-   * - maxNumberOfResults: Maximum number of perturbations to return. */
-  private controlComputationParams: ControlComputationParams = {
-    minRobustness: 0.01,
-    maxSize: undefined,
-    maxNumberOfResults: 1000000,
-  };
+  private computeEngine: ComputeEngineInt;
 
   /** If not empty, blocks all computations with the given reason. */
   private computationBlockingOperations: Record<string, string> = {};
+
+  /** Reference to the LiveModel service. Needs to be set after creation of the ComputationManager because of circular dependencies. */
+  private liveModelServ: LiveModelInt | undefined = undefined;
+  private tabOperationsServ: TabOperationsInt;
+  private messageServ: MessageInt;
+  private loadingServ: LoadingInt;
+
+  private controlStore: ZustandStore<ControlStatus>;
+  private resultsStatusStore: ZustandStore<ResultsStatus>;
+  private computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+  private tabsStore: ZustandStore<TabsState>;
+
+  constructor(
+    tabOperationsServ: TabOperationsInt,
+    messageServ: MessageInt,
+    loadingServ: LoadingInt,
+
+    bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>,
+    controlStore: ZustandStore<ControlStatus>,
+    resultsStatusStore: ZustandStore<ResultsStatus>,
+    computeEngineStatusStore: ZustandStore<ComputeEngineStatusState>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    variablesStore: ZustandStore<VariablesStatus>,
+    tabsStore: ZustandStore<TabsState>
+  ) {
+    this.tabOperationsServ = tabOperationsServ;
+    this.messageServ = messageServ;
+    this.loadingServ = loadingServ;
+
+    this.controlStore = controlStore;
+    this.resultsStatusStore = resultsStatusStore;
+    this.computeEngineStatusStore = computeEngineStatusStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.variablesStore = variablesStore;
+    this.tabsStore = tabsStore;
+
+    this.computeEngine = new ComputeEngine(
+      this.setResults.bind(this),
+      this.loadingServ
+    );
+
+    // TODO - change when multiple phenotypes for computation are allowed
+    const getModelString = () => {
+      return this.getLiveModel()!.Export.exportAeon(
+        false,
+        this.controlStore.getState().phenotypesUsedInComputation.values().next()
+          .value ?? -1
+      );
+    };
+
+    this.Control = new Control(
+      this.messageServ,
+      this.computeEngine,
+      () => this.getLiveModel(),
+      this.controlStore,
+      (model) => this.computationCanStart(model, 'Control'),
+      (warning, error, computeEngineStatus, computationStatus, color) =>
+        this.setComputationStatus(
+          warning,
+          error,
+          computeEngineStatus,
+          computationStatus,
+          color
+        )
+    );
+
+    this.AttractorAnalysis = new AttractorAnalysis(
+      this.messageServ,
+      this.loadingServ,
+      this.computeEngine,
+      getModelString,
+      () => this.getLiveModel(),
+      bifurcationExplorerStatusStore,
+      tabsStore,
+      (model) => this.computationCanStart(model, 'Attractor Analysis'),
+      (warning, error, computeEngineStatus, computationStatus, color) =>
+        this.setComputationStatus(
+          warning,
+          error,
+          computeEngineStatus,
+          computationStatus,
+          color
+        )
+    );
+
+    this.TrapSpaceSuccessionDiagram = new TrapSpaceSuccessionDiagram(
+      messageServ,
+      loadingServ,
+      this.computeEngine,
+      getModelString,
+      (model) => this.computationCanStart(model, 'Attractor Analysis')
+    );
+
+    this.Model = new Model(
+      messageServ,
+      this.computeEngine,
+      variablesStore,
+      (operationName: string, value: string) =>
+        (this.computationBlockingOperations[operationName] = value),
+      (operationName: string) =>
+        delete this.computationBlockingOperations[operationName],
+      () => this.isComputeEngineConnected()
+    );
+  }
+
+  // #endregion
+
+  // #region --- LiveModel Reference ---
+
+  private getLiveModel(): LiveModelInt | undefined {
+    if (!this.liveModelServ) {
+      console.error(
+        'ComputationManager: LiveModel reference is not set. This should not happen, make sure to set it after creating the ComputationManager.'
+      );
+      return undefined;
+    } else {
+      return this.liveModelServ;
+    }
+  }
+
+  public setLiveModel(liveModel: LiveModelInt) {
+    this.liveModelServ = liveModel;
+  }
 
   // #endregion
 
   // #region --- External Compute Engine Adress Setters/Getters ---
 
-  /** Sets the URL of the compute engine */
-  public setComputeEngineAddress(address: string): void {
+  public setComputeEngineAddress(address: string) {
     if (address && this.computeEngine.setEngineAddress)
       this.computeEngine.setEngineAddress(address);
   }
 
-  /** Returns the URL of the compute engine */
-  public getComputeEngineAddress(): string | undefined {
+  public getComputeEngineAddress() {
     if (this.computeEngine.getEngineAddress)
       return this.computeEngine.getEngineAddress();
   }
 
   // #endregion
 
-  // #region --- Control Computation Parameters Setters/Getters ---
-
-  /** Sets maximum number of perturbations */
-  public setMaxNumberOfResults(max: number | undefined) {
-    if (!max) this.controlComputationParams.maxNumberOfResults = 1000000;
-    else if (max < 1) this.controlComputationParams.maxNumberOfResults = 1;
-    else this.controlComputationParams.maxNumberOfResults = max;
-  }
-
-  /** Returns maximum number of perturbations */
-  public getMaxNumberOfResults() {
-    return this.controlComputationParams.maxNumberOfResults;
-  }
-
-  /** Resets the maximum size of a perturbation.
-   * After calling this, the next call to getMaxSize() will set it to the current number of Control-Enabled variables in the model.
-   */
-  public resetMaxSize() {
-    this.controlComputationParams.maxSize = undefined;
-  }
-
-  /** Sets maximum size of a perturbation */
-  public setMaxSize(max: number | undefined) {
-    const numberOfEnabled = LiveModel.Control.getNumberOfSetControl()[0];
-
-    if (!max || max > numberOfEnabled) {
-      this.controlComputationParams.maxSize = numberOfEnabled;
-    } else if (max < 1) {
-      this.controlComputationParams.maxSize = 1;
-    } else {
-      this.controlComputationParams.maxSize = max;
-    }
-  }
-
-  /** Returns maximum size of a perturbation */
-  public getMaxSize() {
-    if (this.controlComputationParams.maxSize === undefined) {
-      this.controlComputationParams.maxSize =
-        LiveModel.Control.getNumberOfSetControl()[0];
-    }
-
-    return this.controlComputationParams.maxSize;
-  }
-
-  /** Sets minimum robustness for perturbations in %*/
-  public setMinRobustness(min: number | undefined) {
-    if (!min || min < 0) this.controlComputationParams.minRobustness = 0.01;
-    else this.controlComputationParams.minRobustness = min;
-  }
-
-  /** Returns minimum robustness for perturbations */
-  public getMinRobustness() {
-    return this.controlComputationParams.minRobustness;
-  }
-
-  // #endregion
-
-  // #region --- Computation Mode Setters/Getters ---
-
-  /** Returns currently set computation mode */
-  public getComputationMode() {
-    return this.computationMode;
-  }
-
-  /** Sets computation mode */
-  public setComputationMode(mode: ComputationModes) {
-    if (mode) this.computationMode = mode;
-  }
-
-  // #endregion
-
   // #region --- Connection Manager ---
 
-  public isComputeEngineConnected(): boolean {
+  public isComputeEngineConnected() {
     return this.computeEngine.isConnected();
   }
 
-  public toggleConnection(): void {
-    this.computeEngine.toggleConnection(this.setComputationStatus);
+  /** Callback for pinging of connected compute engine. Used as callback for the toggle connection function.
+   *  This callback is also used on every ping, if the connection to the compute engine is succesful.
+   */
+  private pingCallback(
+    warning: string | undefined,
+    error: string | undefined,
+    engineStatus: string | undefined,
+    compStatus: ComputationStatus | undefined,
+    color: string | undefined
+  ): void {
+    this.setComputationStatus(warning, error, engineStatus, compStatus, color);
   }
 
-  public computationIsRunning(): boolean {
+  /** Callback which should run after compute engine has succesfully connected. */
+  private succesfulConnectionCallback() {
+    this.getLiveModel()!.UpdateFunctions.validateAllUpdateFunctions();
+  }
+
+  public toggleConnection() {
+    this.computeEngine.toggleConnection(
+      () => this.succesfulConnectionCallback(),
+      (
+        warning: string | undefined,
+        error: string | undefined,
+        engineStatus: string | undefined,
+        compStatus: ComputationStatus | undefined,
+        color: string | undefined
+      ) => {
+        this.pingCallback(warning, error, engineStatus, compStatus, color);
+      }
+    );
+  }
+
+  public computationIsRunning() {
     return this.computeEngine.isWaitingForResults();
   }
 
@@ -158,7 +237,8 @@ class ComputationManagerClass {
   // #region --- Computation Status ---
 
   private computationCanStart(
-    model: string | undefined
+    model: string | undefined,
+    mode: ComputationModes
   ): asserts model is string {
     if (!model) {
       throw new Error('Cannot start computation: Model is empty.');
@@ -173,21 +253,22 @@ class ComputationManagerClass {
       );
     }
 
-    const updateFunctionErrorVarID = useUpdateFunctionsStore
+    const updateFunctionErrorVarID = this.updateFunctionsStore
       .getState()
       .errorInUpdateFunctions();
 
     if (updateFunctionErrorVarID !== undefined) {
       throw new Error(
-        `Cannot start computation: Update function for variable '${useVariablesStore
+        `Cannot start computation: Update function for variable '${this.variablesStore
           .getState()
           .getVariableName(updateFunctionErrorVarID)}' has errors.`
       );
     }
 
-    if (this.computationMode === 'Control') {
-      const [controlEnabled, inPhenotype] =
-        LiveModel.Control.getNumberOfSetControl();
+    if (mode === 'Control') {
+      const [controlEnabled, inPhenotype] = this.controlStore
+        .getState()
+        .getNumberOfSetControl();
 
       if (controlEnabled === 0) {
         throw new Error(
@@ -202,8 +283,12 @@ class ComputationManagerClass {
       }
     }
 
-    useResultsStatus.getState().clear();
-    useTabsStore.getState().clear();
+    this.resultsStatusStore.getState().clearResult(mode);
+    this.tabsStore
+      .getState()
+      .closeByTabType(
+        this.tabOperationsServ.getTabTypeFromComputationMode(mode)
+      );
 
     return;
   }
@@ -216,433 +301,25 @@ class ComputationManagerClass {
     color: string | undefined = undefined
   ): void => {
     if (computeEngineStatus)
-      useComputeEngineStatus
+      this.computeEngineStatusStore
         .getState()
         .setComputeEngineStatus(computeEngineStatus);
 
     if (computationStatus)
-      useComputeEngineStatus.getState().setComputationStatus(computationStatus);
+      this.computeEngineStatusStore
+        .getState()
+        .setComputationStatus(computationStatus);
 
-    if (color) useComputeEngineStatus.getState().setStatusColor(color);
+    if (color) this.computeEngineStatusStore.getState().setStatusColor(color);
 
     if (error) {
-      Message.showError(error);
+      this.messageServ.showError(error);
     }
 
     if (warning) {
-      Message.showInfo(warning);
+      this.messageServ.showInfo(warning);
     }
   };
-
-  // #endregion
-
-  // #region --- Update Functions ---
-
-  private validateUpdateFunctionCallback(
-    variableId: number,
-    response: UpdateFunctionStatus | undefined
-  ): void {
-    if (!response) {
-      Message.showError(
-        `Error validating update function for variable ${useVariablesStore
-          .getState()
-          .getVariableName(variableId)}`
-      );
-      useUpdateFunctionsStore.getState().setUpdateFunctionStatus(variableId, {
-        status: 'Error validating update function',
-        isError: true,
-      });
-    } else {
-      useUpdateFunctionsStore
-        .getState()
-        .setUpdateFunctionStatus(variableId, response);
-    }
-
-    delete this.computationBlockingOperations[
-      'Validating update function ' + variableId
-    ];
-  }
-
-  /** Validates the update function for a specific variable and sets the status in the store */
-  public validateUpdateFunction(
-    variableId: number,
-    updateFunctionFragment: string
-  ): void {
-    if (this.isComputeEngineConnected()) {
-      this.computationBlockingOperations[
-        'Validating update function ' + variableId
-      ] = "'Validating update function'";
-
-      this.computeEngine.validateUpdateFunction(
-        variableId,
-        updateFunctionFragment,
-        this.validateUpdateFunctionCallback.bind(this)
-      );
-    }
-  }
-
-  // #endregion
-
-  // #region --- Open Witness ---
-
-  public openWitnessCallback(
-    error: string | undefined,
-    response: ModelObject | undefined
-  ): void {
-    if (error || !response || !response.model) {
-      Message.showError(`Error opening witness: "${error ?? 'Unknown error'}"`);
-    } else {
-      const modelId = LiveModel.Models.addModel(response.model, 'witness');
-      LiveModel.Models.loadModel(modelId);
-      useTabsStore.getState().addTab(`/witness`, 'Witness', () => {
-        LiveModel.Models.loadModel(modelId);
-        () => LiveModel.Models.removeModel(modelId);
-      });
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Gets the witness for one result from the attractor analysis and opens new witness tab */
-  public openWitnessAttractorAnalysis(behaviorString: string): void {
-    if (!behaviorString || behaviorString.length === 0) {
-      Message.showError(
-        'Cannot open witness: No behavior string provided for the attractor.'
-      );
-      return;
-    }
-
-    Loading.startLoading();
-    this.computeEngine.getWitnessAttractorAnalysis(
-      behaviorString,
-      this.openWitnessCallback.bind(this)
-    );
-  }
-
-  /** Get witness for leaf node in the bifurcation explorer and opens new witness tab */
-  public openWitnessBifurcationExplorer(nodeId: number): void {
-    Loading.startLoading();
-    this.computeEngine.getWitnessBifurcationExplorer(
-      nodeId,
-      this.openWitnessCallback.bind(this)
-    );
-  }
-
-  /** Get witness for stability analysis and opens new witness tab */
-  public openWitnessStabilityAnalysis(
-    nodeId: number,
-    variableName: string,
-    behavior: string,
-    vector: string[]
-  ): void {
-    Loading.startLoading();
-    this.computeEngine.getWitnessStabilityAnalysis(
-      nodeId,
-      variableName,
-      behavior,
-      vector,
-      this.openWitnessCallback.bind(this)
-    );
-  }
-
-  // #endregion
-
-  // #region --- Attractor Analysis Computation ---
-
-  public startAttractorAnalysis(): void {
-    const model = LiveModel.Export.exportAeon();
-
-    try {
-      this.computationCanStart(model);
-    } catch (error: any) {
-      Message.showError(error.message);
-      return;
-    }
-
-    this.computeEngine.startAttractorAnalysis(model, this.setComputationStatus);
-  }
-
-  // #endregion
-
-  // #region --- Attractor Bifurcation Explorer ---
-
-  /** Callback for fetching the bifurcation tree.
-   * Sets the bifurcation tree in the AttractorBifurcationExplorer.
-   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer */
-  private getBifurcationTreeCallback(
-    error: string | undefined,
-    nodes: NodeDataBE[] | undefined,
-    fit: boolean
-  ): void {
-    if (error || !nodes) {
-      Message.showError(
-        `Error fetching bifurcation tree: ${error ?? 'Internal error'}`
-      );
-    } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(nodes, fit);
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Fetches the bifurcation tree from the compute engine.
-   * @param fit - (boolean) Determines whether to fit the tree in the view of AttractorBifurcationExplorer.
-   */
-  public getBifurcationTree(fit: boolean): void {
-    Loading.startLoading();
-    this.computeEngine.getBifurcationTree((error, nodes) =>
-      this.getBifurcationTreeCallback(error, nodes, fit)
-    );
-  }
-
-  /** Callback for setting the bifurcation tree precision. Checks for errors and updates the UI accordingly. */
-  private setBifurcationTreePrecisionCallback(error: string | undefined): void {
-    if (error) {
-      Message.showError(`Error setting bifurcation tree precision: ${error}`);
-      return;
-    }
-
-    this.getBifurcationTree(false);
-  }
-
-  /** Sets the precision of the bifurcation tree.
-   *  Precision is % with up to two decimal places
-   */
-  public setBifurcationTreePrecision(precision: number): void {
-    this.computeEngine.setBifurcationTreePrecision(
-      precision,
-      this.setBifurcationTreePrecisionCallback.bind(this)
-    );
-  }
-
-  /** Callback for auto-expanding the bifurcation tree. Sets the expanded nodes in the AttractorBifurcationExplorer and unselects selected node. */
-  private autoExpandBifurcationTreeCallback(
-    error: string | undefined,
-    nodes: NodeDataBE[] | undefined
-  ): void {
-    if (error || !nodes) {
-      Message.showError(
-        `Error auto-expanding bifurcation tree: ${error ?? 'Internal error'}`
-      );
-    } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(nodes, true);
-    }
-
-    AttractorBifurcationExplorer.refreshSelection();
-
-    Loading.endLoading();
-  }
-
-  /** Automatically expands the bifurcation tree at the given node and depth. */
-  public autoExpandBifurcationTree(nodeId: number, depth: number): void {
-    Loading.startLoading();
-    this.computeEngine.autoExpandBifurcationTree(
-      nodeId,
-      depth,
-      this.autoExpandBifurcationTreeCallback.bind(this)
-    );
-  }
-
-  /** Callback for deleting a bifurcation decision. */
-  private deleteBifurcationDecisionCallback(
-    error: string | undefined,
-    node: NodeDataBE | undefined,
-    removed: number[] | undefined
-  ): void {
-    if (error || !node) {
-      Message.showError(
-        `Error deleting bifurcation decision: ${error ?? 'Internal error'}`
-      );
-    } else {
-      if (!removed || removed.length === 0) {
-        Message.showInfo(
-          `Bifurcation decision for node ${node.id} was deleted, but no nodes were removed.`
-        );
-      }
-      AttractorBifurcationExplorer.removeFromCytoscape(node, removed ?? []);
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Deletes a bifurcation decision by node ID. */
-  public deleteBifurcationDecision(nodeId: number): void {
-    Loading.startLoading();
-    this.computeEngine.deleteBifurcationDecision(
-      nodeId,
-      this.deleteBifurcationDecisionCallback.bind(this)
-    );
-  }
-
-  /** Callback for fetching stability data. */
-  private getStabilityDataCallback(
-    error: string | undefined,
-    behavior: StabilityAnalysisModes,
-    data: Array<StabilityAnalysisVariable> | undefined
-  ): void {
-    if (error || !data) {
-      Message.showError(
-        `Error fetching stability data: ${error ?? 'Internal error'}`
-      );
-    } else {
-      useBifurcationExplorerStatus.getState().loadStabilityData({
-        computedBehavior: behavior,
-        stabilityAnalysis: data,
-      });
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Fetches the stability data for a specific node and behaviour.
-   * @param nodeId - (number) The ID of the node to fetch stability data for.
-   * @param behaviour - (StabilityAnalysisModes) The behaviour mode to use for fetching stability data.
-   */
-  public getStabilityData(
-    nodeId: number,
-    behaviour: StabilityAnalysisModes
-  ): void {
-    Loading.startLoading();
-    this.computeEngine.getStabilityData(
-      nodeId,
-      behaviour,
-      this.getStabilityDataCallback.bind(this)
-    );
-  }
-
-  /** Callback for fetching decisions. */
-  public getDecisionsCallback(
-    error: string | undefined,
-    decisions: Decisions | undefined
-  ) {
-    if (error || !decisions) {
-      Message.showError(
-        `Error fetching decisions: ${error ?? 'Internal error'}`
-      );
-    } else {
-      const formatedDecisions =
-        AttractorBifurcationExplorer.formatClassesDecisions(decisions);
-      useBifurcationExplorerStatus.getState().loadDecisions(formatedDecisions);
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Fetches the decisions for a specific node. */
-  public getDecisions(nodeId: number): void {
-    Loading.startLoading();
-    this.computeEngine.getDecisions(
-      nodeId,
-      this.getDecisionsCallback.bind(this)
-    );
-  }
-
-  public makeDecisionCallback(
-    error: string | undefined,
-    node: NodeDataBE[] | undefined
-  ): void {
-    if (error || !node) {
-      Message.showError(`Error making decision: ${error ?? 'Internal error'}`);
-    } else {
-      AttractorBifurcationExplorer.insertBifurcationTree(node, true, false);
-      AttractorBifurcationExplorer.refreshSelection();
-    }
-
-    Loading.endLoading();
-  }
-
-  public makeDecision(nodeId: number, decisionId: number): void {
-    Loading.startLoading();
-    this.computeEngine.makeDecision(
-      nodeId,
-      decisionId,
-      this.makeDecisionCallback.bind(this)
-    );
-  }
-
-  // #endregion
-
-  // #region --- Attractor Visualizer ---
-
-  /** Callback for attractor getting functions.
-   * Handles errors and inserts attractor data into AttractorVisualizer */
-  private getAttractorCallback(
-    error: string | undefined,
-    attractorData: AttractorData | undefined
-  ) {
-    if (error || !attractorData) {
-      Message.showError(
-        `Error fetching attractor: ${error ?? 'Internal error'}`
-      );
-    } else {
-      AttractorVisualizer.insertAttractorData(attractorData, true);
-    }
-
-    Loading.endLoading();
-  }
-
-  /** Fetches an attractor by its behavior string. Used by the results window.*/
-  public getAttractorByBehavior(behavior: string) {
-    Loading.startLoading();
-    this.computeEngine.getAttractorByBehavior(
-      behavior,
-      this.getAttractorCallback.bind(this)
-    );
-  }
-
-  /** Fetches an attractor for node in the AttractorBifurcationExplorer */
-  public getBifurcationExplorerAttractor(nodeId: number) {
-    Loading.startLoading();
-    this.computeEngine.getBifurcationExplorerAttractor(
-      nodeId,
-      this.getAttractorCallback.bind(this)
-    );
-  }
-
-  public getStabilityAnalysisAttractor(
-    nodeId: number,
-    variableName: string,
-    behavior: string,
-    vector: string[]
-  ) {
-    Loading.startLoading();
-    this.computeEngine.getStabilityAnalysisAttractor(
-      nodeId,
-      variableName,
-      behavior,
-      vector,
-      this.getAttractorCallback.bind(this)
-    );
-  }
-
-  // #endregion
-
-  // #region --- Control Computation ---
-
-  public startControlComputation(): void {
-    const model = LiveModel.Export.exportAeon();
-
-    const oscillation = LiveModel.Control.getOscillation() ?? 'allowed';
-    const phenotypeControlEnabled =
-      LiveModel.Control.getPhenotypeControlEnabledVars();
-
-    try {
-      this.computationCanStart(model);
-    } catch (error: any) {
-      Message.showError(error.message);
-      return;
-    }
-
-    this.computeEngine.startControlComputation(
-      model,
-      oscillation,
-      this.getMinRobustness(),
-      this.getMaxSize(),
-      this.getMaxNumberOfResults(),
-      { ...phenotypeControlEnabled, oscillation: oscillation },
-      this.setComputationStatus
-    );
-  }
 
   // #endregion
 
@@ -654,27 +331,20 @@ class ComputationManagerClass {
     type: ComputationModes | undefined,
     results: AttractorResults | ControlResults | undefined
   ): void {
-    if (type) {
-      useResultsStatus.getState().setType(type);
-    }
-
-    if (results) {
-      useResultsStatus.getState().setResults(results);
+    if (type && results) {
+      this.resultsStatusStore.getState().setResults(type, results);
     }
 
     if (error) {
-      Message.showError(error);
+      this.messageServ.showError(error);
     }
 
     if (warning) {
-      Message.showInfo(warning);
+      this.messageServ.showInfo(warning);
     }
   }
 
   // #endregion
 }
-
-const ComputationManager: ComputationManagerClass =
-  new ComputationManagerClass();
 
 export default ComputationManager;

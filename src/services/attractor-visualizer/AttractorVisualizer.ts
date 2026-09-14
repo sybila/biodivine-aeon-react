@@ -1,18 +1,20 @@
-import { Message } from '../../components/lit-components/message-wrapper';
-import useAttractorVisualizerStatus from '../../stores/AttractorVisualizer/useAttractorVisualizerStatus';
-import useTabsStore from '../../stores/Navigation/useTabsStore';
+import * as vis from 'vis-network';
+import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
+import type { TabsState } from '../../stores/Navigation/TabState';
+import type { ZustandStore } from '../../stores/ZustandStoreType';
+import { err, ok, type Result } from '../../types/result';
 import type {
   AttractorData,
   AttractorVisualizerInput,
   VisEdge,
   VisNode,
-} from '../../types';
-import ComputationManager from '../global/ComputationManager/ComputationManager';
+} from '../../types/types';
+import type { ComputationManagerInt } from '../global/ComputationManager/ComputationManagerInt';
+import type { MessageInt } from '../global/Message/MessageInt';
+import type { AttractorVisualizerInt } from './AttractorVisualizerInt';
 
-declare const vis: any;
-
-class AttractorVisualizerClass {
-  // #region --- Properties ---
+class AttractorVisualizer implements AttractorVisualizerInt {
+  // #region --- Properties + Constructor ---
 
   /** Currently loaded attractor data. */
   private attractorData: AttractorData | undefined = undefined;
@@ -21,86 +23,128 @@ class AttractorVisualizerClass {
   /** Container for the vis graph. */
   private container: HTMLElement | null = null;
   /** Options for the vis graph. */
-  private options: any = {
-    edges: {
-      arrows: {
-        to: { enabled: true, type: 'triangle' },
-      },
-      width: 0.7,
-    },
-    nodes: {
-      color: {
-        border: '#3a568c',
-        background: '#ffffff',
-        highlight: {
-          background: '#e5eeff',
-          border: '#3a568c',
-        },
-      },
-      font: {
-        face: 'Fira Mono',
-      },
-      shape: 'box',
-      labelHighlightBold: false,
-      borderWidth: 1,
-    },
-    layout: {
-      improvedLayout: false,
-    },
-  };
+  private options: any = this.buildOptions();
+
+  private computationManagerServ: ComputationManagerInt;
+  private messageServ: MessageInt;
+
+  private attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
+  private tabsStore: ZustandStore<TabsState>;
+
+  constructor(
+    computationManagerServ: ComputationManagerInt,
+    messageServ: MessageInt,
+    attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>,
+    tabsStore: ZustandStore<TabsState>
+  ) {
+    this.computationManagerServ = computationManagerServ;
+    this.messageServ = messageServ;
+    this.attractorVisualizerStatusStore = attractorVisualizerStatusStore;
+    this.tabsStore = tabsStore;
+  }
 
   // #endregion
 
   // #region --- Initialization ---
 
-  /** Initialize the visualizer with a container element. */
-  public init(container: HTMLElement): void {
+  public init(container: HTMLElement) {
     if (this.container != container) {
       this.container = container;
       this.reloadVisualizer();
     }
   }
 
+  /** Builds options for the vis network visualization.*/
+  private buildOptions(): any {
+    const styles = getComputedStyle(document.documentElement);
+
+    return {
+      edges: {
+        arrows: {
+          to: { enabled: true, type: 'triangle' },
+        },
+        width: 0.7,
+      },
+      nodes: {
+        color: {
+          border: styles
+            .getPropertyValue('--color-attractor-visualizer-node-border')
+            .trim(),
+          background: styles
+            .getPropertyValue('--color-attractor-visualizer-node')
+            .trim(),
+          highlight: {
+            background: styles
+              .getPropertyValue('--color-attractor-visualizer-highlighted-node')
+              .trim(),
+            border: styles
+              .getPropertyValue(
+                '--color-attractor-visualizer-node-highlighted-border'
+              )
+              .trim(),
+          },
+        },
+        font: {
+          face: styles.getPropertyValue('--font-family-fira-mono').trim(),
+          color: styles
+            .getPropertyValue('--color-attractor-visualizer-node-text')
+            .trim(),
+        },
+        shape: 'box',
+        labelHighlightBold: false,
+        borderWidth: 1,
+      },
+      layout: {
+        improvedLayout: false,
+      },
+    };
+  }
+
   // #endregion
 
   // #region --- Show Visualization ---
 
-  /** Open the attractor visualizer with the given input data.
-   * inputData depends on the part of the application from which the visualizer is opened.
-   * inputData types:
-   *  - { behavior: AttractorBehavior } - from the Attractor Analysis results
-   *  - { nodeId: number } - from the overview in the Bifurcation Explorer
-   *  - { nodeId: number, variableName: string, behavior: AttractorBehavior, vector: string[] } - from the Stability Analysis results in the Bifurcation Explorer
-   */
-  public openVisualizer(inputData: AttractorVisualizerInput): void {
+  public openVisualizer(inputData: AttractorVisualizerInput) {
     // todo - add if there is tab open with the same attractor
 
     if (inputData.nodeId === undefined || inputData.nodeId === null) {
       if (inputData.behavior) {
-        ComputationManager.getAttractorByBehavior(inputData.behavior);
+        this.computationManagerServ.AttractorAnalysis.getAttractorByBehavior(
+          inputData.behavior,
+          this
+        );
       }
     } else if (!inputData.variableName || !inputData.vector) {
-      ComputationManager.getBifurcationExplorerAttractor(inputData.nodeId);
+      this.computationManagerServ.AttractorAnalysis.getBifurcationExplorerAttractor(
+        inputData.nodeId,
+        this
+      );
     } else if (inputData.variableName && inputData.vector) {
-      ComputationManager.getStabilityAnalysisAttractor(
+      this.computationManagerServ.AttractorAnalysis.getStabilityAnalysisAttractor(
         inputData.nodeId,
         inputData.variableName,
         inputData.behavior ?? '',
-        inputData.vector
+        inputData.vector,
+        this
       );
     }
   }
 
-  public insertAttractorData(result: any, newTab: boolean): void {
+  public insertAttractorData(result: any, newTab: boolean) {
     if (newTab) {
       result = this.processAttractorData(result);
-      useTabsStore
+      this.tabsStore
         .getState()
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
-          this.reloadVisualizer();
+          this.messageServ.showFromResult(
+            this.reloadVisualizer(),
+            'Failed to open attractor visualization tab'
+          );
           this.clear();
         });
+
+      return;
     }
 
     this.attractorData = result;
@@ -109,16 +153,13 @@ class AttractorVisualizerClass {
 
   /** Inserts this.loadedResults into the visualizer.
    *  Creates new network visualizer with the currently loaded attractor. */
-  private displayAll(): boolean {
+  private displayAll(): Result<boolean> {
     if (!this.attractorData) {
-      Message.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return false;
+      return err('No loaded result available for display.');
     }
 
     if (this.attractorData['has_large_attractors']) {
-      Message.showInfo(
+      this.messageServ.showInfo(
         'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
       );
     }
@@ -132,10 +173,7 @@ class AttractorVisualizerClass {
     }
 
     if (!this.container) {
-      Message.showError(
-        'Unable to render Attractor Visualization: Missing container element - Internal Error'
-      );
-      return false;
+      return err('Internal Error - Missing container element');
     }
 
     this.network = new vis.Network(
@@ -144,44 +182,22 @@ class AttractorVisualizerClass {
       this.options
     );
 
-    return true;
-  }
-
-  public displayGraph(index: number): void {
-    if (!this.container) {
-      Message.showError('Cannot show Attractor Visualization: Internal Error');
-      return;
-    }
-
-    if (!this.attractorData) {
-      Message.showError(
-        'Unable to render Attractor Visualization: No loaded result available for display.'
-      );
-      return;
-    }
-
-    if (this.attractorData?.has_large_attractors) {
-      Message.showInfo(
-        'Some attractors were too large to draw. These will be shown only as two states with the constant and non-constant variables differentiated.'
-      );
-    }
-
-    this.network = new vis.Network(
-      this.container!,
-      this.attractorData.attractors[index].vis,
-      this.options
-    );
+    return ok(true);
   }
 
   /** Reload the visualizer and display currently set attractor. */
-  private reloadVisualizer(): void {
+  private reloadVisualizer(): Result<boolean> {
     if (this.container) {
-      this.displayAll();
+      const result = this.displayAll();
 
       if (this.network) {
         this.network.on('click', this.nodeClick.bind(this));
       }
+
+      return result;
     }
+
+    return err('Internal Error - Missing container.');
   }
 
   // #endregion
@@ -189,10 +205,10 @@ class AttractorVisualizerClass {
   // #region --- Node Click ---
 
   /** Function for handling node clicks.
-   * Changes selected node state in the useAttractorVisualizerStatus store. */
+   * Changes selected node state in the this.attractorVisualizerStatusStore. */
   private nodeClick(e: any): void {
     if (e) {
-      useAttractorVisualizerStatus
+      this.attractorVisualizerStatusStore
         .getState()
         .changeSelectedState(
           e.nodes.length !== 1 || e.nodes[0][0] === 'l'
@@ -254,7 +270,7 @@ class AttractorVisualizerClass {
     };
   }
 
-  /** Process the raw attractor data from the ComputationManager into form used in the visualizer */
+  /** Process the raw attractor data from the this.computationManagerServ into form used in the visualizer */
   private processAttractorData(results: any): AttractorData {
     for (let i = 0; i < results.attractors.length; i++) {
       results.attractors[i].vis = this.edgesToVisFormat(
@@ -279,12 +295,11 @@ class AttractorVisualizerClass {
 
   // #region --- Get Data ---
 
-  /** Returns the list of state variable names, or undefined if no attractor data is loaded. */
-  public getStateVariables(): string[] | undefined {
+  public getStateVariables() {
     return this.attractorData?.variables;
   }
 
-  public getWitness(): Array<[string, string]> | undefined {
+  public getWitness() {
     return this.attractorData?.witness;
   }
 
@@ -292,8 +307,8 @@ class AttractorVisualizerClass {
 
   // #region --- Clear ---
 
-  public clear(): void {
-    useAttractorVisualizerStatus.getState().clear();
+  public clear() {
+    this.attractorVisualizerStatusStore.getState().clear();
   }
 
   // #endregion
@@ -309,12 +324,12 @@ class AttractorVisualizerClass {
       .reverse();
   }
 
-  public witnessPanelVisible(show = true): void {
+  public witnessPanelVisible(show = true) {
     const panel = document.getElementById('explorer-witness-panel');
     if (panel) panel.style.display = show ? 'block' : 'none';
   }
 
-  public showState(string: string): void {
+  public showState(string: string) {
     for (let i = 0; i < string.length; i++) {
       console.log(
         this.attractorData?.variables[i],
@@ -323,7 +338,5 @@ class AttractorVisualizerClass {
     }
   }
 }
-
-const AttractorVisualizer = new AttractorVisualizerClass();
 
 export default AttractorVisualizer;

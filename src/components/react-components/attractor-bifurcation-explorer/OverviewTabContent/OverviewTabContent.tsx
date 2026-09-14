@@ -1,15 +1,23 @@
-import useBifurcationExplorerStatus from '../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
-import type { DecisionMixedNode, LeafNode } from '../../../../types';
-import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import type { DecisionMixedNode, LeafNode } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
+import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import BehaviorClassTable from './BehaviorClassTable/BehaviorClassTable';
 import NecessaryConditionsTable from './NecessaryConditionsTable/NecessaryConditionsTable';
 import NodeStatTable from './NodeStatTable/NodeStatTable';
-import WittnessAttractorRow from './WittnesAttractorRow/WittnessAttractorRow';
+import type { OverviewTabContentProps } from './OverviewTabContentProps';
+import WitnessAttractorRow from './WitnesAttractorRow/WitnessAttractorRow';
 
-const OverviewTabContent: React.FC = () => {
+const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  messageServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
+}) => {
   const selectedNode: LeafNode | DecisionMixedNode | null =
-    useBifurcationExplorerStatus((state) => state.selectedNode);
+    bifurcationExplorerStatusStore((state) => state.selectedNode);
 
   if (!selectedNode) {
     return <NoDataText text="No selected node" />;
@@ -22,6 +30,7 @@ const OverviewTabContent: React.FC = () => {
           <SimpleHeaderReact
             compHeight="fit-content"
             compWidth="100%"
+            textColor="var(--color-primary-text)"
             headerText={selectedNode.label ?? 'Unknown'}
             justifyHeader="center"
             textFontSize="26px"
@@ -29,17 +38,26 @@ const OverviewTabContent: React.FC = () => {
             textFontFamily="var(--base-font-family)"
           />
         ) : (
-          <span className="flex flex-row justify-center h-[30px] w-full text-[30px] font-normal font-[Symbols] overflow-hidden mb-[-10px]">
+          <span className="flex flex-row justify-center h-[30px] w-full text-[30px] font-normal font-[Symbols] text-(--color-primary-text) overflow-hidden mb-[-10px]">
             {selectedNode.label ?? 'Unknown'}
           </span>
         )}
       </section>
 
       <section className="h-fit w-full flex flex-col justify-center items-center gap-2">
-        <NodeStatTable {...selectedNode} />
+        <NodeStatTable
+          nodeData={selectedNode}
+          attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+        />
 
         {selectedNode.type === 'leaf' ? (
-          <WittnessAttractorRow leafNodeId={selectedNode.id} />
+          <WitnessAttractorRow
+            leafNodeId={selectedNode.id}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            messageServ={messageServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
         ) : null}
 
         {selectedNode.classes ? (
@@ -47,11 +65,16 @@ const OverviewTabContent: React.FC = () => {
             classes={selectedNode.classes ?? []}
             nodeCardinality={selectedNode.cardinality}
             isLeaf={selectedNode.type === 'leaf'}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
           />
         ) : null}
 
         {selectedNode.type === 'leaf' ? (
-          <NecessaryConditionsTable nodeId={selectedNode.id} />
+          <NecessaryConditionsTable
+            nodeId={selectedNode.id}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+          />
         ) : null}
       </section>
     </div>

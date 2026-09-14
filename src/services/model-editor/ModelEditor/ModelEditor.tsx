@@ -1,60 +1,82 @@
-import { Message } from '../../../components/lit-components/message-wrapper';
 import ChangeUpFunOverlayContent from '../../../components/react-components/model-editor/ChangeUpFunOverlayContent/ChangeUpFunOverlayContent';
 import ChangeVarNameOverlayContent from '../../../components/react-components/model-editor/ChangeVarNameOverlayContent/ChangeVarNameOverlayContent';
-import useOverlayWindowStore from '../../../stores/ContentOverlayWindow/useOverlayWindowStore';
-import type { ModelStats, RegulationVariables } from '../../../types';
-import { LiveModel } from '../../global/LiveModel/LiveModel';
-import CytoscapeME from '../CytoscapeME/CytoscapeME';
+import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { HelpHoverState } from '../../../stores/HelpHover/HelpHoverState';
+import type { RegulationsStatus } from '../../../stores/LiveModel/RegulationsStore/RegulationsStatus';
+import type { UpdateFunctionsState } from '../../../stores/LiveModel/UpdateFunctionsStore/UpdateFunctionsState';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
+import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
+import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { isErr, ok } from '../../../types/result';
+import type {
+  ContentVisibleComponent,
+  MenuTabButton,
+  MenuTabTypeMENotNull,
+  RegulationVariables,
+  UpdateFunctionStatus,
+} from '../../../types/types';
+import type { LiveModelInt } from '../../global/LiveModel/LiveModelInt';
+import type { MessageInt } from '../../global/Message/MessageInt';
+import type { StringProviderInt } from '../../global/StringProvider/StringProviderInt';
+import type { ModelVisualizationInt } from '../ModelVisualization/ModelVisualizationInt';
+import type { ModelEditorInt } from './ModelEditorInt';
 
 /**
     Responsible for managing the UI of the model editor, i.e. adding/removing variables and regulations, focusing
     right elements when needed, etc.
 */
-class ModelEditorClass {
-  // #region --- Properties ---
-
-  /** Function for toggling hover state of variables in the ModelEditorTabContent.tsx component */
-  private hoverVariableInfo:
-    | ((id: number, turnOnHover: boolean) => void)
-    | null = null;
+class ModelEditor implements ModelEditorInt {
+  // #region --- Properties + Constructor ---
 
   /** Currently searched variable name in the ModelEditorTabContent.tsx component */
   private variableSearch: string = '';
 
-  /** Function for toggling hover state of regulations in the ModelEditorTabContent.tsx component */
-  private hoverRegulationInfo:
-    | ((regulation: RegulationVariables, turnOnHover: boolean) => void)
-    | null = null;
+  private modelVisualizationServ: ModelVisualizationInt;
+  private liveModelServ: LiveModelInt;
+  private stringProviderServ: StringProviderInt;
+  private messageServ: MessageInt;
 
-  /** Function for toggling selected state of regulations in the ModelEditorTabContent.tsx component */
-  private selectRegulationInfo:
-    | ((regulation: RegulationVariables, select: boolean) => void)
-    | null = null;
+  private overlayWindowStore: ZustandStore<OverlayWindowState>;
+  private regulationStore: ZustandStore<RegulationsStatus>;
+  private variablesStore: ZustandStore<VariablesStatus>;
+  private updateFunctionsStore: ZustandStore<UpdateFunctionsState>;
+  private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  private helpHoverStore: ZustandStore<HelpHoverState>;
 
-  /** Currently selected regulation in the ModelEditorCanvas.tsx component */
-  private selectedRegulation: RegulationVariables | null = null;
+  constructor(
+    modelVisualization: ModelVisualizationInt,
+    liveModelServ: LiveModelInt,
+    stringProviderServ: StringProviderInt,
+    messageServ: MessageInt,
 
-  // #endregion
-
-  // #region --- Hover/Select Variable Function Setters ---
-
-  /** Sets hover function for variables inside the ModelEditorTabContent.tsx (needs to be called before hoverVariable function) */
-  public setHoverVariableFunction(
-    hoverFunction: (id: number, turnOnHover: boolean) => void
+    overlayWindowStore: ZustandStore<OverlayWindowState>,
+    regulationStore: ZustandStore<RegulationsStatus>,
+    variablesStore: ZustandStore<VariablesStatus>,
+    updateFunctionsStore: ZustandStore<UpdateFunctionsState>,
+    modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
+    helpHoverStore: ZustandStore<HelpHoverState>
   ) {
-    this.hoverVariableInfo = hoverFunction;
+    this.modelVisualizationServ = modelVisualization;
+    this.liveModelServ = liveModelServ;
+    this.stringProviderServ = stringProviderServ;
+    this.messageServ = messageServ;
+
+    this.overlayWindowStore = overlayWindowStore;
+    this.regulationStore = regulationStore;
+    this.variablesStore = variablesStore;
+    this.updateFunctionsStore = updateFunctionsStore;
+    this.modelEditorStatusStore = modelEditorStatusStore;
+    this.helpHoverStore = helpHoverStore;
   }
 
   // #endregion
 
   // #region --- Variable Search ---
 
-  /** Returns currently searched variable name in the ModelEditorTabContent.tsx component */
-  public getVariableSearch(): string {
+  public getVariableSearch() {
     return this.variableSearch;
   }
 
-  /** Sets currently searched variable name in the ModelEditorTabContent.tsx component */
   public setVariableSearch(name: string) {
     this.variableSearch = name;
   }
@@ -63,210 +85,266 @@ class ModelEditorClass {
 
   // #region --- Variable Actions ---
 
-  /** Adds a new variable and zooms on it */
   public addVariable() {
-    const newVariableId = LiveModel.Variables.addVariable(true);
-    if (newVariableId !== undefined) {
-      this.zoomOnVariable(newVariableId);
+    const newVariableId = this.liveModelServ.Variables.addVariable({
+      force: true,
+      addIntoUndoRedo: true,
+    });
+
+    if (!isErr(newVariableId) && newVariableId.value !== undefined) {
+      this.zoomOnVariable(newVariableId.value);
     }
   }
 
-  /** Changes the name of a variable */
-  public changeVariableName(id: number, newName: string): boolean {
-    if (newName != '') {
-      const error = LiveModel.Variables.renameVariable(id, newName);
+  public changeVariableName(
+    id: number,
+    newName: string,
+    force: boolean = false
+  ) {
+    if (force || newName != '') {
+      const error = this.liveModelServ.Variables.renameVariable(
+        id,
+        newName,
+        true,
+        force
+      );
 
-      if (error) {
-        Message.showError('Variable name not changed: ' + error);
-        return false;
+      if (!force && isErr(error)) {
+        return error;
       }
 
-      return true;
+      return ok(true);
     }
-    return false;
+    return ok(false);
   }
 
-  /** Removes a variable */
   public async removeVariable(id: number) {
-    await LiveModel.Variables.removeVariable(id);
-  }
-
-  /** Toggles hover state on a variable in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set hoverVariableInfo with setHoverVariableFunction before running this function)
-   */
-  public hoverVariable(id: number, turnOnHover: boolean) {
-    if (this.hoverVariableInfo) {
-      this.hoverVariableInfo(id, turnOnHover);
-    }
-  }
-
-  // #endregion
-
-  // #region --- Hover/Select Regulation Function Setters ---
-
-  /** Sets hover function for regulations inside the ModelEditorTabContent.tsx (needs to be called before hoverRegulation function) */
-  public setHoverRegulationFunction(
-    hoverFunction: (
-      regulation: RegulationVariables,
-      turnOnHover: boolean
-    ) => void
-  ) {
-    this.hoverRegulationInfo = hoverFunction;
-  }
-
-  /** Sets select function for regulations inside the ModelEditorTabContent.tsx (needs to be called before selectRegulation function) */
-  public setSelectRegulationFunction(
-    selectFunction: (regulation: RegulationVariables, select: boolean) => void
-  ) {
-    this.selectRegulationInfo = selectFunction;
-  }
-
-  // #endregion
-
-  // #region --- Regulation Selection/Hover ---
-
-  /** Returns last selected regulation id in the ModelEditorCanvas.tsx component. Returns null if no regulation is selected */
-  public getSelectedRegulation(): RegulationVariables | null {
-    return this.selectedRegulation;
-  }
-
-  /** Sets currently selected regulation id in the ModelEditorCanvas.tsx component. id is null if no regulation is selected */
-  public setSelectedRegulation(regulation: RegulationVariables | null) {
-    this.selectedRegulation = regulation;
-  }
-
-  /** Toggles hover state on a regulation in the ModelEditorTabContent.tsx component
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   * (you must first set hoverRegulationInfo with setHoverRegulationFunction before running this function)
-   */
-  public hoverRegulation(
-    regulation: RegulationVariables,
-    turnOnHover: boolean
-  ) {
-    if (this.hoverRegulationInfo) {
-      this.hoverRegulationInfo(regulation, turnOnHover);
-    }
-  }
-
-  /** Toggles selected state on a regulation in the ModelEditorTabContent.tsx component
-   * If `select` is true, it sets regulation as selected; if false, it unselects it.
-   * (you must first set selectRegulationInfo with setSelectRegulationFunction before running this function)
-   */
-  public selectRegulation(regulation: RegulationVariables, select: boolean) {
-    if (this.selectRegulationInfo) {
-      this.setSelectedRegulation(select ? regulation : null);
-      this.selectRegulationInfo(regulation, select);
-    }
+    await this.liveModelServ.Variables.removeVariable(id, true);
   }
 
   // #endregion
 
   // #region --- Regulation Actions ---
 
-  public toggleRegulationMonocity(regulatorId: number, targetId: number): void {
-    LiveModel.Regulations.toggleMonotonicity(regulatorId, targetId);
+  public toggleRegulationMonocity(regulatorId: number, targetId: number) {
+    this.liveModelServ.Regulations.toggleMonotonicity(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   public toggleRegulationObservability(regulatorId: number, targetId: number) {
-    LiveModel.Regulations.toggleObservability(regulatorId, targetId);
+    this.liveModelServ.Regulations.toggleObservability(
+      regulatorId,
+      targetId,
+      true,
+      false
+    );
   }
 
   // #endregion
 
   // #region --- Update Functions ---
 
-  /** Sets update function for a variable in the ModelEditorTabContent.tsx component */
-  public setUpdateFunction(
-    id: number,
-    updateFunction: string
-  ): string | undefined {
-    const error = LiveModel.UpdateFunctions.setUpdateFunction(
+  public setUpdateFunction(id: number, updateFunction: string) {
+    const result = this.liveModelServ.UpdateFunctions.setUpdateFunction(
       id,
-      updateFunction
+      updateFunction,
+      true,
+      false
     );
 
-    if (error) {
-      Message.showError('Update function not changed: ' + error);
-      return error;
-    }
-
-    return undefined;
+    return result;
   }
 
   // #endregion
 
   // #region --- Model Info ---
 
-  public getModelStats(): ModelStats {
-    return LiveModel.Export.stats();
+  public getModelStats() {
+    return this.liveModelServ.Export.stats();
   }
 
-  /** Sets the model name in the LiveModel */
   public setModelDescription(description: string) {
-    LiveModel.Info.setModelDescription(description);
+    this.liveModelServ.Info.setModelDescription(description, true, false);
   }
 
-  /** Sets the model name in the LiveModel */
   public setModelName(name: string) {
-    LiveModel.Info.setModelName(name);
+    this.liveModelServ.Info.setModelName(name, true, false);
   }
 
   // #endregion
 
   // #region --- Cytoscape Actions ---
 
-  /** Toggles hover state on a variable node in the CytoscapeMe canvas.
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
   public hoverVariableCytoscape(id: number, turnOnHover: boolean) {
-    CytoscapeME.hoverNode(id, turnOnHover);
+    this.modelVisualizationServ.hoverNode(id, turnOnHover);
   }
 
-  /** Toggles hover state on a edge node in the CytoscapeMe canvas.
-   * If `turnOnHover` is true, it starts the hover effect; if false, it ends it.
-   */
   public hoverRegulationCytoscape(
     regulation: RegulationVariables,
     turnOnHover: boolean
   ) {
-    CytoscapeME.hoverEdge(regulation.regulator, regulation.target, turnOnHover);
+    this.modelVisualizationServ.hoverEdge(
+      regulation.regulator,
+      regulation.target,
+      turnOnHover
+    );
   }
 
-  /** Finds variable in the CytoscapeMe canvas nad zooms on it */
   public zoomOnVariable(id: number) {
-    CytoscapeME.showNode(id);
+    this.modelVisualizationServ.showNode(id);
+  }
+
+  // #endregion
+
+  // #region --- Menu Tab Actions ---
+
+  public openMenuTab(tabType: MenuTabTypeMENotNull) {
+    const button: MenuTabButton | undefined =
+      this.modelEditorStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  public async scrollVariableIntoView(variableId: number) {
+    if (!this.openMenuTab('Model Editor')) {
+      console.warn(
+        'Error: Could not open Model Editor menu tab to scroll variable into view. Missing menu tab button reference'
+      );
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      this.modelEditorStatusStore.getState().setScrollToVariable(variableId);
+    }
+  }
+
+  // #endregion
+
+  // #region --- Utilities Menu Actions ----
+
+  public openUtilitiesMenu() {
+    const reference: ContentVisibleComponent | null =
+      this.modelEditorStatusStore.getState().utilitiesMenuRef;
+
+    if (reference === null) {
+      console.warn(
+        'Error: Could not open the Model Editor Utilities Menu. Missing reference.'
+      );
+
+      return;
+    }
+
+    reference.contentVisible = true;
+  }
+
+  public focusOnGlobalSearch() {
+    const searchReference =
+      this.modelEditorStatusStore.getState().globalSearchRef;
+
+    if (!searchReference) {
+      console.warn(
+        'Error: Could not focus on the global search text input. Missing reference.'
+      );
+
+      return;
+    }
+
+    this.openUtilitiesMenu();
+
+    searchReference.focus();
   }
 
   // #endregion
 
   // #region --- Open Content Overlay Windows ---
 
-  /** Opens the "Change Variable Name" overlay window.
-   *  @param varId - The id of the variable to change the name of.
-   */
   public openChangeVarNameWindow(varId: number) {
     if (varId === undefined) return;
 
-    useOverlayWindowStore.getState().setCurrentContent({
+    const originalName: string =
+      this.variablesStore.getState().variables[varId]?.name ?? '';
+
+    this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Variable Name',
-      content: <ChangeVarNameOverlayContent varId={varId} />,
+      content: (
+        <ChangeVarNameOverlayContent
+          varId={varId}
+          originalName={originalName}
+          closeFunction={() =>
+            this.overlayWindowStore.getState().setCurrentContent(null)
+          }
+          modelEditorServ={this}
+          pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
+          messageServ={this.messageServ}
+          helpHoverStore={this.helpHoverStore}
+        />
+      ),
+      showCloseButton: false,
+      closeOnBgClick: false,
     });
   }
 
-  /** Opens the "Change Update Function" overlay window.
-   *  @param varId - The id of the variable to change the update function of.
-   */
   public openChangeUpdateFunctionWindow(varId: number) {
     if (varId === undefined) return;
 
-    useOverlayWindowStore.getState().setCurrentContent({
+    const varName =
+      this.variablesStore.getState().getVariableName(varId) ?? 'Unknown';
+
+    const originalUpdateFunction =
+      this.updateFunctionsStore.getState().getUpdateFunctionId(varId)
+        ?.functionString ?? '';
+
+    const originalUpdateFunctionStatus = this.updateFunctionsStore.getState()
+      .updateFunctionStatus[varId] ?? {
+      status: 'Missing Update Function Status: Validate the update function.',
+      isError: true,
+    };
+
+    this.overlayWindowStore.getState().setCurrentContent({
       header: 'Edit Update Function',
-      content: <ChangeUpFunOverlayContent varId={varId} />,
+      content: (
+        <ChangeUpFunOverlayContent
+          varId={varId}
+          varName={varName}
+          originalUpdateFunction={originalUpdateFunction}
+          originalUpdateFunctionStatus={originalUpdateFunctionStatus}
+          validateUpdateFunctionFun={(
+            setStatus: (status: UpdateFunctionStatus) => void,
+            updateFunction: string
+          ) =>
+            this.liveModelServ.UpdateFunctions.validateUpdateFunction(
+              varId,
+              (status: UpdateFunctionStatus) => setStatus(status),
+              updateFunction
+            )
+          }
+          closeFunction={() =>
+            this.overlayWindowStore.getState().setCurrentContent(null)
+          }
+          modelEditorServ={this}
+          pageStringProviderServ={this.stringProviderServ.ModelEditorPage}
+          messageServ={this.messageServ}
+          regulationsStore={this.regulationStore}
+          variablesStore={this.variablesStore}
+          updateFunctionsStore={this.updateFunctionsStore}
+          helpHoverStore={this.helpHoverStore}
+        />
+      ),
+      showCloseButton: false,
+      closeOnBgClick: false,
     });
   }
-}
 
-const ModelEditor: ModelEditorClass = new ModelEditorClass();
+  // #endregion
+}
 
 export default ModelEditor;

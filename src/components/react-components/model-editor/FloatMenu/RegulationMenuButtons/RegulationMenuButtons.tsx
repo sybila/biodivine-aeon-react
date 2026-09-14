@@ -1,16 +1,14 @@
 import FloatMenuButton from '../FloatMenuButton/FloatMenuButton';
-import { LiveModel } from '../../../../../services/global/LiveModel/LiveModel';
 import type { RegulationMenuButtonsProps } from './RegulationMenuButtonsProps';
-import useRegulationsStore from '../../../../../stores/LiveModel/useRegulationsStore';
 
-import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
-import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
-import MonotocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
-import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
-import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
-import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
 import { useMemo } from 'react';
-import type { EdgeMonotonicity } from '../../../../../types';
+import DeleteIcon from '../../../../../assets/icons/delete-24px.svg';
+import MonotocityOffIcon from '../../../../../assets/icons/swap_vert.svg';
+import MonotocityInhIcon from '../../../../../assets/icons/trending_down.svg';
+import MonotocityActIcon from '../../../../../assets/icons/trending_up.svg';
+import VisibilityOffIcon from '../../../../../assets/icons/visibility_off.svg';
+import VisibilityOnIcon from '../../../../../assets/icons/visibility_on.svg';
+import type { EdgeMonotonicity } from '../../../../../types/types';
 
 type MOButtonInfo = {
   icon: string;
@@ -22,8 +20,10 @@ type MOButtonInfo = {
 const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
   setHint,
   selectedRegulationIds,
+  liveModelServ,
+  regulationsStore,
 }) => {
-  const regulationInfo = useRegulationsStore((state) =>
+  const regulationInfo = regulationsStore((state) =>
     state.getRegulationId(
       selectedRegulationIds.regulator,
       selectedRegulationIds.target
@@ -91,9 +91,11 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={observabilityInfo.icon}
         iconAlt={observabilityInfo.alt}
         onClick={() =>
-          LiveModel.Regulations.toggleObservability(
+          liveModelServ.Regulations.toggleObservability(
             regulationInfo.regulator,
-            regulationInfo.target
+            regulationInfo.target,
+            true,
+            false
           )
         }
         hintText={observabilityInfo.hint}
@@ -104,9 +106,11 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={monotocityInfo.icon}
         iconAlt={monotocityInfo.alt}
         onClick={() =>
-          LiveModel.Regulations.toggleMonotonicity(
+          liveModelServ.Regulations.toggleMonotonicity(
             regulationInfo.regulator,
-            regulationInfo.target
+            regulationInfo.target,
+            true,
+            false
           )
         }
         hintText={monotocityInfo.hint}
@@ -117,7 +121,8 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         iconSrc={DeleteIcon}
         iconAlt="⌫"
         onClick={() =>
-          LiveModel.Regulations.removeRegulation(
+          liveModelServ.Regulations.removeRegulation(
+            true,
             regulationInfo.regulator,
             regulationInfo.target
           )

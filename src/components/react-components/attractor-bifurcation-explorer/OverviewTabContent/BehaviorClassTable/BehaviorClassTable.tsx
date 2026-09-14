@@ -1,31 +1,47 @@
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import type { AttractorClassBE } from '../../../../../types';
 import BehaviorClassLegend from '../../../global/BehaviorClassLegend/BehaviorClassLegend';
 import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
+import type { BehaviorClassTableProps } from './BehaviorClassTableProps';
 import BehaviorClassTableRow from './BehaviorClassTableRow/BehaviorClassTableRow';
 
-const BehaviorClassTable: React.FC<{
-  classes: AttractorClassBE[];
-  nodeCardinality: number;
-  isLeaf: boolean;
-}> = ({ classes, nodeCardinality, isLeaf }) => {
+const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
+  classes,
+  nodeCardinality,
+  isLeaf,
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+}) => {
   const renderTable = () => {
     return (
       <section className="flex flex-col w-full h-fit items-center justify-center gap-2">
         <div className="flex flex-row justify-start items-center w-full h-[50px]">
           <div className="flex flex-col justify-center items-center w-[30%] h-full">
-            <SimpleHeaderReact headerText="Behavior" />
-            <SimpleHeaderReact headerText="Class" />
+            <SimpleHeaderReact
+              headerText="Behavior"
+              textColor="var(--color-primary-text)"
+            />
+            <SimpleHeaderReact
+              headerText="Class"
+              textColor="var(--color-primary-text)"
+            />
           </div>
 
           <div className="flex flex-col justify-center items-center mx-[5%] w-[30%] h-full">
-            <SimpleHeaderReact headerText="Interpretation" />
-            <SimpleHeaderReact headerText="Count" />
+            <SimpleHeaderReact
+              headerText="Interpretation"
+              textColor="var(--color-primary-text)"
+            />
+            <SimpleHeaderReact
+              headerText="Count"
+              textColor="var(--color-primary-text)"
+            />
           </div>
 
           <div className="flex flex-col justify-center items-center w-[30%] h-full">
-            <SimpleHeaderReact headerText="Distribution" />
+            <SimpleHeaderReact
+              headerText="Distribution"
+              textColor="var(--color-primary-text)"
+            />
           </div>
         </div>
 
@@ -41,12 +57,13 @@ const BehaviorClassTable: React.FC<{
               key={index}
               interpretationCount={behaviorClass.cardinality}
               behaviorClassJSON={behaviorClass.class ?? ''}
+              behaviorClassOperationsServ={behaviorClassOperationsServ}
               distribution={[
-                AttractorBifurcationExplorer.mathPercent(
+                attractorBifurcationExplorerServ.mathPercent(
                   behaviorClass.cardinality,
                   nodeCardinality
                 ) ?? -1,
-                AttractorBifurcationExplorer.mathDimPercent(
+                attractorBifurcationExplorerServ.mathDimPercent(
                   behaviorClass.cardinality,
                   nodeCardinality
                 ) ?? -1,

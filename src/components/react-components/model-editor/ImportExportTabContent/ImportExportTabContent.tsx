@@ -1,33 +1,29 @@
-import { LiveModel } from '../../../../services/global/LiveModel/LiveModel';
+import { useRef } from 'react';
+import { ExampleModels } from '../../../../ExampleModels';
+import type { fileType } from '../../../../types/types';
 import DoubleTextButtonReact from '../../lit-wrappers/DoubleTextButtonReact';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
-
-import { ExampleModels } from '../../../../ExampleModels';
-import { Message } from '../../../lit-components/message-wrapper';
-import { useEffect, useRef, useState } from 'react';
-import FileConvertors from '../../../../services/utilities/FileConvertors';
-import type { fileType } from '../../../../types';
+import type { ImportExportTabContentProps } from './ImportExportTabContentProps';
 
 /** This component is used to display the Import/Export tab content in the Model Editor */
-const ImportExportTabContent: React.FC = () => {
+const ImportExportTabContent: React.FC<ImportExportTabContentProps> = ({
+  liveModelServ,
+  fileConvertorsServ,
+  messageServ,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fileHandlerRef = useRef<
     ((fileInput: HTMLInputElement & { files: FileList }) => void) | null
   >(null);
-  const [acceptType, setAcceptType] = useState<fileType | ''>('');
-  const [pendingFileDialog, setPendingFileDialog] = useState<boolean>(false);
 
   const handleExampleImport = async (exampleModel: string) => {
-    await LiveModel.Import.importAeonWithWarnings(exampleModel);
+    messageServ.showFromResult(
+      await liveModelServ.Import.importAeonWithWarnings(exampleModel),
+      'Failed to import example model',
+      'Model imported successfully.'
+    );
   };
-
-  useEffect(() => {
-    if (pendingFileDialog) {
-      fileInputRef.current?.click();
-      setPendingFileDialog(false);
-    }
-  }, [acceptType, pendingFileDialog]);
 
   const startFileImport = async (
     importFunction: (
@@ -38,15 +34,17 @@ const ImportExportTabContent: React.FC = () => {
     fileHandlerRef.current = async (
       fileInput: HTMLInputElement & { files: FileList }
     ) => await importFunction(fileInput);
-    setAcceptType(accept);
-    setPendingFileDialog(true);
+
+    fileInputRef.current?.setAttribute('accept', accept);
+
+    fileInputRef.current?.click();
   };
 
   const importButtons: Array<[string, string, () => void]> = [
     [
       'Last Model',
       'Browser Storage',
-      async () => await LiveModel.Import.loadFromLocalStorage(),
+      async () => await liveModelServ.Import.loadFromLocalStorage(),
     ],
     [
       '.aeon',
@@ -54,7 +52,7 @@ const ImportExportTabContent: React.FC = () => {
       () =>
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(fileInput),
+            await liveModelServ.Import.importFromFile(fileInput),
           '.aeon'
         ),
     ],
@@ -64,9 +62,10 @@ const ImportExportTabContent: React.FC = () => {
       () => {
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(
+            await liveModelServ.Import.importFromFile(
               fileInput,
-              FileConvertors.sbmlToAeon
+              async (aeonString: string) =>
+                await fileConvertorsServ.sbmlToAeon(aeonString)
             ),
           '.sbml'
         );
@@ -78,9 +77,10 @@ const ImportExportTabContent: React.FC = () => {
       () => {
         startFileImport(
           async (fileInput: HTMLInputElement & { files: FileList }) =>
-            await LiveModel.Import.importFromFile(
+            await liveModelServ.Import.importFromFile(
               fileInput,
-              FileConvertors.bnetToAeon
+              async (aeonString: string) =>
+                await fileConvertorsServ.bnetToAeon(aeonString)
             ),
           '.bnet'
         );
@@ -92,26 +92,37 @@ const ImportExportTabContent: React.FC = () => {
     [
       '.aeon',
       'Simple Text Format',
-      () => LiveModel.Export.exportToFile('.aeon'),
+      () => liveModelServ.Export.exportToFile('.aeon'),
     ],
     [
       '.sbml (Parametrized)',
       'Parametrized Model',
-      () => LiveModel.Export.exportToFile('.sbml', FileConvertors.aeonToSbml),
+      () =>
+        liveModelServ.Export.exportToFile(
+          '.sbml',
+          async (aeonString: string) =>
+            await fileConvertorsServ.aeonToSbml(aeonString)
+        ),
     ],
     [
       '.sbml (Instantiated)',
-      'Wittness Model',
+      'Witness Model',
       () =>
-        LiveModel.Export.exportToFile(
+        liveModelServ.Export.exportToFile(
           '.sbml',
-          FileConvertors.aeonToSbmlInstantiated
+          async (aeonString: string) =>
+            await fileConvertorsServ.aeonToSbmlInstantiated(aeonString)
         ),
     ],
     [
       '.bnet',
       'Boolnet Text Format',
-      () => LiveModel.Export.exportToFile('.bnet', FileConvertors.aeonToBnet),
+      () =>
+        liveModelServ.Export.exportToFile(
+          '.bnet',
+          async (aeonString: string) =>
+            await fileConvertorsServ.aeonToBnet(aeonString)
+        ),
     ],
   ];
 
@@ -150,6 +161,12 @@ const ImportExportTabContent: React.FC = () => {
   ) => {
     return buttonArray.map(([leftText, rightText, onClick], index) => (
       <DoubleTextButtonReact
+        leftTextColor="var(--color-secondary-text)"
+        rightTextColor="var(--color-secondary-text)"
+        leftColor="var(--color-secondary-buttons)"
+        leftHoverColor="var(--color-secondary-buttons-hover)"
+        rightColor="var(--color-secondary-buttons-darker)"
+        rightHoverColor="var(--color-secondary-buttons-darker-hover)"
         key={index + buttonType}
         leftText={leftText}
         rightText={rightText}
@@ -163,7 +180,6 @@ const ImportExportTabContent: React.FC = () => {
       <input
         ref={fileInputRef}
         type="file"
-        accept={acceptType}
         style={{ display: 'none' }}
         onChange={() => {
           if (fileHandlerRef.current) {
@@ -171,7 +187,7 @@ const ImportExportTabContent: React.FC = () => {
               fileInputRef.current as HTMLInputElement & { files: FileList }
             );
           } else {
-            Message.showError(
+            messageServ.showError(
               'Import Error: Internal Error - No file handler set.'
             );
           }
@@ -184,7 +200,11 @@ const ImportExportTabContent: React.FC = () => {
             id="import"
             className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
           >
-            <SimpleHeaderReact className="m-2" headerText="Import" />
+            <SimpleHeaderReact
+              textColor="var(--color-primary-text)"
+              className="m-2"
+              headerText="Import"
+            />
             {renderButtons('import', importButtons)}
           </section>
 
@@ -192,14 +212,21 @@ const ImportExportTabContent: React.FC = () => {
             id="export"
             className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2"
           >
-            <SimpleHeaderReact className="m-2" headerText="Export" />
+            <SimpleHeaderReact
+              textColor="var(--color-primary-text)"
+              className="m-2"
+              headerText="Export"
+            />
             {renderButtons('export', exportButtons)}
           </section>
         </div>
       </div>
 
       <div className="flex flex-col justify-center items-center w-full h-fit gap-4">
-        <SimpleHeaderReact headerText="Example Models" />
+        <SimpleHeaderReact
+          textColor="var(--color-primary-text)"
+          headerText="Example Models"
+        />
 
         <div className="flex flex-row items-center justify-center h-fit w-full w-min-fit gap-2">
           <section className="flex flex-col items-center justify-center h-fit w-1/2 w-min-fit gap-2">

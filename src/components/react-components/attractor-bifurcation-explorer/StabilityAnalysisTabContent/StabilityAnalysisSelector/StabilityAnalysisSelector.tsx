@@ -1,23 +1,25 @@
-import { useState } from 'react';
-import type { StabilityAnalysisModes } from '../../../../../types';
+import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
+import type {
+  FullStabilityAnalysisMode,
+  StabilityAnalysisModes,
+} from '../../../../../types/types';
 import ArrowSelectButton from '../../../global/ArrowsSelectButton/ArrowsSelectButton';
+import SeparatorLine from '../../../global/SeparatorLine/SeparatorLine';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
+import type { StabilityAnalysisSelectorProps } from './StabilityAnalysisSelectorProps';
 
-import StabilityIcon from '../../../../../assets/icons/stability_analysis.svg';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-
-type FullStabilityAnalysisMode =
-  | 'Total'
-  | 'Stability'
-  | 'Oscillation'
-  | 'Disorder';
-
-const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
+const StabilityAnalysisSelector: React.FC<StabilityAnalysisSelectorProps> = ({
   nodeId,
+
+  attractorBifurcationExplorerServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
-  const [stabilityMode, setStabilityMode] =
-    useState<FullStabilityAnalysisMode>('Total');
+  const stabilityMode: FullStabilityAnalysisMode =
+    bifurcationExplorerStatusStore((state) => state.stabilityAnalysisMode);
 
   const renderButtons = () => {
     const firstCol: Array<FullStabilityAnalysisMode> = ['Total', 'Stability'];
@@ -31,7 +33,26 @@ const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
         key={mode}
         active={stabilityMode === mode}
         text={mode}
-        onClick={() => setStabilityMode(mode)}
+        buttonColor="var(--color-secondary-buttons)"
+        buttonActiveColor='var(--color-secondary-buttons-active)'
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        textColor="var(--color-secondary-text)"
+        onClick={() =>
+          bifurcationExplorerStatusStore
+            .getState()
+            .setStabilityAnalysisMode(mode)
+        }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeStabilityAnalysisMode(mode),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     );
     return (
@@ -56,6 +77,7 @@ const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
       <div className="h-fit w-full flex flex-col justify-start items-center gap-3">
         <DotHeaderReact
           headerText="Select Analysis Mode"
+          textColor="var(--color-primary-text)"
           compHeight="30px"
           compWidth="100%"
           justifyHeader="start"
@@ -63,21 +85,36 @@ const StabilityAnalysisSelector: React.FC<{ nodeId: number }> = ({
         {renderButtons()}
       </div>
 
-      <div className="h-[2px] w-[94%] mt-2 mb-2 bg-gray-300" />
+      <SeparatorLine />
+
       <TextIconButtonReact
         compHeight="40px"
         compWidth="95%"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        textColor="var(--color-secondary-text)"
         text="Start Stability Analysis"
         iconAlt="Stability"
         iconSrc={StabilityIcon}
         handleClick={() =>
-          AttractorBifurcationExplorer.getStabilityData(
+          attractorBifurcationExplorerServ.getStabilityData(
             nodeId,
             stabilityMode === 'Total'
               ? 'total'
               : (stabilityMode[0] as StabilityAnalysisModes)
           )
         }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.startStabilityAnalysis(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </section>
   );

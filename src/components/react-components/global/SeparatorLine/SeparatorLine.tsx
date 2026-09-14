@@ -1,6 +1,12 @@
-const SeparatorLine: React.FC<{ width?: string }> = ({ width }) => {
+const SeparatorLine: React.FC<{ width?: string; color?: string }> = ({
+  width = '94%',
+  color = 'var(--color-primary-separator)',
+}) => {
   return (
-    <div className={`h-[2px] w-[${width ?? '94%'}] mt-2 mb-2 bg-gray-300`} />
+    <div
+      className="h-[2px] mt-2 mb-2"
+      style={{ width: width, backgroundColor: color }}
+    />
   );
 };
 

@@ -1,17 +1,18 @@
-import ComputationManager from '../../../../../services/global/ComputationManager/ComputationManager';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import NumberInputReact from '../../../lit-wrappers/NumberInputReact';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
-import useControlStore from '../../../../../stores/LiveModel/useControlStore';
-import type { ControlInfo } from '../../../../../types';
+import type { ControlCompParamsProps } from './ControlCompParamsProps';
 
-const ControlCompParams: React.FC = () => {
-  const controlInfo: Record<number, ControlInfo> = useControlStore(
-    (state) => state.controlInfo
+const ControlCompParams: React.FC<ControlCompParamsProps> = ({
+  computationManagerServ,
+  controlStore,
+}) => {
+  const controlEnabledStatuses: Record<number, boolean> = controlStore(
+    (state) => state.controlEnabled
   );
 
-  const numberOfEnabled = Object.values(controlInfo).filter(
-    (info) => info.controlEnabled
+  const numberOfEnabled = Object.values(controlEnabledStatuses).filter(
+    (controlEnabledStatus) => controlEnabledStatus
   ).length;
 
   const headers: Array<string> = [
@@ -30,22 +31,22 @@ const ControlCompParams: React.FC = () => {
     [() => number, (value: number | undefined) => void, number, number, number]
   > = [
     [
-      () => ComputationManager.getMinRobustness(),
-      (v) => ComputationManager.setMinRobustness(v),
+      () => computationManagerServ.Control.getMinRobustness(),
+      (v) => computationManagerServ.Control.setMinRobustness(v),
       0,
       100,
       0.1,
     ],
     [
-      () => ComputationManager.getMaxSize(),
-      (v) => ComputationManager.setMaxSize(v),
+      () => computationManagerServ.Control.getMaxSize(),
+      (v) => computationManagerServ.Control.setMaxSize(v),
       1,
       numberOfEnabled,
       1,
     ],
     [
-      () => ComputationManager.getMaxNumberOfResults(),
-      (v) => ComputationManager.setMaxNumberOfResults(v),
+      () => computationManagerServ.Control.getMaxNumberOfResults(),
+      (v) => computationManagerServ.Control.setMaxNumberOfResults(v),
       1,
       100,
       1,
@@ -55,6 +56,8 @@ const ControlCompParams: React.FC = () => {
   return (
     <section className="flex flex-col w-full gap-3">
       <DotHeaderReact
+        textColor="var(--color-secondary-text)"
+        style={{ userSelect: 'none' }}
         headerText="Control Computation Parameters"
         compWidth="100%"
         justifyHeader="start"
@@ -63,10 +66,12 @@ const ControlCompParams: React.FC = () => {
         <div className="flex flex-col w-[47%] gap-1 justify-center">
           {headers.map((header) => (
             <SimpleHeaderReact
+              style={{ userSelect: 'none' }}
               key={header}
               headerText={`${header}:`}
               textFontSize="18px"
               textFontWeight="normal"
+              textColor="var(--color-secondary-text)"
             />
           ))}
         </div>
@@ -82,6 +87,9 @@ const ControlCompParams: React.FC = () => {
               compHeight="22px"
               value={getFunc().toString()}
               handleChange={setFunc}
+              inputColor="var(--color-tertiary-text-inputs)"
+              inputBorderColor="var(--color-tertiary-text-inputs-border)"
+              textColor="var(--color-tertiary-text)"
             />
           ))}
         </div>

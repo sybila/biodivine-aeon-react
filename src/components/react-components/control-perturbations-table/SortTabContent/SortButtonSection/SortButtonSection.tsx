@@ -1,20 +1,19 @@
+import ArrowDownIcon from '../../../../../assets/icons/arrow_down.svg';
+import ArrowUpIcon from '../../../../../assets/icons/arrow_up.svg';
+import type { PerturbationSortFields } from '../../../../../types/types';
 import IconButtonReact from '../../../lit-wrappers/IconButtonReact';
 import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
+import type { SortButtonSectionProps } from './SortButtonSectionProps';
 
-import ArrowUpIcon from '../../../../../assets/icons/arrow_up.svg';
-import ArrowDownIcon from '../../../../../assets/icons/arrow_down.svg';
-import type {
-  PertTableSort,
-  PerturbationSortFields,
-  SortDirection,
-} from '../../../../../types';
+const SortButtonSection: React.FC<SortButtonSectionProps> = ({
+  sortDirection,
+  sortField,
+  setFunction,
+  disable,
 
-const SortButtonSection: React.FC<{
-  sortDirection: SortDirection;
-  sortField: PerturbationSortFields;
-  setFunction: (value: PertTableSort | undefined) => void;
-  disable: boolean;
-}> = ({ sortDirection, sortField, setFunction, disable }) => {
+  pageStringProviderServ,
+  helpHoverStore,
+}) => {
   const toggleSortDirection = () => {
     const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
     setFunction({ field: sortField, direction: newDirection });
@@ -47,14 +46,47 @@ const SortButtonSection: React.FC<{
         iconSrc={sortDirection === 'asc' ? ArrowUpIcon : ArrowDownIcon}
         iconAlt={sortDirection === 'asc' ? 'Asc' : 'Desc'}
         handleClick={() => toggleSortDirection()}
-        buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        buttonColor={
+          disable
+            ? 'var(--color-secondary-buttons-disabled)'
+            : 'var(--color-secondary-buttons)'
+        }
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeSortDirection(),
+              true,
+              -50,
+              150
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
       <TextButtonReact
         compHeight="40px"
         compWidth="300px"
         text={sortField}
         handleClick={() => toggleSortField()}
-        buttonColor={disable ? 'var(--color-grey-light)' : undefined}
+        buttonColor={
+          disable
+            ? 'var(--color-secondary-buttons-disabled)'
+            : 'var(--color-secondary-buttons)'
+        }
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.changeSortingAttribute(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </section>
   );

@@ -10,7 +10,7 @@ const FloatMenuButton: React.FC<FloatMenuButtonProps> = ({
 }) => {
   return (
     <button
-      className="flex flex-row justify-center items-center h-[36px] w-[36px] rounded-[24px] hover:bg-[var(--color-grey-blue-light)] transition duration-[0.3s]"
+      className="flex flex-row justify-center items-center h-[36px] w-[36px] rounded-[24px] hover:bg-(--color-model-float-menu-button-hover) transition duration-[0.3s]"
       onClick={() => {
         onClick();
         if (nextHintText !== undefined) setHintText(nextHintText);

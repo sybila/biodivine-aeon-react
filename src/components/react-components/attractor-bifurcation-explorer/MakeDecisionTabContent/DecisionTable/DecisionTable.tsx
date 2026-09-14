@@ -1,17 +1,24 @@
-import useBifurcationExplorerStatus from '../../../../../stores/AttractorBifurcationExplorer/useBifurcationExplorerStatus';
 import TextIconButtonReact from '../../../lit-wrappers/TextIconButtonReact';
 
-import PlusIcon from '../../../../../assets/icons/add_box.svg';
-import AttractorBifurcationExplorer from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorer';
-import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 import { useState } from 'react';
+import PlusIcon from '../../../../../assets/icons/add_box.svg';
+import type { DecisionTableProps } from './DecisionTableProps';
+import DecisionTableRow from './DecisionTableRow/DecisionTableRow';
 
-const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
+const DecisionTable: React.FC<DecisionTableProps> = ({
   nodeId,
   nodeCardinality,
+
+  attractorBifurcationExplorerServ,
+  behaviorClassOperationsServ,
+  pageStringProviderServ,
+
+  bifurcationExplorerStatusStore,
+  helpHoverStore,
 }) => {
+  // TODO - remove when paging for decisions implemented (now causes lag on reenter)
   const [decisionsOpened, setDecisionsOpened] = useState(false);
-  const decisions = useBifurcationExplorerStatus(
+  const decisions = bifurcationExplorerStatusStore(
     (state) => state.availableDecisions
   );
 
@@ -21,14 +28,28 @@ const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
         className="mb-2"
         compWidth="95%"
         text="Get Decisions"
+        textColor='var(--color-secondary-text)'
+        buttonColor='var(--color-secondary-buttons)'
+        buttonHoverColor='var(--color-secondary-buttons-hover)'
         iconAlt="Plus Icon"
         iconSrc={PlusIcon}
         handleClick={() => {
           if (!decisions) {
-            AttractorBifurcationExplorer.getDecisions(nodeId);
+            attractorBifurcationExplorerServ.getDecisions(nodeId);
           }
           setDecisionsOpened(true);
         }}
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              pageStringProviderServ.Tooltips.getDecisionsButton(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     );
   }
@@ -42,6 +63,10 @@ const DecisionTable: React.FC<{ nodeId: number; nodeCardinality: number }> = ({
             decision={decision}
             nodeId={nodeId}
             nodeCardinality={nodeCardinality}
+            attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
+            behaviorClassOperationsServ={behaviorClassOperationsServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
           />
         ))}
       </>
