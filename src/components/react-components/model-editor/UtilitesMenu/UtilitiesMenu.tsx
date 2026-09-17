@@ -94,6 +94,17 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
                 -115
               )
           }
+          submitButtonTooltipFunction={(e) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e,
+                pageStringProviderServ.Tooltips.variableSearchSubmitButton(),
+                true,
+                50,
+                -115
+              )
+          }
           clearTooltipFunction={() => helpHoverStore.getState().clear()}
           gapInsideSection={gapInsideSection}
           suggestionstrings={variableNames}

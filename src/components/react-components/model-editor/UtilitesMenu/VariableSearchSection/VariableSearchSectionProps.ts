@@ -3,6 +3,7 @@ export type VariableSearchSectionProps = {
   setSearchBarRef: (el: HTMLElement) => void;
 
   textInputTooltipFunction: (e: MouseEvent) => void;
+  submitButtonTooltipFunction: (e: MouseEvent) => void;
   clearTooltipFunction: () => void;
 
   /** Css property defining the size of gap between header and other content. */
