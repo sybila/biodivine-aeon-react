@@ -240,7 +240,11 @@ class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
   }
 
   public variableSearch() {
-    return 'Zoom on variables in model visualization.';
+    return 'Specify variables to zoom on.';
+  }
+
+  public variableSearchSubmitButton() {
+    return 'Zoom on variables in the model.';
   }
 
   public undoButton() {

@@ -6,6 +6,8 @@ import VariableMenuButtons from './VariableMenuButtons/VariableMenuButtons';
 const FloatMenu: React.FC<FloatMenuProps> = ({
   liveModelServ,
   modelEditorServ,
+  floatMenuStringsServ,
+
   modelEditorStatusStore,
   regulationsStore,
 }) => {
@@ -37,6 +39,7 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
             setHint={setCurrentHint}
             selectedRegulationIds={floatingMenuInfo.itemInfo.regulationIds}
             liveModelServ={liveModelServ}
+            floatMenuStringsServ={floatMenuStringsServ}
             regulationsStore={regulationsStore}
           />
         ) : (
@@ -44,11 +47,12 @@ const FloatMenu: React.FC<FloatMenuProps> = ({
             setHint={setCurrentHint}
             selectedVariableId={floatingMenuInfo.itemInfo.id}
             liveModelServ={liveModelServ}
+            floatMenuStringsServ={floatMenuStringsServ}
             modelEditorServ={modelEditorServ}
           />
         )}
       </div>
-      <span className="h-[24px] w-[190px] text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-(--base-font-family) text-center font-bold select-none pointer-none text-(--color-model-float-menu-hint-text)">
+      <span className="h-[24px] w-fit text-[14px] text-shadow-[0px 2px 5px #d0d0d0] font-(--base-font-family) text-center font-bold select-none pointer-none text-(--color-model-float-menu-hint-text)">
         {currentHint}
       </span>
     </div>

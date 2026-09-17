@@ -63,7 +63,7 @@ function createUndoRedoStore(): ZustandStore<UndoRedoState> {
     undo: () => {
       const { operationStack, pointer } = get();
 
-      if (pointer < 1) {
+      if (pointer < 0) {
         return;
       }
 

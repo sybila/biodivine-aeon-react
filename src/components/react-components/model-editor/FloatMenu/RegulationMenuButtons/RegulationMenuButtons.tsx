@@ -21,6 +21,8 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
   setHint,
   selectedRegulationIds,
   liveModelServ,
+  floatMenuStringsServ,
+
   regulationsStore,
 }) => {
   const regulationInfo = regulationsStore((state) =>
@@ -35,14 +37,14 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
       ? {
           icon: VisibilityOnIcon,
           alt: 'O On',
-          hint: 'Observability on (O)',
-          nextHintText: 'Observability off (O)',
+          hint: floatMenuStringsServ.toggleObservability(false),
+          nextHintText: floatMenuStringsServ.toggleObservability(true),
         }
       : {
           icon: VisibilityOffIcon,
           alt: 'O Off',
-          hint: 'Observability off (O)',
-          nextHintText: 'Observability on (O)',
+          hint: floatMenuStringsServ.toggleObservability(true),
+          nextHintText: floatMenuStringsServ.toggleObservability(false),
         };
   };
 
@@ -52,22 +54,22 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
         return {
           icon: MonotocityActIcon,
           alt: 'M Act',
-          hint: 'Make activating (M)',
-          nextHintText: 'Make inhibiting (M)',
+          hint: floatMenuStringsServ.toggleMonotonicity('activation'),
+          nextHintText: floatMenuStringsServ.toggleMonotonicity('inhibition'),
         };
       case 'activation':
         return {
           icon: MonotocityInhIcon,
           alt: 'M Inh',
-          hint: 'Make inhibiting (M)',
-          nextHintText: 'Monocity off (M)',
+          hint: floatMenuStringsServ.toggleMonotonicity('inhibition'),
+          nextHintText: floatMenuStringsServ.toggleMonotonicity('unspecified'),
         };
       default:
         return {
           icon: MonotocityOffIcon,
           alt: 'M Off',
-          hint: 'Monocity off (M)',
-          nextHintText: 'Make activating (M)',
+          hint: floatMenuStringsServ.toggleMonotonicity('unspecified'),
+          nextHintText: floatMenuStringsServ.toggleMonotonicity('activation'),
         };
     }
   };
@@ -127,7 +129,7 @@ const RegulationMenuButtons: React.FC<RegulationMenuButtonsProps> = ({
             regulationInfo.target
           )
         }
-        hintText="Remove (⌫)"
+        hintText={floatMenuStringsServ.removeReg()}
         setHintText={setHint}
       />
     </div>
