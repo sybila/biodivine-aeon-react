@@ -202,7 +202,7 @@ const PhenotypesOverlayContent: React.FC<PhenotypesOverlayContentProps> = ({
             <TextIconButtonReact
               className="mr-1"
               compHeight="90%"
-              compWidth="20%"
+              compWidth="200px"
               iconSrc={AddIcon}
               iconAlt="Add"
               iconHeight="19px"
