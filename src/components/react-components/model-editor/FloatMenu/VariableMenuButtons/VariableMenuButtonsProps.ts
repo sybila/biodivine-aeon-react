@@ -6,4 +6,5 @@ export type VariableMenuButtonsProps = {
   selectedVariableId: number;
   liveModelServ: LiveModelInt;
   modelEditorServ: ModelEditorInt;
+  floatMenuStringsServ: EditorFloatMenuInt;
 };

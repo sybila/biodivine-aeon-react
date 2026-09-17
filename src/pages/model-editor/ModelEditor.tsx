@@ -311,6 +311,9 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
       <FloatMenu
         liveModelServ={liveModelServ}
         modelEditorServ={modelEditorServ}
+        floatMenuStringsServ={
+          pageStringProviderServ.OtherStrings.EditorFloatMenu
+        }
         modelEditorStatusStore={modelEditorStatusStore}
         regulationsStore={regulationsStore}
       />

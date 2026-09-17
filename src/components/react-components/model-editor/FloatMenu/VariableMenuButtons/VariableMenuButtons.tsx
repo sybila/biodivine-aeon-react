@@ -10,16 +10,17 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
   selectedVariableId,
   liveModelServ,
   modelEditorServ,
+  floatMenuStringsServ,
 }) => {
   return (
     <div className="flex flex-row h-auto w-[99%] items-center">
       <FloatMenuButton
         iconSrc={EditNameIcon}
-        iconAlt="E"
+        iconAlt="R"
         onClick={() =>
           modelEditorServ.openChangeVarNameWindow(selectedVariableId)
         }
-        hintText="Edit name (E)"
+        hintText={floatMenuStringsServ.editVarName()}
         setHintText={setHint}
       />
       <FloatMenuButton
@@ -28,19 +29,19 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
         onClick={() =>
           modelEditorServ.openChangeUpdateFunctionWindow(selectedVariableId)
         }
-        hintText="Edit update function (F)"
+        hintText={floatMenuStringsServ.editUpdateFunction()}
         setHintText={setHint}
       />
       <FloatMenuButton
         iconSrc={DeleteIcon}
-        iconAlt="⌫"
+        iconAlt="D"
         onClick={async () =>
           await liveModelServ.Variables.removeVariableWithWarnings(
             selectedVariableId,
             true
           )
         }
-        hintText="Remove (⌫)"
+        hintText={floatMenuStringsServ.removeVar()}
         setHintText={setHint}
       />
 
@@ -50,7 +51,7 @@ const VariableMenuButtons: React.FC<VariableMenuButtonsProps> = ({
         onClick={() =>
           modelEditorServ.scrollVariableIntoView(selectedVariableId)
         }
-        hintText="Find In Menu (S)"
+        hintText={floatMenuStringsServ.findVarInMenu()}
         setHintText={setHint}
       />
     </div>
