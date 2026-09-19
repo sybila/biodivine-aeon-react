@@ -1,9 +1,9 @@
-import MakeDecisionTab from './MakeDecisionTab/MakeDecisionTab';
-import type { MakeDecisionTabInt } from './MakeDecisionTab/MakeDecisionTabInt';
+import MakeDecisionTabOtherStrings from './MakeDecisionTab/MakeDecisionTabOtherStrings';
+import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecisionTabOtherStringsInt';
 import type { OtherStringsInt } from './OtherStringsInt';
 
 class OtherStrings implements OtherStringsInt {
-  public MakeDecisionTab: MakeDecisionTabInt = new MakeDecisionTab();
+  public MakeDecisionTab: MakeDecisionTabOtherStringsInt = new MakeDecisionTabOtherStrings();
 }
 
 export default OtherStrings;
