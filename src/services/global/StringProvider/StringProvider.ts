@@ -9,23 +9,21 @@ import type { GlobalStringsInt } from './GlobalStrings/GlobalStringsInt';
 import ModelEditorPageStrings from './ModelEditorPageStrings/ModelEditorPageStrings';
 import type { ModelEditorPageStringsInt } from './ModelEditorPageStrings/ModelEditorPageStringsInt';
 import type { StringProviderInt } from './StringProviderInt';
+import TrapSpaceSDPageStrings from './TrapSpaceSDPageStrings/TrapSpaceSDPageStrings';
+import type { TrapSpaceSDPageStringsInt } from './TrapSpaceSDPageStrings/TrapSpaceSDPageStringsInt';
 
 class StringProvider implements StringProviderInt {
-  public ModelEditorPage: ModelEditorPageStringsInt;
-  public AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt;
-  public AttractorVisualizerPage: AttractorVisualizerPageStringsInt;
-  public ControlPerturbationTablePage: ControlPerturbationTablePageStringsInt;
-  public Global: GlobalStringsInt;
-
-  constructor() {
-    this.ModelEditorPage = new ModelEditorPageStrings();
-    this.AttractorBifurcationExplorerPage =
-      new AttractorBifurcationExplorerPageStrings();
-    this.AttractorVisualizerPage = new AttractorVisualizerPageStrings();
-    this.ControlPerturbationTablePage =
-      new ControlPerturbationTablePageStrings();
-    this.Global = new GlobalStrings();
-  }
+  public ModelEditorPage: ModelEditorPageStringsInt =
+    new ModelEditorPageStrings();
+  public AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt =
+    new AttractorBifurcationExplorerPageStrings();
+  public AttractorVisualizerPage: AttractorVisualizerPageStringsInt =
+    new AttractorVisualizerPageStrings();
+  public ControlPerturbationTablePage: ControlPerturbationTablePageStringsInt =
+    new ControlPerturbationTablePageStrings();
+  public TrapSpaceSDPage: TrapSpaceSDPageStringsInt =
+    new TrapSpaceSDPageStrings();
+  public Global: GlobalStringsInt = new GlobalStrings();
 }
 
 export default StringProvider;
