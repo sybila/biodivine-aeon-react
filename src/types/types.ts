@@ -465,6 +465,7 @@ export type DecisionTSSD = {
   /** Maps variable ids (keys) to state of variable. If variable state is undefined, it means the variable is free (unpercolated). */
   variableValues: Record<string, number | undefined>;
   numberOfInterpretations: number;
+  numberOfMinTrapSpaces: number;
 };
 
 export type DecisionsTSSD = Array<DecisionTSSD>;
