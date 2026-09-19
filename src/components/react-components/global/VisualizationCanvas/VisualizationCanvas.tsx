@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { VisualizationCanvasProps } from './VisualizationCanvasProps';
 
-const BifurcationExplorerCanvas: React.FC<VisualizationCanvasProps> = ({
+const VisualizationCanvas: React.FC<VisualizationCanvasProps> = ({
   initialized,
   setInitialized,
   initializeCanvas,
@@ -27,4 +27,4 @@ const BifurcationExplorerCanvas: React.FC<VisualizationCanvasProps> = ({
   );
 };
 
-export default BifurcationExplorerCanvas;
+export default VisualizationCanvas;
