@@ -62,7 +62,8 @@ const ModelEditorComponent = () => (
 export const defaultRedirect = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  loader: () => redirect({ to: '/model-editor' }),
+  // TODO - change to model-editor
+  loader: () => redirect({ to: '/trap-space-succession-diagram' }),
 });
 
 export const modelEditorRoute = createRoute({
@@ -162,9 +163,11 @@ export const TrapSpaceSuccessionDiagramRoute = createRoute({
         ObjectProvider.TrapSpaceSuccessionDiagramnServicesProvider
           .trapSpaceSDServ
       }
+      pageStringProviderServ={ObjectProvider.GlobalServicesProvider.stringProviderServ.TrapSpaceSDPage}
       trapSpaceSDStatusStore={
         ObjectProvider.StoresProvider.trapSpaceSDStatusStore
       }
+      helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),
 });

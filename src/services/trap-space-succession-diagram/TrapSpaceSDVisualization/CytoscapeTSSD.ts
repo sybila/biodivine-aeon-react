@@ -1,4 +1,5 @@
-import type { CytoscapeOptions, EventObject } from 'cytoscape';
+import cytoscape, { type CytoscapeOptions, type EventObject } from 'cytoscape';
+import tidytree from 'cytoscape-tidytree';
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
@@ -11,8 +12,6 @@ import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormate
 
 const remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
-
-declare const cytoscape: any;
 
 class CytoscapeTSSD {
   // #region --- Properties + Constructor ---
@@ -70,6 +69,9 @@ class CytoscapeTSSD {
 
     this.container = container;
     this.cytoscape = cytoscape(this.initOptions());
+
+    cytoscape.use(tidytree);
+
     this.cytoscape.on('select', (e: EventObject) => this.onSelect(e));
     this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
     this.cytoscape.on('grabon', this.handleDragStart.bind(this));

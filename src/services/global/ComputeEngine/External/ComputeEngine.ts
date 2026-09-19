@@ -1012,13 +1012,20 @@ class ComputeEngine implements ComputeEngineInt {
     ) => void
   ): void {
     // TODO - implement this endpoint in the compute engine and uncomment the backend request.
+    
+    // This callback should return array of stable motif objects.
+    // Each stable motif object contains:
+    // id (number) - id of the stable motif
+    // variableValues: Record containing variable names and their percolated values (1 - true, 0 - false). If variable is not present, then is unpercolated (free)
+    // numberOfInterpretations: For how many interpretations of the model is the stable motif valid.
+    // numberOfMinTrapSpaces: How many different minimal trap spaces is reachable after selecting this stable motif 
     callback(undefined, [
-      { id: 0, variableValues: {}, numberOfInterpretations: 4 },
-      { id: 1, variableValues: { A: 1 }, numberOfInterpretations: 4 },
-      { id: 0, variableValues: { B: 0 }, numberOfInterpretations: 4 },
-      { id: 1, variableValues: { B: 1 }, numberOfInterpretations: 4 },
-      { id: 0, variableValues: { C: 0 }, numberOfInterpretations: 2 },
-      { id: 1, variableValues: { C: 1 }, numberOfInterpretations: 2 },
+      { id: 0, variableValues: {}, numberOfInterpretations: 4, numberOfMinTrapSpaces: 1 },
+      { id: 1, variableValues: { A: 1 }, numberOfInterpretations: 4, numberOfMinTrapSpaces: 3 },
+      { id: 2, variableValues: { B: 0 }, numberOfInterpretations: 4, numberOfMinTrapSpaces: 5 },
+      { id: 3, variableValues: { B: 1 }, numberOfInterpretations: 4, numberOfMinTrapSpaces: 6 },
+      { id: 4, variableValues: { C: 0 }, numberOfInterpretations: 2, numberOfMinTrapSpaces: 6 },
+      { id: 5, variableValues: { C: 1 }, numberOfInterpretations: 2, numberOfMinTrapSpaces: 1 },
     ]);
     // this.backendRequest(
     //   '/get_attributes_tssd/' + nodeId,

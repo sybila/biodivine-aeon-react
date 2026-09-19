@@ -3,16 +3,25 @@ import ContentTab from '../../components/react-components/global/ContentTab/Cont
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import VisualizationCanvas from '../../components/react-components/global/VisualizationCanvas/VisualizationCanvas';
 import IconButtonReact from '../../components/react-components/lit-wrappers/IconButtonReact';
-import type { MenuTabTypeTrapSpaceSD } from '../../types/types';
+import type {
+  MenuTabButton,
+  MenuTabTypeTrapSpaceSD,
+  MenuTabTypeTrapSpaceSDNotNull,
+} from '../../types/types';
 import type { TrapSpaceSuccessionDiagramProps } from './TrapSpaceSuccessionDiagramProps';
 
+import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
+
+import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/OverviewTabContent/OverviewTabContent';
 
 const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
   trapSpaceSDServ,
+  pageStringProviderServ,
 
   trapSpaceSDStatusStore,
+  helpHoverStore,
 }) => {
   /** Check if the succession diagram canvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -33,6 +42,18 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
         return (
           <OverviewTabContent trapSpaceSDStatusStore={trapSpaceSDStatusStore} />
         );
+      case 'Make Decision':
+        return (
+          <MakeDecisionTabContent
+            trapSpaceSDServ={trapSpaceSDServ}
+            generalStringsServ={
+              pageStringProviderServ.OtherStrings.MakeDecisionTab
+            }
+            tooltipStringsServ={pageStringProviderServ.Tooltips.MakeDecisionTab}
+            trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        );
       default:
         return null;
     }
@@ -46,17 +67,53 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
     trapSpaceSDStatusStore.getState().setActiveMenuTab(tabType);
   };
 
+  const setTabRef = (
+    tabName: MenuTabTypeTrapSpaceSDNotNull,
+    el: MenuTabButton
+  ) => trapSpaceSDStatusStore.getState().setMenuTabButtonRef(tabName, el);
+
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
+  };
+
+  const sidePanelButtons: Array<{
+    tab: MenuTabTypeTrapSpaceSDNotNull;
+    icon: string;
+    alt: string;
+  }> = [
+    {
+      tab: 'Overview',
+      icon: StateIcon,
+      alt: 'State',
+    },
+    {
+      tab: 'Make Decision',
+      icon: DecisionIcon,
+      alt: 'Decision',
+    },
+  ];
+
   return (
     <>
       <SideButtonMenu>
-        <IconButtonReact
-          isActive={activeTab === 'Overview'}
-          onClick={() => showHideTab('Overview')}
-          iconSrc={StateIcon}
-          iconAlt="State"
-          showTag={true}
-          tagText="Overview"
-        ></IconButtonReact>
+        {sidePanelButtons.map(({ tab, icon, alt }) => {
+          return (
+            <IconButtonReact
+              key={tab}
+              {...commonButtonProps}
+              ref={(el) => setTabRef(tab, el as MenuTabButton)}
+              isActive={activeTab === tab}
+              onClick={() => showHideTab(tab)}
+              iconSrc={icon}
+              iconAlt={alt}
+              tagText={tab ?? ''}
+            />
+          );
+        })}
       </SideButtonMenu>
 
       <ContentTab
