@@ -261,10 +261,10 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
     { tab: 'Help', icon: HelpIcon, alt: 'Help' },
   ];
 
-  const setTabRef = (tabName: MenuTabTypeMENotNull) => (el: any) =>
+  const setTabRef = (tabName: MenuTabTypeMENotNull, el: MenuTabButton) =>
     modelEditorStatusStore
       .getState()
-      .setMenuTabButtonRef(tabName, el as MenuTabButton);
+      .setMenuTabButtonRef(tabName, el);
 
   return (
     <>
@@ -288,7 +288,7 @@ const ModelEditor: React.FC<ModelEditorProps> = ({
             <IconButtonReact
               key={displayTab}
               {...commonButtonProps}
-              ref={setTabRef(displayTab)}
+              ref={(el) => setTabRef(displayTab, el as MenuTabButton)}
               isActive={activeTab === displayTab}
               onClick={() => showHideTab(displayTab)}
               iconSrc={icon}
