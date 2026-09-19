@@ -139,7 +139,8 @@ class ComputationManager implements ComputationManagerInt {
       loadingServ,
       this.computeEngine,
       getModelString,
-      (model) => this.computationCanStart(model, 'Attractor Analysis')
+      // TODO -- change when trap space diagram is fully designed
+      (model) => true
     );
 
     this.Model = new Model(

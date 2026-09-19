@@ -1,6 +1,8 @@
 import type {
   DecisionsTSSD,
+  MenuTabButton,
   MenuTabTypeTrapSpaceSD,
+  MenuTabTypeTrapSpaceSDNotNull,
   NodeDataTSSD,
   VisualizationStatus,
 } from '../../types/types';
@@ -15,6 +17,18 @@ export type TrapSpaceSDStatusState = {
   selectedNode: NodeDataTSSD | null;
   /** Decisions available for the selected node */
   availableDecisions: DecisionsTSSD | null;
+
+  /** Reference to the menu tab buttons. */
+  menuTabButtonsRef: Partial<Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>>;
+
+  /** Sets the reference to a menu tab button.
+   *  @param tab - The menu tab type.
+   *  @param el - The HTML button element, or null to clear the reference.
+   */
+  setMenuTabButtonRef: (
+    tab: MenuTabTypeTrapSpaceSDNotNull,
+    el: MenuTabButton | null
+  ) => void;
 
   setVisualizationStatus: (status: VisualizationStatus) => void;
   setAvailableDecisions: (decisions: DecisionsTSSD) => void;

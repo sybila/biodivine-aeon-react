@@ -8,6 +8,18 @@ class MakeDecisionTabOtherStrings implements MakeDecisionTabOtherStringsInt {
   noSelectedNode() {
     return 'No selected node';
   }
+
+  getDecisionsButton() {
+    return 'Get Stable Motifs (Decisions)';
+  }
+
+  selectDecisionButton() {
+    return "Select stable motif"
+  }
+
+  fullStableMotifStateHeader() {
+    return "Full State"
+  }
 }
 
 export default MakeDecisionTabOtherStrings;
