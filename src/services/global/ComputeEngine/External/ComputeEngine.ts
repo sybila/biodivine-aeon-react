@@ -1080,7 +1080,6 @@ class ComputeEngine implements ComputeEngineInt {
     });
 
     // TODO - implement this endpoint in the compute engine and uncomment the backend request.
-
     // This callback should return array of stable motif objects.
     // Each stable motif object contains:
     // id (number) - id of the stable motif
