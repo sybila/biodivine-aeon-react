@@ -218,8 +218,15 @@ class CytoscapeTSSD {
 
   // #region --- Node/Edge Selection ---
 
-  private selectedDecisionNode(e: EventObject) {
+  private selectedDecisionNode(nodeId: string, e: EventObject) {
+    const nodeEdges = this.cytoscape?.edges('[source = "' + nodeId + '"]');
+
+    if (nodeEdges && nodeEdges.length <= 0) {
+      return;
+    }
+
     const currentPosition = e.target.position();
+
     // Show close button
     const closeButton = {
       classes: ['remove-button'],
@@ -234,18 +241,18 @@ class CytoscapeTSSD {
         y: currentPosition.y - e.target.height() / 2 - 12,
       },
     };
-    const node = this.cytoscape!.add(closeButton);
-    node.on('mouseover', () => {
-      node.addClass('hover');
+    const buttonElement = this.cytoscape!.add(closeButton);
+    buttonElement.on('mouseover', () => {
+      buttonElement.addClass('hover');
     });
-    node.on('mouseout', () => {
-      node.removeClass('hover');
+    buttonElement.on('mouseout', () => {
+      buttonElement.removeClass('hover');
     });
 
     // Update position of the close button when the target is moved
     const handler = (e: EventObject) => {
       const targetPos = e.target.position();
-      node.position({
+      buttonElement.position({
         x: targetPos.x + e.target.width() / 2 + 12,
         y: targetPos.y - e.target.height() / 2 - 12,
       });
@@ -284,13 +291,17 @@ class CytoscapeTSSD {
       return;
     }
 
-    const nodeDataTSSD: NodeDataTSSDWithMotifs = selectedElement.treeData;
+    const nodeDataTSSD: NodeDataTSSDWithMotifs = {
+      ...selectedElement.treeData,
+      id: Number(selectedElement.treeData.id),
+    };
 
     this.trapSpaceSDStatusStore
       .getState()
       .changeSelectedItem({ type: 'node', data: nodeDataTSSD });
 
-    if (nodeDataTSSD.type === 'decision') this.selectedDecisionNode(e);
+    if (nodeDataTSSD.type === 'decision')
+      this.selectedDecisionNode(selectedElement.id, e);
   }
 
   /** Function to handle node unselection */
