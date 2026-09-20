@@ -122,7 +122,11 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
           buttonHoverColor="var(--color-tertiary-buttons-hover)"
           handleClick={() => {
             helpHoverStore.getState().clear();
-            trapSpaceSDServ.makeDecision(nodeId, stableMotifData.id);
+            trapSpaceSDServ.makeDecision(
+              nodeId,
+              stableMotifData,
+              stableMotifData.possibleChildNodes[0].id
+            );
           }}
           onMouseEnter={(e: React.MouseEvent) =>
             helpHoverStore

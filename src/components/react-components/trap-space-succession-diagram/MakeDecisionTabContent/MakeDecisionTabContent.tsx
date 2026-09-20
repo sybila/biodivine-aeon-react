@@ -1,4 +1,3 @@
-import type { NodeDataTSSD } from '../../../../types/types';
 import NoDataText from '../../global/NoDataText/NoDataText';
 import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps';
@@ -12,19 +11,23 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
   trapSpaceSDStatusStore,
   helpHoverStore,
 }) => {
-  const selectedNode: NodeDataTSSD | null = trapSpaceSDStatusStore(
-    (state) => state.selectedNode
-  );
+  const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
 
-  if (!selectedNode) {
+  if (!selectedItem) {
     return <NoDataText text={generalStringsServ.noSelectedNode()} />;
   }
 
+  if (selectedItem.type === 'edge') {
+    return (
+      <NoDataText text={generalStringsServ.cannotMakeDecisionOnLeafNode()} />
+    );
+  }
+
+  const selectedNode = selectedItem.data;
+
   if (selectedNode.type != 'decision') {
     return (
-      <NoDataText
-        text={generalStringsServ.cannotMakeDecisionOnLeafNode()}
-      />
+      <NoDataText text={generalStringsServ.cannotMakeDecisionOnLeafNode()} />
     );
   }
 

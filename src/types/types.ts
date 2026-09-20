@@ -439,33 +439,56 @@ export type MenuTabTypeTrapSpaceSDNotNull = 'Overview' | 'Make Decision';
 
 export type MenuTabTypeTrapSpaceSD = MenuTabTypeTrapSpaceSDNotNull | null;
 
+export type TSSDNodeVariableValues = Record<string, number | undefined>;
+
 export type NodeDataTSSD = {
   id: number;
   /** Maps variable ids (keys) to state of variable. If variable state is undefined, it means the variable is free (unpercolated). */
-  variableValues: Record<string, number | undefined>;
+  variableValues: TSSDNodeVariableValues;
   /** Number of interpretations for which this node is valid */
   cardinality: number;
-  /** Ids of nodes which are children of this node */
-  childNodeIds: number[];
   type: NodeTypeTSSD;
+};
+
+export type NodeDataTSSDWithMotifs = NodeDataTSSD & {
+  /** Stable Motifs (edges) comming from this node.*/
+  stableMotifs: Array<StableMotifWithNode>;
 };
 
 export type VisualizationNodeDataTSSD = {
   id: string;
   label: string;
-  action: 'remove';
-  treeData: NodeDataTSSD;
+  action?: undefined;
+  treeData: NodeDataTSSDWithMotifs;
   type: NodeTypeTSSD;
+  opacity: number;
+};
+
+export type VisualizationEdgeDataTSSD = {
+  action?: undefined;
+  source: number;
+  target: number;
+  label: string;
+  type: 'edge';
+  motifData: StableMotifInfo;
 };
 
 export type NodeTypeTSSD = 'decision' | 'leaf';
 
-export type DecisionTSSD = {
+export type StableMotifInfo = {
   id: number;
   /** Maps variable ids (keys) to state of variable. If variable state is undefined, it means the variable is free (unpercolated). */
   variableValues: Record<string, number | undefined>;
   numberOfInterpretations: number;
   numberOfMinTrapSpaces: number;
+};
+
+export type StableMotifWithNode = StableMotifInfo & {
+  targetNodeId: number;
+};
+
+export type DecisionTSSD = StableMotifInfo & {
+  possibleChildNodes: Array<NodeDataTSSD>;
 };
 
 export type DecisionsTSSD = Array<DecisionTSSD>;
