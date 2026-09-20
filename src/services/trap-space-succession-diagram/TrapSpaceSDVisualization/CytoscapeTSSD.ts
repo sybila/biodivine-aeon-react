@@ -1,4 +1,8 @@
-import cytoscape, { type CytoscapeOptions, type EventObject } from 'cytoscape';
+import cytoscape, {
+  type Core,
+  type CytoscapeOptions,
+  type EventObject,
+} from 'cytoscape';
 import tidytree from 'cytoscape-tidytree';
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
@@ -16,7 +20,7 @@ const remove_svg =
 class CytoscapeTSSD {
   // #region --- Properties + Constructor ---
 
-  private cytoscape: any = undefined;
+  private cytoscape: Core | undefined;
   private totalCardinality = 0.0;
   private showMass = false;
 
@@ -40,8 +44,6 @@ class CytoscapeTSSD {
 
   private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
-  private removeNodeFunction: (nodeId: number) => void;
-
   constructor(
     messageServ: MessageInt,
     dataFormatersServ: DataFormatersInt,
@@ -52,10 +54,6 @@ class CytoscapeTSSD {
     this.dataFormatersServ = dataFormatersServ;
 
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
-
-    this.removeNodeFunction = (_: number) => {
-      console.warn('CytoscapeTSSD: RemoveNodeFunction not set');
-    };
   }
 
   // #endregion
@@ -72,10 +70,10 @@ class CytoscapeTSSD {
 
     cytoscape.use(tidytree);
 
-    this.cytoscape.on('select', (e: EventObject) => this.onSelect(e));
-    this.cytoscape.on('unselect', (e: EventObject) => this._onUnselect(e));
-    this.cytoscape.on('grabon', this.handleDragStart.bind(this));
-    this.cytoscape.on('dragfreeon', this.handleDragEnd.bind(this));
+    this.cytoscape!.on('select', (e: EventObject) => this.onSelect(e));
+    this.cytoscape!.on('unselect', (e: EventObject) => this._onUnselect(e));
+    this.cytoscape!.on('grabon', this.handleDragStart.bind(this));
+    this.cytoscape!.on('dragfreeon', this.handleDragEnd.bind(this));
   }
 
   private initOptions(): CytoscapeOptions {
@@ -178,16 +176,6 @@ class CytoscapeTSSD {
 
   // #endregion
 
-  // #region --- External Function Setters ---
-
-  /** Setter for function which removes node from the tree visualization. */
-  setRemoveNodeFunction(func: (nodeId: number) => void) {
-    if (func != undefined) {
-      this.removeNodeFunction = func;
-    }
-  }
-
-  // #endregion
   // #region --- Cardinality ---
 
   public getTotalCardinality() {
@@ -214,7 +202,7 @@ class CytoscapeTSSD {
         y: currentPosition.y - e.target.height() / 2 - 12,
       },
     };
-    const node = this.cytoscape.add(closeButton);
+    const node = this.cytoscape!.add(closeButton);
     node.on('mouseover', () => {
       node.addClass('hover');
     });
@@ -243,7 +231,7 @@ class CytoscapeTSSD {
     if (nodeData.action == 'remove') {
       if (!nodeData.id) return;
       // This is a remove button for a specifc tree node.
-      this.removeNodeFunction(Number(nodeData.id));
+      this.removeNode(nodeData.id);
       return;
     }
 
@@ -257,7 +245,7 @@ class CytoscapeTSSD {
   private _onUnselect(e: any) {
     this.trapSpaceSDStatusStore.getState().clearSelectedNodeInfo();
     // Clear remove button
-    this.cytoscape.$('.remove-button').remove();
+    this.cytoscape!.$('.remove-button').remove();
 
     // Remove the listener upading its position
     const scratch = this.scratch(e.target);
@@ -266,20 +254,20 @@ class CytoscapeTSSD {
   }
 
   public selectNode(nodeId: string) {
-    let current = this.cytoscape.nodes(':selected');
+    let current = this.cytoscape!.nodes(':selected');
     current.unselect();
-    this.cytoscape.getElementById(nodeId).select();
+    this.cytoscape!.getElementById(nodeId).select();
   }
 
   public refreshSelection(targetId?: string) {
-    const selected = this.cytoscape.$(':selected'); // node or edge that are selected
+    const selected = this.cytoscape!.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {
       selected.unselect();
     }
 
     // If there was an error and this.trapSpaceSDStatusStore has selected node, unselect it
     if (
-      selected <= 0 &&
+      selected.size() <= 0 &&
       this.trapSpaceSDStatusStore.getState().selectedNode != null
     ) {
       this.trapSpaceSDStatusStore.getState().changeSelectedNode(null);
@@ -290,7 +278,7 @@ class CytoscapeTSSD {
         selected.select();
       }
     } else {
-      this.cytoscape.getElementById(targetId).select();
+      this.cytoscape!.getElementById(targetId).select();
     }
   }
 
@@ -299,7 +287,7 @@ class CytoscapeTSSD {
   // #region --- Node Getters ---
 
   public getParentNode(targetId: string) {
-    let parentEdge = this.cytoscape.edges("edge[target='" + targetId + "']");
+    let parentEdge = this.cytoscape!.edges("edge[target='" + targetId + "']");
     if (parentEdge.length == 0) {
       return undefined;
     }
@@ -307,7 +295,7 @@ class CytoscapeTSSD {
   }
 
   public getChildNode(sourceId: string) {
-    let childEdge = this.cytoscape.edges("edge[source='" + sourceId + "']");
+    let childEdge = this.cytoscape!.edges("edge[source='" + sourceId + "']");
     if (childEdge.length == 0) {
       return undefined;
     }
@@ -315,12 +303,12 @@ class CytoscapeTSSD {
   }
 
   public getSiblingNode(targetId: string) {
-    let parentEdge = this.cytoscape.edges("edge[target='" + targetId + "']");
+    let parentEdge = this.cytoscape!.edges("edge[target='" + targetId + "']");
     if (parentEdge.length == 0) {
       return undefined;
     }
     let sourceId = parentEdge.data().source;
-    let childEdge = this.cytoscape.edges("edge[source='" + sourceId + "']");
+    let childEdge = this.cytoscape!.edges("edge[source='" + sourceId + "']");
     if (childEdge.length == 0) {
       return undefined;
     }
@@ -328,19 +316,19 @@ class CytoscapeTSSD {
   }
 
   public getSelectedNodeId() {
-    const node = this.cytoscape.nodes(':selected');
+    const node = this.cytoscape!.nodes(':selected');
     if (node.length == 0) return undefined;
     return node.data().id;
   }
 
   public getSelectedNodeTreeData() {
-    const node = this.cytoscape.nodes(':selected');
+    const node = this.cytoscape!.nodes(':selected');
     if (node.length == 0) return undefined;
     return node.data().treeData;
   }
 
   public getNodeType(nodeId: string) {
-    return this.cytoscape.getElementById(nodeId).data().type;
+    return this.cytoscape!.getElementById(nodeId).data().type;
   }
 
   // #endregion
@@ -374,17 +362,17 @@ class CytoscapeTSSD {
   }
 
   public ensureNode(treeData: NodeDataTSSD) {
-    let node = this.cytoscape.getElementById(treeData.id);
+    let node = this.cytoscape!.getElementById(treeData.id.toString());
     if (node !== undefined && node.length > 0) {
       const data = node.data();
       this.applyTreeData(data, treeData);
-      this.cytoscape.style().update(); //redraw graph
+      this.cytoscape!.style().update(); //redraw graph
       return node;
     } else {
       const data = this.applyTreeData({ id: treeData.id }, treeData);
 
-      return this.cytoscape.add({
-        id: data.id,
+      return this.cytoscape!.add({
+        id: () => data.id,
         data: data,
         grabbable: treeData.id != 0,
         position: { x: 0.0, y: 0.0 },
@@ -403,15 +391,15 @@ class CytoscapeTSSD {
       return;
     }
 
-    const edge = this.cytoscape.edges(
+    const edge = this.cytoscape!.edges(
       '[source = "' + sourceId + '"][target = "' + targetId + '"]'
     );
     if (edge.length >= 1) {
       // Edge exists
-      this.cytoscape.style().update(); //redraw graph
+      this.cytoscape!.style().update(); //redraw graph
     } else {
       // Make new edge
-      this.cytoscape.add({
+      this.cytoscape!.add({
         group: 'edges',
         data: {
           source: sourceId,
@@ -422,12 +410,12 @@ class CytoscapeTSSD {
   }
 
   public removeAll() {
-    this.cytoscape.nodes(':selected').unselect(); // Triggers reset of other UI.
-    this.cytoscape.elements().remove();
+    this.cytoscape!.nodes(':selected').unselect(); // Triggers reset of other UI.
+    this.cytoscape!.elements().remove();
   }
 
   public removeNode(nodeId: string) {
-    let e = this.cytoscape.getElementById(nodeId);
+    let e = this.cytoscape!.getElementById(nodeId);
     if (e.length > 0) {
       e.remove();
     }
@@ -439,22 +427,22 @@ class CytoscapeTSSD {
 
   public setMassEnabled() {
     this.showMass = true;
-    for (const node of this.cytoscape.nodes()) {
+    for (const node of this.cytoscape!.nodes()) {
       let data = node.data();
       if (data.treeData !== undefined) {
         data.opacity = this._computeMassOpacity(data.treeData.cardinality);
       }
     }
-    this.cytoscape.style().update(); //redraw graph
+    this.cytoscape!.style().update(); //redraw graph
   }
 
   public setMassDisabled() {
     this.showMass = false;
-    for (const node of this.cytoscape.nodes()) {
+    for (const node of this.cytoscape!.nodes()) {
       const data = node.data();
       data.opacity = 1.0;
     }
-    this.cytoscape.style().update(); //redraw graph
+    this.cytoscape!.style().update(); //redraw graph
   }
 
   private _computeMassOpacity(cardinality: number) {
@@ -475,7 +463,7 @@ class CytoscapeTSSD {
   // #region --- Tree Layout Management ---
 
   public fit() {
-    this.cytoscape.fit(undefined, this.layoutSettings.fitPadding);
+    this.cytoscape!.fit(undefined, this.layoutSettings.fitPadding);
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
@@ -517,9 +505,8 @@ class CytoscapeTSSD {
           fit: fit,
           padding: settings.fitPadding,
         };
-    this.cytoscape
-      .elements()
-      .difference(this.cytoscape.$('.remove-button'))
+    this.cytoscape!.elements()
+      .difference(this.cytoscape!.$('.remove-button'))
       .layout(options)
       .run();
   }
@@ -545,11 +532,6 @@ class CytoscapeTSSD {
 
   public toggleAnimateLayoutChanges() {
     this.layoutSettings.animate = !this.layoutSettings.animate;
-    this.applyTreeLayout();
-  }
-
-  public togglePositiveOnLeft() {
-    this.layoutSettings.positiveOnLeft = !this.layoutSettings.positiveOnLeft;
     this.applyTreeLayout();
   }
 
@@ -630,7 +612,7 @@ class CytoscapeTSSD {
     // If node dragged past its sibling, switch their order
     const siblingId = this.getSiblingNode(dragged.id());
     if (siblingId !== undefined) {
-      const siblingPos = this.cytoscape.getElementById(siblingId).position();
+      const siblingPos = this.cytoscape!.getElementById(siblingId).position();
       if (
         Math.min(origPos.x, draggedPos.x) < siblingPos.x &&
         Math.max(origPos.x, draggedPos.x) > siblingPos.x
@@ -644,7 +626,7 @@ class CytoscapeTSSD {
     }
 
     // Else, set node's extra spacing based on the drag final position
-    const parent = this.cytoscape.getElementById(parentId);
+    const parent = this.cytoscape!.getElementById(parentId);
     const newSpacing =
       draggedPos.y -
       (parent.position().y +
@@ -673,17 +655,17 @@ class CytoscapeTSSD {
 
   public getVisualizationStatus() {
     return {
-      zoom: this.cytoscape.zoom(),
-      pan: this.cytoscape.pan(),
+      zoom: this.cytoscape!.zoom(),
+      pan: this.cytoscape!.pan(),
     };
   }
 
   public loadVisualizationStatus(status: VisualizationStatus) {
     // Apply viewport directly to avoid triggering additional animated relayouts.
     if (status.zoom !== undefined || status.pan !== undefined) {
-      this.cytoscape.viewport({
-        zoom: status.zoom ?? this.cytoscape.zoom(),
-        pan: status.pan ?? this.cytoscape.pan(),
+      this.cytoscape!.viewport({
+        zoom: status.zoom.currentZoom ?? this.cytoscape!.zoom(),
+        pan: status.pan ?? this.cytoscape!.pan(),
       });
     }
   }
