@@ -7,7 +7,7 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
     visualizationStatus: null,
     activeMenuTab: null,
     availableDecisions: null,
-    selectedNode: null,
+    selectedItem: null,
 
     menuTabButtonsRef: {},
     setMenuTabButtonRef: (tab, el) =>
@@ -27,16 +27,16 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
     setActiveMenuTab: (tab) => {
       set({ activeMenuTab: tab });
     },
-    changeSelectedNode: (node) => {
-      if (node === null) {
-        get().clearSelectedNodeInfo();
+    changeSelectedItem: (selectedItem) => {
+      if (selectedItem === null) {
+        get().clearSelectedItemInfo();
         return;
       }
-      set({ selectedNode: node });
+      set({ selectedItem: selectedItem });
     },
 
-    clearSelectedNodeInfo: () => {
-      set({ selectedNode: null, visualizationStatus: null });
+    clearSelectedItemInfo: () => {
+      set({ selectedItem: null, visualizationStatus: null });
     },
   }));
 }

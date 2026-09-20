@@ -1,4 +1,4 @@
-import type { NodeDataTSSD } from '../../../types/types';
+import type { NodeDataTSSDWithMotifs } from '../../../types/types';
 
 /** Interface which defines service responsible for managing Trap Space Succession Diagram page.  */
 export interface TrapSpaceSuccessionDiagramInt {
@@ -11,7 +11,7 @@ export interface TrapSpaceSuccessionDiagramInt {
 
   /** Inserts the succession diagram into visualization. */
   insertSuccessionDiagram: (
-    nodeList: NodeDataTSSD[],
+    nodeList: NodeDataTSSDWithMotifs[],
     fit: boolean,
     animate: boolean,
     clearCytoscape: boolean
@@ -26,7 +26,7 @@ export interface TrapSpaceSuccessionDiagramInt {
   refreshSelection: () => void;
 
   /** Removes node from the succession diagram. */
-  removeNode(nodeId: number): void;
+  removeNode(node: NodeDataTSSDWithMotifs): void;
 
   // #endregion
 
@@ -38,7 +38,9 @@ export interface TrapSpaceSuccessionDiagramInt {
   getDecisions(nodeId: number): void;
 
   /** Extends succession diagram by adding new node corresponding to the selected decision. */
-  makeDecision(nodeId: number, decisionId: number): void;
+  makeDecision(    sourceNodeId: number,
+      selectedDecision: DecisionTSSD,
+      selectedNodeId: number): void;
 
   // #endregion
 }

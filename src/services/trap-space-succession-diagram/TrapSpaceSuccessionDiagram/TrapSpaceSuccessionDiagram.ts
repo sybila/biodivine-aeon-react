@@ -1,6 +1,10 @@
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
-import type { DecisionsTSSD, NodeDataTSSD } from '../../../types/types';
+import type {
+  DecisionsTSSD,
+  DecisionTSSD,
+  NodeDataTSSDWithMotifs,
+} from '../../../types/types';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
@@ -30,6 +34,15 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       trapSpaceSDStatusStore
     );
 
+    this.visualization.setRemoveNodeFunction((node) =>
+      computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
+        node,
+        (node, removed) => {
+          this.removeFromVisualization(node, removed);
+        }
+      )
+    );
+
     this.computationManagerServ = computationManagerServ;
 
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
@@ -46,7 +59,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       const hasSavedVisualizationStatus =
         this.trapSpaceSDStatusStore.getState().visualizationStatus !== null;
       this.computationManagerServ.TrapSpaceSuccessionDiagram.getTrapSpaceSuccessionDiagram(
-        (nodeList: NodeDataTSSD[]) => {
+        (nodeList: NodeDataTSSDWithMotifs[]) => {
           this.insertSuccessionDiagram(
             nodeList,
             !hasSavedVisualizationStatus,
@@ -58,7 +71,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   }
 
   public insertSuccessionDiagram(
-    nodeList: NodeDataTSSD[],
+    nodeList: NodeDataTSSDWithMotifs[],
     fit: boolean = true,
     animate: boolean = true,
     clearCytoscape: boolean = true
@@ -69,8 +82,8 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
         this.visualization.ensureNode(n);
       }
       for (const n of nodeList) {
-        for (const childId of n.childNodeIds) {
-          this.visualization.ensureEdge(n.id, childId);
+        for (const motif of n.stableMotifs) {
+          this.visualization.ensureEdge(n.id, motif.targetNodeId, motif);
         }
       }
       // Do not auto-fit when restoring a previously saved pan/zoom state.
@@ -91,7 +104,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
    *  @param removedNodes - (number[]) List of IDs of removed nodes. These nodes will be removed from the visualization.
    */
   private removeFromVisualization(
-    node: NodeDataTSSD | undefined,
+    node: NodeDataTSSDWithMotifs | undefined,
     removedNodes: number[]
   ) {
     if (removedNodes.length > 0) {
@@ -107,10 +120,13 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     }
   }
 
-  public removeNode(nodeId: number) {
-    this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(nodeId, (node, removed) => {
-      this.removeFromVisualization(node, removed);
-    });
+  public removeNode(node: NodeDataTSSDWithMotifs) {
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
+      node,
+      (node, removed) => {
+        this.removeFromVisualization(node, removed);
+      }
+    );
   }
 
   // #endregion
@@ -126,12 +142,20 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     );
   }
 
-  public makeDecision(nodeId: number, decisionId: number) {
+  public makeDecision(
+    sourceNodeId: number,
+    selectedDecision: DecisionTSSD,
+    selectedNodeId: number
+  ) {
     this.computationManagerServ.TrapSpaceSuccessionDiagram.makeDecisionTSSD(
-      nodeId,
-      decisionId,
-      (nodes) => {
-        this.insertSuccessionDiagram(nodes, true, false);
+      selectedNodeId,
+      selectedDecision.id,
+      (node) => {
+        const nodeWithMotifs = { ...node, stableMotifs: [] };
+
+        this.visualization.ensureNode(nodeWithMotifs);
+        this.visualization.ensureEdge(sourceNodeId, node.id, selectedDecision);
+        this.visualization.applyTreeLayout(true, false);
       }
     );
   }
