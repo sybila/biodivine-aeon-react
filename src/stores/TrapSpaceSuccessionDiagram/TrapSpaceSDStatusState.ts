@@ -47,7 +47,9 @@ export type TrapSpaceSDStatusState = {
   ) => void;
 
   /** Reference to the menu tab buttons. */
-  menuTabButtonsRef: Partial<Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>>;
+  menuTabButtonsRef: Partial<
+    Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>
+  >;
 
   /** Sets the reference to a menu tab button.
    *  @param tab - The menu tab type.

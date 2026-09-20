@@ -8,7 +8,7 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({
   selectedNode,
   generalStringsServ,
 }) => {
-  const [stateAsText, setStateAsText] = useState<boolean>(false);
+  const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
 
   const stats: {
     name: string;
