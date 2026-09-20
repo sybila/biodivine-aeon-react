@@ -7,7 +7,9 @@ import tidytree from 'cytoscape-tidytree';
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
-  NodeDataTSSD,
+  NodeDataTSSDWithMotifs,
+  StableMotifInfo,
+  VisualizationEdgeDataTSSD,
   VisualizationNodeDataTSSD,
   VisualizationStatus,
 } from '../../../types/types';
@@ -44,6 +46,8 @@ class CytoscapeTSSD {
 
   private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
+  private removeNodeFunction: (node: NodeDataTSSDWithMotifs) => void;
+
   constructor(
     messageServ: MessageInt,
     dataFormatersServ: DataFormatersInt,
@@ -54,6 +58,10 @@ class CytoscapeTSSD {
     this.dataFormatersServ = dataFormatersServ;
 
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
+
+    this.removeNodeFunction = (_: NodeDataTSSDWithMotifs) => {
+      console.warn('CytoscapeABE: RemoveNodeFunction not set');
+    };
   }
 
   // #endregion
@@ -161,17 +169,41 @@ class CytoscapeTSSD {
         {
           selector: 'edge',
           style: {
+            // basic appearance
+            label: 'data(label)',
             'curve-style': 'taxi',
             'taxi-direction': 'vertical',
             'target-arrow-shape': 'triangle',
-            'taxi-turn': '20px',
+            'taxi-turn': '30px',
+
+            // ---- label‑readability enhancements ----
+            'font-size': '13px',
+            'font-family': 'Helvetica,Arial,sans-serif',
+            color: '#222', // text colour
+            'text-outline-color': '#fff', // outline (helps on dark edges)
+            'text-outline-width': 2,
+            'text-rotation': 'autorotate',
+            'text-margin-y': -8,
+            'z-index': 10,
           },
         },
+
         /*{
               'selector': 'node[type="decision"]'
             } */
       ],
     };
+  }
+
+  // #endregion
+
+  // #region --- External Function Setters ---
+
+  /** Setter for function which removes node from the tree visualization. */
+  setRemoveNodeFunction(func: (node: NodeDataTSSDWithMotifs) => void) {
+    if (func != undefined) {
+      this.removeNodeFunction = func;
+    }
   }
 
   // #endregion
@@ -194,7 +226,7 @@ class CytoscapeTSSD {
       grabbable: false,
       data: {
         action: 'remove',
-        targetId: e.target.data().id,
+        targetData: e.target.data(),
       },
       position: {
         // 12 is half the radius of the close icon
@@ -226,24 +258,44 @@ class CytoscapeTSSD {
   private onSelect(e: EventObject) {
     // Todo - add quick help for tree explorer
 
-    const nodeData: VisualizationNodeDataTSSD = e.target.data();
+    const selectedElement:
+      | VisualizationNodeDataTSSD
+      | VisualizationEdgeDataTSSD
+      | { action: 'remove'; targetData: VisualizationNodeDataTSSD } =
+      e.target.data();
 
-    if (nodeData.action == 'remove') {
-      if (!nodeData.id) return;
+    if (selectedElement.action == 'remove') {
+      const removeNode = selectedElement.targetData;
+
+      if (removeNode === null) return;
+
       // This is a remove button for a specifc tree node.
-      this.removeNode(nodeData.id);
+      this.removeNodeFunction(removeNode.treeData);
       return;
     }
 
-    const nodeDataTSSD: NodeDataTSSD = nodeData.treeData;
+    if (selectedElement.type === 'edge') {
+      const stableMotif: StableMotifInfo = selectedElement.motifData;
 
-    this.trapSpaceSDStatusStore.getState().changeSelectedNode(nodeDataTSSD);
-    if (nodeData.type === 'decision') this.selectedDecisionNode(e);
+      this.trapSpaceSDStatusStore
+        .getState()
+        .changeSelectedItem({ type: 'edge', data: stableMotif });
+
+      return;
+    }
+
+    const nodeDataTSSD: NodeDataTSSDWithMotifs = selectedElement.treeData;
+
+    this.trapSpaceSDStatusStore
+      .getState()
+      .changeSelectedItem({ type: 'node', data: nodeDataTSSD });
+
+    if (nodeDataTSSD.type === 'decision') this.selectedDecisionNode(e);
   }
 
   /** Function to handle node unselection */
   private _onUnselect(e: any) {
-    this.trapSpaceSDStatusStore.getState().clearSelectedNodeInfo();
+    this.trapSpaceSDStatusStore.getState().clearSelectedItemInfo();
     // Clear remove button
     this.cytoscape!.$('.remove-button').remove();
 
@@ -268,9 +320,9 @@ class CytoscapeTSSD {
     // If there was an error and this.trapSpaceSDStatusStore has selected node, unselect it
     if (
       selected.size() <= 0 &&
-      this.trapSpaceSDStatusStore.getState().selectedNode != null
+      this.trapSpaceSDStatusStore.getState().selectedItem != null
     ) {
-      this.trapSpaceSDStatusStore.getState().changeSelectedNode(null);
+      this.trapSpaceSDStatusStore.getState().changeSelectedItem(null);
     }
 
     if (targetId === undefined) {
@@ -336,53 +388,46 @@ class CytoscapeTSSD {
   // #region --- Ensure/Remove Nodes/Edges ---
 
   private applyTreeData(
-    data: any,
-    treeData: NodeDataTSSD
+    nodeData: NodeDataTSSDWithMotifs
   ): VisualizationNodeDataTSSD {
-    if (data.id != treeData.id) {
-      this.messageServ.showError(
-        'Bifurcation Error: Internal Error - Updating wrong node.'
-      );
-    }
-    if (treeData.id == 0) {
-      this.totalCardinality = treeData.cardinality;
+    if (nodeData.id == 0) {
+      this.totalCardinality = nodeData.cardinality;
     }
 
-    data.type = treeData.type;
-    data.label = this.dataFormatersServ.convertRecordOfVariableStatesToString(
-      treeData.variableValues
-    );
-    data.treeData = treeData;
-    let opacity = 1.0;
-    if (this.showMass) {
-      opacity = this._computeMassOpacity(treeData.cardinality);
-    }
-    data.opacity = opacity;
-    return data;
+    return {
+      id: nodeData.id.toString(),
+      type: nodeData.type,
+      label: this.dataFormatersServ.convertRecordOfVariableStatesToString(
+        nodeData.variableValues
+      ),
+      treeData: nodeData,
+      opacity: this.showMass
+        ? this._computeMassOpacity(nodeData.cardinality)
+        : 1.0,
+    };
   }
 
-  public ensureNode(treeData: NodeDataTSSD) {
-    let node = this.cytoscape!.getElementById(treeData.id.toString());
-    if (node !== undefined && node.length > 0) {
-      const data = node.data();
-      this.applyTreeData(data, treeData);
-      this.cytoscape!.style().update(); //redraw graph
-      return node;
-    } else {
-      const data = this.applyTreeData({ id: treeData.id }, treeData);
+  public ensureNode(nodeData: NodeDataTSSDWithMotifs) {
+    const node = this.cytoscape!.getElementById(nodeData.id.toString());
 
-      return this.cytoscape!.add({
-        id: () => data.id,
-        data: data,
-        grabbable: treeData.id != 0,
-        position: { x: 0.0, y: 0.0 },
-      });
+    if (node !== undefined && node.length > 0) {
+      this.cytoscape!.style().update();
+      return node;
     }
+
+    const data = this.applyTreeData(nodeData);
+
+    return this.cytoscape!.add({
+      data: data,
+      grabbable: nodeData.id != 0,
+      position: { x: 0.0, y: 0.0 },
+    });
   }
 
   public ensureEdge(
     sourceId: number | undefined,
-    targetId: number | undefined
+    targetId: number | undefined,
+    stableMotifData: StableMotifInfo
   ) {
     if (sourceId === undefined || targetId === undefined) {
       this.messageServ.showError(
@@ -391,9 +436,15 @@ class CytoscapeTSSD {
       return;
     }
 
+    const label = this.dataFormatersServ.convertRecordOfVariableStatesToString(
+      stableMotifData.variableValues
+    );
+
+    // TODO - possibly check also label, if two edges into one node are allowed
     const edge = this.cytoscape!.edges(
       '[source = "' + sourceId + '"][target = "' + targetId + '"]'
     );
+
     if (edge.length >= 1) {
       // Edge exists
       this.cytoscape!.style().update(); //redraw graph
@@ -404,6 +455,9 @@ class CytoscapeTSSD {
         data: {
           source: sourceId,
           target: targetId,
+          label: label,
+          motifData: stableMotifData,
+          type: 'edge',
         },
       });
     }
@@ -415,9 +469,10 @@ class CytoscapeTSSD {
   }
 
   public removeNode(nodeId: string) {
-    let e = this.cytoscape!.getElementById(nodeId);
-    if (e.length > 0) {
-      e.remove();
+    const node = this.cytoscape!.getElementById(nodeId);
+
+    if (node.size() > 0) {
+      node.remove();
     }
   }
 

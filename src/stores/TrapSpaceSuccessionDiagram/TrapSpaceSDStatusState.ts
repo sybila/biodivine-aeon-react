@@ -3,9 +3,14 @@ import type {
   MenuTabButton,
   MenuTabTypeTrapSpaceSD,
   MenuTabTypeTrapSpaceSDNotNull,
-  NodeDataTSSD,
+  NodeDataTSSDWithMotifs,
+  StableMotifInfo,
   VisualizationStatus,
 } from '../../types/types';
+
+type SelectedItemTSSD =
+  | { type: 'node'; data: NodeDataTSSDWithMotifs }
+  | { type: 'edge'; data: StableMotifInfo };
 
 /** Zustand Store which manages state of the Trap Space Succession Diagram page. */
 export type TrapSpaceSDStatusState = {
@@ -14,12 +19,14 @@ export type TrapSpaceSDStatusState = {
   /** Active menu tab inside the Trap Space Succession Diagram page. */
   activeMenuTab: MenuTabTypeTrapSpaceSD;
 
-  selectedNode: NodeDataTSSD | null;
+  selectedItem: SelectedItemTSSD | null;
   /** Decisions available for the selected node */
   availableDecisions: DecisionsTSSD | null;
 
   /** Reference to the menu tab buttons. */
-  menuTabButtonsRef: Partial<Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>>;
+  menuTabButtonsRef: Partial<
+    Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>
+  >;
 
   /** Sets the reference to a menu tab button.
    *  @param tab - The menu tab type.
@@ -33,7 +40,7 @@ export type TrapSpaceSDStatusState = {
   setVisualizationStatus: (status: VisualizationStatus) => void;
   setAvailableDecisions: (decisions: DecisionsTSSD) => void;
   setActiveMenuTab: (tab: MenuTabTypeTrapSpaceSD) => void;
-  changeSelectedNode: (node: NodeDataTSSD | null) => void;
-  /** Clears the information about the selected node. (sets selectedNode to null) */
-  clearSelectedNodeInfo: () => void;
+  changeSelectedItem: (node: SelectedItemTSSD | null) => void;
+  /** Clears the information about the selected item. (sets selectedItem to null) */
+  clearSelectedItemInfo: () => void;
 };
