@@ -4,7 +4,10 @@ import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../lit-wrappers/StatTableReact';
 import type { NodeOverviewProps } from './NodeOverviewProps';
 
-const NodeOverview: React.FC<NodeOverviewProps> = ({ selectedNode }) => {
+const NodeOverview: React.FC<NodeOverviewProps> = ({
+  selectedNode,
+  generalStringsServ,
+}) => {
   const [stateAsText, setStateAsText] = useState<boolean>(false);
 
   const stats: {
@@ -27,25 +30,25 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({ selectedNode }) => {
     );
     return [
       {
-        name: 'Number Of Interpretations',
+        name: generalStringsServ.numberOfInterpretationsStatName(),
         value: selectedNode.cardinality.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
       {
-        name: 'Number Of Children',
+        name: generalStringsServ.numberOfChildrenStatName(),
         value: selectedNode.stableMotifs.length.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
       {
-        name: 'Number Of Fixed',
+        name: generalStringsServ.numberOfFixedVarsStatName(),
         value: stateNumbers[0].toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
       {
-        name: 'Number Of Free',
+        name: generalStringsServ.numberOfFreeVarsStatName(),
         value: stateNumbers[1].toString(),
         nameWidth: '60%',
         valueWidth: '39%',
@@ -66,7 +69,7 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({ selectedNode }) => {
         compHeight="30px"
         compWidth="100%"
         justifyHeader="start"
-        headerText="State Variables"
+        headerText={generalStringsServ.nodeStateVariablesHeader()}
       />
 
       <div
@@ -86,7 +89,7 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({ selectedNode }) => {
         compHeight="30px"
         compWidth="100%"
         justifyHeader="start"
-        headerText="Stats"
+        headerText={generalStringsServ.statisticsHeader()}
       />
 
       <StatTableReact

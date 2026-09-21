@@ -17,11 +17,14 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   return (
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pb-1">
       {selectedItem.type === 'node' ? (
-        <NodeOverview selectedNode={selectedItem.data} />
+        <NodeOverview
+          selectedNode={selectedItem.data}
+          generalStringsServ={generalStringsServ}
+        />
       ) : selectedItem.type === 'edge' ? (
         <EdgeOverview
-          generalStringsServ={generalStringsServ}
           selectedEdge={selectedItem.data}
+          generalStringsServ={generalStringsServ}
         />
       ) : null}
     </div>
