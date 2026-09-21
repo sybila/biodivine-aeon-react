@@ -1,11 +1,11 @@
 import MakeDecisionTabOtherStrings from './MakeDecisionTab/MakeDecisionTabOtherStrings';
 import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecisionTabOtherStringsInt';
 import type { OtherStringsInt } from './OtherStringsInt';
-import OverviewTab from './OverviewTab/OverviewTab';
-import type { OverviewTabInt } from './OverviewTab/OverviewTabInt';
+import OverviewTabOtherStrings from './OverviewTab/OverviewTabOtherStrings';
+import type { OverviewTabOtherStringsInt } from './OverviewTab/OverviewTabOtherStringsInt';
 
 class OtherStrings implements OtherStringsInt {
-  public OverviewTab: OverviewTabInt = new OverviewTab();
+  public OverviewTab: OverviewTabOtherStringsInt = new OverviewTabOtherStrings();
   public MakeDecisionTab: MakeDecisionTabOtherStringsInt =
     new MakeDecisionTabOtherStrings();
 }
