@@ -1,4 +1,4 @@
-import type { OverviewTabOtherStringsInt as OverviewTabOtherStringsInt } from './OverviewTabOtherStringsInt';
+import type { OverviewTabOtherStringsInt } from './OverviewTabOtherStringsInt';
 
 class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
   // #region --- Global ---
@@ -7,15 +7,19 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
     return 'Select a node or edge to view its overview.';
   }
 
-  numberOfInterpretationsStatName() {
+  public statisticsHeader() {
+    return 'Stats';
+  }
+
+  public numberOfInterpretationsStatName() {
     return 'Number Of Interpretations';
   }
 
-  numberOfFixedVarsStatName() {
+  public numberOfFixedVarsStatName() {
     return 'Number Of Fixed';
   }
 
-  numberOfFreeVarsStatName() {
+  public numberOfFreeVarsStatName() {
     return 'Number Of Free';
   }
 
@@ -23,11 +27,11 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
 
   // #region --- Edge ----
 
-  edgeStateVariablesHeader() {
+  public edgeStateVariablesHeader() {
     return 'Stable Motif (Edge) State';
   }
 
-  numberOfMinTrapSpacesStatName() {
+  public numberOfMinTrapSpacesStatName() {
     return 'Number Of Min Trap Spaces';
   }
 
@@ -35,11 +39,11 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
 
   // #region --- Node ---
 
-  nodeStateVariablesHeader() {
+  public nodeStateVariablesHeader() {
     return 'Trap Space (Node) State';
   }
 
-  numberOfChildrenStatName() {
+  public numberOfChildrenStatName() {
     return 'Number Of Children';
   }
 
