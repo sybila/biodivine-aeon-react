@@ -1,4 +1,4 @@
-export interface OverviewTabInt {
+export interface OverviewTabOtherStringsInt {
   // #region --- Global ---
 
   noSelectedItem(): string;

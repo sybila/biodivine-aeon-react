@@ -1,10 +1,10 @@
-import type { OverviewTabInt } from './OverviewTabInt';
+import type { OverviewTabOtherStringsInt as OverviewTabOtherStringsInt } from './OverviewTabOtherStringsInt';
 
-class OverviewTab implements OverviewTabInt {
+class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
   // #region --- Global ---
 
   public noSelectedItem() {
-    return 'No selected item. Please select node or edge to see overview.';
+    return 'Select a node or edge to view its overview.';
   }
 
   numberOfInterpretationsStatName() {
@@ -46,4 +46,4 @@ class OverviewTab implements OverviewTabInt {
   // #endregion
 }
 
-export default OverviewTab;
+export default OverviewTabOtherStrings;
