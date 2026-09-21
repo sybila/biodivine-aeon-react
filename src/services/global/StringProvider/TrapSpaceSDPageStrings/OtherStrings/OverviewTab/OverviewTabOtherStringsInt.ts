@@ -3,6 +3,8 @@ export interface OverviewTabOtherStringsInt {
 
   noSelectedItem(): string;
 
+  statisticsHeader(): string;
+
   numberOfInterpretationsStatName(): string;
 
   numberOfFixedVarsStatName(): string;
