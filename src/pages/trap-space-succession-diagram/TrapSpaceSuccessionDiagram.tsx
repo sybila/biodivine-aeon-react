@@ -40,7 +40,10 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
     switch (activeTab) {
       case 'Overview':
         return (
-          <OverviewTabContent trapSpaceSDStatusStore={trapSpaceSDStatusStore} />
+          <OverviewTabContent
+            generalStringsServ={pageStringProviderServ.OtherStrings.OverviewTab}
+            trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+          />
         );
       case 'Make Decision':
         return (
