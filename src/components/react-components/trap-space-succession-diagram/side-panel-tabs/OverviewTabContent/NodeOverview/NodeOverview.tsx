@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
-import ColoredWordsReact from '../../../lit-wrappers/ColoredWordsReact';
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
-import StatTableReact from '../../../lit-wrappers/StatTableReact';
-import type { EdgeOverviewProps } from './EdgeOverviewProps';
+import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
+import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
+import StatTableReact from '../../../../lit-wrappers/StatTableReact';
+import type { NodeOverviewProps } from './NodeOverviewProps';
 
-const EdgeOverview: React.FC<EdgeOverviewProps> = ({
-  selectedEdge,
+const NodeOverview: React.FC<NodeOverviewProps> = ({
+  selectedNode,
   generalStringsServ,
 }) => {
   const [stateAsText, setStateAsText] = useState<boolean>(false);
@@ -16,11 +16,11 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
     nameWidth: string;
     valueWidth: string;
   }[] = useMemo(() => {
-    if (!selectedEdge) return [];
+    if (!selectedNode) return [];
 
     // Counts how many variables are fixed (have state 0 or 1) and how many are free (have state undefined/*)
     const stateNumbers: [number, number] = Object.values(
-      selectedEdge.variableValues
+      selectedNode.variableValues
     ).reduce<[number, number]>(
       (acc, value) =>
         value === 0 || value === 1
@@ -31,13 +31,13 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
     return [
       {
         name: generalStringsServ.numberOfInterpretationsStatName(),
-        value: selectedEdge.numberOfInterpretations.toString(),
+        value: selectedNode.cardinality.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
       {
-        name: generalStringsServ.numberOfMinTrapSpacesStatName(),
-        value: selectedEdge.numberOfMinTrapSpaces.toString(),
+        name: generalStringsServ.numberOfChildrenStatName(),
+        value: selectedNode.stableMotifs.length.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
@@ -54,10 +54,10 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
         valueWidth: '39%',
       },
     ];
-  }, [selectedEdge]);
+  }, [selectedNode]);
 
   const words: { text: string; color: string; weight: string }[] =
-    Object.entries(selectedEdge.variableValues).map(([key, value]) => ({
+    Object.entries(selectedNode.variableValues).map(([key, value]) => ({
       text: stateAsText ? `${key}: ${value ?? '*'}` : `${key}`,
       color: `${value === 0 ? 'var(--color-negative)' : value === 1 ? 'var(--color-positive)' : 'var(--color-neutral)'}`,
       weight: `${value === 0 || value === 1 ? 'bold' : 'normal'}`,
@@ -69,7 +69,7 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
         compHeight="30px"
         compWidth="100%"
         justifyHeader="start"
-        headerText={generalStringsServ.edgeStateVariablesHeader()}
+        headerText={generalStringsServ.nodeStateVariablesHeader()}
       />
 
       <div
@@ -88,8 +88,8 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
       <DotHeaderReact
         compHeight="30px"
         compWidth="100%"
-        justifyHeader={generalStringsServ.statisticsHeader()}
-        headerText="Stats"
+        justifyHeader="start"
+        headerText={generalStringsServ.statisticsHeader()}
       />
 
       <StatTableReact
@@ -105,4 +105,4 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
   );
 };
 
-export default EdgeOverview;
+export default NodeOverview;

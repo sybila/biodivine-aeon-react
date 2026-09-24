@@ -2,16 +2,16 @@ import type { MakeDecisionTabOtherStringsInt } from '../../../../../../services/
 import type { MakeDecisionTabTooltipsInt } from '../../../../../../services/global/StringProvider/TrapSpaceSDPageStrings/Tooltips/MakeDecisionTab/MakeDecisionTabTooltipsInt';
 import type { TrapSpaceSuccessionDiagramInt } from '../../../../../../services/trap-space-succession-diagram/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
+import type { TrapSpaceSDStatusState } from '../../../../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
-import type { DecisionTSSD } from '../../../../../../types/types';
 
-export type StableMotifRowProps = {
-  nodeId: number;
-  stableMotifData: DecisionTSSD;
+export type StableMotifsTableProps = {
+  selectedNodeId: number;
 
   trapSpaceSDServ: TrapSpaceSuccessionDiagramInt;
   generalStringsServ: MakeDecisionTabOtherStringsInt;
   tooltipStringsServ: MakeDecisionTabTooltipsInt;
 
+  trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

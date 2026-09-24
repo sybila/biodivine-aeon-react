@@ -2,9 +2,9 @@ import { useState } from 'react';
 import type {
   VisualOptionsButtonSection,
   VisualOptionsSwitchableTSSD,
-} from '../../../../types/types';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
-import TextButtonReact from '../../lit-wrappers/TextButtonReact';
+} from '../../../../../types/types';
+import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
+import TextButtonReact from '../../../lit-wrappers/TextButtonReact';
 import type { VisualOptionsTabContentProps } from './VisualOptionsTabContentProps';
 
 const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({

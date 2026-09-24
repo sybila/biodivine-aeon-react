@@ -1,5 +1,5 @@
-import NoDataText from '../../global/NoDataText/NoDataText';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import NoDataText from '../../../global/NoDataText/NoDataText';
+import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps';
 import StableMotifsTable from './StableMotifsTable/StableMotifsTable';
 
