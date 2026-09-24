@@ -64,6 +64,7 @@ export const defaultRedirect = createRoute({
   path: '/',
   // TODO - change to model-editor
   loader: () => redirect({ to: '/trap-space-succession-diagram' }),
+  //loader: () => redirect({ to: '/model-editor' }),
 });
 
 export const modelEditorRoute = createRoute({
@@ -71,7 +72,7 @@ export const modelEditorRoute = createRoute({
   path: '/model-editor',
   // TODO - change to model-editor
   loader: () => redirect({ to: '/trap-space-succession-diagram' }),
-  // component: ModelEditorComponent,
+  //component: ModelEditorComponent,
 });
 
 export const AttractorBifurcationExplorerRoute = createRoute({

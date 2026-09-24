@@ -1,3 +1,5 @@
+import AttractorClassesTabTooltips from './AttractorClassesTab/AttractorClassesTabTooltips';
+import type { AttractorClassesTabTooltipsInt } from './AttractorClassesTab/AttractorClassesTabTooltipsInt';
 import MakeDecisionTabTooltips from './MakeDecisionTab/MakeDecisionTabTooltips';
 import type { MakeDecisionTabTooltipsInt } from './MakeDecisionTab/MakeDecisionTabTooltipsInt';
 import type { TooltipsInt } from './TooltipsInt';
@@ -9,6 +11,8 @@ import type { VisualOptionsTabTooltipsInt } from './VisualOptionsTab/VisualOptio
 class Tooltips implements TooltipsInt {
   public MakeDecisionTab: MakeDecisionTabTooltipsInt =
     new MakeDecisionTabTooltips();
+  public AttractorClassesTab: AttractorClassesTabTooltipsInt =
+    new AttractorClassesTabTooltips();
   public VisualOptionsTab: VisualOptionsTabTooltipsInt =
     new VisualOptionsTabTooltips();
 

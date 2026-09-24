@@ -1,5 +1,6 @@
 import type {
   DecisionTSSD,
+  ItemTypesTSSD,
   NodeDataTSSDWithMotifs,
   VisualOptionsSwitchableTSSD,
 } from '../../../types/types';
@@ -47,6 +48,19 @@ export interface TrapSpaceSuccessionDiagramInt {
     selectedDecision: DecisionTSSD,
     selectedNodeId: number
   ): void;
+
+  // #endregion
+
+  // #region --- Attractor C;asses --
+
+  /** Gets attractor classes for specified item (stable motif (edge) or node) */
+  getAttractorClasses(itemType: ItemTypesTSSD, itemId: number): void;
+
+  /** Opens attractor visualization for attractor behavior class. */
+  openAttractorVisualization(classBehavior: string): void;
+
+  /** Opens witness model for attractor behavior class. */
+  openWitness(classBehavior: string): void;
 
   // #endregion
 
