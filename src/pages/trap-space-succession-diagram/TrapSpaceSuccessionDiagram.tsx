@@ -21,6 +21,7 @@ import HelpTabContent from '../../components/react-components/global/HelpTabCont
 import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/OverviewTabContent/OverviewTabContent';
 import VisualOptionsTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/VisualOptionsTabContent/VisualOptionsTabContent';
+import UtilitiesMenu from '../../components/react-components/trap-space-succession-diagram/UtilitiesMenu/UtilitiesMenu';
 
 const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
   trapSpaceSDServ,
@@ -137,6 +138,14 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
 
   return (
     <>
+      <UtilitiesMenu
+        trapSpaceSDServ={trapSpaceSDServ}
+        generalStringsServ={pageStringProviderServ.OtherStrings.UtilitiesMenu}
+        tooltipStringsServ={pageStringProviderServ.Tooltips.UtilitiesMenu}
+        helpHoverStore={helpHoverStore}
+        trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+      />
+
       <SideButtonMenu>
         {sidePanelButtons.map(({ tab, icon, alt }) => {
           return (

@@ -1,4 +1,5 @@
 import type {
+  ContentVisibleComponent,
   DecisionsTSSD,
   MenuTabButton,
   MenuTabTypeTrapSpaceSD,
@@ -27,6 +28,11 @@ export type TrapSpaceSDStatusState = {
   menuTabButtonsRef: Partial<
     Record<MenuTabTypeTrapSpaceSDNotNull, MenuTabButton>
   >;
+
+  /** Reference to the utilities menu component. */
+  utilitiesMenuRef: ContentVisibleComponent | null;
+  /** Setter for the reference to the utilities menu component. */
+  setUtilitiesMenuRef: (ref: ContentVisibleComponent) => void;
 
   /** Sets the reference to a menu tab button.
    *  @param tab - The menu tab type.

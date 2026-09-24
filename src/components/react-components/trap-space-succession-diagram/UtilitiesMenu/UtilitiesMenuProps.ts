@@ -1,13 +1,16 @@
-import type { AttractorBifurcationExplorerInt } from '../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
-import type { AttractorBifurcationExplorerPageStringsInt } from '../../../../services/global/StringProvider/AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStringsInt';
+import type { UtilitiesMenuOtherStringsInt } from '../../../../services/global/StringProvider/TrapSpaceSDPageStrings/OtherStrings/UtilitiesMenu/UtilitiesMenuOtherStringsInt';
+import type { UtilitiesMenuTooltipsInt } from '../../../../services/global/StringProvider/TrapSpaceSDPageStrings/Tooltips/UtilitiesMenu/UtilitiesMenuTooltipsInt';
+import type { TrapSpaceSuccessionDiagramInt } from '../../../../services/trap-space-succession-diagram/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 import type { BifurcationExplorerStatusState } from '../../../../stores/AttractorBifurcationExplorer/BifurcationExplorerStatusState';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
+import type { TrapSpaceSDStatusState } from '../../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 
 export type UtilitiesMenuProps = {
-  attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
-  pageStringProviderServ: AttractorBifurcationExplorerPageStringsInt;
+  trapSpaceSDServ: TrapSpaceSuccessionDiagramInt;
+  generalStringsServ: UtilitiesMenuOtherStringsInt;
+  tooltipStringsServ: UtilitiesMenuTooltipsInt;
 
   helpHoverStore: ZustandStore<HelpHoverState>;
-  bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
+  trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 };
