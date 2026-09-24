@@ -10,9 +10,13 @@ import type {
 } from '../../types/types';
 import type { TrapSpaceSuccessionDiagramProps } from './TrapSpaceSuccessionDiagramProps';
 
+import AttractorIcon from '../../assets/icons/attractor-visualizer.svg';
+import EyeIcon from '../../assets/icons/eye.svg';
+import HelpIcon from '../../assets/icons/help.svg';
 import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
 
+import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/OverviewTabContent/OverviewTabContent';
 
@@ -57,6 +61,12 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
             helpHoverStore={helpHoverStore}
           />
         );
+      case 'Attractor Classes':
+        return null;
+      case 'Visual Options':
+        return null;
+      case 'Help':
+        return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
         return null;
     }
@@ -81,6 +91,7 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
     buttonActiveColor: 'var(--color-primary-buttons-active)',
     tagTextColor: 'var(--color-primary-text)',
     showTag: true,
+    iconSize: '45px',
   };
 
   const sidePanelButtons: Array<{
@@ -97,6 +108,17 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
       tab: 'Make Decision',
       icon: DecisionIcon,
       alt: 'Decision',
+    },
+    {
+      tab: 'Attractor Classes',
+      icon: AttractorIcon,
+      alt: 'Attractor',
+    },
+    { tab: 'Visual Options', icon: EyeIcon, alt: 'Visual' },
+    {
+      tab: 'Help',
+      icon: HelpIcon,
+      alt: 'Help',
     },
   ];
 

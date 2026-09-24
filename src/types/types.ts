@@ -435,7 +435,12 @@ export type PertVariableFilterStatus =
 
 // #region --- Trap Space Succession Diagram ---
 
-export type MenuTabTypeTrapSpaceSDNotNull = 'Overview' | 'Make Decision';
+export type MenuTabTypeTrapSpaceSDNotNull =
+  | 'Overview'
+  | 'Make Decision'
+  | 'Attractor Classes'
+  | 'Visual Options'
+  | 'Help';
 
 export type MenuTabTypeTrapSpaceSD = MenuTabTypeTrapSpaceSDNotNull | null;
 
