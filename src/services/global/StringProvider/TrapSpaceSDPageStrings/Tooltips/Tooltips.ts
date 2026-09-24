@@ -20,4 +20,3 @@ class Tooltips implements TooltipsInt {
 }
 
 export default Tooltips;
-     
