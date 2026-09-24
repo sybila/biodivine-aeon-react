@@ -2,6 +2,7 @@ import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
 import ValueSliderReact from '../../lit-wrappers/ValueSliderReact';
 import type { ZoomSectionProps } from './ZoomSectionProps';
 
+// TODO - convert it so that it takes header text as a prop
 const ZoomSection: React.FC<ZoomSectionProps> = ({
   setZoomFunction,
   minValue,
