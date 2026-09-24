@@ -229,7 +229,7 @@ global stability analysis.
   // #region --- Visualization Operations ---
 
   /** Set zoom level of the model visualization
-   *  @param zoomLevel (number) number which signifies how much zoomed the model should be.
+   *  @param zoomLevel (number) number which signifies how much should be the canvas zoomed.
    */
   setZoom(zoomLevel: number): void;
 
