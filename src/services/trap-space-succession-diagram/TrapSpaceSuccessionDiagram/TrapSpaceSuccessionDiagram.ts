@@ -4,6 +4,7 @@ import type {
   DecisionsTSSD,
   DecisionTSSD,
   NodeDataTSSDWithMotifs,
+  VisualizationStatus,
 } from '../../../types/types';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
@@ -93,6 +94,35 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #endregion
 
+  // #region --- Visualization Status ---
+
+  public saveVisualizationStatus() {
+    const status: VisualizationStatus =
+      this.visualization.getVisualizationStatus();
+
+    this.trapSpaceSDStatusStore.getState().setVisualizationStatus(status);
+  }
+
+  public restoreVisualizationState(selectRootNodeFallback: boolean = false) {
+    const status = this.trapSpaceSDStatusStore.getState().visualizationStatus;
+    const selectedItem = this.trapSpaceSDStatusStore.getState().selectedItem;
+
+    if (status) {
+      this.visualization.loadVisualizationStatus(status);
+    }
+
+    if (selectedItem) {
+      this.visualization.refreshSelection({
+        targetId: selectedItem.data.id.toString(),
+        type: selectedItem.type,
+      });
+    } else if (selectRootNodeFallback) {
+      this.visualization.selectRootNode();
+    }
+  }
+
+  // #endregion
+
   // #region --- Node Operations ---
 
   public refreshSelection() {
@@ -114,7 +144,10 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     }
     if (node !== undefined) {
       this.visualization.ensureNode(node);
-      this.visualization.refreshSelection(node.id.toString());
+      this.visualization.refreshSelection({
+        targetId: node.id.toString(),
+        type: 'node',
+      });
     } else {
       this.visualization.refreshSelection();
     }
@@ -174,6 +207,24 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   public toggleAnimateLayoutChanges() {
     this.visualization.toggleAnimateLayoutChanges();
+  }
+
+  // #endregion
+
+  // #region --- Visualization Operations ---
+
+  public setZoom(zoomLevel: number) {
+    this.visualization.setZoom(zoomLevel);
+
+    this.saveVisualizationStatus();
+  }
+
+  public fitTree() {
+    this.visualization.fit();
+  }
+
+  public resetTreeLayout() {
+    this.visualization.resetTreeLayout();
   }
 
   // #endregion
