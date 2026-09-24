@@ -62,4 +62,20 @@ export interface TrapSpaceSuccessionDiagramInt {
   toggleAnimateLayoutChanges(): void;
 
   // #endregion
+
+  // #region --- Visualization Operations ---
+
+  /** Set zoom level of the model visualization
+   *  @param zoomLevel (number) number which signifies how much should be the canvas zoomed.
+   *
+   * */
+  setZoom(zoomLevel: number): void;
+
+  /** Fits the succession diagram to the viewport. */
+  fitTree(): void;
+
+  /** Resets the layout of the succession diagram. */
+  resetTreeLayout(): void;
+
+  // #endregion
 }

@@ -3,6 +3,8 @@ import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecis
 import type { OtherStringsInt } from './OtherStringsInt';
 import OverviewTabOtherStrings from './OverviewTab/OverviewTabOtherStrings';
 import type { OverviewTabOtherStringsInt } from './OverviewTab/OverviewTabOtherStringsInt';
+import UtilitiesMenuOtherStrings from './UtilitiesMenu/UtilitiesMenuOtherStrings';
+import type { UtilitiesMenuOtherStringsInt } from './UtilitiesMenu/UtilitiesMenuOtherStringsInt';
 import VisualOptionsTabOtherStrings from './VisualOptionsTab/VisualOptionsTabOtherStrings';
 import type { VisualOptionsTabOtherStringsInt } from './VisualOptionsTab/VisualOptionsTabOtherStringsInt';
 
@@ -13,6 +15,8 @@ class OtherStrings implements OtherStringsInt {
     new MakeDecisionTabOtherStrings();
   public VisualOptionsTab: VisualOptionsTabOtherStringsInt =
     new VisualOptionsTabOtherStrings();
+
+  public UtilitiesMenu: UtilitiesMenuOtherStringsInt = new UtilitiesMenuOtherStrings()
 }
 
 export default OtherStrings;

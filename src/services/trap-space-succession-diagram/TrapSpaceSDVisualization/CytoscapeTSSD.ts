@@ -2,6 +2,7 @@ import cytoscape, {
   type Core,
   type CytoscapeOptions,
   type EventObject,
+  type NodeSingular,
 } from 'cytoscape';
 import tidytree from 'cytoscape-tidytree';
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
@@ -89,6 +90,9 @@ class CytoscapeTSSD {
       container: this.container,
       boxSelectionEnabled: false,
       selectionType: 'single',
+      wheelSensitivity: 1,
+      maxZoom: 18,
+      minZoom: 0.5,
       style: [
         {
           // Style of the graph nodes
@@ -322,7 +326,20 @@ class CytoscapeTSSD {
     this.cytoscape!.getElementById(nodeId).select();
   }
 
-  public refreshSelection(targetId?: string) {
+  public selectRootNode() {
+    const root = this.cytoscape!.nodes()
+      .filter((node: NodeSingular) => node.incomers('edge').length === 0)
+      .first();
+
+    if (root) {
+      this.selectNode(root.id());
+    }
+  }
+
+  public refreshSelection(targetInfo?: {
+    targetId: string;
+    type: 'node' | 'edge';
+  }) {
     const selected = this.cytoscape!.$(':selected'); // node or edge that are selected
     if (selected.length > 0) {
       selected.unselect();
@@ -336,12 +353,14 @@ class CytoscapeTSSD {
       this.trapSpaceSDStatusStore.getState().changeSelectedItem(null);
     }
 
-    if (targetId === undefined) {
+    if (targetInfo === undefined) {
       if (selected.length > 0) {
         selected.select();
       }
+    } else if (targetInfo.type === 'node') {
+      this.cytoscape!.nodes().$id(targetInfo.targetId).select();
     } else {
-      this.cytoscape!.getElementById(targetId).select();
+      this.cytoscape!.edges().$id(targetInfo.targetId).select();
     }
   }
 
@@ -533,6 +552,21 @@ class CytoscapeTSSD {
     //this._cytoscape.zoom(this._cytoscape.zoom() * 0.8);	// zoom out a bit to have some padding
   }
 
+  public setZoom(zoomLevel: number) {
+    const zoom = Math.min(
+      this.cytoscape!.maxZoom(),
+      Math.max(this.cytoscape!.minZoom(), zoomLevel)
+    );
+
+    this.cytoscape!.zoom({
+      level: zoom,
+      renderedPosition: {
+        x: this.cytoscape!.width() / 2,
+        y: this.cytoscape!.height() / 2,
+      },
+    });
+  }
+
   public applyTreeLayout(
     fit: boolean = false,
     animate: boolean = this.layoutSettings.animate
@@ -720,7 +754,11 @@ class CytoscapeTSSD {
 
   public getVisualizationStatus() {
     return {
-      zoom: this.cytoscape!.zoom(),
+      zoom: {
+        minZoom: this.cytoscape!.minZoom(),
+        maxZoom: this.cytoscape!.maxZoom(),
+        currentZoom: this.cytoscape!.zoom(),
+      },
       pan: this.cytoscape!.pan(),
     };
   }

@@ -6,15 +6,16 @@ import OneButtonSection from '../../global/OneButtonSection/OneButtonSection';
 import ZoomSection from '../../global/ZoomSection/ZoomSection';
 
 const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
-  attractorBifurcationExplorerServ,
-  pageStringProviderServ,
+  trapSpaceSDServ,
+  generalStringsServ,
+  tooltipStringsServ,
 
   helpHoverStore,
-  bifurcationExplorerStatusStore,
+  trapSpaceSDStatusStore,
 }) => {
   const gapInsideSection: string = '15px';
 
-  const visualizationStatus = bifurcationExplorerStatusStore(
+  const visualizationStatus = trapSpaceSDStatusStore(
     (state) => state.visualizationStatus
   );
 
@@ -23,7 +24,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
   return (
     <HorizontalHidableContentReact
       ref={(el) =>
-        bifurcationExplorerStatusStore
+        trapSpaceSDStatusStore
           .getState()
           .setUtilitiesMenuRef(el as ContentVisibleComponent)
       }
@@ -39,7 +40,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
           .getState()
           .setHelpHoverAtMouse(
             e,
-            pageStringProviderServ.Tooltips.utilitiesMenu(),
+            tooltipStringsServ.utilitiesMenuOpenCloseButton(),
             true,
             50,
             -110
@@ -53,7 +54,7 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
       >
         <ZoomSection
           setZoomFunction={(zoomLevel: number) =>
-            attractorBifurcationExplorerServ.setZoom(zoomLevel)
+            trapSpaceSDServ.setZoom(zoomLevel)
           }
           gapInsideSection={gapInsideSection}
           minValue={zoomStatus?.minZoom ?? 0}
@@ -63,31 +64,26 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
 
         <OneButtonSection
           gapInsideSection={gapInsideSection}
-          headerText="Fit Into View"
-          buttonText="Fit"
+          headerText={generalStringsServ.fitIntoViewHeader()}
+          buttonText={generalStringsServ.fitIntoViewButton()}
           headerTextColor="var(--color-primary-text)"
           buttonTextColor="var(--color-secondary-text)"
           buttonColor="var(--color-secondary-buttons)"
           buttonTooltipFunction={(e: MouseEvent) =>
             helpHoverStore
               .getState()
-              .setHelpHoverAtMouse(
-                e,
-                pageStringProviderServ.Tooltips.fit(),
-                true,
-                -50
-              )
+              .setHelpHoverAtMouse(e, tooltipStringsServ.fitButton(), true, -50)
           }
           hideTooltipFunction={() => helpHoverStore.getState().clear()}
           onClick={() => {
-            attractorBifurcationExplorerServ.fitTree();
+            trapSpaceSDServ.fitTree();
           }}
         />
 
         <OneButtonSection
           gapInsideSection={gapInsideSection}
-          headerText="Reset Layout"
-          buttonText="Reset"
+          headerText={generalStringsServ.resetLayoutHeader()}
+          buttonText={generalStringsServ.resetLayoutButton()}
           headerTextColor="var(--color-primary-text)"
           buttonTextColor="var(--color-secondary-text)"
           buttonColor="var(--color-secondary-buttons)"
@@ -96,14 +92,14 @@ const UtilitiesMenu: React.FC<UtilitiesMenuProps> = ({
               .getState()
               .setHelpHoverAtMouse(
                 e,
-                pageStringProviderServ.Tooltips.resetLayout(),
+                tooltipStringsServ.resetLayoutButton(),
                 true,
                 -50
               )
           }
           hideTooltipFunction={() => helpHoverStore.getState().clear()}
           onClick={() => {
-            attractorBifurcationExplorerServ.resetTreeLayout();
+            trapSpaceSDServ.resetTreeLayout();
           }}
         />
       </div>
