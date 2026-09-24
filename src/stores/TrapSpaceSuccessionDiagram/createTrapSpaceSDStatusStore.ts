@@ -32,11 +32,16 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
         get().clearSelectedItemInfo();
         return;
       }
-      set({ selectedItem: selectedItem });
+
+      set({
+        selectedItem: selectedItem,
+        availableDecisions:
+          selectedItem === get().selectedItem ? get().availableDecisions : null,
+      });
     },
 
     clearSelectedItemInfo: () => {
-      set({ selectedItem: null, visualizationStatus: null });
+      set({ selectedItem: null, availableDecisions: null });
     },
   }));
 }
