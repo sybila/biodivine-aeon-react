@@ -40,10 +40,17 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
         return;
       }
 
+      const selectedItemAdditionalInfo =
+        selectedItem === get().selectedItem
+          ? {}
+          : {
+              availableDecisions: null,
+              computedAttractorClasses: null,
+            };
+
       set({
         selectedItem: selectedItem,
-        availableDecisions:
-          selectedItem === get().selectedItem ? get().availableDecisions : null,
+        ...selectedItemAdditionalInfo,
       });
     },
 
