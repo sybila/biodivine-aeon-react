@@ -53,8 +53,6 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
       </section>
     </div>
   );
-
-  return;
 };
 
 export default MakeDecisionTabContent;
