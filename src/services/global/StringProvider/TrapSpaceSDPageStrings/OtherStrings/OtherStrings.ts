@@ -1,3 +1,5 @@
+import AttractorClassesTabOtherStrings from './AttractorClassesTab/AttractorClassesTabOtherStrings';
+import type { AttractorClassesTabOtherStringsInt } from './AttractorClassesTab/AttractorClassesTabOtherStringsInt';
 import MakeDecisionTabOtherStrings from './MakeDecisionTab/MakeDecisionTabOtherStrings';
 import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecisionTabOtherStringsInt';
 import type { OtherStringsInt } from './OtherStringsInt';
@@ -13,10 +15,13 @@ class OtherStrings implements OtherStringsInt {
     new OverviewTabOtherStrings();
   public MakeDecisionTab: MakeDecisionTabOtherStringsInt =
     new MakeDecisionTabOtherStrings();
+  public AttractorClassesTab: AttractorClassesTabOtherStringsInt =
+    new AttractorClassesTabOtherStrings();
   public VisualOptionsTab: VisualOptionsTabOtherStringsInt =
     new VisualOptionsTabOtherStrings();
 
-  public UtilitiesMenu: UtilitiesMenuOtherStringsInt = new UtilitiesMenuOtherStrings()
+  public UtilitiesMenu: UtilitiesMenuOtherStringsInt =
+    new UtilitiesMenuOtherStrings();
 }
 
 export default OtherStrings;
