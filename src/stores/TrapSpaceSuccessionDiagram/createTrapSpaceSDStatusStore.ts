@@ -22,6 +22,9 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
         },
       })),
 
+    utilitiesMenuRef: null,
+    setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
+
     menuTabButtonsRef: {},
     setMenuTabButtonRef: (tab, el) =>
       set((state) => ({
