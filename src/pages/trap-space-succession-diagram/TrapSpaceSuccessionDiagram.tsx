@@ -10,6 +10,7 @@ import type {
 } from '../../types/types';
 import type { TrapSpaceSuccessionDiagramProps } from './TrapSpaceSuccessionDiagramProps';
 
+// TODO = change, might be confusing, that its the same icon as attr vis
 import AttractorIcon from '../../assets/icons/attractor-visualizer.svg';
 import EyeIcon from '../../assets/icons/eye.svg';
 import HelpIcon from '../../assets/icons/help.svg';
