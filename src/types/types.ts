@@ -46,6 +46,21 @@ export type ModelEditorItem = ModelEditorVariable | ModelEditorRegulation;
 
 // #endregion
 
+// #region --- Attractor Class ---
+
+export type AttractorClassArray = {
+  numberOfInterpretations: number;
+  classBehavior: Array<AttractorBehavior>;
+};
+
+/** Type for Attractor class, classBehavior should be json of type Array<AttractorBehavior>. */
+export type AttractorClassJson = {
+  numberOfInterpretations: number;
+  classBehavior: string;
+};
+
+// #endregion
+
 // #region --- Update Function ---
 
 export type UpdateFunctionMetadata = {
@@ -477,6 +492,8 @@ export type VisualizationEdgeDataTSSD = {
   type: 'edge';
   motifData: StableMotifInfo;
 };
+
+export type ItemTypesTSSD = "node" | "edge"
 
 export type NodeTypeTSSD = 'decision' | 'leaf';
 

@@ -3,6 +3,7 @@ import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type {
   DecisionsTSSD,
   DecisionTSSD,
+  ItemTypesTSSD,
   NodeDataTSSDWithMotifs,
   VisualizationStatus,
 } from '../../../types/types';
@@ -192,6 +193,64 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       }
     );
   }
+
+  // #endregion
+
+  // #region --- Attractor C;asses --
+
+  public getAttractorClasses(itemType: ItemTypesTSSD, itemId: number) {
+    // TODO - change into computation manager call
+    this.trapSpaceSDStatusStore.getState().setComputedAttractorClasses([
+      {
+        numberOfInterpretations: 42,
+        classBehavior: ['Disorder'],
+      },
+      {
+        numberOfInterpretations: 15,
+        classBehavior: ['Stability'],
+      },
+      {
+        numberOfInterpretations: 89,
+        classBehavior: ['Oscillation'],
+      },
+      {
+        numberOfInterpretations: 23,
+        classBehavior: ['Stability', 'Stability'],
+      },
+      {
+        numberOfInterpretations: 67,
+        classBehavior: ['Stability', 'Oscillation'],
+      },
+      {
+        numberOfInterpretations: 11,
+        classBehavior: ['Stability', 'Disorder'],
+      },
+      {
+        numberOfInterpretations: 45,
+        classBehavior: ['Oscillation', 'Disorder'],
+      },
+      {
+        numberOfInterpretations: 32,
+        classBehavior: ['Oscillation', 'Oscillation'],
+      },
+      {
+        numberOfInterpretations: 98,
+        classBehavior: ['Disorder', 'Disorder'],
+      },
+      {
+        numberOfInterpretations: 56,
+        classBehavior: ['Stability', 'Stability', 'Oscillation'],
+      },
+      {
+        numberOfInterpretations: 19,
+        classBehavior: ['Stability', 'Stability', 'Disorder'],
+      },
+    ]);
+  }
+
+  public openAttractorVisualization(classBehavior: string) {}
+
+  public openWitness(classBehavior: string) {}
 
   // #endregion
 

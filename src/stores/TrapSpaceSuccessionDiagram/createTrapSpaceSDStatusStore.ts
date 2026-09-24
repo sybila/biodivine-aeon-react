@@ -8,6 +8,7 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
     activeMenuTab: null,
     availableDecisions: null,
     selectedItem: null,
+    computedAttractorClasses: null,
 
     utilitiesMenuRef: null,
     setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
@@ -27,6 +28,9 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
     setAvailableDecisions: (decisions) => {
       set({ availableDecisions: decisions });
     },
+    setComputedAttractorClasses: (attractorClasses) => {
+      set({ computedAttractorClasses: attractorClasses });
+    },
     setActiveMenuTab: (tab) => {
       set({ activeMenuTab: tab });
     },
@@ -44,7 +48,11 @@ function createTrapSpaceSDStatusStore(): ZustandStore<TrapSpaceSDStatusState> {
     },
 
     clearSelectedItemInfo: () => {
-      set({ selectedItem: null, availableDecisions: null });
+      set({
+        selectedItem: null,
+        availableDecisions: null,
+        computedAttractorClasses: null,
+      });
     },
   }));
 }

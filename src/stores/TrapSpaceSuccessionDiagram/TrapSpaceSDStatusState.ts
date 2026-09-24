@@ -1,4 +1,5 @@
 import type {
+  AttractorClassArray,
   ContentVisibleComponent,
   DecisionsTSSD,
   MenuTabButton,
@@ -23,6 +24,8 @@ export type TrapSpaceSDStatusState = {
   selectedItem: SelectedItemTSSD | null;
   /** Decisions available for the selected node */
   availableDecisions: DecisionsTSSD | null;
+  /** Attractor Behavior Classes computed for the selected item. */
+  computedAttractorClasses: Array<AttractorClassArray> | null;
 
   /** Reference to the menu tab buttons. */
   menuTabButtonsRef: Partial<
@@ -45,6 +48,7 @@ export type TrapSpaceSDStatusState = {
 
   setVisualizationStatus: (status: VisualizationStatus) => void;
   setAvailableDecisions: (decisions: DecisionsTSSD) => void;
+  setComputedAttractorClasses: (attractorClasses: Array<AttractorClassArray>) => void;
   setActiveMenuTab: (tab: MenuTabTypeTrapSpaceSD) => void;
   changeSelectedItem: (node: SelectedItemTSSD | null) => void;
   /** Clears the information about the selected item. (sets selectedItem to null) */

@@ -18,6 +18,7 @@ import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
 
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
+import AttractorClassesTab from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/AttractorClassesTab/AttractorClassesTab';
 import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/OverviewTabContent/OverviewTabContent';
 import VisualOptionsTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/VisualOptionsTabContent/VisualOptionsTabContent';
@@ -65,7 +66,19 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
           />
         );
       case 'Attractor Classes':
-        return null;
+        return (
+          <AttractorClassesTab
+            trapSpaceSDServ={trapSpaceSDServ}
+            generalStringsServ={
+              pageStringProviderServ.OtherStrings.AttractorClassesTab
+            }
+            tooltipStringsServ={
+              pageStringProviderServ.Tooltips.AttractorClassesTab
+            }
+            helpHoverStore={helpHoverStore}
+            trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+          />
+        );
       case 'Visual Options':
         return (
           <VisualOptionsTabContent
