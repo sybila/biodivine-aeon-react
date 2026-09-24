@@ -587,7 +587,6 @@ class CytoscapeTSSD {
     return {
       animate: this.layoutSettings.animate ?? false,
       snapLayers: this.layoutSettings.layered ?? false,
-      positiveOnLeft: this.layoutSettings.positiveOnLeft ?? false,
     };
   }
 
