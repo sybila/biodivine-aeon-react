@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import SectionWithDotHeader from '../../../../global/SectionWithDotHeader/SectionWithDotHeader';
-import SeparatorLine from '../../../../global/SeparatorLine/SeparatorLine';
-import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
-import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
-import StatEntryReact from '../../../../lit-wrappers/StatEntryReact';
-import TextButtonReact from '../../../../lit-wrappers/TextButtonReact';
+import SectionWithDotHeader from '../../../../../global/SectionWithDotHeader/SectionWithDotHeader';
+import SeparatorLine from '../../../../../global/SeparatorLine/SeparatorLine';
+import ColoredWordsReact from '../../../../../lit-wrappers/ColoredWordsReact';
+import ExtendableContentReact from '../../../../../lit-wrappers/ExtendableContentReact';
+import StatEntryReact from '../../../../../lit-wrappers/StatEntryReact';
+import TextButtonReact from '../../../../../lit-wrappers/TextButtonReact';
 import type { StableMotifRowProps } from './StableMotifRowProps';
 
 type Word = {

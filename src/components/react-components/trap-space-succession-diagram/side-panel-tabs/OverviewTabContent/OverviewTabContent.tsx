@@ -1,4 +1,4 @@
-import NoDataText from '../../global/NoDataText/NoDataText';
+import NoDataText from '../../../global/NoDataText/NoDataText';
 import EdgeOverview from './EdgeOverview/EdgeOverview';
 import NodeOverview from './NodeOverview/NodeOverview';
 import type { OverviewTabContentProps } from './OverviewTabContentProp';
