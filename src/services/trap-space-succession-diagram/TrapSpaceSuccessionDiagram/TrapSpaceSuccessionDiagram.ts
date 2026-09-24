@@ -161,6 +161,22 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   }
 
   // #endregion
+
+  // #region --- Visual Options ---
+
+  public getSwitchableOptionsState() {
+    return this.visualization.getSwitchLayoutOptions();
+  }
+
+  public toggleSnapNodesToLayers() {
+    this.visualization.toggleSnapNodesToLayers();
+  }
+
+  public toggleAnimateLayoutChanges() {
+    this.visualization.toggleAnimateLayoutChanges();
+  }
+
+  // #endregion
 }
 
 export default TrapSpaceSuccessionDiagram;

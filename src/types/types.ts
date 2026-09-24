@@ -513,6 +513,11 @@ export type VisualOptionsSwitchableABE = {
   positiveOnLeft: boolean;
 };
 
+export type VisualOptionsSwitchableTSSD = {
+  animate: boolean;
+  snapLayers: boolean;
+};
+
 // #endregion
 
 // #region --- Computation ---

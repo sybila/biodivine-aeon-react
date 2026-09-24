@@ -1,4 +1,8 @@
-import type { DecisionTSSD, NodeDataTSSDWithMotifs } from '../../../types/types';
+import type {
+  DecisionTSSD,
+  NodeDataTSSDWithMotifs,
+  VisualOptionsSwitchableTSSD,
+} from '../../../types/types';
 
 /** Interface which defines service responsible for managing Trap Space Succession Diagram page.  */
 export interface TrapSpaceSuccessionDiagramInt {
@@ -14,7 +18,7 @@ export interface TrapSpaceSuccessionDiagramInt {
     nodeList: NodeDataTSSDWithMotifs[],
     fit: boolean,
     animate: boolean,
-    clearCytoscape: boolean
+    clearVisualization: boolean
   ) => void;
 
   // #endregion
@@ -38,9 +42,24 @@ export interface TrapSpaceSuccessionDiagramInt {
   getDecisions(nodeId: number): void;
 
   /** Extends succession diagram by adding new node corresponding to the selected decision. */
-  makeDecision(    sourceNodeId: number,
-      selectedDecision: DecisionTSSD,
-      selectedNodeId: number): void;
+  makeDecision(
+    sourceNodeId: number,
+    selectedDecision: DecisionTSSD,
+    selectedNodeId: number
+  ): void;
+
+  // #endregion
+
+  // #region --- Visual Options ---
+
+  /** Gets the current state of the switchable options in the visual options tab */
+  getSwitchableOptionsState(): VisualOptionsSwitchableTSSD;
+
+  /** Sets the nodes to snap to their respective layers. */
+  toggleSnapNodesToLayers(): void;
+
+  /** Animates layout changes in the visualization instance. */
+  toggleAnimateLayoutChanges(): void;
 
   // #endregion
 }
