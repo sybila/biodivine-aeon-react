@@ -18,9 +18,9 @@ import DecisionIcon from '../../assets/icons/make_decision.svg';
 import StateIcon from '../../assets/icons/state_overview.svg';
 
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
-import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/MakeDecisionTabContent/MakeDecisionTabContent';
-import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/OverviewTabContent/OverviewTabContent';
-import VisualOptionsTabContent from '../../components/react-components/trap-space-succession-diagram/VisualOptionsTabContent/VisualOptionsTabContent';
+import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/MakeDecisionTabContent/MakeDecisionTabContent';
+import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/OverviewTabContent/OverviewTabContent';
+import VisualOptionsTabContent from '../../components/react-components/trap-space-succession-diagram/side-panel-tabs/VisualOptionsTabContent/VisualOptionsTabContent';
 
 const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
   trapSpaceSDServ,

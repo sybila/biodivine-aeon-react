@@ -5,9 +5,7 @@ import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverSt
 import type { TrapSpaceSDStatusState } from '../../../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
-export type StableMotifsTableProps = {
-  selectedNodeId: number;
-
+export type MakeDecisionTabContentProps = {
   trapSpaceSDServ: TrapSpaceSuccessionDiagramInt;
   generalStringsServ: MakeDecisionTabOtherStringsInt;
   tooltipStringsServ: MakeDecisionTabTooltipsInt;
