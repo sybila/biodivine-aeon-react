@@ -20,6 +20,7 @@ import StateIcon from '../../assets/icons/state_overview.svg';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import MakeDecisionTabContent from '../../components/react-components/trap-space-succession-diagram/MakeDecisionTabContent/MakeDecisionTabContent';
 import OverviewTabContent from '../../components/react-components/trap-space-succession-diagram/OverviewTabContent/OverviewTabContent';
+import VisualOptionsTabContent from '../../components/react-components/trap-space-succession-diagram/VisualOptionsTabContent/VisualOptionsTabContent';
 
 const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
   trapSpaceSDServ,
@@ -65,7 +66,18 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
       case 'Attractor Classes':
         return null;
       case 'Visual Options':
-        return null;
+        return (
+          <VisualOptionsTabContent
+            trapSpaceSDServ={trapSpaceSDServ}
+            generalStringsServ={
+              pageStringProviderServ.OtherStrings.VisualOptionsTab
+            }
+            tooltipStringsServ={
+              pageStringProviderServ.Tooltips.VisualOptionsTab
+            }
+            helpHoverStore={helpHoverStore}
+          />
+        );
       case 'Help':
         return <HelpTabContent text={pageStringProviderServ.helpText()} />;
       default:
