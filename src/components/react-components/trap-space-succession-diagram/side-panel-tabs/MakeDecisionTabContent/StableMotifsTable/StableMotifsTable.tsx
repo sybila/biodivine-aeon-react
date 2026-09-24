@@ -2,7 +2,7 @@ import { useState } from 'react';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 import type { StableMotifsTableProps } from './StableMotifsTableProps';
 
-import PlusIcon from '../../../../../assets/icons/add_box.svg';
+import PlusIcon from '../../../../../../assets/icons/add_box.svg';
 import StableMotifRow from './StableMotifRow/StableMotifRow';
 
 const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
