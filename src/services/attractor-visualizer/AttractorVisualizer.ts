@@ -137,10 +137,12 @@ class AttractorVisualizer implements AttractorVisualizerInt {
         .getState()
         .addTab('/attractor-visualizer', 'Attractor Visualizer', () => {
           this.attractorData = result;
-          this.messageServ.showFromResult(
-            this.reloadVisualizer(),
-            'Failed to open attractor visualization tab'
-          );
+          if (this.container) {
+            this.messageServ.showFromResult(
+              this.reloadVisualizer(),
+              'Failed to open attractor visualization tab'
+            );
+          }
           this.clear();
         });
 
@@ -148,7 +150,10 @@ class AttractorVisualizer implements AttractorVisualizerInt {
     }
 
     this.attractorData = result;
-    this.reloadVisualizer();
+
+    if (this.container) {
+      this.reloadVisualizer();
+    }
   }
 
   /** Inserts this.loadedResults into the visualizer.
