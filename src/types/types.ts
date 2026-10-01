@@ -539,7 +539,7 @@ export type VisualOptionsSwitchableTSSD = {
 
 // #region --- Computation ---
 
-export type ComputationModes = 'Attractor Analysis' | 'Control';
+export type ComputationModes = 'Attractor Analysis' | 'Control' | 'Trap Space';
 
 export type TimestampResponse = {
   timestamp: number | undefined;

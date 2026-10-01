@@ -68,7 +68,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       return;
     }
 
-    this.computeEngine.getTrapSpaceSuccessionDiagram(
+    this.computeEngine.TrapSpaceSuccessionDiagram.getTrapSpaceSuccessionDiagram(
       model,
       (
         error: string | undefined,
@@ -103,8 +103,10 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     setDecisionsFunction: (decisions: DecisionsTSSD) => void
   ): void {
     this.loadingServ.startLoading();
-    this.computeEngine.getDecisionsTSSD(nodeId, (error, decisions) =>
-      this.getDecisionsTSSDCallback(error, decisions, setDecisionsFunction)
+    this.computeEngine.TrapSpaceSuccessionDiagram.getDecisionsTSSD(
+      nodeId,
+      (error, decisions) =>
+        this.getDecisionsTSSDCallback(error, decisions, setDecisionsFunction)
     );
   }
 
@@ -131,13 +133,16 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     insertSuccessionDiagramFunction: (node: NodeDataTSSD) => void
   ): void {
     this.loadingServ.startLoading();
-    this.computeEngine.makeDecisionTSSD(nodeId, decisionId, (error, node) =>
-      this.makeDecisionTSSDCallback(
-        error,
-        nodeId,
-        node,
-        insertSuccessionDiagramFunction
-      )
+    this.computeEngine.TrapSpaceSuccessionDiagram.makeDecisionTSSD(
+      nodeId,
+      decisionId,
+      (error, node) =>
+        this.makeDecisionTSSDCallback(
+          error,
+          nodeId,
+          node,
+          insertSuccessionDiagramFunction
+        )
     );
   }
 
@@ -173,14 +178,17 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     ) => void
   ): void {
     this.loadingServ.startLoading();
-    this.computeEngine.deleteDecisionTSSD(node, (error, node, removed) => {
-      this.deleteDecisionTSSDCallback(
-        error,
-        node,
-        removed,
-        removeNodesFromVisualizationFunction
-      );
-    });
+    this.computeEngine.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
+      node,
+      (error, node, removed) => {
+        this.deleteDecisionTSSDCallback(
+          error,
+          node,
+          removed,
+          removeNodesFromVisualizationFunction
+        );
+      }
+    );
   }
 
   // #endregion
