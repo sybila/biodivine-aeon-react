@@ -22,6 +22,7 @@ import type {
 } from '../../../../types/types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { ComputeEngineInt } from '../ComputeEngineInt';
+import type { TrapSpaceSuccessionDiagramInt } from '../module-interfaces/TrapSpaceSuccessionDiagramInt';
 import type {
   AttractorResponse,
   ComputationInfo,
@@ -29,6 +30,7 @@ import type {
   DeleteBifDecisionResponse,
   ValidateUpdateFunctionResponse,
 } from './ComputeEngineTypes';
+import TrapSpaceSuccessionDiagram from './TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagram';
 
 // Check if we already have a Tab ID for this specific tab
 let TAB_ID = sessionStorage.getItem('X-Tab-ID');
@@ -78,7 +80,21 @@ class ComputeEngine implements ComputeEngineInt {
     this.setResults = setResults;
 
     this.loadingServ = loadingServ;
+
+    this.TrapSpaceSuccessionDiagram = new TrapSpaceSuccessionDiagram(
+      this.backendRequest.bind(this),
+      this.startComputationCallback.bind(this),
+      (isWaiting: boolean) => {
+        this.waitingForResults = isWaiting;
+      }
+    );
   }
+
+  // #endregion
+
+  // #region --- Modules ---
+
+  public TrapSpaceSuccessionDiagram: TrapSpaceSuccessionDiagramInt;
 
   // #endregion
 

@@ -12,6 +12,7 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
     results: {
       'Attractor Analysis': undefined,
       Control: undefined,
+      'Trap Space': undefined,
     },
     lastAddedResults: undefined,
     selectedResults: undefined,
@@ -107,6 +108,7 @@ function createResultsStatusStore(): ZustandStore<ResultsStatus> {
         results: {
           'Attractor Analysis': undefined,
           Control: undefined,
+          'Trap Space': undefined,
         },
         lastAddedResults: undefined,
       })),
