@@ -11,6 +11,18 @@ jobs:
         steps:
         - name: Checkout code
           uses: actions/checkout@v7
+        # Only strict vX.X.X tags (e.g. v0.6.2, no -alpha/-rc suffixes)
+        # should update the landing page.
+        - name: Detect stable tag
+          id: stable-tag
+          env:
+            TAG: ${{ github.ref_name }}
+          run: |
+            if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "is_stable=true" >> "$GITHUB_OUTPUT"
+            else
+                echo "is_stable=false" >> "$GITHUB_OUTPUT"
+            fi
         - name: Set up Node.js
           uses: actions/setup-node@v7
           with:
@@ -56,3 +68,13 @@ jobs:
                 rm -rf '$DEPLOY_DIR/${TAG}'
                 unzip -o /tmp/${TAG}.zip -d '$DEPLOY_DIR'
                 rm /tmp/${TAG}.zip"
+        # For stable vX.X.X releases, also replace the public landing page
+        # with the file bundled in this repo (the landing page location
+        # is versioned, so it is safe to overwrite without backup).
+        - name: Update landing page
+          if: steps.stable-tag.outputs.is_stable == 'true'
+          env:
+            TS_HOST: sybila-infra
+            HOME_PAGE_TARGET: /root/sybila-infra/stratus/infra/biodivine/aeon/index.html
+          run: |
+            scp aeon-home.html root@"$TS_HOST:$HOME_PAGE_TARGET"
