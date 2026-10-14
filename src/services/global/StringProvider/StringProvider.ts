@@ -1,5 +1,7 @@
 import AttractorBifurcationExplorerPageStrings from './AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStrings';
 import type { AttractorBifurcationExplorerPageStringsInt } from './AttractorBifurcationExplorerPageStrings/AttractorBifurcationExplorerPageStringsInt';
+import AttractorVisualizerPageStrings from './AttractorVisualizerPageStrings/AttractorVisualizerPageStrings';
+import type { AttractorVisualizerPageStringsInt } from './AttractorVisualizerPageStrings/AttractorVisualizerPageStringsInt';
 import ControlPerturbationTablePageStrings from './ControlPerturbationTablePageStrings/ControlPerturbationTablePageStrings';
 import type { ControlPerturbationTablePageStringsInt } from './ControlPerturbationTablePageStrings/ControlPerturbationTablePageStringsInt';
 import GlobalStrings from './GlobalStrings/GlobalStrings';
@@ -11,7 +13,7 @@ import type { StringProviderInt } from './StringProviderInt';
 class StringProvider implements StringProviderInt {
   public ModelEditorPage: ModelEditorPageStringsInt;
   public AttractorBifurcationExplorerPage: AttractorBifurcationExplorerPageStringsInt;
-  public AttractorVisualizerPage: AttractorBifurcationExplorerPageStringsInt;
+  public AttractorVisualizerPage: AttractorVisualizerPageStringsInt;
   public ControlPerturbationTablePage: ControlPerturbationTablePageStringsInt;
   public Global: GlobalStringsInt;
 
@@ -19,8 +21,7 @@ class StringProvider implements StringProviderInt {
     this.ModelEditorPage = new ModelEditorPageStrings();
     this.AttractorBifurcationExplorerPage =
       new AttractorBifurcationExplorerPageStrings();
-    this.AttractorVisualizerPage =
-      new AttractorBifurcationExplorerPageStrings();
+    this.AttractorVisualizerPage = new AttractorVisualizerPageStrings();
     this.ControlPerturbationTablePage =
       new ControlPerturbationTablePageStrings();
     this.Global = new GlobalStrings();
