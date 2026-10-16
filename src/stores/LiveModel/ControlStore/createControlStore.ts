@@ -466,7 +466,7 @@ function createControlStore(): ZustandStore<ControlStatus> {
     getVariablePhenotype: (id, phenotypeId) => {
       let phenotypeStatus: PhenotypeStatus | undefined;
 
-      if (!phenotypeId) {
+      if (phenotypeId == undefined || phenotypeId == get().currentlyEditedPhenotype.id) {
         phenotypeStatus = get().currentlyEditedPhenotype.variables[id];
       } else {
         const phenotype = get().phenotypes[phenotypeId];
