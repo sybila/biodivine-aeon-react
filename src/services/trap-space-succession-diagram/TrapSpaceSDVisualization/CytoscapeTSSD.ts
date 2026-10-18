@@ -7,8 +7,12 @@ import cytoscape, {
 import tidytree from 'cytoscape-tidytree';
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { err, ok, type Result } from '../../../types/result';
 import type {
-  NodeDataTSSDWithMotifs,
+  NodeDataTSSD,
+  NodesWithParentInfoTSSD,
+  NodeTypeTSSD,
+  NodeWithType,
   StableMotifInfo,
   VisualizationEdgeDataTSSD,
   VisualizationNodeDataTSSD,
@@ -16,11 +20,12 @@ import type {
 } from '../../../types/types';
 import type { MessageInt } from '../../global/Message/MessageInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
+import type { TrapSpaceSDVisualizationInt } from './TrapSpaceSDVisualizationInt';
 
 const remove_svg =
   '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 6h14v14H6z"/><path fill="#d05d5d" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
 
-class CytoscapeTSSD {
+class CytoscapeTSSD implements TrapSpaceSDVisualizationInt {
   // #region --- Properties + Constructor ---
 
   private cytoscape: Core | undefined;
@@ -42,12 +47,17 @@ class CytoscapeTSSD {
 
   private container: HTMLElement | null = null;
 
+  private rootNodeId: string | null = null;
+
   private messageServ: MessageInt;
   private dataFormatersServ: DataFormatersInt;
 
   private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
-  private removeNodeFunction: (node: NodeDataTSSDWithMotifs) => void;
+  private removeNodeFunction: (
+    removedNodeId: number,
+    removedNodeType: NodeTypeTSSD
+  ) => void;
 
   constructor(
     messageServ: MessageInt,
@@ -60,7 +70,7 @@ class CytoscapeTSSD {
 
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
 
-    this.removeNodeFunction = (_: NodeDataTSSDWithMotifs) => {
+    this.removeNodeFunction = (_: number, __: NodeTypeTSSD) => {
       console.warn('CytoscapeABE: RemoveNodeFunction not set');
     };
   }
@@ -122,6 +132,29 @@ class CytoscapeTSSD {
           },
         },
         {
+          selector: 'node[type = "stable-motif"]',
+          style: {
+            'background-color': '#EFEFEF',
+            'border-color': '#616161',
+            'border-width': '3px',
+            'border-style': 'solid',
+
+            shape: 'hexagon',
+
+            width: 'label',
+            height: 'label',
+            padding: '12',
+
+            label: 'data(label)',
+            'text-valign': 'center',
+            'font-family': 'FiraMono',
+            'font-size': '12pt',
+            color: '#212121',
+
+            opacity: (ele: any) => ele.data('opacity'),
+          },
+        },
+        {
           selector: '.remove-button',
           style: {
             'text-valign': 'top',
@@ -156,7 +189,7 @@ class CytoscapeTSSD {
           },
         },
         {
-          selector: 'node[type = "decision"]',
+          selector: 'node[type = "trap-space-decision"]',
           style: {
             'background-color': '#EFEFEF',
             'border-color': '#616161',
@@ -173,22 +206,10 @@ class CytoscapeTSSD {
         {
           selector: 'edge',
           style: {
-            // basic appearance
-            label: 'data(label)',
             'curve-style': 'taxi',
             'taxi-direction': 'vertical',
             'target-arrow-shape': 'triangle',
             'taxi-turn': '30px',
-
-            // ---- label‑readability enhancements ----
-            'font-size': '13px',
-            'font-family': 'Helvetica,Arial,sans-serif',
-            color: '#222', // text colour
-            'text-outline-color': '#fff', // outline (helps on dark edges)
-            'text-outline-width': 2,
-            'text-rotation': 'autorotate',
-            'text-margin-y': -8,
-            'z-index': 10,
           },
         },
 
@@ -203,8 +224,9 @@ class CytoscapeTSSD {
 
   // #region --- External Function Setters ---
 
-  /** Setter for function which removes node from the tree visualization. */
-  setRemoveNodeFunction(func: (node: NodeDataTSSDWithMotifs) => void) {
+  public setRemoveNodeFunction(
+    func: (removedNodeId: number, removedNodeType: NodeTypeTSSD) => void
+  ) {
     if (func != undefined) {
       this.removeNodeFunction = func;
     }
@@ -212,27 +234,13 @@ class CytoscapeTSSD {
 
   // #endregion
 
-  // #region --- Cardinality ---
-
-  public getTotalCardinality() {
-    return this.totalCardinality ?? -1;
-  }
-
-  // #endregion
-
   // #region --- Node/Edge Selection ---
 
-  private selectedDecisionNode(nodeId: string, e: EventObject) {
-    const nodeEdges = this.cytoscape?.edges('[source = "' + nodeId + '"]');
-
-    if (nodeEdges && nodeEdges.length <= 0) {
-      return;
-    }
-
+  private addRemoveButton(e: EventObject) {
     const currentPosition = e.target.position();
 
     // Show close button
-    const closeButton = {
+    const removeButton = {
       classes: ['remove-button'],
       grabbable: false,
       data: {
@@ -245,7 +253,7 @@ class CytoscapeTSSD {
         y: currentPosition.y - e.target.height() / 2 - 12,
       },
     };
-    const buttonElement = this.cytoscape!.add(closeButton);
+    const buttonElement = this.cytoscape!.add(removeButton);
     buttonElement.on('mouseover', () => {
       buttonElement.addClass('hover');
     });
@@ -281,31 +289,38 @@ class CytoscapeTSSD {
       if (removeNode === null) return;
 
       // This is a remove button for a specifc tree node.
-      this.removeNodeFunction(removeNode.treeData);
+      this.removeNodeFunction(removeNode.treeData.id, removeNode.type);
       return;
     }
 
     if (selectedElement.type === 'edge') {
-      const stableMotif: StableMotifInfo = selectedElement.motifData;
-
-      this.trapSpaceSDStatusStore
-        .getState()
-        .changeSelectedItem({ type: 'edge', data: stableMotif });
-
       return;
     }
 
-    const nodeDataTSSD: NodeDataTSSDWithMotifs = {
+    const nodeData = {
       ...selectedElement.treeData,
       id: Number(selectedElement.treeData.id),
     };
 
-    this.trapSpaceSDStatusStore
-      .getState()
-      .changeSelectedItem({ type: 'node', data: nodeDataTSSD });
+    if (selectedElement.type == 'stable-motif') {
+      this.trapSpaceSDStatusStore.getState().changeSelectedItem({
+        type: 'stable-motif',
+        nodeInfo: nodeData as StableMotifInfo,
+      });
+    } else {
+      this.trapSpaceSDStatusStore.getState().changeSelectedItem({
+        type: selectedElement.type,
+        nodeInfo: nodeData as NodeDataTSSD,
+      });
+    }
 
-    if (nodeDataTSSD.type === 'decision')
-      this.selectedDecisionNode(selectedElement.id, e);
+    if (this.rootNodeId == null) {
+      this.getRootNode();
+    }
+
+    if (this.rootNodeId != selectedElement.id) {
+      this.addRemoveButton(e);
+    }
   }
 
   /** Function to handle node unselection */
@@ -327,20 +342,16 @@ class CytoscapeTSSD {
   }
 
   public selectRootNode() {
-    const root = this.cytoscape!.nodes()
-      .filter((node: NodeSingular) => node.incomers('edge').length === 0)
-      .first();
+    const root = this.getRootNode();
 
     if (root) {
       this.selectNode(root.id());
     }
   }
 
-  public refreshSelection(targetInfo?: {
-    targetId: string;
-    type: 'node' | 'edge';
-  }) {
-    const selected = this.cytoscape!.$(':selected'); // node or edge that are selected
+  public refreshSelection(targetInfo?: NodeWithType) {
+    const selected = this.cytoscape!.nodes(':selected');
+
     if (selected.length > 0) {
       selected.unselect();
     }
@@ -357,16 +368,30 @@ class CytoscapeTSSD {
       if (selected.length > 0) {
         selected.select();
       }
-    } else if (targetInfo.type === 'node') {
-      this.cytoscape!.nodes().$id(targetInfo.targetId).select();
     } else {
-      this.cytoscape!.edges().$id(targetInfo.targetId).select();
+      this.getNode(targetInfo.nodeInfo.id, targetInfo.type).select();
     }
   }
 
   // #endregion
 
   // #region --- Node Getters ---
+
+  private getNode(nodeId: number, nodeType: NodeTypeTSSD) {
+    return this.cytoscape!.nodes(`[id="${nodeId}"][type="${nodeType}"]`);
+  }
+
+  private getRootNode() {
+    const rootNode = this.cytoscape!.nodes()
+      .filter((node: NodeSingular) => node.incomers('edge').length === 0)
+      .first();
+
+    if (rootNode != undefined) {
+      this.rootNodeId = rootNode.data('id');
+    }
+
+    return rootNode;
+  }
 
   public getParentNode(targetId: string) {
     let parentEdge = this.cytoscape!.edges("edge[target='" + targetId + "']");
@@ -376,12 +401,37 @@ class CytoscapeTSSD {
     return parentEdge.data().source;
   }
 
-  public getChildNode(sourceId: string) {
-    let childEdge = this.cytoscape!.edges("edge[source='" + sourceId + "']");
-    if (childEdge.length == 0) {
-      return undefined;
+  public getChildNodes(
+    parentId: number,
+    parentType: NodeTypeTSSD
+  ): Result<NodesWithParentInfoTSSD> {
+    const parentNode = this.getNode(parentId, parentType);
+
+    if (parentNode.empty()) {
+      return err(
+        `Unable to retrieve children: no ${parentType} node found with id "${parentId}".`
+      );
     }
-    return childEdge.data().target;
+
+    const outgoingEdges = parentNode.outgoers('edge');
+
+    const childNodes = outgoingEdges.targets();
+
+    if (parentType === 'trap-space-decision' || parentType === 'leaf') {
+      const payload = childNodes.map((n) => n.data() as StableMotifInfo);
+      return ok({
+        parentId,
+        parentType: 'trap-space',
+        nodes: payload,
+      });
+    }
+
+    const payload = childNodes.map((n) => n.data() as NodeDataTSSD);
+    return ok({
+      parentId,
+      parentType: 'stable-motif',
+      nodes: payload,
+    });
   }
 
   public getSiblingNode(targetId: string) {
@@ -397,138 +447,109 @@ class CytoscapeTSSD {
     return childEdge.data().target;
   }
 
-  public getSelectedNodeId() {
-    const node = this.cytoscape!.nodes(':selected');
-    if (node.length == 0) return undefined;
-    return node.data().id;
-  }
-
-  public getSelectedNodeTreeData() {
-    const node = this.cytoscape!.nodes(':selected');
-    if (node.length == 0) return undefined;
-    return node.data().treeData;
-  }
-
-  public getNodeType(nodeId: string) {
-    return this.cytoscape!.getElementById(nodeId).data().type;
-  }
-
   // #endregion
 
   // #region --- Ensure/Remove Nodes/Edges ---
 
-  private applyTreeData(
-    nodeData: NodeDataTSSDWithMotifs
+  private constructVisualizationNodeData(
+    node: NodeWithType
   ): VisualizationNodeDataTSSD {
-    if (nodeData.id == 0) {
-      this.totalCardinality = nodeData.cardinality;
+    if (node.type != 'stable-motif' && node.nodeInfo.id == 0) {
+      this.totalCardinality = node.nodeInfo.numberOfInterpretations;
     }
 
-    return {
-      id: nodeData.id.toString(),
-      type: nodeData.type,
+    const data: Partial<VisualizationNodeDataTSSD> = {
+      id: node.nodeInfo.id.toString(),
       label: this.dataFormatersServ.convertRecordOfVariableStatesToString(
-        nodeData.variableValues
+        node.nodeInfo.variableValues
       ),
-      treeData: nodeData,
       opacity: this.showMass
-        ? this._computeMassOpacity(nodeData.cardinality)
+        ? this._computeMassOpacity(node.nodeInfo.numberOfInterpretations)
         : 1.0,
     };
-  }
 
-  public ensureNode(nodeData: NodeDataTSSDWithMotifs) {
-    const node = this.cytoscape!.getElementById(nodeData.id.toString());
-
-    if (node !== undefined && node.length > 0) {
-      this.cytoscape!.style().update();
-      return node;
+    if (node.type == 'stable-motif') {
+      data.type = 'stable-motif';
+      data.treeData = node.nodeInfo as StableMotifInfo;
+    } else {
+      data.type = node.type;
+      data.treeData = node.nodeInfo as NodeDataTSSD;
     }
 
-    const data = this.applyTreeData(nodeData);
+    return data as VisualizationNodeDataTSSD;
+  }
 
-    return this.cytoscape!.add({
+  public ensureNode(node: NodeWithType) {
+    const existingNode = this.getNode(node.nodeInfo.id, node.type);
+
+    if (existingNode !== undefined && existingNode.length > 0) {
+      this.cytoscape!.style().update();
+      return ok(false);
+    }
+    const data = this.constructVisualizationNodeData(node);
+
+    if (this.cytoscape!.nodes().empty()) {
+      this.rootNodeId = node.nodeInfo.id.toString();
+    }
+
+    this.cytoscape!.add({
       data: data,
-      grabbable: nodeData.id != 0,
+      grabbable: node.type == 'stable-motif' || node.nodeInfo.id != 0,
       position: { x: 0.0, y: 0.0 },
     });
+
+    return ok(true);
   }
 
-  public ensureEdge(
-    sourceId: number | undefined,
-    targetId: number | undefined,
-    stableMotifData: StableMotifInfo
-  ) {
-    if (sourceId === undefined || targetId === undefined) {
-      this.messageServ.showError(
-        'Error inserting edge: Source or target ID is undefined.'
-      );
-      return;
-    }
-
-    const label = this.dataFormatersServ.convertRecordOfVariableStatesToString(
-      stableMotifData.variableValues
-    );
-
-    // TODO - possibly check also label, if two edges into one node are allowed
-    const edge = this.cytoscape!.edges(
+  public ensureEdge(sourceId: number, targetId: number) {
+    const existingEdge = this.cytoscape!.edges(
       '[source = "' + sourceId + '"][target = "' + targetId + '"]'
     );
 
-    if (edge.length >= 1) {
+    if (existingEdge.length >= 1) {
       // Edge exists
       this.cytoscape!.style().update(); //redraw graph
-    } else {
-      // Make new edge
-      this.cytoscape!.add({
-        group: 'edges',
-        data: {
-          source: sourceId,
-          target: targetId,
-          label: label,
-          motifData: stableMotifData,
-          type: 'edge',
-        },
-      });
+
+      return ok(false);
     }
+
+    // Make new edge
+    this.cytoscape!.add({
+      group: 'edges',
+      data: {
+        source: sourceId,
+        target: targetId,
+        selectable: false,
+        type: 'edge',
+      },
+    });
+
+    return ok(true);
   }
 
   public removeAll() {
     this.cytoscape!.nodes(':selected').unselect(); // Triggers reset of other UI.
     this.cytoscape!.elements().remove();
+    this.rootNodeId = null;
   }
 
-  public removeNode(nodeId: string) {
-    const node = this.cytoscape!.getElementById(nodeId);
+  public removeNode(nodeId: number, nodeType: NodeTypeTSSD): Result<undefined> {
+    const node = this.getNode(nodeId, nodeType);
 
     if (node.size() > 0) {
       node.remove();
+
+      if (node.data('id') == this.rootNodeId) {
+        this.rootNodeId = null;
+      }
     }
+
+    return ok(undefined);
   }
 
   // #endregion
 
   // #region --- Mass Management ---
-
-  public setMassEnabled() {
-    this.showMass = true;
-    for (const node of this.cytoscape!.nodes()) {
-      let data = node.data();
-      if (data.treeData !== undefined) {
-        data.opacity = this._computeMassOpacity(data.treeData.cardinality);
-      }
-    }
-    this.cytoscape!.style().update(); //redraw graph
-  }
-
-  public setMassDisabled() {
-    this.showMass = false;
-    for (const node of this.cytoscape!.nodes()) {
-      const data = node.data();
-      data.opacity = 1.0;
-    }
-    this.cytoscape!.style().update(); //redraw graph
-  }
 
   private _computeMassOpacity(cardinality: number) {
     if (cardinality === undefined) {
@@ -617,7 +638,7 @@ class CytoscapeTSSD {
     this.applyTreeLayout();
   }
 
-  public getSwitchLayoutOptions() {
+  public getSetVisualOptions() {
     return {
       animate: this.layoutSettings.animate ?? false,
       snapLayers: this.layoutSettings.layered ?? false,
@@ -637,20 +658,6 @@ class CytoscapeTSSD {
   // #endregion
 
   // #region --- Node/Edge moving ---
-
-  public moveNode(nodeId: string, steps: number) {
-    const settings = this.layoutSettings;
-    const spacing = settings.extraVerticalSpacings;
-    const change = (settings.layered ? settings.layerHeight : 50) * steps;
-    if (spacing[nodeId] === undefined) {
-      spacing[nodeId] = 0;
-    }
-    spacing[nodeId] += change;
-    if (spacing[nodeId] <= 0) {
-      delete spacing[nodeId];
-    }
-    this.applyTreeLayout();
-  }
 
   private handleDragStart(e: any) {
     const dragged = e.target;

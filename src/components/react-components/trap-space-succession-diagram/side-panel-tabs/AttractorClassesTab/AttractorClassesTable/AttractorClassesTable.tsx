@@ -36,8 +36,8 @@ const AttractorClassesTable: React.FC<AttractorClassesTableProps> = ({
         handleClick={() => {
           if (!attractorClasses) {
             trapSpaceSDServ.getAttractorClasses(
-              selectedItemType,
-              selectedItemId
+              selectedItemId,
+              selectedItemType
             );
           }
           setAttractorsOpened(true);

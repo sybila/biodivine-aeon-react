@@ -70,9 +70,13 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
 
     this.warningServ = new Warning(
       this.tabOperationsServ,
+      this.stringProviderServ.TrapSpaceSDPage,
       storesProvider.resultsStatusStore,
       storesProvider.tabsStore,
       storesProvider.warningStore,
+      storesProvider.helpHoverStore,
+      storesProvider.overlayWindowStore,
+      storesProvider.variablesStore,
       utilitiesServiceProvider.waiterFunctionServ
     );
 

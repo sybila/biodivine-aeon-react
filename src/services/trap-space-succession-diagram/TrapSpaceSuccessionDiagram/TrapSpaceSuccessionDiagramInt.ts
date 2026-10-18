@@ -1,7 +1,7 @@
 import type {
-  DecisionTSSD,
-  ItemTypesTSSD,
+  DecisionNodeTypeTSSD,
   NodeDataTSSDWithMotifs,
+  NodeTypeTSSD,
   VisualOptionsSwitchableTSSD,
 } from '../../../types/types';
 
@@ -16,7 +16,7 @@ export interface TrapSpaceSuccessionDiagramInt {
 
   /** Inserts the succession diagram into visualization. */
   insertSuccessionDiagram: (
-    nodeList: NodeDataTSSDWithMotifs[],
+    rootNode: NodeDataTSSDWithMotifs,
     fit: boolean,
     animate: boolean,
     clearVisualization: boolean
@@ -30,8 +30,11 @@ export interface TrapSpaceSuccessionDiagramInt {
    *  Unselects and re-selects the current selected node. */
   refreshSelection: () => void;
 
-  /** Removes node from the succession diagram. */
-  removeNode(node: NodeDataTSSDWithMotifs): void;
+  /** Removes node from trap space succession diagram.
+   *  @param nodeId: (number) Id of the node to be removed,
+   *  @param nodeType: (NodeTypeTSSD) type of the node to be removed,
+   */
+  removeNode(nodeId: number, nodeType: NodeTypeTSSD): void;
 
   // #endregion
 
@@ -39,22 +42,28 @@ export interface TrapSpaceSuccessionDiagramInt {
 
   /** Gets all possible decisions for a specific node.
    *  @param nodeId - (number) The ID of the node to fetch decisions for.
+   *  @param nodeType - (DecisionNodeTypeTSSD) The type of node for which to fetch decisions (eg. "stable-motif")
    */
-  getDecisions(nodeId: number): void;
+  getDecisions(nodeId: number, nodeType: DecisionNodeTypeTSSD): void;
 
-  /** Extends succession diagram by adding new node corresponding to the selected decision. */
+  /** Extends trap space succession diagram with a new nodes defined by targetIds.
+   *  The new nodes are a children of the node with id = sourceId.
+   * @param sourceId - (number) ID of the parent node from which the new node will be generated.
+   * @param sourceType - (DecisionNodeTypeTSSD) type of node specified by the sourceId (for example "trap-space-decision")
+   * @param targetIds - (Array<number>) IDs of nodes which should be added into the succession diagram.
+   */
   makeDecision(
     sourceNodeId: number,
-    selectedDecision: DecisionTSSD,
-    selectedNodeId: number
+    sourceNodeType: DecisionNodeTypeTSSD,
+    selectedNodeIds: Array<number>
   ): void;
 
   // #endregion
 
   // #region --- Attractor C;asses --
 
-  /** Gets attractor classes for specified item (stable motif (edge) or node) */
-  getAttractorClasses(itemType: ItemTypesTSSD, itemId: number): void;
+  /** Gets attractor classes for specified node */
+  getAttractorClasses(nodeId: number, nodeType: NodeTypeTSSD): void;
 
   /** Opens attractor visualization for attractor behavior class. */
   openAttractorVisualization(classBehavior: string): void;

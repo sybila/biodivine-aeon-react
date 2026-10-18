@@ -4,11 +4,11 @@ import type { TrapSpaceSuccessionDiagramInt } from '../../../../../../services/t
 import type { HelpHoverState } from '../../../../../../stores/HelpHover/HelpHoverState';
 import type { TrapSpaceSDStatusState } from '../../../../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../../../../stores/ZustandStoreType';
-import type { ItemTypesTSSD } from '../../../../../../types/types';
+import type { ItemTypesTSSD, NodeTypeTSSD } from '../../../../../../types/types';
 
 export type AttractorClassesTableProps = {
   selectedItemId: number;
-  selectedItemType: ItemTypesTSSD;  
+  selectedItemType: NodeTypeTSSD;  
 
   trapSpaceSDServ: TrapSpaceSuccessionDiagramInt;
   generalStringsServ: AttractorClassesTabOtherStringsInt;

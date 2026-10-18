@@ -1,10 +1,16 @@
 import type { ResultsStatus } from '../../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { OverlayWindowState } from '../../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { HelpHoverState } from '../../../stores/HelpHover/HelpHoverState';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { TabsState } from '../../../stores/Navigation/TabState';
 import type { WarningState } from '../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { ComputationModes } from '../../../types/types';
 import type { WaiterFunctionInt } from '../../utilities/WaiterFunction/WaiterFunctionInt';
 import type { TabOperationsInt } from '../Navigation/TabOperationsInt';
+import type { TrapSpaceSDPageStringsInt } from '../StringProvider/TrapSpaceSDPageStrings/TrapSpaceSDPageStringsInt';
+import TrapSpaceSuccessionDiagramWarnings from './TrapSpaceSuccessionDiagramWarnings/TrapSpaceSuccessionDiagramWarnings';
+import type { TrapSpaceSuccessionDiagramWarningsInt } from './TrapSpaceSuccessionDiagramWarnings/TrapSpaceSuccessionDiagramWarningsInt';
 import type { WarningInt } from './WarningInt';
 
 /** Service for managing warnings in the application */
@@ -21,10 +27,14 @@ class Warning implements WarningInt {
 
   constructor(
     tabOperationsServ: TabOperationsInt,
+    stringProviderTSSDServ: TrapSpaceSDPageStringsInt,
 
     resultsStatusStore: ZustandStore<ResultsStatus>,
     tabsStore: ZustandStore<TabsState>,
     warningStore: ZustandStore<WarningState>,
+    helpHoverStore: ZustandStore<HelpHoverState>,
+    overlayWindowStore: ZustandStore<OverlayWindowState>,
+    variablesStore: ZustandStore<VariablesStatus>,
 
     waiterFunction: WaiterFunctionInt
   ) {
@@ -35,7 +45,21 @@ class Warning implements WarningInt {
     this.warningStore = warningStore;
 
     this.waiterFunction = waiterFunction;
+
+    this.TrapSpaceSuccessionDiagram = new TrapSpaceSuccessionDiagramWarnings(
+      stringProviderTSSDServ,
+      warningStore,
+      overlayWindowStore,
+      helpHoverStore,
+      variablesStore
+    );
   }
+
+  // #endregion
+
+  // #region --- Modules ---
+
+  public TrapSpaceSuccessionDiagram: TrapSpaceSuccessionDiagramWarningsInt;
 
   // #endregion
 

@@ -2,6 +2,7 @@ import NoDataText from '../../../global/NoDataText/NoDataText';
 import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
 import type { MakeDecisionTabContentProps } from './MakeDecisionTabContentProps';
 import StableMotifsTable from './StableMotifsTable/StableMotifsTable';
+import TrapSpaceTable from './TrapSpaceTable/TrapSpaceTable';
 
 const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
   trapSpaceSDServ,
@@ -11,21 +12,13 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
   trapSpaceSDStatusStore,
   helpHoverStore,
 }) => {
-  const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
+  const selectedNode = trapSpaceSDStatusStore((state) => state.selectedItem);
 
-  if (!selectedItem) {
+  if (!selectedNode) {
     return <NoDataText text={generalStringsServ.noSelectedNode()} />;
   }
 
-  if (selectedItem.type === 'edge') {
-    return (
-      <NoDataText text={generalStringsServ.cannotMakeDecisionOnLeafNode()} />
-    );
-  }
-
-  const selectedNode = selectedItem.data;
-
-  if (selectedNode.type != 'decision') {
+  if (selectedNode.type == 'leaf') {
     return (
       <NoDataText text={generalStringsServ.cannotMakeDecisionOnLeafNode()} />
     );
@@ -42,14 +35,25 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
           textColor="var(--color-primary-text)"
         />
 
-        <StableMotifsTable
-          selectedNodeId={selectedNode.id}
-          trapSpaceSDServ={trapSpaceSDServ}
-          generalStringsServ={generalStringsServ}
-          tooltipStringsServ={tooltipStringsServ}
-          trapSpaceSDStatusStore={trapSpaceSDStatusStore}
-          helpHoverStore={helpHoverStore}
-        />
+        {selectedNode.type == 'stable-motif' ? (
+          <TrapSpaceTable
+            selectedNodeId={selectedNode.nodeInfo.id}
+            trapSpaceSDServ={trapSpaceSDServ}
+            generalStringsServ={generalStringsServ}
+            tooltipStringsServ={tooltipStringsServ}
+            trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        ) : (
+          <StableMotifsTable
+            selectedNodeId={selectedNode.nodeInfo.id}
+            trapSpaceSDServ={trapSpaceSDServ}
+            generalStringsServ={generalStringsServ}
+            tooltipStringsServ={tooltipStringsServ}
+            trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+            helpHoverStore={helpHoverStore}
+          />
+        )}
       </section>
     </div>
   );

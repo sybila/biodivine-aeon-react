@@ -3,6 +3,8 @@ import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 import type { StableMotifsTableProps } from './StableMotifsTableProps';
 
 import PlusIcon from '../../../../../../assets/icons/add_box.svg';
+import type { StableMotifInfo } from '../../../../../../types/types';
+import BasicTable from '../../../../global/BasicTable/BasicTable';
 import StableMotifRow from './StableMotifRow/StableMotifRow';
 
 const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
@@ -20,12 +22,16 @@ const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
     (state) => state.availableDecisions
   );
 
-  if (!motifsOpened || !stableMotifs) {
+  if (
+    !motifsOpened ||
+    !stableMotifs ||
+    stableMotifs.parentType != 'trap-space'
+  ) {
     return (
       <TextIconButtonReact
         className="mb-2"
         compWidth="95%"
-        text={generalStringsServ.getDecisionsButton()}
+        text={generalStringsServ.getStableMotifsButton()}
         textColor="var(--color-secondary-text)"
         buttonColor="var(--color-secondary-buttons)"
         buttonHoverColor="var(--color-secondary-buttons-hover)"
@@ -33,7 +39,7 @@ const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
         iconSrc={PlusIcon}
         handleClick={() => {
           if (!stableMotifs) {
-            trapSpaceSDServ.getDecisions(selectedNodeId);
+            trapSpaceSDServ.getDecisions(selectedNodeId, 'trap-space-decision');
           }
           setMotifsOpened(true);
           helpHoverStore.getState().clear();
@@ -53,10 +59,10 @@ const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
     );
   }
 
-  const renderTable = () => {
+  const renderTable = (availableStableMotifs: StableMotifInfo[]) => {
     return (
-      <>
-        {stableMotifs?.map((stableMotif, index) => (
+      <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
+        {availableStableMotifs.map((stableMotif, index) => (
           <StableMotifRow
             key={index}
             nodeId={selectedNodeId}
@@ -67,14 +73,19 @@ const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
             helpHoverStore={helpHoverStore}
           />
         ))}
-      </>
+      </section>
     );
   };
 
   return (
-    <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
-      {renderTable()}
-    </section>
+    <BasicTable
+      elements={stableMotifs.nodes}
+      noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
+      noRowsTextColor="var(--color-primary-text)"
+      renderRowsWithContainer={(stableMotifs: StableMotifInfo[]) =>
+        renderTable(stableMotifs)
+      }
+    />
   );
 };
 

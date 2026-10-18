@@ -47,6 +47,6 @@ export function err(message: string): Err {
 /**
  * This function checks if the provided `Result<T>` is of type `Err`. It returns `true` if the result is an error and `false` if it is successful.
  */
-export function isErr<T>(result: Result<T>) {
+export function isErr(result: Result<unknown>) {
   return result.type === 'err';
 }

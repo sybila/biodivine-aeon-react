@@ -1,7 +1,8 @@
 import type {
-  DecisionsTSSD,
-  NodeDataTSSD,
+  DecisionNodeTypeTSSD,
   NodeDataTSSDWithMotifs,
+  NodesWithParentInfoTSSD,
+  NodeTypeTSSD,
 } from '../../../../types/types';
 import type { ComputeEngineInt } from '../../ComputeEngine/ComputeEngineInt';
 import type { LoadingInt } from '../../Loading/LoadingInt';
@@ -41,22 +42,22 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   private getSuccessionDiagramCallback(
     error: string | undefined,
-    nodes: NodeDataTSSDWithMotifs[] | undefined,
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSDWithMotifs[]) => void
+    rootNode: NodeDataTSSDWithMotifs | undefined,
+    insertSuccessionDiagramFunction: (node: NodeDataTSSDWithMotifs) => void
   ): void {
-    if (error || !nodes) {
+    if (error || !rootNode) {
       this.messageServ.showError(
         `Error fetching trap space succession diagram: ${error ?? 'Internal error'}`
       );
     } else {
-      insertSuccessionDiagramFunction(nodes);
+      insertSuccessionDiagramFunction(rootNode);
     }
 
     this.loadingServ.endLoading();
   }
 
   public getTrapSpaceSuccessionDiagram(
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSDWithMotifs[]) => void
+    insertSuccessionDiagramFunction: (rootNode: NodeDataTSSDWithMotifs) => void
   ): void {
     const model = this.getModelString();
 
@@ -72,20 +73,20 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       model,
       (
         error: string | undefined,
-        nodes: NodeDataTSSDWithMotifs[] | undefined
+        rootNode: NodeDataTSSDWithMotifs | undefined
       ) =>
         this.getSuccessionDiagramCallback(
           error,
-          nodes,
+          rootNode,
           insertSuccessionDiagramFunction
         )
     );
   }
 
-  private getDecisionsTSSDCallback(
+  private getDecisionsCallback(
     error: string | undefined,
-    decisions: DecisionsTSSD | undefined,
-    setDecisionsFunction: (decisions: DecisionsTSSD) => void
+    decisions: NodesWithParentInfoTSSD | undefined,
+    setDecisionsFunction: (decisions: NodesWithParentInfoTSSD) => void
   ) {
     if (error || !decisions) {
       this.messageServ.showError(
@@ -98,93 +99,105 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.loadingServ.endLoading();
   }
 
-  public getDecisionsTSSD(
-    nodeId: number,
-    setDecisionsFunction: (decisions: DecisionsTSSD) => void
+  public getDecisions(
+    sourceId: number,
+    sourceType: DecisionNodeTypeTSSD,
+    setDecisionsFunction: (decisions: NodesWithParentInfoTSSD) => void
   ): void {
     this.loadingServ.startLoading();
     this.computeEngine.TrapSpaceSuccessionDiagram.getDecisionsTSSD(
-      nodeId,
+      sourceId,
+      sourceType,
       (error, decisions) =>
-        this.getDecisionsTSSDCallback(error, decisions, setDecisionsFunction)
+        this.getDecisionsCallback(error, decisions, setDecisionsFunction)
     );
   }
 
-  private makeDecisionTSSDCallback(
+  private makeDecisionCallback(
     error: string | undefined,
-    originalSelectedNodeId: number,
-    node: NodeDataTSSD | undefined,
-    insertSuccessionDiagramFunction: (nodes: NodeDataTSSD) => void
+    nodesToAdd: NodesWithParentInfoTSSD | undefined,
+    addNodesIntoSuccessionDiagramFunction: (
+      nodesToAdd: NodesWithParentInfoTSSD
+    ) => void
   ): void {
-    if (error || !node || node.id != originalSelectedNodeId) {
+    if (error || !nodesToAdd) {
       this.messageServ.showError(
         `Error making decision: ${error ?? 'Internal error'}`
       );
     } else {
-      insertSuccessionDiagramFunction(node);
+      addNodesIntoSuccessionDiagramFunction(nodesToAdd);
     }
 
     this.loadingServ.endLoading();
   }
 
-  public makeDecisionTSSD(
-    nodeId: number,
-    decisionId: number,
-    insertSuccessionDiagramFunction: (node: NodeDataTSSD) => void
+  public makeDecision(
+    sourceId: number,
+    sourceType: DecisionNodeTypeTSSD,
+    targetIds: Array<number>,
+    addNodesIntoSuccessionDiagramFunction: (
+      nodesToAdd: NodesWithParentInfoTSSD
+    ) => void
   ): void {
     this.loadingServ.startLoading();
     this.computeEngine.TrapSpaceSuccessionDiagram.makeDecisionTSSD(
-      nodeId,
-      decisionId,
-      (error, node) =>
-        this.makeDecisionTSSDCallback(
+      sourceId,
+      sourceType,
+      targetIds,
+      (error, nodesToAdd) =>
+        this.makeDecisionCallback(
           error,
-          nodeId,
-          node,
-          insertSuccessionDiagramFunction
+          nodesToAdd,
+          addNodesIntoSuccessionDiagramFunction
         )
     );
   }
 
-  private deleteDecisionTSSDCallback(
+  private deleteNodeCallback(
     error: string | undefined,
-    node: NodeDataTSSDWithMotifs | undefined,
-    removed: number[] | undefined,
+    originalNodeId: number | undefined,
+    removedNodeType: NodeTypeTSSD | undefined,
+    removedNodeId: number | undefined,
     removeNodesFromVisualizationFunction: (
-      node: NodeDataTSSDWithMotifs,
-      removedNodes: number[]
+      removedNodeId: number,
+      removedNodeType: NodeTypeTSSD
     ) => void
   ): void {
-    if (error || !node) {
+    if (
+      error ||
+      removedNodeId == undefined ||
+      originalNodeId == undefined ||
+      removedNodeType == undefined ||
+      removedNodeId != originalNodeId
+    ) {
       this.messageServ.showError(
         `Error deleting decision: ${error ?? 'Internal error'}`
       );
-    } else if (!removed || removed.length === 0) {
-      this.messageServ.showInfo(
-        `Decision for node ${node.id} was deleted, but no nodes were removed.`
-      );
     } else {
-      removeNodesFromVisualizationFunction(node, removed);
+      removeNodesFromVisualizationFunction(removedNodeId, removedNodeType);
     }
 
     this.loadingServ.endLoading();
   }
 
-  public deleteDecisionTSSD(
-    node: NodeDataTSSDWithMotifs,
+  public deleteNode(
+    nodeId: number,
+    nodeType: NodeTypeTSSD,
     removeNodesFromVisualizationFunction: (
-      node: NodeDataTSSDWithMotifs,
-      removedNodes: number[]
+      removedNodeId: number,
+      removedNodeType: NodeTypeTSSD
     ) => void
   ): void {
     this.loadingServ.startLoading();
-    this.computeEngine.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
-      node,
-      (error, node, removed) => {
-        this.deleteDecisionTSSDCallback(
+    this.computeEngine.TrapSpaceSuccessionDiagram.deleteNodeTSSD(
+      nodeId,
+      nodeType,
+      (error, originalNodeId, removedNodeType, removedNodeId) => {
+        this.deleteNodeCallback(
           error,
-          node,
-          removed,
+          originalNodeId,
+          removedNodeType,
+          removedNodeId,
           removeNodesFromVisualizationFunction
         );
       }

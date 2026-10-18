@@ -31,16 +31,16 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({
     return [
       {
         name: generalStringsServ.numberOfInterpretationsStatName(),
-        value: selectedNode.cardinality.toString(),
+        value: selectedNode.numberOfInterpretations.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
-      {
-        name: generalStringsServ.numberOfChildrenStatName(),
-        value: selectedNode.stableMotifs.length.toString(),
-        nameWidth: '60%',
-        valueWidth: '39%',
-      },
+      // {
+      //   name: generalStringsServ.numberOfChildrenStatName(),
+      //   value: selectedNode.stableMotifs.length.toString(),
+      //   nameWidth: '60%',
+      //   valueWidth: '39%',
+      // },
       {
         name: generalStringsServ.numberOfFixedVarsStatName(),
         value: stateNumbers[0].toString(),
