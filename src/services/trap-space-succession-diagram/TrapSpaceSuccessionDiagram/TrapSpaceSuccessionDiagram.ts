@@ -1,31 +1,43 @@
 import type { TrapSpaceSDStatusState } from '../../../stores/TrapSpaceSuccessionDiagram/TrapSpaceSDStatusState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
+import { isErr } from '../../../types/result';
 import type {
-  DecisionsTSSD,
-  DecisionTSSD,
-  ItemTypesTSSD,
+  DecisionNodeTypeTSSD,
+  NodeDataTSSD,
   NodeDataTSSDWithMotifs,
+  NodesWithParentInfoTSSD,
+  NodeTypeTSSD,
+  NodeWithChildrenAndTypeTSSD,
+  StableMotifInfo,
   VisualizationStatus,
 } from '../../../types/types';
 import type { ComputationManagerInt } from '../../global/ComputationManager/ComputationManagerInt';
 import type { MessageInt } from '../../global/Message/MessageInt';
+import type { TrapSpaceSDPageStringsInt } from '../../global/StringProvider/TrapSpaceSDPageStrings/TrapSpaceSDPageStringsInt';
+import type { TrapSpaceSuccessionDiagramWarningsInt } from '../../global/Warning/TrapSpaceSuccessionDiagramWarnings/TrapSpaceSuccessionDiagramWarningsInt';
 import type { DataFormatersInt } from '../../utilities/DataFormaters/DataFormatersInt';
 import CytoscapeTSSD from '../TrapSpaceSDVisualization/CytoscapeTSSD';
+import type { TrapSpaceSDVisualizationInt } from '../TrapSpaceSDVisualization/TrapSpaceSDVisualizationInt';
 import type { TrapSpaceSuccessionDiagramInt } from './TrapSpaceSuccessionDiagramInt';
 
 class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   private isEmpty: boolean;
 
-  private visualization: CytoscapeTSSD;
+  private visualization: TrapSpaceSDVisualizationInt;
 
   private computationManagerServ: ComputationManagerInt;
+  private pageWarningServ: TrapSpaceSuccessionDiagramWarningsInt;
+  private pageStringProviderServ: TrapSpaceSDPageStringsInt;
+  private messageServ: MessageInt;
 
   private trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
   constructor(
-    messageServ: MessageInt,
     dataFormatersServ: DataFormatersInt,
     computationManagerServ: ComputationManagerInt,
+    pageWarningServ: TrapSpaceSuccessionDiagramWarningsInt,
+    pageStringProviderServ: TrapSpaceSDPageStringsInt,
+    messageServ: MessageInt,
 
     trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>
   ) {
@@ -36,16 +48,14 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       trapSpaceSDStatusStore
     );
 
-    this.visualization.setRemoveNodeFunction((node) =>
-      computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
-        node,
-        (node, removed) => {
-          this.removeFromVisualization(node, removed);
-        }
-      )
+    this.visualization.setRemoveNodeFunction((nodeId, nodeType) =>
+      this.removeNode(nodeId, nodeType)
     );
 
     this.computationManagerServ = computationManagerServ;
+    this.pageWarningServ = pageWarningServ;
+    this.pageStringProviderServ = pageStringProviderServ;
+    this.messageServ = messageServ;
 
     this.trapSpaceSDStatusStore = trapSpaceSDStatusStore;
   }
@@ -61,9 +71,9 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       const hasSavedVisualizationStatus =
         this.trapSpaceSDStatusStore.getState().visualizationStatus !== null;
       this.computationManagerServ.TrapSpaceSuccessionDiagram.getTrapSpaceSuccessionDiagram(
-        (nodeList: NodeDataTSSDWithMotifs[]) => {
+        (rootNode: NodeDataTSSDWithMotifs) => {
           this.insertSuccessionDiagram(
-            nodeList,
+            rootNode,
             !hasSavedVisualizationStatus,
             !hasSavedVisualizationStatus
           );
@@ -72,25 +82,42 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     }
   }
 
+  private insertSuccessionDiagramRec(currentNode: NodeWithChildrenAndTypeTSSD) {
+    this.visualization.ensureNode(currentNode);
+
+    if (currentNode.type == 'stable-motif') {
+      currentNode.nodeInfo.targetTrapSpaces.forEach((trapSpace) => {
+        this.insertSuccessionDiagramRec({
+          type: trapSpace.type,
+          nodeInfo: trapSpace,
+        });
+        this.visualization.ensureEdge(currentNode.nodeInfo.id, trapSpace.id);
+      });
+    } else {
+      currentNode.nodeInfo.stableMotifs.forEach((stableMotif) => {
+        this.insertSuccessionDiagramRec({
+          type: 'stable-motif',
+          nodeInfo: stableMotif,
+        });
+        this.visualization.ensureEdge(currentNode.nodeInfo.id, stableMotif.id);
+      });
+    }
+  }
+
   public insertSuccessionDiagram(
-    nodeList: NodeDataTSSDWithMotifs[],
+    rootNode: NodeDataTSSDWithMotifs,
     fit: boolean = true,
     animate: boolean = true,
     clearCytoscape: boolean = true
   ): void {
-    if (nodeList !== undefined && nodeList.length > 0) {
-      if (clearCytoscape) this.visualization.removeAll();
-      for (const n of nodeList) {
-        this.visualization.ensureNode(n);
-      }
-      for (const n of nodeList) {
-        for (const motif of n.stableMotifs) {
-          this.visualization.ensureEdge(n.id, motif.targetNodeId, motif);
-        }
-      }
-      // Do not auto-fit when restoring a previously saved pan/zoom state.
-      this.visualization.applyTreeLayout(fit, animate);
-    }
+    if (clearCytoscape) this.visualization.removeAll();
+
+    this.insertSuccessionDiagramRec({
+      type: rootNode.type,
+      nodeInfo: rootNode,
+    });
+    // Do not auto-fit when restoring a previously saved pan/zoom state.
+    this.visualization.applyTreeLayout(fit, animate);
   }
 
   // #endregion
@@ -113,10 +140,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     }
 
     if (selectedItem) {
-      this.visualization.refreshSelection({
-        targetId: selectedItem.data.id.toString(),
-        type: selectedItem.type,
-      });
+      this.visualization.refreshSelection(selectedItem);
     } else if (selectRootNodeFallback) {
       this.visualization.selectRootNode();
     }
@@ -130,35 +154,82 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.visualization.refreshSelection();
   }
 
-  /** Removes nodes from visualization.
-   *  @param node - (NodeDataTSSD | undefined) The node which will be selected after the removal. If undefined, no node will be selected.
-   *  @param removedNodes - (number[]) List of IDs of removed nodes. These nodes will be removed from the visualization.
+  /** Removes node from visualization and check if there was an error.
+   *  If error occured shows error message.
    */
-  private removeFromVisualization(
-    node: NodeDataTSSDWithMotifs | undefined,
-    removedNodes: number[]
-  ) {
-    if (removedNodes.length > 0) {
-      for (const removed of removedNodes) {
-        this.visualization.removeNode(removed.toString());
-      }
+  private removeNodeWithError(
+    removedNodeId: number,
+    removedNodeType: NodeTypeTSSD
+  ): boolean {
+    const removeRes = this.visualization.removeNode(
+      removedNodeId,
+      removedNodeType
+    );
+
+    if (isErr(removeRes)) {
+      this.messageServ.showError(
+        'Error when removing node: ' + removeRes.error + ' (Internal Error)'
+      );
+      return false;
     }
-    if (node !== undefined) {
-      this.visualization.ensureNode(node);
-      this.visualization.refreshSelection({
-        targetId: node.id.toString(),
-        type: 'node',
-      });
+
+    return true;
+  }
+
+  /** Recursively removes node and its children. */
+  private removeNodeRecursive(
+    removedNodeId: number,
+    removedNodeType: NodeTypeTSSD
+  ): void {
+    const childResult = this.visualization.getChildNodes(
+      removedNodeId,
+      removedNodeType
+    );
+
+    this.removeNodeWithError(removedNodeId, removedNodeType);
+
+    if (isErr(childResult)) {
+      this.messageServ.showError(
+        'Error when removing node: ' + childResult.error + ' (Internal Error)'
+      );
+      return;
+    }
+
+    const children = childResult.value;
+
+    if (children.nodes.length == 0) {
+      return;
+    }
+
+    if (children.parentType == 'trap-space') {
+      children.nodes.forEach((node) =>
+        this.removeNodeRecursive(node.id, 'stable-motif')
+      );
     } else {
-      this.visualization.refreshSelection();
+      children.nodes.forEach((node) =>
+        this.removeNodeRecursive(node.id, node.type)
+      );
     }
   }
 
-  public removeNode(node: NodeDataTSSDWithMotifs) {
-    this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteDecisionTSSD(
-      node,
-      (node, removed) => {
-        this.removeFromVisualization(node, removed);
+  /** Removes nodes from visualization.
+   *  @param removedNodeId - (number) Id of the node, which was removed.
+   *  @param removedNodeType - (NodeTypeTSSD) type of the removed node
+   */
+  private removeFromVisualization(
+    removedNodeId: number,
+    removedNodeType: NodeTypeTSSD
+  ) {
+    this.removeNodeRecursive(removedNodeId, removedNodeType);
+    this.visualization.refreshSelection();
+  }
+
+  public removeNode(nodeId: number, nodeType: NodeTypeTSSD) {
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteNode(
+      nodeId,
+      nodeType,
+      (removedNodeId, removedNodeType) => {
+        this.removeFromVisualization(removedNodeId, removedNodeType);
       }
     );
   }
@@ -167,10 +238,11 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #region --- Make Decision ---
 
-  public getDecisions(nodeId: number) {
-    this.computationManagerServ.TrapSpaceSuccessionDiagram.getDecisionsTSSD(
+  public getDecisions(nodeId: number, nodeType: DecisionNodeTypeTSSD) {
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.getDecisions(
       nodeId,
-      (decisions: DecisionsTSSD) => {
+      nodeType,
+      (decisions: NodesWithParentInfoTSSD) => {
         this.trapSpaceSDStatusStore.getState().setAvailableDecisions(decisions);
       }
     );
@@ -178,17 +250,34 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   public makeDecision(
     sourceNodeId: number,
-    selectedDecision: DecisionTSSD,
-    selectedNodeId: number
+    sourceNodeType: DecisionNodeTypeTSSD,
+    selectedNodeIds: Array<number>
   ) {
-    this.computationManagerServ.TrapSpaceSuccessionDiagram.makeDecisionTSSD(
-      selectedNodeId,
-      selectedDecision.id,
-      (node) => {
-        const nodeWithMotifs = { ...node, stableMotifs: [] };
+    this.computationManagerServ.TrapSpaceSuccessionDiagram.makeDecision(
+      sourceNodeId,
+      sourceNodeType,
+      selectedNodeIds,
+      (nodesToAdd) => {
+        nodesToAdd.nodes.forEach((node) => {
+          if (nodesToAdd.parentType == 'stable-motif') {
+            const trapSpaceNode = node as NodeDataTSSD;
 
-        this.visualization.ensureNode(nodeWithMotifs);
-        this.visualization.ensureEdge(sourceNodeId, node.id, selectedDecision);
+            this.visualization.ensureNode({
+              type: trapSpaceNode.type,
+              nodeInfo: trapSpaceNode,
+            });
+          } else {
+            const stableMotifNode = node as StableMotifInfo;
+
+            this.visualization.ensureNode({
+              type: 'stable-motif',
+              nodeInfo: stableMotifNode,
+            });
+          }
+
+          this.visualization.ensureEdge(nodesToAdd.parentId, node.id);
+        });
+
         this.visualization.applyTreeLayout(true, false);
       }
     );
@@ -196,9 +285,9 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #endregion
 
-  // #region --- Attractor C;asses --
+  // #region --- Attractor Classes --
 
-  public getAttractorClasses(itemType: ItemTypesTSSD, itemId: number) {
+  public getAttractorClasses(nodeId: number, nodeType: NodeTypeTSSD) {
     // TODO - change into computation manager call
     this.trapSpaceSDStatusStore.getState().setComputedAttractorClasses([
       {
@@ -257,7 +346,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   // #region --- Visual Options ---
 
   public getSwitchableOptionsState() {
-    return this.visualization.getSwitchLayoutOptions();
+    return this.visualization.getSetVisualOptions();
   }
 
   public toggleSnapNodesToLayers() {

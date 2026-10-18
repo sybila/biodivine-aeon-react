@@ -1,9 +1,17 @@
 import type { ComputationModes } from '../../../types/types';
+import type { TrapSpaceSuccessionDiagramWarningsInt } from './TrapSpaceSuccessionDiagramWarnings/TrapSpaceSuccessionDiagramWarningsInt';
 
 /**
  * Interface for creation and management of warnings in the application
  */
 export interface WarningInt {
+
+  // #region --- Modules ---
+
+   TrapSpaceSuccessionDiagram: TrapSpaceSuccessionDiagramWarningsInt;
+
+  // #endregion
+
   // #region --- Starting Computation Warning ---
 
   /** Adds a warning about starting a new computation that will clear results and close tabs. */

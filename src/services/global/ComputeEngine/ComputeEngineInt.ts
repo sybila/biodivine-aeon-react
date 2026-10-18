@@ -3,7 +3,7 @@ import type {
   ComputationStatus,
   ControlPreComputationInfo,
   Decisions,
-  DecisionsTSSD,
+  NodesWithParentInfoTSSD,
   NodeDataBE,
   NodeDataTSSD,
   NodeDataTSSDWithMotifs,

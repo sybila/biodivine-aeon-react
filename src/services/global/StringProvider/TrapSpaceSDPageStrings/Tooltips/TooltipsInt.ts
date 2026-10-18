@@ -1,5 +1,6 @@
 import type { AttractorClassesTabTooltipsInt } from './AttractorClassesTab/AttractorClassesTabTooltipsInt';
 import type { MakeDecisionTabTooltipsInt } from './MakeDecisionTab/MakeDecisionTabTooltipsInt';
+import type { SelectTrapSpacesOverlayWindowTooltipsInt } from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowTooltipsInt';
 import type { UtilitiesMenuTooltipsInt } from './UtilitiesMenu/UtilitiesMenuTooltipsInt';
 import type { VisualOptionsTabTooltipsInt } from './VisualOptionsTab/VisualOptionsTabTooltipsInt';
 
@@ -8,6 +9,8 @@ export interface TooltipsInt {
   MakeDecisionTab: MakeDecisionTabTooltipsInt;
   AttractorClassesTab: AttractorClassesTabTooltipsInt;
   VisualOptionsTab: VisualOptionsTabTooltipsInt;
+
+  SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowTooltipsInt;
 
   UtilitiesMenu: UtilitiesMenuTooltipsInt;
 }

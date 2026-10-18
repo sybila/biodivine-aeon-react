@@ -3,8 +3,10 @@ export interface MakeDecisionTabOtherStringsInt {
   cannotMakeDecisionOnLeafNode(): string;
   noSelectedNode(): string;
 
-  getDecisionsButton(): string;
+  getTrapSpacesButton(): string;
+  getStableMotifsButton(): string;
   selectDecisionButton(): string;
+  noAvailableStableMotifs(): string;
 
   fullStableMotifStateHeader(): string;
 }

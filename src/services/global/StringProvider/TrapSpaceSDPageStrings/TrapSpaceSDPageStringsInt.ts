@@ -1,3 +1,4 @@
+import type { MessagesInt } from './Messages/MessagesInt';
 import type { OtherStringsInt } from './OtherStrings/OtherStringsInt';
 import type { TooltipsInt } from './Tooltips/TooltipsInt';
 
@@ -5,6 +6,7 @@ import type { TooltipsInt } from './Tooltips/TooltipsInt';
 export interface TrapSpaceSDPageStringsInt {
   Tooltips: TooltipsInt;
   OtherStrings: OtherStringsInt;
+  Messages: MessagesInt;
 
   helpText(): string;
 }

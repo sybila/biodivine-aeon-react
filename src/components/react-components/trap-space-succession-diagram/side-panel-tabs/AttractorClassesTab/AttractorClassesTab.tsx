@@ -29,7 +29,7 @@ const AttractorClassesTab: React.FC<AttractorClassesTabProps> = ({
       </section>
 
       <AttractorClassesTable
-        selectedItemId={selectedItem.data.id}
+        selectedItemId={selectedItem.nodeInfo.id}
         selectedItemType={selectedItem.type}
         trapSpaceSDServ={trapSpaceSDServ}
         generalStringsServ={generalStringsServ}

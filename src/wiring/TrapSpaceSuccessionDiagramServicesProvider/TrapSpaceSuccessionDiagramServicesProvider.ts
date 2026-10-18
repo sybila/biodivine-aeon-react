@@ -14,9 +14,11 @@ class TrapSpaceSuccessionDiagramServicesProvider implements TrapSpaceSuccessionD
     dataFormatersServ: DataFormatersInt
   ) {
     this.trapSpaceSDServ = new TrapSpaceSuccessionDiagram(
-      globalServicesProvider.messageServ,
       dataFormatersServ,
       globalServicesProvider.computationManagerServ,
+      globalServicesProvider.warningServ.TrapSpaceSuccessionDiagram,
+      globalServicesProvider.stringProviderServ.TrapSpaceSDPage,
+      globalServicesProvider.messageServ,
       storesProvider.trapSpaceSDStatusStore
     );
   }

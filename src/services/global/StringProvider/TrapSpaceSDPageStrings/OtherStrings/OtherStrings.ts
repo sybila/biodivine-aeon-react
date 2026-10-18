@@ -5,6 +5,8 @@ import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecis
 import type { OtherStringsInt } from './OtherStringsInt';
 import OverviewTabOtherStrings from './OverviewTab/OverviewTabOtherStrings';
 import type { OverviewTabOtherStringsInt } from './OverviewTab/OverviewTabOtherStringsInt';
+import SelectTrapSpacesOverlayWindowOtherStrings from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowOtherStrings';
+import type { SelectTrapSpacesOverlayWindowOtherStringsInt } from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowOtherStringsInt';
 import UtilitiesMenuOtherStrings from './UtilitiesMenu/UtilitiesMenuOtherStrings';
 import type { UtilitiesMenuOtherStringsInt } from './UtilitiesMenu/UtilitiesMenuOtherStringsInt';
 import VisualOptionsTabOtherStrings from './VisualOptionsTab/VisualOptionsTabOtherStrings';
@@ -19,6 +21,9 @@ class OtherStrings implements OtherStringsInt {
     new AttractorClassesTabOtherStrings();
   public VisualOptionsTab: VisualOptionsTabOtherStringsInt =
     new VisualOptionsTabOtherStrings();
+
+  public SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowOtherStringsInt =
+    new SelectTrapSpacesOverlayWindowOtherStrings();
 
   public UtilitiesMenu: UtilitiesMenuOtherStringsInt =
     new UtilitiesMenuOtherStrings();

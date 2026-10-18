@@ -459,43 +459,56 @@ export type MenuTabTypeTrapSpaceSDNotNull =
 
 export type MenuTabTypeTrapSpaceSD = MenuTabTypeTrapSpaceSDNotNull | null;
 
-export type TSSDNodeVariableValues = Record<string, number | undefined>;
+export type TrapSpaceVariableState = 0 | 1 | undefined;
+
+export type TSSDNodeVariableValues = Record<string, TrapSpaceVariableState>;
 
 export type NodeDataTSSD = {
   id: number;
   /** Maps variable ids (keys) to state of variable. If variable state is undefined, it means the variable is free (unpercolated). */
   variableValues: TSSDNodeVariableValues;
   /** Number of interpretations for which this node is valid */
-  cardinality: number;
-  type: NodeTypeTSSD;
+  numberOfInterpretations: number;
+  type: TrapSpaceType;
 };
 
 export type NodeDataTSSDWithMotifs = NodeDataTSSD & {
   /** Stable Motifs (edges) comming from this node.*/
-  stableMotifs: Array<StableMotifWithNode>;
+  stableMotifs: Array<StableMotifWithTrapSpaces>;
 };
 
-export type VisualizationNodeDataTSSD = {
-  id: string;
-  label: string;
-  action?: undefined;
-  treeData: NodeDataTSSDWithMotifs;
-  type: NodeTypeTSSD;
-  opacity: number;
-};
+export type VisualizationNodeDataTSSD =
+  | {
+      id: string;
+      label: string;
+      action?: undefined;
+      treeData: StableMotifInfo;
+      type: 'stable-motif';
+      opacity: number;
+    }
+  | {
+      id: string;
+      label: string;
+      action?: undefined;
+      treeData: NodeDataTSSD;
+      type: TrapSpaceType;
+      opacity: number;
+    };
 
 export type VisualizationEdgeDataTSSD = {
   action?: undefined;
   source: number;
   target: number;
-  label: string;
   type: 'edge';
-  motifData: StableMotifInfo;
 };
 
-export type ItemTypesTSSD = "node" | "edge"
+export type ItemTypesTSSD = 'node' | 'edge';
 
-export type NodeTypeTSSD = 'decision' | 'leaf';
+export type DecisionNodeTypeTSSD = 'trap-space-decision' | 'stable-motif';
+
+export type TrapSpaceType = 'trap-space-decision' | 'leaf';
+
+export type NodeTypeTSSD = DecisionNodeTypeTSSD | TrapSpaceType;
 
 export type StableMotifInfo = {
   id: number;
@@ -505,15 +518,41 @@ export type StableMotifInfo = {
   numberOfMinTrapSpaces: number;
 };
 
-export type StableMotifWithNode = StableMotifInfo & {
-  targetNodeId: number;
+export type StableMotifWithTrapSpaces = StableMotifInfo & {
+  targetTrapSpaces: Array<NodeDataTSSDWithMotifs>;
 };
 
-export type DecisionTSSD = StableMotifInfo & {
-  possibleChildNodes: Array<NodeDataTSSD>;
-};
+export type NodeWithType =
+  | {
+      type: TrapSpaceType;
+      nodeInfo: NodeDataTSSD;
+    }
+  | {
+      type: 'stable-motif';
+      nodeInfo: StableMotifInfo;
+    };
 
-export type DecisionsTSSD = Array<DecisionTSSD>;
+export type NodeWithChildrenAndTypeTSSD =
+  | {
+      type: TrapSpaceType;
+      nodeInfo: NodeDataTSSDWithMotifs;
+    }
+  | {
+      type: 'stable-motif';
+      nodeInfo: StableMotifWithTrapSpaces;
+    };
+
+export type NodesWithParentInfoTSSD =
+  | {
+      parentId: number;
+      parentType: 'trap-space';
+      nodes: Array<StableMotifInfo>;
+    }
+  | {
+      parentId: number;
+      parentType: 'stable-motif';
+      nodes: Array<NodeDataTSSD>;
+    };
 
 // #endregion
 

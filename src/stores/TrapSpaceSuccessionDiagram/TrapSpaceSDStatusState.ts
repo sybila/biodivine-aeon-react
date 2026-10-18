@@ -1,18 +1,13 @@
 import type {
   AttractorClassArray,
   ContentVisibleComponent,
-  DecisionsTSSD,
   MenuTabButton,
   MenuTabTypeTrapSpaceSD,
   MenuTabTypeTrapSpaceSDNotNull,
-  NodeDataTSSDWithMotifs,
-  StableMotifInfo,
+  NodesWithParentInfoTSSD,
+  NodeWithType,
   VisualizationStatus,
 } from '../../types/types';
-
-type SelectedItemTSSD =
-  | { type: 'node'; data: NodeDataTSSDWithMotifs }
-  | { type: 'edge'; data: StableMotifInfo };
 
 /** Zustand Store which manages state of the Trap Space Succession Diagram page. */
 export type TrapSpaceSDStatusState = {
@@ -21,9 +16,9 @@ export type TrapSpaceSDStatusState = {
   /** Active menu tab inside the Trap Space Succession Diagram page. */
   activeMenuTab: MenuTabTypeTrapSpaceSD;
 
-  selectedItem: SelectedItemTSSD | null;
+  selectedItem: NodeWithType | null;
   /** Decisions available for the selected node */
-  availableDecisions: DecisionsTSSD | null;
+  availableDecisions: NodesWithParentInfoTSSD | null;
   /** Attractor Behavior Classes computed for the selected item. */
   computedAttractorClasses: Array<AttractorClassArray> | null;
 
@@ -47,10 +42,12 @@ export type TrapSpaceSDStatusState = {
   ) => void;
 
   setVisualizationStatus: (status: VisualizationStatus) => void;
-  setAvailableDecisions: (decisions: DecisionsTSSD) => void;
-  setComputedAttractorClasses: (attractorClasses: Array<AttractorClassArray>) => void;
+  setAvailableDecisions: (decisions: NodesWithParentInfoTSSD) => void;
+  setComputedAttractorClasses: (
+    attractorClasses: Array<AttractorClassArray>
+  ) => void;
   setActiveMenuTab: (tab: MenuTabTypeTrapSpaceSD) => void;
-  changeSelectedItem: (node: SelectedItemTSSD | null) => void;
+  changeSelectedItem: (node: NodeWithType | null) => void;
   /** Clears the information about the selected item. (sets selectedItem to null) */
   clearSelectedItemInfo: () => void;
 };

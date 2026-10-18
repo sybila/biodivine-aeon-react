@@ -9,16 +9,24 @@ class MakeDecisionTabOtherStrings implements MakeDecisionTabOtherStringsInt {
     return 'No selected node';
   }
 
-  getDecisionsButton() {
-    return 'Get Stable Motifs (Decisions)';
+  getTrapSpacesButton() {
+    return 'Get Trap Spaces';
+  }
+
+  getStableMotifsButton() {
+    return 'Get Stable Motifs';
+  }
+
+  noAvailableStableMotifs() {
+    return 'There are no other stable motifs available for this trap space.';
   }
 
   selectDecisionButton() {
-    return "Select stable motif"
+    return 'Select stable motif';
   }
 
   fullStableMotifStateHeader() {
-    return "Full State"
+    return 'Full State';
   }
 }
 

@@ -1,6 +1,7 @@
 import type { AttractorClassesTabOtherStringsInt } from './AttractorClassesTab/AttractorClassesTabOtherStringsInt';
 import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTab/MakeDecisionTabOtherStringsInt';
 import type { OverviewTabOtherStringsInt } from './OverviewTab/OverviewTabOtherStringsInt';
+import type { SelectTrapSpacesOverlayWindowOtherStringsInt } from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowOtherStringsInt';
 import type { UtilitiesMenuOtherStringsInt } from './UtilitiesMenu/UtilitiesMenuOtherStringsInt';
 import type { VisualOptionsTabOtherStringsInt } from './VisualOptionsTab/VisualOptionsTabOtherStringsInt';
 
@@ -10,6 +11,8 @@ export interface OtherStringsInt {
   MakeDecisionTab: MakeDecisionTabOtherStringsInt;
   AttractorClassesTab: AttractorClassesTabOtherStringsInt;
   VisualOptionsTab: VisualOptionsTabOtherStringsInt;
+
+  SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowOtherStringsInt;
 
   UtilitiesMenu: UtilitiesMenuOtherStringsInt;
 }

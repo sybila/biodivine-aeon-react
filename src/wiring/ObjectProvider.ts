@@ -1,5 +1,6 @@
 import { Loading } from '../components/lit-components/loading-wrapper';
 import { Message } from '../components/lit-components/message-wrapper';
+import { ExampleModels } from '../ExampleModels';
 import AttractorBifurcationExplorerServicesProvider from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProvider';
 import type { AttractorBifurcationExplorerServicesProviderInt } from './AttractorBifurcationExplorerServicesProvider/AttractorBifurcationExplorerServicesProviderInt';
 import AttractorVisualizerServicesProvider from './AttractorVisualizerServicesProvider/AttractorVisualizerServicesProvider';
@@ -87,7 +88,12 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.StoresProvider.initializeUndoRedoStore(
       this.GlobalServicesProvider.messageServ
     );
+
+    // TODO - remove after testing of TSSD
+    this.GlobalServicesProvider.liveModelServ.Import.importAeonWithWarnings(ExampleModels.g2a)
   }
+
+
 }
 
 const ObjectProvider = new ObjectProviderClass();
