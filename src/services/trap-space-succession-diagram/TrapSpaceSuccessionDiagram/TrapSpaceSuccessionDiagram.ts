@@ -49,7 +49,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     );
 
     this.visualization.setRemoveNodeFunction((nodeId, nodeType) =>
-      this.removeNode(nodeId, nodeType)
+      this.removeNodeWithWarning(nodeId, nodeType)
     );
 
     this.computationManagerServ = computationManagerServ;
@@ -214,22 +214,67 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   /** Removes nodes from visualization.
    *  @param removedNodeId - (number) Id of the node, which was removed.
-   *  @param removedNodeType - (NodeTypeTSSD) type of the removed node
+   *  @param removedNodesType - (NodeTypeTSSD) type of the removed node
    */
   private removeFromVisualization(
     removedNodeId: number,
     removedNodeType: NodeTypeTSSD
   ) {
-    this.removeNodeRecursive(removedNodeId, removedNodeType);
-    this.visualization.refreshSelection();
+    if (
+      this.visualization.getNodeInfo(removedNodeId, removedNodeType) !=
+      undefined
+    ) {
+      this.removeNodeRecursive(removedNodeId, removedNodeType);
+
+      this.visualization.refreshSelection();
+    }
   }
 
-  public removeNode(nodeId: number, nodeType: NodeTypeTSSD) {
+  /** Removes node from trap space succession diagram.
+   *  @param nodeIds: (number) array of Ids of the to be removed nodes,
+   *  @param nodeType: (NodeTypeTSSD) type of to be removed nodes,
+   */
+  private removeNode(nodeIds: number, nodeType: NodeTypeTSSD) {
     this.computationManagerServ.TrapSpaceSuccessionDiagram.deleteNode(
-      nodeId,
+      nodeIds,
       nodeType,
       (removedNodeId, removedNodeType) => {
         this.removeFromVisualization(removedNodeId, removedNodeType);
+      }
+    );
+  }
+
+  public removeNodeWithWarning(nodeId: number, nodeType: NodeTypeTSSD) {
+    this.pageWarningServ.deleteNodeWithChildrenWarning(
+      () => {
+        this.removeNode(nodeId, nodeType);
+      },
+      () => {
+        const childNodes = this.visualization.getChildNodes(nodeId, nodeType);
+
+        if (isErr(childNodes)) {
+          this.messageServ.showError(
+            'Error when trying to delete nodes children: ' + childNodes.error
+          );
+          return;
+        }
+
+        if (childNodes.value.nodes.length < 1) {
+          this.messageServ.showError(
+            `Error when trying to delete nodes children: Couldn't find children for node ${nodeId}. Please try again.`
+          );
+          return;
+        }
+
+        if (childNodes.value.parentType != 'stable-motif') {
+          childNodes.value.nodes.forEach((node) =>
+            this.removeNode(node.id, 'stable-motif')
+          );
+        } else {
+          childNodes.value.nodes.forEach((node) =>
+            this.removeNode(node.id, node.type)
+          );
+        }
       }
     );
   }

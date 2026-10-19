@@ -11,6 +11,8 @@ import UtilitiesMenuOtherStrings from './UtilitiesMenu/UtilitiesMenuOtherStrings
 import type { UtilitiesMenuOtherStringsInt } from './UtilitiesMenu/UtilitiesMenuOtherStringsInt';
 import VisualOptionsTabOtherStrings from './VisualOptionsTab/VisualOptionsTabOtherStrings';
 import type { VisualOptionsTabOtherStringsInt } from './VisualOptionsTab/VisualOptionsTabOtherStringsInt';
+import WarningsOtherStrings from './Warnings/WarningsOtherStrings';
+import type { WarningsOtherStringsInt } from './Warnings/WarningsOtherStringsInt';
 
 class OtherStrings implements OtherStringsInt {
   public OverviewTab: OverviewTabOtherStringsInt =
@@ -24,6 +26,8 @@ class OtherStrings implements OtherStringsInt {
 
   public SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowOtherStringsInt =
     new SelectTrapSpacesOverlayWindowOtherStrings();
+
+  public Warnings: WarningsOtherStringsInt = new WarningsOtherStrings();
 
   public UtilitiesMenu: UtilitiesMenuOtherStringsInt =
     new UtilitiesMenuOtherStrings();

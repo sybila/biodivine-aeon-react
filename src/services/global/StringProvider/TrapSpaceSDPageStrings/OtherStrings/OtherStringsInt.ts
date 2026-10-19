@@ -4,6 +4,7 @@ import type { OverviewTabOtherStringsInt } from './OverviewTab/OverviewTabOtherS
 import type { SelectTrapSpacesOverlayWindowOtherStringsInt } from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowOtherStringsInt';
 import type { UtilitiesMenuOtherStringsInt } from './UtilitiesMenu/UtilitiesMenuOtherStringsInt';
 import type { VisualOptionsTabOtherStringsInt } from './VisualOptionsTab/VisualOptionsTabOtherStringsInt';
+import type { WarningsOtherStringsInt } from './Warnings/WarningsOtherStringsInt';
 
 /** Class which provides uncategorized strings (not tooltips, help texts....) for the Trap Space Succession Diagram page. */
 export interface OtherStringsInt {
@@ -13,6 +14,8 @@ export interface OtherStringsInt {
   VisualOptionsTab: VisualOptionsTabOtherStringsInt;
 
   SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowOtherStringsInt;
+
+  Warnings: WarningsOtherStringsInt;
 
   UtilitiesMenu: UtilitiesMenuOtherStringsInt;
 }

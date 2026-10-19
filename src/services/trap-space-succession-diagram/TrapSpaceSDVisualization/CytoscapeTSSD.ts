@@ -393,6 +393,21 @@ class CytoscapeTSSD implements TrapSpaceSDVisualizationInt {
     return rootNode;
   }
 
+  public getNodeInfo(nodeId: number, nodeType: NodeTypeTSSD) {
+    const node = this.getNode(nodeId, nodeType);
+
+    if (node.empty()) {
+      return undefined;
+    }
+
+    const data = node.data().treeData;
+
+    return {
+      type: nodeType,
+      nodeInfo: data,
+    };
+  }
+
   public getParentNode(targetId: string) {
     let parentEdge = this.cytoscape!.edges("edge[target='" + targetId + "']");
     if (parentEdge.length == 0) {

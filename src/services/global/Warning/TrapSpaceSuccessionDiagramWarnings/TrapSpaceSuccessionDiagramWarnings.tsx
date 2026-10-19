@@ -1,10 +1,8 @@
-import SelectTrapSpacesOverlayWindow from '../../../../components/react-components/trap-space-succession-diagram/overlay-windows/SelectTrapSpacesOverlayWindow';
 import type { OverlayWindowState } from '../../../../stores/ContentOverlayWindow/OverlayWindowState';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { VariablesStatus } from '../../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { WarningState } from '../../../../stores/Warning/WarningState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
-import type { NodeDataTSSD } from '../../../../types/types';
 import type { TrapSpaceSDPageStringsInt } from '../../StringProvider/TrapSpaceSDPageStrings/TrapSpaceSDPageStringsInt';
 import type { TrapSpaceSuccessionDiagramWarningsInt } from './TrapSpaceSuccessionDiagramWarningsInt';
 
@@ -35,63 +33,34 @@ class TrapSpaceSuccessionDiagramWarnings implements TrapSpaceSuccessionDiagramWa
 
   // #endregion
 
-  public selectTrapSpacesWarning(
-    makeDecisionFunction: (selectedTrapSpacesIds: Array<number>) => void,
-    availableTrapSpaces: Array<NodeDataTSSD>
+  public deleteNodeWithChildrenWarning(
+    deleteNodeFunction: () => void,
+    deleteChildNodesFunction: () => void
   ) {
     this.warningStore
       .getState()
       .addWarning(
-        'This stable motif has multiple available trap spaces. Do you want to import all of them or only their subset?',
+        this.stringProviderTSSDServ.OtherStrings.Warnings.deleteNodeWithChildrenWarningMessage(),
         [
           {
-            text: 'Import All',
-            action: () => {
-              makeDecisionFunction(
-                availableTrapSpaces.map((trapSpace) => trapSpace.id)
-              );
-            },
+            text: this.stringProviderTSSDServ.OtherStrings.Warnings.deleteNodeWithChildrenCancelButton(),
+            action: () => {},
+            
+            buttonWidth: '220px',
           },
           {
-            text: 'Select Subset',
-            buttonWidth: '130px',
+            text: this.stringProviderTSSDServ.OtherStrings.Warnings.deleteNodeWithChildrenDeleteNodeWithChildrenButton(),
             action: () => {
-              this.overlayWindowStore.getState().setCurrentContent({
-                header: 'Select trap spaces',
-                content: (
-                  <SelectTrapSpacesOverlayWindow
-                    trapSpacesForSelection={availableTrapSpaces}
-                    variableNames={this.variablesStore
-                      .getState()
-                      .getAllVariables()
-                      .map((variable) => variable.name)}
-                    makeDecisionFunction={(trapSpaces) =>
-                      makeDecisionFunction(
-                        trapSpaces.map((trapSpace) => trapSpace.id)
-                      )
-                    }
-                    filterFilterTableVariablesFunction={function (
-                      variableNames: Array<string>,
-                      searchTerm: string
-                    ): Array<string> {
-                      return variableNames;
-                    }}
-                    generalStringProviderServ={
-                      (this,
-                      this.stringProviderTSSDServ.OtherStrings
-                        .SelectTrapSpacesOverlayWindow)
-                    }
-                    tooltipStringProviderServ={
-                      this.stringProviderTSSDServ.Tooltips
-                        .SelectTrapSpacesOverlayWindow
-                    }
-                    helpHoverStore={this.helpHoverStore}
-                  />
-                ),
-                showCloseButton: false,
-                closeOnBgClick: false,
-              });
+              deleteNodeFunction();
             },
+            buttonWidth: '220px',
+          },
+          {
+            text: this.stringProviderTSSDServ.OtherStrings.Warnings.deleteNodeWithChildrenDeleteOnlyChildrenButton(),
+            action: () => {
+              deleteChildNodesFunction();
+            },
+            buttonWidth: '220px',
           },
         ]
       );

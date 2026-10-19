@@ -30,11 +30,13 @@ export interface TrapSpaceSuccessionDiagramInt {
    *  Unselects and re-selects the current selected node. */
   refreshSelection: () => void;
 
-  /** Removes node from trap space succession diagram.
-   *  @param nodeId: (number) Id of the node to be removed,
-   *  @param nodeType: (NodeTypeTSSD) type of the node to be removed,
+  /**
+   * Removes a node from the visualization after showing a confirmation warning.
+   *
+   * @param nodeId   - (number) The unique identifier of the node to be removed.
+   * @param nodeType - (NodeTypeTSSD) The type of the node
    */
-  removeNode(nodeId: number, nodeType: NodeTypeTSSD): void;
+  removeNodeWithWarning(nodeId: number, nodeType: NodeTypeTSSD): void;
 
   // #endregion
 
