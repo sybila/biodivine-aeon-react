@@ -201,7 +201,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
       return;
     }
 
-    if (children.parentType == 'trap-space') {
+    if (children.parentType == 'trap-space-decision') {
       children.nodes.forEach((node) =>
         this.removeNodeRecursive(node.id, 'stable-motif')
       );
@@ -238,12 +238,55 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #region --- Make Decision ---
 
+  private withoutSelected(
+    decisions: NodesWithParentInfoTSSD,
+    selectedIdSet: Set<number>
+  ): NodesWithParentInfoTSSD {
+    if (decisions.parentType === 'stable-motif') {
+      return {
+        ...decisions,
+        nodes: decisions.nodes.filter((node) => !selectedIdSet.has(node.id)),
+      };
+    }
+    return {
+      ...decisions,
+      nodes: decisions.nodes.filter((node) => !selectedIdSet.has(node.id)),
+    };
+  }
+
+  private filterOutAlreadySelectedDecisions(
+    decisions: NodesWithParentInfoTSSD
+  ): NodesWithParentInfoTSSD | undefined {
+    const childrenNodesRes = this.visualization.getChildNodes(
+      decisions.parentId,
+      decisions.parentType
+    );
+
+    if (isErr(childrenNodesRes)) {
+      this.messageServ.showError(
+        'Failed to filter opened decisions: Available decisions list may contain already selected ones.'
+      );
+      return undefined;
+    }
+
+    const childrenIdSet = new Set(
+      childrenNodesRes.value.nodes.map((node) => node.id)
+    );
+
+    return this.withoutSelected(decisions, childrenIdSet);
+  }
+
   public getDecisions(nodeId: number, nodeType: DecisionNodeTypeTSSD) {
     this.computationManagerServ.TrapSpaceSuccessionDiagram.getDecisions(
       nodeId,
       nodeType,
       (decisions: NodesWithParentInfoTSSD) => {
-        this.trapSpaceSDStatusStore.getState().setAvailableDecisions(decisions);
+        const filteredDecisions =
+          this.filterOutAlreadySelectedDecisions(decisions);
+
+        this.trapSpaceSDStatusStore
+          .getState()
+          .setAvailableDecisions(filteredDecisions ?? decisions);
       }
     );
   }
@@ -253,6 +296,19 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     sourceNodeType: DecisionNodeTypeTSSD,
     selectedNodeIds: Array<number>
   ) {
+    const currentDecisions =
+      this.trapSpaceSDStatusStore.getState().availableDecisions;
+
+    const selectedIdSet = new Set(selectedNodeIds);
+
+    if (currentDecisions != null) {
+      this.trapSpaceSDStatusStore
+        .getState()
+        .setAvailableDecisions(
+          this.withoutSelected(currentDecisions, selectedIdSet)
+        );
+    }
+
     this.computationManagerServ.TrapSpaceSuccessionDiagram.makeDecision(
       sourceNodeId,
       sourceNodeType,

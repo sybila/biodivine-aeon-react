@@ -545,7 +545,7 @@ export type NodeWithChildrenAndTypeTSSD =
 export type NodesWithParentInfoTSSD =
   | {
       parentId: number;
-      parentType: 'trap-space';
+      parentType: 'trap-space-decision';
       nodes: Array<StableMotifInfo>;
     }
   | {
