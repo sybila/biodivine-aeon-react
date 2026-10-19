@@ -281,7 +281,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
       decisions = {
         parentId: sourceId,
-        parentType: 'trap-space',
+        parentType: 'trap-space-decision',
         nodes: stableMotifs,
       };
     } else {
@@ -331,7 +331,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
       nodes = {
         parentId: sourceId,
-        parentType: 'trap-space',
+        parentType: 'trap-space-decision',
         nodes: stableMotifs,
       };
     } else {

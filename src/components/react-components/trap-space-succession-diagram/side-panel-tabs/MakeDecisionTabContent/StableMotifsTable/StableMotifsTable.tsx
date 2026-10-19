@@ -25,7 +25,7 @@ const StableMotifsTable: React.FC<StableMotifsTableProps> = ({
   if (
     !motifsOpened ||
     !stableMotifs ||
-    stableMotifs.parentType != 'trap-space'
+    stableMotifs.parentType != 'trap-space-decision'
   ) {
     return (
       <TextIconButtonReact
