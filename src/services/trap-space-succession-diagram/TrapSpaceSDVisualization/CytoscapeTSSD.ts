@@ -418,15 +418,17 @@ class CytoscapeTSSD implements TrapSpaceSDVisualizationInt {
     const childNodes = outgoingEdges.targets();
 
     if (parentType === 'trap-space-decision' || parentType === 'leaf') {
-      const payload = childNodes.map((n) => n.data() as StableMotifInfo);
+      const payload: StableMotifInfo[] = childNodes.map((n) =>
+        n.data('treeData')
+      );
       return ok({
         parentId,
-        parentType: 'trap-space',
+        parentType: 'trap-space-decision',
         nodes: payload,
       });
     }
 
-    const payload = childNodes.map((n) => n.data() as NodeDataTSSD);
+    const payload: NodeDataTSSD[] = childNodes.map((n) => n.data('treeData'));
     return ok({
       parentId,
       parentType: 'stable-motif',
