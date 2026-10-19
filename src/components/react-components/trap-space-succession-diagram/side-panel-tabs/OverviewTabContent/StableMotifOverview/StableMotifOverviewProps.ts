@@ -1,8 +1,8 @@
 import type { OverviewTabOtherStringsInt } from '../../../../../../services/global/StringProvider/TrapSpaceSDPageStrings/OtherStrings/OverviewTab/OverviewTabOtherStringsInt';
-import type { NodeDataTSSD } from '../../../../../../types/types';
+import type { StableMotifInfo } from '../../../../../../types/types';
 
-export type NodeOverviewProps = {
-  selectedNode: NodeDataTSSD;
+export type StableMotifOverviewProps = {
+  stableMotif: StableMotifInfo;
 
   generalStringsServ: OverviewTabOtherStringsInt;
 };

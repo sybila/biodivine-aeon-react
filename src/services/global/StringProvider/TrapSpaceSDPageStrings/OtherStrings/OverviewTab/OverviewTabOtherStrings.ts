@@ -4,7 +4,7 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
   // #region --- Global ---
 
   public noSelectedItem() {
-    return 'Select a node or edge to view its overview.';
+    return 'Select a node (trap space or stable motif) to view its overview.';
   }
 
   public statisticsHeader() {
@@ -28,7 +28,7 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
   // #region --- Edge ----
 
   public edgeStateVariablesHeader() {
-    return 'Stable Motif (Edge) State';
+    return 'Stable Motif State';
   }
 
   public numberOfMinTrapSpacesStatName() {
@@ -40,7 +40,7 @@ class OverviewTabOtherStrings implements OverviewTabOtherStringsInt {
   // #region --- Node ---
 
   public nodeStateVariablesHeader() {
-    return 'Trap Space (Node) State';
+    return 'Trap Space State';
   }
 
   public numberOfChildrenStatName() {

@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../../lit-wrappers/StatTableReact';
-import type { NodeOverviewProps } from './NodeOverviewProps';
+import type { TrapSpaceOverviewProps } from './TrapSpaceOverviewProps';
 
-const NodeOverview: React.FC<NodeOverviewProps> = ({
-  selectedNode,
+const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
+  trapSpace: selectedNode,
   generalStringsServ,
 }) => {
   const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
@@ -35,12 +35,6 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({
         nameWidth: '60%',
         valueWidth: '39%',
       },
-      // {
-      //   name: generalStringsServ.numberOfChildrenStatName(),
-      //   value: selectedNode.stableMotifs.length.toString(),
-      //   nameWidth: '60%',
-      //   valueWidth: '39%',
-      // },
       {
         name: generalStringsServ.numberOfFixedVarsStatName(),
         value: stateNumbers[0].toString(),
@@ -105,4 +99,4 @@ const NodeOverview: React.FC<NodeOverviewProps> = ({
   );
 };
 
-export default NodeOverview;
+export default TrapSpaceOverview;

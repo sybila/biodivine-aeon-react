@@ -1,6 +1,6 @@
 import NoDataText from '../../../global/NoDataText/NoDataText';
-import EdgeOverview from './EdgeOverview/EdgeOverview';
-import NodeOverview from './NodeOverview/NodeOverview';
+import StableMotifOverview from './StableMotifOverview/StableMotifOverview';
+import TrapSpaceOverview from './TrapSpaceOverview/TrapSpaceOverview';
 import type { OverviewTabContentProps } from './OverviewTabContentProp';
 
 const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
@@ -18,13 +18,13 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
     <div className="flex flex-col items-center justify-center w-full h-fit gap-2 pb-1">
       {selectedItem.type === 'trap-space-decision' ||
       selectedItem.type === 'leaf' ? (
-        <NodeOverview
-          selectedNode={selectedItem.nodeInfo}
+        <TrapSpaceOverview
+          trapSpace={selectedItem.nodeInfo}
           generalStringsServ={generalStringsServ}
         />
       ) : selectedItem.type === 'stable-motif' ? (
-        <EdgeOverview
-          selectedEdge={selectedItem.nodeInfo}
+        <StableMotifOverview
+          stableMotif={selectedItem.nodeInfo}
           generalStringsServ={generalStringsServ}
         />
       ) : null}
