@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../../lit-wrappers/StatTableReact';
-import type { EdgeOverviewProps } from './EdgeOverviewProps';
+import type { StableMotifOverviewProps } from './StableMotifOverviewProps';
 
-const EdgeOverview: React.FC<EdgeOverviewProps> = ({
-  selectedEdge,
+const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
+  stableMotif: selectedEdge,
   generalStringsServ,
 }) => {
   const [stateAsText, setStateAsText] = useState<boolean>(false);
@@ -105,4 +105,4 @@ const EdgeOverview: React.FC<EdgeOverviewProps> = ({
   );
 };
 
-export default EdgeOverview;
+export default StableMotifOverview;
