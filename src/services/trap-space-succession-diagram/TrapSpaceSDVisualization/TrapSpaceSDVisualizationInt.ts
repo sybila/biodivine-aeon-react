@@ -40,6 +40,16 @@ export interface TrapSpaceSDVisualizationInt {
 
   // #region --- Node Getters ---
 
+  /**
+   * Retrieves information for a specific node.
+   *
+   * @param nodeId   - The numeric identifier of the node.
+   * @param nodeType - The type of the node (`NodeTypeTSSD`).
+   * @returns An object containing the node’s information (`NodeWithType`) if the node exists,
+   *          otherwise `undefined`.
+   */
+  getNodeInfo(nodeId: number, nodeType: NodeTypeTSSD): NodeWithType | undefined;
+
   /** Returns the children of a specific node.
    *  @param sourceId (number) - The ID of the parent node for which you want its children.
    *  @param sourceType (NodeTypeTSSD) - The type of the parent node (e.g., "stable-motif").
