@@ -2,8 +2,6 @@ import AttractorClassesTabTooltips from './AttractorClassesTab/AttractorClassesT
 import type { AttractorClassesTabTooltipsInt } from './AttractorClassesTab/AttractorClassesTabTooltipsInt';
 import MakeDecisionTabTooltips from './MakeDecisionTab/MakeDecisionTabTooltips';
 import type { MakeDecisionTabTooltipsInt } from './MakeDecisionTab/MakeDecisionTabTooltipsInt';
-import SelectTrapSpacesOverlayWindowTooltips from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowTooltips';
-import type { SelectTrapSpacesOverlayWindowTooltipsInt } from './SelectTrapSpacesOverlayWindow/SelectTrapSpacesOverlayWindowTooltipsInt';
 import type { TooltipsInt } from './TooltipsInt';
 import UtilitiesMenuTooltips from './UtilitiesMenu/UtilitiesMenuTooltips';
 import type { UtilitiesMenuTooltipsInt } from './UtilitiesMenu/UtilitiesMenuTooltipsInt';
@@ -17,9 +15,6 @@ class Tooltips implements TooltipsInt {
     new AttractorClassesTabTooltips();
   public VisualOptionsTab: VisualOptionsTabTooltipsInt =
     new VisualOptionsTabTooltips();
-
-  public SelectTrapSpacesOverlayWindow: SelectTrapSpacesOverlayWindowTooltipsInt =
-    new SelectTrapSpacesOverlayWindowTooltips();
 
   public UtilitiesMenu: UtilitiesMenuTooltipsInt = new UtilitiesMenuTooltips();
 }
