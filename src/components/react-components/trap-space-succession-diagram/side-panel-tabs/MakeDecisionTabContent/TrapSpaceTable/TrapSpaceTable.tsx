@@ -1,32 +1,52 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
 import type { TrapSpaceTableProps } from './TrapSpaceTableProps';
 
 import PlusIcon from '../../../../../../assets/icons/add_box.svg';
-import type { NodeDataTSSD, StableMotifInfo } from '../../../../../../types/types';
+import type { NodeDataTSSD } from '../../../../../../types/types';
 import BasicTable from '../../../../global/BasicTable/BasicTable';
+import SectionWithDotHeader from '../../../../global/SectionWithDotHeader/SectionWithDotHeader';
+import type { TSSDVariableTrapSpaceFilterStateArray } from '../VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTableProps';
 import TrapSpaceRow from './TrapSpaceRow/TrapSpaceRow';
+import TrapSpaceTableFilters from './TrapSpaceTableFilters/TrapSpaceTableFilters';
 
 const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
   selectedNodeId,
+  variableNames,
 
   trapSpaceSDServ,
   generalStringsServ,
   tooltipStringsServ,
+  searchAndFilterHelpersServ,
 
   trapSpaceSDStatusStore,
   helpHoverStore,
 }) => {
-  const [motifsOpened, setMotifsOpened] = useState(false);
+  const [trapSpacesOpened, setTrapSpacesOpened] = useState(false);
   const trapSpaces = trapSpaceSDStatusStore(
     (state) => state.availableDecisions
   );
 
-  if (
-    !motifsOpened ||
-    !trapSpaces ||
-    trapSpaces.parentType != 'stable-motif'
-  ) {
+  const [trapSpaceFilter, setTrapSpaceFilter] =
+    useState<TSSDVariableTrapSpaceFilterStateArray>([]);
+
+  const filteredTrapSpaces = useMemo(() => {
+    if (trapSpaces == null || trapSpaces.parentType != 'stable-motif') {
+      return null;
+    }
+
+    return trapSpaceFilter.length < 1
+      ? trapSpaces.nodes
+      : trapSpaces.nodes.filter((trapSpace) =>
+          trapSpaceFilter.every(
+            (filterTrapSpace) =>
+              trapSpace.variableValues[filterTrapSpace.varName] ===
+              filterTrapSpace.trapSpaceValue
+          )
+        );
+  }, [trapSpaces, trapSpaceFilter]);
+
+  const renderGetTrapSpaceButton = () => {
     return (
       <TextIconButtonReact
         className="mb-2"
@@ -41,7 +61,7 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
           if (!trapSpaces) {
             trapSpaceSDServ.getDecisions(selectedNodeId, 'stable-motif');
           }
-          setMotifsOpened(true);
+          setTrapSpacesOpened(true);
           helpHoverStore.getState().clear();
         }}
         onMouseEnter={(e: React.MouseEvent) =>
@@ -57,11 +77,14 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
         onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     );
-  }
+  };
 
   const renderTable = (availableTrapSpaces: NodeDataTSSD[]) => {
     return (
-      <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
+      <section
+        className="flex flex-col w-full min-h-[150px] gap-2 overflow-y-auto"
+        style={{ maxHeight: 'calc(70vh - 300px)' }}
+      >
         {availableTrapSpaces.map((trapSpace, index) => (
           <TrapSpaceRow
             key={index}
@@ -78,14 +101,44 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
   };
 
   return (
-    <BasicTable
-      elements={trapSpaces.nodes}
-      noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
-      noRowsTextColor="var(--color-primary-text)"
-      renderRowsWithContainer={(trapSpaces: NodeDataTSSD[]) =>
-        renderTable(trapSpaces)
-      }
-    />
+    <>
+      <SectionWithDotHeader
+        text="Filters"
+        textColor="var(--color-primary-text)"
+        width="100%"
+      >
+        <TrapSpaceTableFilters
+          variableNames={variableNames}
+          setFilteredVariables={setTrapSpaceFilter.bind(this)}
+          generalStringProviderServ={generalStringsServ}
+          tooltipStringProviderServ={tooltipStringsServ}
+          searchAndFilterHelpersServ={searchAndFilterHelpersServ}
+          helpHoverStore={helpHoverStore}
+        />
+      </SectionWithDotHeader>
+
+      <SectionWithDotHeader
+        text="Decisions"
+        textColor="var(--color-primary-text)"
+        width="100%"
+      >
+        {!trapSpacesOpened ||
+        !trapSpaces ||
+        !filteredTrapSpaces ||
+        trapSpaces.parentType != 'stable-motif' ? (
+          renderGetTrapSpaceButton()
+        ) : (
+          <BasicTable
+            elements={filteredTrapSpaces}
+            noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
+            noRowsTextColor="var(--color-primary-text)"
+            renderRowsWithContainer={(trapSpaces: NodeDataTSSD[]) =>
+              renderTable(trapSpaces)
+            }
+          />
+        )}
+      </SectionWithDotHeader>
+    </>
   );
 };
 
