@@ -1,8 +1,14 @@
+import { EmptyBase } from '../../../../../../types/mixins';
+import PageSelectorTooltips from '../../../common-tooltips/PageSelectorTooltips/PageSelectorTooltips';
 import VariableStateFilterTableTooltips from '../../common-strings/VariableStateFilterTable/VariableStateFilterTableTooltips/VariableStateFilterTableTooltips';
 import type { MakeDecisionTabTooltipsInt } from './MakeDecisionTabTooltipsInt';
 
+const Mixins = VariableStateFilterTableTooltips(
+  PageSelectorTooltips(EmptyBase)
+);
+
 class MakeDecisionTabTooltips
-  extends VariableStateFilterTableTooltips
+  extends Mixins
   implements MakeDecisionTabTooltipsInt
 {
   public getDecisionsButton() {
@@ -11,13 +17,6 @@ class MakeDecisionTabTooltips
 
   public selectDecisionButton() {
     return 'Select stable motif (edge) leading into new percolated trap space.';
-  }
-
-  public changeSelectedVariablesFilter(trapSpaceValue: string) {
-    return `Change filter value of selected variables to ${trapSpaceValue}.`;
-  }
-  public removeSelectedVariablesFromFilter() {
-    return 'Remove selected variables from filter.';
   }
 }
 

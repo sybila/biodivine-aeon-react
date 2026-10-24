@@ -1,11 +1,14 @@
+import { EmptyBase } from '../../../../../types/mixins';
 import {
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
 } from '../../../../../types/types';
-import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
+import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonsTooltips/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 
-class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
+const Mixin = SelectionButtonsTooltips(EmptyBase);
+
+class Tooltips extends Mixin implements TooltipsInt {
   // #region Variable Info
 
   public variableArity(arity: number) {

@@ -1,7 +1,10 @@
-import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
+import { EmptyBase } from '../../../../../types/mixins';
+import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonsTooltips/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 
-class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {
+const Mixin = SelectionButtonsTooltips(EmptyBase);
+
+class Tooltips extends Mixin implements TooltipsInt {
   // #region --- Filters ---
   changeVariableFilterStatus(varFilterStatus: string): string {
     return `Set selected variables to be considered by filter as '${varFilterStatus}'`;
