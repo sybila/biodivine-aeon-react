@@ -1,7 +1,8 @@
-import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
+import type { PageSelectorTooltipsInt } from '../../common-tooltips/PageSelectorTooltips/PageSelectorTooltipsInt';
+import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltips/SelectionButtonsTooltipsInt';
 
 /** Class which provides tooltips for the control perturbation table page. */
-export interface TooltipsInt extends SelectionButtonsTooltipsInt {
+export interface TooltipsInt extends SelectionButtonsTooltipsInt, PageSelectorTooltipsInt {
   // #region --- Filters ---
 
   changeVariableFilterStatus(varFilterStatus: string): string;
@@ -14,14 +15,6 @@ export interface TooltipsInt extends SelectionButtonsTooltipsInt {
   changeSortDirection(): string;
   changeSortingAttribute(): string;
   applySorts(): string;
-
-  // #endregion
-
-  // #region --- Paging ---
-
-  nextPage(isAvailable: boolean): string;
-  previousPage(isAvailable: boolean): string;
-  pageIndicator(): string;
 
   // #endregion
 

@@ -1,4 +1,4 @@
-import type { SelectionButtonsTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/SelectionButtonsTooltipsInt';
+import type { SelectionButtonsTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/SelectionButtonsTooltips/SelectionButtonsTooltipsInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 

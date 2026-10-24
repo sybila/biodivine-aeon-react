@@ -1,5 +1,5 @@
 import type { PhenotypeStatus } from '../../../../../types/types';
-import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
+import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltips/SelectionButtonsTooltipsInt';
 
 /** Tooltips for the Model Editor page */
 export interface TooltipsInt extends SelectionButtonsTooltipsInt {
