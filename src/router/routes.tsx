@@ -169,9 +169,13 @@ export const TrapSpaceSuccessionDiagramRoute = createRoute({
       pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ.TrapSpaceSDPage
       }
+      searchAndFilterHelpersServ={
+        ObjectProvider.UtilitiesServiceProvider.searchAndFilterHelpersServ
+      }
       trapSpaceSDStatusStore={
         ObjectProvider.StoresProvider.trapSpaceSDStatusStore
       }
+      variablesStore={ObjectProvider.StoresProvider.variablesStore}
       helpHoverStore={ObjectProvider.StoresProvider.helpHoverStore}
     />
   ),

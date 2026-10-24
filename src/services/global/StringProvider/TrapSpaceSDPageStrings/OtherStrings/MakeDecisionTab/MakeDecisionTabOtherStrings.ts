@@ -1,6 +1,10 @@
+import VariableStateFilterTableOtherStrings from '../../common-strings/VariableStateFilterTable/VariableStateFilterTableOtherStrings/VariableStateFilterTableOtherStrings';
 import type { MakeDecisionTabOtherStringsInt } from './MakeDecisionTabOtherStringsInt';
 
-class MakeDecisionTabOtherStrings implements MakeDecisionTabOtherStringsInt {
+class MakeDecisionTabOtherStrings
+  extends VariableStateFilterTableOtherStrings
+  implements MakeDecisionTabOtherStringsInt
+{
   cannotMakeDecisionOnLeafNode() {
     return 'Cannot make decision on minimal trap space (choose node which is not a leaf node to make further decisions).';
   }

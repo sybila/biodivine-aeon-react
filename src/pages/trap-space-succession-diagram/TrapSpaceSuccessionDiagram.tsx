@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ContentTab from '../../components/react-components/global/ContentTab/ContentTab';
 import SideButtonMenu from '../../components/react-components/global/SideButtonMenu/SideButtonMenu';
 import VisualizationCanvas from '../../components/react-components/global/VisualizationCanvas/VisualizationCanvas';
@@ -27,12 +27,25 @@ import UtilitiesMenu from '../../components/react-components/trap-space-successi
 const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
   trapSpaceSDServ,
   pageStringProviderServ,
+  searchAndFilterHelpersServ,
 
   trapSpaceSDStatusStore,
+  variablesStore,
   helpHoverStore,
 }) => {
   /** Check if the succession diagram canvas is initialized. */
   const [initialized, setInitialized] = useState<boolean>(false);
+
+  const variables = variablesStore((state) => state.variables);
+
+  const variableNames = useMemo(
+    () =>
+      variablesStore
+        .getState()
+        .getAllVariables()
+        .map((variable) => variable.name),
+    [variables, variablesStore]
+  );
 
   const activeTab: MenuTabTypeTrapSpaceSD = trapSpaceSDStatusStore(
     (state) => state.activeMenuTab
@@ -56,11 +69,13 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
       case 'Make Decision':
         return (
           <MakeDecisionTabContent
+            variableNames={variableNames}
             trapSpaceSDServ={trapSpaceSDServ}
             generalStringsServ={
               pageStringProviderServ.OtherStrings.MakeDecisionTab
             }
             tooltipStringsServ={pageStringProviderServ.Tooltips.MakeDecisionTab}
+            searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             trapSpaceSDStatusStore={trapSpaceSDStatusStore}
             helpHoverStore={helpHoverStore}
           />
