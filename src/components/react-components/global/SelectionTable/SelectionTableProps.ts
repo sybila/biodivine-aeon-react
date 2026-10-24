@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { PageSelectorTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/PageSelectorTooltips/PageSelectorTooltipsInt';
 import type { SelectionButtonsTooltipsInt } from '../../../../services/global/StringProvider/common-tooltips/SelectionButtonsTooltips/SelectionButtonsTooltipsInt';
 import type { HelpHoverState } from '../../../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../../../stores/ZustandStoreType';
@@ -46,6 +47,14 @@ export type SelectionTableProps<ID extends string | number, Element> = {
     allElementIds: ID[];
     selectionButtonsTooltips: SelectionButtonsTooltipsInt;
     helpHoverStore: ZustandStore<HelpHoverState>;
+  };
+
+  pagingWrapperConfig?: {
+    pagingWrapperHeight?: string;
+    pagingWrapperWidth?: string;
+    pagingWrapperTooltips: PageSelectorTooltipsInt;
+    helpHoverStore: ZustandStore<HelpHoverState>;
+    numberOfElementsOnPage?: number;
   };
 
   renderRowsWithContainer: (elements: Array<Element>) => ReactNode;

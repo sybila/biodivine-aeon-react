@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactElement } from 'react';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
+import PagingWrapper from '../PagingWrapper/PagingWrapper';
 import SelectionButtons from '../SelectionButtons/SelectionButtons';
 import type { SelectionTableProps } from './SelectionTableProps';
 
@@ -31,12 +32,15 @@ function SelectionTable<ID extends string | number, Element>({
 
   selectionButtonsConfig = undefined,
 
+  pagingWrapperConfig = undefined,
+
   renderRowsWithContainer,
 
   hideTooltipFunction,
 }: SelectionTableProps<ID, Element>): ReactElement {
   const [componentSearchText, setComponentSearchText] =
     useState<string>(getSearchText());
+  const [elementsOnPage, setElementsOnPage] = useState<Array<Element>>([]);
 
   const setSearch = (name: string) => {
     if (name !== componentSearchText) {
@@ -48,6 +52,26 @@ function SelectionTable<ID extends string | number, Element>({
   const filteredElements = useMemo(() => {
     return filterElements(elements, componentSearchText);
   }, [elements, filterElements]);
+
+  const renderPagingWrapper = (children: React.ReactNode) => {
+    if (pagingWrapperConfig == undefined) {
+      return children;
+    }
+
+    return (
+      <PagingWrapper
+        wrapperHeight={pagingWrapperConfig.pagingWrapperHeight ?? 'fit-content'}
+        wrapperWidth={pagingWrapperConfig.pagingWrapperWidth ?? '100%'}
+        elements={filteredElements}
+        numberOfElementsOnPage={pagingWrapperConfig.numberOfElementsOnPage ?? undefined}
+        setElementsOnPage={(elements) => setElementsOnPage(elements)}
+        tooltipStringsServ={pagingWrapperConfig.pagingWrapperTooltips}
+        helpHoverStore={pagingWrapperConfig.helpHoverStore}
+      >
+        {children}
+      </PagingWrapper>
+    );
+  };
 
   return (
     <section
@@ -107,19 +131,25 @@ function SelectionTable<ID extends string | number, Element>({
         </section>
       ) : null}
 
-      {!filteredElements || filteredElements.length === 0 ? (
-        <section
-          className="flex justify-center items-center"
-          style={{ height: noRowsHeight, width: noRowsWidth }}
-        >
-          <SimpleHeaderReact
-            textColor={noRowsTextColor}
-            headerText={noRowsPlaceholder}
-            textFontWeight="normal"
-          />
-        </section>
-      ) : (
-        renderRowsWithContainer(filteredElements)
+      {renderPagingWrapper(
+        (pagingWrapperConfig != undefined && elementsOnPage.length < 1) ||
+          (pagingWrapperConfig == undefined &&
+            (!filteredElements || filteredElements.length < 1)) ? (
+          <section
+            className="flex justify-center items-center"
+            style={{ height: noRowsHeight, width: noRowsWidth }}
+          >
+            <SimpleHeaderReact
+              textColor={noRowsTextColor}
+              headerText={noRowsPlaceholder}
+              textFontWeight="normal"
+            />
+          </section>
+        ) : (
+          renderRowsWithContainer(
+            pagingWrapperConfig != undefined ? elementsOnPage : filteredElements
+          )
+        )
       )}
     </section>
   );
