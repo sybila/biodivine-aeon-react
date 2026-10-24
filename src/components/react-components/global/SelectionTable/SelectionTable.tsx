@@ -1,17 +1,20 @@
 import { useMemo, useState, type ReactElement } from 'react';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
+import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import TextInputReact from '../../lit-wrappers/TextInputReact';
 import SelectionButtons from '../SelectionButtons/SelectionButtons';
 import type { SelectionTableProps } from './SelectionTableProps';
 
-function SelectionTable<T extends string | number, E>({
+function SelectionTable<ID extends string | number, Element>({
   elements,
-  getIdFromElement,
-  selectedElementIds,
-  setSelectedElementIds,
+
+  containerHeight = 'fit',
+  containerWidth = '100%',
 
   noRowsPlaceholder,
   noRowsTextColor,
+  noRowsHeight = '100px',
+  noRowsWidth = '98%',
 
   getSearchText,
   setSearchText,
@@ -21,12 +24,17 @@ function SelectionTable<T extends string | number, E>({
   textInputColor,
   textInputBorderColor,
 
-  renderRow,
+  buttons = [],
+  buttonSectionHeight = '50px',
+  buttonHeight = '29px',
+  buttonWidth = '29px',
 
-  selectionButtonTooltips,
+  selectionButtonsConfig = undefined,
 
-  helpHoverStore,
-}: SelectionTableProps<T, E>): ReactElement {
+  renderRowsWithContainer,
+
+  hideTooltipFunction,
+}: SelectionTableProps<ID, Element>): ReactElement {
   const [componentSearchText, setComponentSearchText] =
     useState<string>(getSearchText());
 
@@ -37,16 +45,15 @@ function SelectionTable<T extends string | number, E>({
     }
   };
 
-  const elementIds = useMemo(() => {
-    return elements.map((el) => getIdFromElement(el));
-  }, [elements, getIdFromElement]);
-
   const filteredElements = useMemo(() => {
     return filterElements(elements, componentSearchText);
   }, [elements, filterElements]);
 
   return (
-    <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
+    <section
+      className="flex flex-col items-center  gap-1 mb-3"
+      style={{ height: containerHeight, width: containerWidth }}
+    >
       <TextInputReact
         textColor={textInputTextColor}
         inputColor={textInputColor}
@@ -57,38 +64,54 @@ function SelectionTable<T extends string | number, E>({
         value={componentSearchText}
       />
 
-      <section className="flex flex-row justify-between items-center h-[50px] w-[94%]">
-        {/* <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start">
-          {statusButtons.map(
-            ([label, color, hoverColor, onClick, onMouseEnter], index) => (
-              <TextButtonReact
-                textColor="var(--color-secondary-text)"
-                key={index}
-                compHeight="29px"
-                compWidth="29px"
-                text={label}
-                handleClick={onClick}
-                buttonColor={color}
-                buttonHoverColor={hoverColor}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={() => helpHoverStore.getState().clear()}
-              />
-            )
-          )}
-        </div> */}
-        <SelectionButtons<T>
-          keys={elementIds}
-          selectedVariables={selectedElementIds}
-          setSelectedVariables={(newSelected) =>
-            setSelectedElementIds(newSelected)
-          }
-          tooltips={selectionButtonTooltips}
-          helpHoverStore={helpHoverStore}
-        />
-      </section>
+      {(buttons && buttons.length > 0) ||
+      selectionButtonsConfig != undefined ? (
+        <section
+          className="flex items-center justify-between w-[95%] overflow-y-visible overflow-x-hidden px-1"
+          style={{ height: buttonSectionHeight }}
+        >
+          {buttons && buttons.length > 0 ? (
+            <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start ">
+              {buttons.map((button, index) => (
+                <TextButtonReact
+                  key={index}
+                  text={button.text}
+                  buttonColor={button.buttonBgColor}
+                  buttonHoverColor={button.buttonHoverColor}
+                  handleClick={() => button.handleClick()}
+                  compHeight={buttonHeight}
+                  compWidth={buttonWidth}
+                  onMouseEnter={(e: React.MouseEvent) =>
+                    button.buttonTooltipFunction(e.nativeEvent)
+                  }
+                  onMouseLeave={() => hideTooltipFunction()}
+                />
+              ))}
+            </div>
+          ) : null}
+
+          {selectionButtonsConfig != undefined ? (
+            <SelectionButtons<ID>
+              buttonSize={selectionButtonsConfig.buttonSize ?? buttonHeight}
+              buttonColor={selectionButtonsConfig.buttonColor}
+              buttonHoverColor={selectionButtonsConfig.buttonHoverColor}
+              keys={selectionButtonsConfig.allElementIds}
+              selectedVariables={selectionButtonsConfig.selectedElementsIds}
+              setSelectedVariables={(selected: Set<ID>) => {
+                selectionButtonsConfig.setSelectedElements(selected);
+              }}
+              tooltips={selectionButtonsConfig.selectionButtonsTooltips}
+              helpHoverStore={selectionButtonsConfig.helpHoverStore}
+            />
+          ) : null}
+        </section>
+      ) : null}
 
       {!filteredElements || filteredElements.length === 0 ? (
-        <section className="flex h-[200px] w-[98%] justify-center items-center">
+        <section
+          className="flex justify-center items-center"
+          style={{ height: noRowsHeight, width: noRowsWidth }}
+        >
           <SimpleHeaderReact
             textColor={noRowsTextColor}
             headerText={noRowsPlaceholder}
@@ -96,9 +119,7 @@ function SelectionTable<T extends string | number, E>({
           />
         </section>
       ) : (
-        <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
-          {filteredElements.map((el: E) => renderRow(el))}
-        </section>
+        renderRowsWithContainer(filteredElements)
       )}
     </section>
   );
