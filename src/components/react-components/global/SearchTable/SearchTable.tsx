@@ -64,28 +64,31 @@ function SearchTable<E, ID extends string | number = number>({
         value={componentSearchText}
       />
 
-      {buttons && buttons.length > 0 ? (
+      {(buttons && buttons.length > 0) ||
+      selectionButtonsConfig != undefined ? (
         <section
           className="flex items-center justify-between w-[95%] overflow-y-visible overflow-x-hidden px-1"
           style={{ height: buttonSectionHeight }}
         >
-          <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start ">
-            {buttons.map((button, index) => (
-              <TextButtonReact
-                key={index}
-                text={button.text}
-                buttonColor={button.buttonBgColor}
-                buttonHoverColor={button.buttonHoverColor}
-                handleClick={() => button.handleClick()}
-                compHeight={buttonHeight}
-                compWidth={buttonWidth}
-                onMouseEnter={(e: React.MouseEvent) =>
-                  button.buttonTooltipFunction(e.nativeEvent)
-                }
-                onMouseLeave={() => hideTooltipFunction()}
-              />
-            ))}
-          </div>
+          {buttons && buttons.length > 0 ? (
+            <div className="flex flex-row gap-2 h-full max-w-[50%] items-center justify-start ">
+              {buttons.map((button, index) => (
+                <TextButtonReact
+                  key={index}
+                  text={button.text}
+                  buttonColor={button.buttonBgColor}
+                  buttonHoverColor={button.buttonHoverColor}
+                  handleClick={() => button.handleClick()}
+                  compHeight={buttonHeight}
+                  compWidth={buttonWidth}
+                  onMouseEnter={(e: React.MouseEvent) =>
+                    button.buttonTooltipFunction(e.nativeEvent)
+                  }
+                  onMouseLeave={() => hideTooltipFunction()}
+                />
+              ))}
+            </div>
+          ) : null}
 
           {selectionButtonsConfig != undefined ? (
             <SelectionButtons<ID>
