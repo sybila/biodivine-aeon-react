@@ -106,7 +106,7 @@ const VarTrapSpaceStateFilterTable: React.FC<
             tooltipStringProviderServ.removeSelectedVariablesFromFilter(),
             true,
             -50,
-            80,
+            80
           ),
     },
     {
@@ -175,7 +175,7 @@ const VarTrapSpaceStateFilterTable: React.FC<
         textInputBorderColor="var(--color-secondary-text-inputs-border)"
         renderRowsWithContainer={(variableNames: string[]) => {
           return (
-            <section className="flex flex-col h-[150px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
+            <section className="flex flex-col h-[175px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
               {variableNames.map((variableName) => (
                 <TableRowWithName
                   key={variableName}
@@ -253,6 +253,11 @@ const VarTrapSpaceStateFilterTable: React.FC<
           allElementIds: variableNames,
           selectionButtonsTooltips: tooltipStringProviderServ,
           helpHoverStore: helpHoverStore,
+        }}
+        pagingWrapperConfig={{
+          pagingWrapperTooltips: tooltipStringProviderServ,
+          helpHoverStore: helpHoverStore,
+          numberOfElementsOnPage: 4,
         }}
         hideTooltipFunction={() => helpHoverStore.getState().clear()}
       />
