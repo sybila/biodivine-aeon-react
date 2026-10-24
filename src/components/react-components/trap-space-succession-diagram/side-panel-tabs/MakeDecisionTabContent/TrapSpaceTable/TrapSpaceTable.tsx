@@ -5,6 +5,7 @@ import type { TrapSpaceTableProps } from './TrapSpaceTableProps';
 import PlusIcon from '../../../../../../assets/icons/add_box.svg';
 import type { NodeDataTSSD } from '../../../../../../types/types';
 import BasicTable from '../../../../global/BasicTable/BasicTable';
+import PagingWrapper from '../../../../global/PagingWrapper/PagingWrapper';
 import SectionWithDotHeader from '../../../../global/SectionWithDotHeader/SectionWithDotHeader';
 import type { TSSDVariableTrapSpaceFilterStateArray } from '../VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTableProps';
 import TrapSpaceRow from './TrapSpaceRow/TrapSpaceRow';
@@ -27,6 +28,9 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
     (state) => state.availableDecisions
   );
 
+  const [trapSpacesOnPage, setTrapSpacesOnPage] = useState<Array<NodeDataTSSD>>(
+    []
+  );
   const [trapSpaceFilter, setTrapSpaceFilter] =
     useState<TSSDVariableTrapSpaceFilterStateArray>([]);
 
@@ -128,14 +132,23 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
         trapSpaces.parentType != 'stable-motif' ? (
           renderGetTrapSpaceButton()
         ) : (
-          <BasicTable
+          <PagingWrapper
+            wrapperWidth="100%"
             elements={filteredTrapSpaces}
-            noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
-            noRowsTextColor="var(--color-primary-text)"
-            renderRowsWithContainer={(trapSpaces: NodeDataTSSD[]) =>
-              renderTable(trapSpaces)
-            }
-          />
+            numberOfElementsOnPage={15}
+            setElementsOnPage={setTrapSpacesOnPage.bind(this)}
+            tooltipStringsServ={tooltipStringsServ}
+            helpHoverStore={helpHoverStore}
+          >
+            <BasicTable
+              elements={trapSpacesOnPage}
+              noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
+              noRowsTextColor="var(--color-primary-text)"
+              renderRowsWithContainer={(trapSpaces: NodeDataTSSD[]) =>
+                renderTable(trapSpaces)
+              }
+            />
+          </PagingWrapper>
         )}
       </SectionWithDotHeader>
     </>
