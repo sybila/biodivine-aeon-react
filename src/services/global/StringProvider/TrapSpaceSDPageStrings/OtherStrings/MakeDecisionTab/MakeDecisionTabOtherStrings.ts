@@ -5,33 +5,69 @@ class MakeDecisionTabOtherStrings
   extends VariableStateFilterTableOtherStrings
   implements MakeDecisionTabOtherStringsInt
 {
-  cannotMakeDecisionOnLeafNode() {
+  /* #region --- Common --- */
+
+  public cannotMakeDecisionOnLeafNode() {
     return 'Cannot make decision on minimal trap space (choose node which is not a leaf node to make further decisions).';
   }
 
-  noSelectedNode() {
+  public noSelectedNode() {
     return 'No selected node';
   }
 
-  getTrapSpacesButton() {
-    return 'Get Trap Spaces';
+  public filtersHeader() {
+    return 'Filter';
   }
 
-  getStableMotifsButton() {
-    return 'Get Stable Motifs';
+  public fullStateHeader() {
+    return 'Full State';
   }
 
-  noAvailableStableMotifs() {
+  public getDecisionsButton() {
+    return 'Get Decisions';
+  }
+
+  public numberOfIntepretationsStatName() {
+    return 'Number Of Interpretations';
+  }
+
+  /* #endregion */
+
+  /* #region  --- Stable Motifs Table ---  */
+
+  public stableMotifsTableHeader() {
+    return 'Available Stable Motifs';
+  }
+
+  public noAvailableStableMotifs() {
     return 'There are no other stable motifs available for this trap space.';
   }
 
-  selectDecisionButton() {
-    return 'Select stable motif';
+  public selectStableMotifButton() {
+    return 'Select Stable Motif';
   }
 
-  fullStableMotifStateHeader() {
-    return 'Full State';
+  public numberOfMinTrapSpaceStatName() {
+    return 'Number of Min. Trap Spaces';
   }
+
+  /* #endregion */
+
+  /* #region --- Trap Space Table --- */
+
+  public trapSpacesTableHeader() {
+    return 'Available Trap Spaces';
+  }
+
+  public noAvailableTrapSpaces() {
+    return 'There are no other trap spaces available for this stable motif.';
+  }
+
+  public selectTrapSpaceButton() {
+    return 'Select Trap Space';
+  }
+
+  /* #endregion */
 }
 
 export default MakeDecisionTabOtherStrings;

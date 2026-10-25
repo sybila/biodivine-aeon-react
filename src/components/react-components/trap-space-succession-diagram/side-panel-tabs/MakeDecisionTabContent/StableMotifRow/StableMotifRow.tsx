@@ -96,7 +96,7 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
             compWidth="100%"
             nameMaxWidth="60%"
             valueMaxWidth="38%"
-            statName="Number of Interpretations"
+            statName={generalStringsServ.numberOfIntepretationsStatName()}
             statValue={stableMotifData.numberOfInterpretations.toString()}
             contBgColor="var(--color-tertiary)"
             textColor="var(--color-tertiary-text)"
@@ -105,7 +105,7 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
             compWidth="100%"
             nameMaxWidth="64%"
             valueMaxWidth="30%"
-            statName="Number of Min. Trap Spaces"
+            statName={generalStringsServ.numberOfMinTrapSpaceStatName()}
             contBgColor="var(--color-tertiary)"
             textColor="var(--color-tertiary-text)"
             statValue={stableMotifData.numberOfMinTrapSpaces.toString()}
@@ -114,7 +114,7 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
 
         <TextButtonReact
           className="mb-[7px]"
-          text={generalStringsServ.selectDecisionButton()}
+          text={generalStringsServ.selectStableMotifButton()}
           compHeight="30px"
           compWidth="97%"
           textColor="var(--color-tertiary-text)"
@@ -151,9 +151,7 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
       >
         <SeparatorLine width={'96%'} />
 
-        <SectionWithDotHeader
-          text={generalStringsServ.fullStableMotifStateHeader()}
-        >
+        <SectionWithDotHeader text={generalStringsServ.fullStateHeader()}>
           <ColoredWordsReact
             contMinHeight="23px"
             contMaxHeight="98%"

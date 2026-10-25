@@ -96,7 +96,7 @@ const TrapSpaceRow: React.FC<TrapSpaceRowProps> = ({
             compWidth="100%"
             nameMaxWidth="60%"
             valueMaxWidth="38%"
-            statName="Number of Interpretations"
+            statName={generalStringsServ.numberOfIntepretationsStatName()}
             statValue={trapSpaceData.numberOfInterpretations.toString()}
             contBgColor="var(--color-tertiary)"
             textColor="var(--color-tertiary-text)"
@@ -105,7 +105,7 @@ const TrapSpaceRow: React.FC<TrapSpaceRowProps> = ({
 
         <TextButtonReact
           className="mb-[7px]"
-          text={generalStringsServ.selectDecisionButton()}
+          text={generalStringsServ.selectTrapSpaceButton()}
           compHeight="30px"
           compWidth="97%"
           textColor="var(--color-tertiary-text)"
@@ -142,9 +142,7 @@ const TrapSpaceRow: React.FC<TrapSpaceRowProps> = ({
       >
         <SeparatorLine width={'96%'} />
 
-        <SectionWithDotHeader
-          text={generalStringsServ.fullStableMotifStateHeader()}
-        >
+        <SectionWithDotHeader text={generalStringsServ.fullStateHeader()}>
           <ColoredWordsReact
             contMinHeight="23px"
             contMaxHeight="98%"

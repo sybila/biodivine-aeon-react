@@ -58,12 +58,23 @@ function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
         );
   }, [decisionsWithParentInfo, decisionFilters]);
 
-  const renderGetTrapSpaceButton = () => {
+  const tableStrings =
+    parentType != 'stable-motif'
+      ? {
+          tableHeader: generalStringsServ.stableMotifsTableHeader,
+          noRows: generalStringsServ.noAvailableStableMotifs,
+        }
+      : {
+          tableHeader: generalStringsServ.trapSpacesTableHeader,
+          noRows: generalStringsServ.noAvailableTrapSpaces,
+        };
+
+  const renderGetDecisionsButton = () => {
     return (
       <TextIconButtonReact
         className="mb-2"
         compWidth="95%"
-        text={generalStringsServ.getTrapSpacesButton()}
+        text={generalStringsServ.getDecisionsButton()}
         textColor="var(--color-secondary-text)"
         buttonColor="var(--color-secondary-buttons)"
         buttonHoverColor="var(--color-secondary-buttons-hover)"
@@ -107,7 +118,7 @@ function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
   return (
     <>
       <SectionWithDotHeader
-        text="Filters"
+        text={generalStringsServ.filtersHeader()}
         textColor="var(--color-primary-text)"
         width="100%"
       >
@@ -122,7 +133,7 @@ function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
       </SectionWithDotHeader>
 
       <SectionWithDotHeader
-        text="Decisions"
+        text={tableStrings.tableHeader()}
         textColor="var(--color-primary-text)"
         width="100%"
       >
@@ -130,7 +141,7 @@ function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
         !decisionsWithParentInfo ||
         !filteredTrapSpaces ||
         decisionsWithParentInfo.parentType != parentType ? (
-          renderGetTrapSpaceButton()
+          renderGetDecisionsButton()
         ) : (
           <PagingWrapper
             wrapperWidth="100%"
@@ -144,7 +155,7 @@ function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
           >
             <BasicTable
               elements={decisionsOnPage}
-              noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
+              noRowsPlaceholder={tableStrings.noRows()}
               noRowsTextColor="var(--color-primary-text)"
               renderRowsWithContainer={(decisions: Element[]) =>
                 renderTable(decisions)

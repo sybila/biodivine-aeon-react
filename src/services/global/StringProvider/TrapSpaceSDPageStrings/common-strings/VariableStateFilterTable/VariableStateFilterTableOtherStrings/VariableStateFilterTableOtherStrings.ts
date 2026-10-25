@@ -9,8 +9,16 @@ class VariableStateFilterTableOtherStrings implements VariableStateFilterTableOt
     return 'No Variables Available.';
   }
 
-  public filterTrapSpacesButton() {
-    return 'Filter Trap Spaces';
+  public filterRowsButton() {
+    return 'Filter Rows';
+  }
+
+  public variableNameSearchInputPlaceholder() {
+    return 'Insert variable names...';
+  }
+
+  public changeFilterForVariableButton() {
+    return 'TS Value';
   }
 }
 

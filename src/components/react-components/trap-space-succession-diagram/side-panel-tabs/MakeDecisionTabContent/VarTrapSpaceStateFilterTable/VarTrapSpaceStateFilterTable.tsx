@@ -86,6 +86,20 @@ const VarTrapSpaceStateFilterTable: React.FC<
     }
   };
 
+  const changeVariableFilterStateButtonTooltip = (
+    e: MouseEvent,
+    filterStatus: TrapSpaceFilterVariableState | undefined
+  ) => {
+    helpHoverStore
+      .getState()
+      .setHelpHoverAtMouse(
+        e,
+        tooltipStringProviderServ.changeFilterForVariableButton(filterStatus),
+        true,
+        -50
+      );
+  };
+
   const statusButtons = [
     {
       text: 'N',
@@ -166,7 +180,7 @@ const VarTrapSpaceStateFilterTable: React.FC<
         setSearchText={(newSearchText: string) =>
           setSearchTextFilterTable(newSearchText)
         }
-        searchPlaceholder="Insert variable name"
+        searchPlaceholder={generalStringProviderServ.variableNameSearchInputPlaceholder()}
         filterElements={(elements: string[], searchTerm: string) =>
           filterFilterTableVariablesFunction(elements, searchTerm)
         }
@@ -190,7 +204,7 @@ const VarTrapSpaceStateFilterTable: React.FC<
                   contBorderColor="var(--color-secondary)"
                   rowHeight="39px"
                   buttonHeight="28px"
-                  buttonWidth="115px"
+                  buttonWidth="120px"
                   isSelected={filterTableSelected.has(variableName)}
                   handleClick={() => {
                     const newSelected = new Set(filterTableSelected);
@@ -205,10 +219,10 @@ const VarTrapSpaceStateFilterTable: React.FC<
                   }}
                   buttons={[
                     {
-                      text: 'TS Value',
+                      text: generalStringProviderServ.changeFilterForVariableButton(),
                       icon: TrapSpaceButtonIcon,
                       iconAlt: 'TS',
-                      handleClick: () => {
+                      handleClick: (e: MouseEvent) => {
                         const currentFilterCopy = { ...currentFilter };
 
                         const newValue = toggleVarFilterValue(
@@ -222,6 +236,12 @@ const VarTrapSpaceStateFilterTable: React.FC<
                         }
 
                         setCurrentFilter(currentFilterCopy);
+
+                        helpHoverStore.getState().clear();
+                        changeVariableFilterStateButtonTooltip(
+                          e,
+                          toggleVarFilterValue(newValue)
+                        );
                       },
                       buttonBgColor: getColorFromFilter(
                         currentFilter[variableName]
@@ -233,10 +253,15 @@ const VarTrapSpaceStateFilterTable: React.FC<
                         currentFilter[variableName]
                       ),
                       buttonActiveColor: '',
-                      buttonTooltipFunction: () => {},
+                      buttonTooltipFunction: (e) =>
+                        changeVariableFilterStateButtonTooltip(
+                          e,
+                          toggleVarFilterValue(currentFilter[variableName])
+                        ),
                       isActive: false,
                     },
                   ]}
+                  hideTooltipFun={() => helpHoverStore.getState().clear()}
                 />
               ))}
             </section>
@@ -263,7 +288,7 @@ const VarTrapSpaceStateFilterTable: React.FC<
       />
 
       <TextButtonReact
-        text={generalStringProviderServ.filterTrapSpacesButton()}
+        text={generalStringProviderServ.filterRowsButton()}
         compWidth="98%"
         handleClick={() =>
           setFilteredVariables(
@@ -272,6 +297,17 @@ const VarTrapSpaceStateFilterTable: React.FC<
             })
           )
         }
+        onMouseEnter={(e: React.MouseEvent) =>
+          helpHoverStore
+            .getState()
+            .setHelpHoverAtMouse(
+              e.nativeEvent,
+              tooltipStringProviderServ.filterRowsButton(),
+              true,
+              -50
+            )
+        }
+        onMouseLeave={() => helpHoverStore.getState().clear()}
       />
     </div>
   );
