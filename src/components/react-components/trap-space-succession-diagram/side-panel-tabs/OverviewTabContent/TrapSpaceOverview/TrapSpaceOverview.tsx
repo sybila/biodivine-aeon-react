@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../../lit-wrappers/StatTableReact';
@@ -11,11 +11,9 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
   generalStringsServ,
   tooltipStringsServ,
 
-  trapSpaceSDStatusStore,
-
   helpHoverStore,
 }) => {
-  const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
+  const [stateAsText, setStateAsText] = useState<boolean>(false);
 
   const stats: {
     name: string;
@@ -102,7 +100,6 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText={generalStringsServ.statisticsHeader()}
-        headerText="Stats"
       />
 
       <StatTableReact
