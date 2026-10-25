@@ -137,7 +137,7 @@ const TableRowWithName: React.FC<TableRowWithNameProps> = memo(
                   button.buttonTooltipFunction(e.nativeEvent)
                 }
                 onMouseLeave={() => hideTooltipFun()}
-                handleClick={() => button.handleClick()}
+                handleClick={(e: MouseEvent) => button.handleClick(e)}
               />
             ))}
           </section>

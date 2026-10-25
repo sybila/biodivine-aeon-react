@@ -3,5 +3,9 @@ export interface VariableStateFilterTableOtherStringsInt {
 
   emptyFilterTablePlaceholderText(): string;
 
-  filterTrapSpacesButton(): string;
+  filterRowsButton(): string;
+
+  variableNameSearchInputPlaceholder(): string;
+
+  changeFilterForVariableButton(): string;
 }

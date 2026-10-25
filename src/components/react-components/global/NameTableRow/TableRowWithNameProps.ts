@@ -97,7 +97,7 @@ export type TableRowWithNameProps = {
     iconAlt: string;
 
     /** Click‑handler for the button. */
-    handleClick: () => void;
+    handleClick: (e: MouseEvent) => void;
 
     /** Background colour of the button (normal state). */
     buttonBgColor: string;

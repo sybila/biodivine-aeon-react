@@ -1,6 +1,14 @@
+import type { TrapSpaceFilterVariableState } from '../../../../../../../components/react-components/trap-space-succession-diagram/side-panel-tabs/MakeDecisionTabContent/VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTableProps';
 import type { SelectionButtonsTooltipsInt } from '../../../../common-tooltips/SelectionButtonsTooltips/SelectionButtonsTooltipsInt';
 
 export interface VariableStateFilterTableTooltipsInt extends SelectionButtonsTooltipsInt {
   changeSelectedVariablesFilter(trapSpaceValue: string): string;
+
   removeSelectedVariablesFromFilter(): string;
+
+  filterRowsButton(): string;
+
+  changeFilterForVariableButton(
+    nextFilterVarValue: TrapSpaceFilterVariableState | undefined
+  ): string;
 }
