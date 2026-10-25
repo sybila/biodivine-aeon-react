@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../../lit-wrappers/StatTableReact';
+
 import type { StableMotifOverviewProps } from './StableMotifOverviewProps';
 
 const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
@@ -20,11 +21,13 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
     nameWidth: string;
     valueWidth: string;
   }[] = useMemo(() => {
+
     if (!stableMotif) return [];
 
     // Counts how many variables are fixed (have state 0 or 1) and how many are free (have state undefined/*)
     const stateNumbers: [number, number] = Object.values(
       stableMotif.variableValues
+
     ).reduce<[number, number]>(
       (acc, value) =>
         value === 0 || value === 1
@@ -36,6 +39,7 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
       {
         name: generalStringsServ.numberOfInterpretationsStatName(),
         value: stableMotif.numberOfInterpretations.toString(),
+
         nameWidth: '60%',
         valueWidth: '39%',
       },

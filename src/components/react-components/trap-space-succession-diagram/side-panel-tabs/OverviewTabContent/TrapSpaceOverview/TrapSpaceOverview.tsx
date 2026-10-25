@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
 import DotHeaderReact from '../../../../lit-wrappers/DotHeaderReact';
 import StatTableReact from '../../../../lit-wrappers/StatTableReact';
+
 import type { TrapSpaceOverviewProps } from './TrapSpaceOverviewProps';
 
 const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
@@ -9,6 +10,8 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
 
   generalStringsServ,
   tooltipStringsServ,
+
+  trapSpaceSDStatusStore,
 
   helpHoverStore,
 }) => {
@@ -99,6 +102,7 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
         compWidth="100%"
         justifyHeader="start"
         headerText={generalStringsServ.statisticsHeader()}
+        headerText="Stats"
       />
 
       <StatTableReact
