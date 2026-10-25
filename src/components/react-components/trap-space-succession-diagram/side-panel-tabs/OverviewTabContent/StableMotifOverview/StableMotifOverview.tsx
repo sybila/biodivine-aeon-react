@@ -5,8 +5,12 @@ import StatTableReact from '../../../../lit-wrappers/StatTableReact';
 import type { StableMotifOverviewProps } from './StableMotifOverviewProps';
 
 const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
-  stableMotif: selectedEdge,
+  stableMotif,
+
   generalStringsServ,
+  tooltipStringsServ,
+
+  helpHoverStore,
 }) => {
   const [stateAsText, setStateAsText] = useState<boolean>(false);
 
@@ -16,11 +20,11 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
     nameWidth: string;
     valueWidth: string;
   }[] = useMemo(() => {
-    if (!selectedEdge) return [];
+    if (!stableMotif) return [];
 
     // Counts how many variables are fixed (have state 0 or 1) and how many are free (have state undefined/*)
     const stateNumbers: [number, number] = Object.values(
-      selectedEdge.variableValues
+      stableMotif.variableValues
     ).reduce<[number, number]>(
       (acc, value) =>
         value === 0 || value === 1
@@ -31,13 +35,13 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
     return [
       {
         name: generalStringsServ.numberOfInterpretationsStatName(),
-        value: selectedEdge.numberOfInterpretations.toString(),
+        value: stableMotif.numberOfInterpretations.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
       {
         name: generalStringsServ.numberOfMinTrapSpacesStatName(),
-        value: selectedEdge.numberOfMinTrapSpaces.toString(),
+        value: stableMotif.numberOfMinTrapSpaces.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
@@ -54,10 +58,10 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
         valueWidth: '39%',
       },
     ];
-  }, [selectedEdge]);
+  }, [stableMotif]);
 
   const words: { text: string; color: string; weight: string }[] =
-    Object.entries(selectedEdge.variableValues).map(([key, value]) => ({
+    Object.entries(stableMotif.variableValues).map(([key, value]) => ({
       text: stateAsText ? `${key}: ${value ?? '*'}` : `${key}`,
       color: `${value === 0 ? 'var(--color-negative)' : value === 1 ? 'var(--color-positive)' : 'var(--color-neutral)'}`,
       weight: `${value === 0 || value === 1 ? 'bold' : 'normal'}`,
@@ -82,6 +86,17 @@ const StableMotifOverview: React.FC<StableMotifOverviewProps> = ({
           contMinWidth="98%"
           lineHeight="25px"
           fontSize="24px"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                tooltipStringsServ.toggleStateVisualization(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </div>
 

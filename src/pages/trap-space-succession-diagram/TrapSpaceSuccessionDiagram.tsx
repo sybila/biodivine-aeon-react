@@ -63,7 +63,9 @@ const TrapSpaceSuccessionDiagram: React.FC<TrapSpaceSuccessionDiagramProps> = ({
         return (
           <OverviewTabContent
             generalStringsServ={pageStringProviderServ.OtherStrings.OverviewTab}
+            tooltipStringsServ={pageStringProviderServ.Tooltips.OverviewTab}
             trapSpaceSDStatusStore={trapSpaceSDStatusStore}
+            helpHoverStore={helpHoverStore}
           />
         );
       case 'Make Decision':
