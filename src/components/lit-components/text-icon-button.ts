@@ -1,6 +1,32 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+type StyleProperty =
+  | 'compHeight'
+  | 'compWidth'
+  | 'buttonHeight'
+  | 'buttonWidth'
+  | 'buttonColor'
+  | 'buttonHoverColor'
+  | 'buttonActiveColor'
+  | 'buttonShadow'
+  | 'buttonJustifyContent'
+  | 'buttonAlignItems'
+  | 'textColor'
+  | 'textFontSize'
+  | 'textFontWeight'
+  | 'textFontFamily'
+  | 'textShadow'
+  | 'textTransform'
+  | 'textAlign'
+  | 'textLineHeight'
+  | 'textContainerHeight'
+  | 'textContainerWidth'
+  | 'iconSrc'
+  | 'iconAlt'
+  | 'iconHeight'
+  | 'iconWidth';
+
 @customElement('text-icon-button')
 export class TextIconButton extends LitElement {
   @property({ type: String }) declare compHeight?: string;
@@ -15,7 +41,7 @@ export class TextIconButton extends LitElement {
   @property({ type: String }) declare buttonJustifyContent?: string;
   @property({ type: String }) declare buttonAlignItems?: string;
 
-  @property({ type: Function }) declare handleClick?: () => void;
+  @property({ type: Function }) declare handleClick?: (e: MouseEvent) => void;
 
   @property({ type: String }) declare text?: string;
   @property({ type: String }) declare textContainerHeight?: string;
@@ -102,16 +128,16 @@ export class TextIconButton extends LitElement {
   `;
 
   private updateStyleVariable(
-    propertyName: string,
+    propertyName: StyleProperty,
     cssVar: string,
     fallback: string
   ) {
-    const value = (this as any)[propertyName] ?? fallback;
+    const value = this[propertyName] ?? fallback;
     this.style.setProperty(cssVar, value);
   }
 
-  updated(changed: Map<string, any>) {
-    const update = (prop: string, cssVar: string, fallback: string) =>
+  updated(changed: Map<string, StyleProperty>) {
+    const update = (prop: StyleProperty, cssVar: string, fallback: string) =>
       changed.has(prop) && this.updateStyleVariable(prop, cssVar, fallback);
 
     update('compHeight', '--text-icon-button-comp-height', '40px');
