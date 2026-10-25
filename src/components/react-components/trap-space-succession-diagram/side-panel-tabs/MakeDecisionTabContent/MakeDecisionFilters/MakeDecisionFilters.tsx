@@ -1,7 +1,7 @@
-import VarTrapSpaceStateFilterTable from '../../VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTable';
-import type { TrapSpaceTableFiltersProps } from './TrapSpaceTableFiltersProps';
+import VarTrapSpaceStateFilterTable from '../VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTable';
+import type { MakeDecisionFiltersProps } from './MakeDecisionFiltersProps';
 
-const TrapSpaceTableFilters: React.FC<TrapSpaceTableFiltersProps> = ({
+const MakeDecisionFilters: React.FC<MakeDecisionFiltersProps> = ({
   variableNames,
   setFilteredVariables,
 
@@ -28,4 +28,4 @@ const TrapSpaceTableFilters: React.FC<TrapSpaceTableFiltersProps> = ({
   );
 };
 
-export default TrapSpaceTableFilters;
+export default MakeDecisionFilters;

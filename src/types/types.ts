@@ -554,6 +554,18 @@ export type NodesWithParentInfoTSSD =
       nodes: Array<NodeDataTSSD>;
     };
 
+export type NodeWithParentInfoTSSD =
+  | {
+      parentId: number;
+      parentType: 'trap-space-decision';
+      node: StableMotifInfo;
+    }
+  | {
+      parentId: number;
+      parentType: 'stable-motif';
+      node: NodeDataTSSD;
+    };
+
 // #endregion
 
 // #region --- Visual Options ---

@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import SectionWithDotHeader from '../../../../../global/SectionWithDotHeader/SectionWithDotHeader';
-import SeparatorLine from '../../../../../global/SeparatorLine/SeparatorLine';
-import ColoredWordsReact from '../../../../../lit-wrappers/ColoredWordsReact';
-import ExtendableContentReact from '../../../../../lit-wrappers/ExtendableContentReact';
-import StatEntryReact from '../../../../../lit-wrappers/StatEntryReact';
-import TextButtonReact from '../../../../../lit-wrappers/TextButtonReact';
-import type { StableMotifRowProps } from './StableMotifRowProps';
+import SectionWithDotHeader from '../../../../global/SectionWithDotHeader/SectionWithDotHeader';
+import SeparatorLine from '../../../../global/SeparatorLine/SeparatorLine';
+import ColoredWordsReact from '../../../../lit-wrappers/ColoredWordsReact';
+import ExtendableContentReact from '../../../../lit-wrappers/ExtendableContentReact';
+import StatEntryReact from '../../../../lit-wrappers/StatEntryReact';
+import TextButtonReact from '../../../../lit-wrappers/TextButtonReact';
+import type { TrapSpaceRowProps } from './TrapSpaceRowProps';
 
 type Word = {
   text: string;
@@ -13,9 +13,9 @@ type Word = {
   weight: string;
 };
 
-const StableMotifRow: React.FC<StableMotifRowProps> = ({
+const TrapSpaceRow: React.FC<TrapSpaceRowProps> = ({
   nodeId,
-  stableMotifData,
+  trapSpaceData,
 
   trapSpaceSDServ,
   generalStringsServ,
@@ -24,8 +24,8 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
   helpHoverStore,
 }) => {
   const stableMotifVariables = useMemo(() => {
-    return Object.entries(stableMotifData.variableValues);
-  }, [stableMotifData]);
+    return Object.entries(trapSpaceData.variableValues);
+  }, [trapSpaceData]);
 
   if (stableMotifVariables.length < 1) {
     return;
@@ -91,24 +91,15 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
           words={cutWords}
         />
 
-        <div className="flex flex-col justify-between items-center h-[45px] w-[97%]">
+        <div className="flex flex-col justify-between items-center h-[30px] w-[97%]">
           <StatEntryReact
             compWidth="100%"
             nameMaxWidth="60%"
             valueMaxWidth="38%"
             statName="Number of Interpretations"
-            statValue={stableMotifData.numberOfInterpretations.toString()}
+            statValue={trapSpaceData.numberOfInterpretations.toString()}
             contBgColor="var(--color-tertiary)"
             textColor="var(--color-tertiary-text)"
-          />
-          <StatEntryReact
-            compWidth="100%"
-            nameMaxWidth="64%"
-            valueMaxWidth="30%"
-            statName="Number of Min. Trap Spaces"
-            contBgColor="var(--color-tertiary)"
-            textColor="var(--color-tertiary-text)"
-            statValue={stableMotifData.numberOfMinTrapSpaces.toString()}
           />
         </div>
 
@@ -123,8 +114,8 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
           handleClick={() => {
             helpHoverStore.getState().clear();
 
-            trapSpaceSDServ.makeDecision(nodeId, 'trap-space-decision', [
-              stableMotifData.id,
+            trapSpaceSDServ.makeDecision(nodeId, 'stable-motif', [
+              trapSpaceData.id,
             ]);
           }}
           onMouseEnter={(e: React.MouseEvent) =>
@@ -189,4 +180,4 @@ const StableMotifRow: React.FC<StableMotifRowProps> = ({
   );
 };
 
-export default StableMotifRow;
+export default TrapSpaceRow;
