@@ -1,19 +1,24 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactElement } from 'react';
 import TextIconButtonReact from '../../../../lit-wrappers/TextIconButtonReact';
-import type { TrapSpaceTableProps } from './TrapSpaceTableProps';
 
 import PlusIcon from '../../../../../../assets/icons/add_box.svg';
-import type { NodeDataTSSD } from '../../../../../../types/types';
+import type {
+  NodeDataTSSD,
+  StableMotifInfo,
+} from '../../../../../../types/types';
 import BasicTable from '../../../../global/BasicTable/BasicTable';
 import PagingWrapper from '../../../../global/PagingWrapper/PagingWrapper';
 import SectionWithDotHeader from '../../../../global/SectionWithDotHeader/SectionWithDotHeader';
+import MakeDecisionFilters from '../MakeDecisionFilters/MakeDecisionFilters';
 import type { TSSDVariableTrapSpaceFilterStateArray } from '../VarTrapSpaceStateFilterTable/VarTrapSpaceStateFilterTableProps';
-import TrapSpaceRow from './TrapSpaceRow/TrapSpaceRow';
-import TrapSpaceTableFilters from './TrapSpaceTableFilters/TrapSpaceTableFilters';
+import type { DecisionTableProps } from './DecisionTableProps';
 
-const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
+function DecisionTable<Element extends NodeDataTSSD | StableMotifInfo>({
   selectedNodeId,
   variableNames,
+  parentType,
+
+  renderRow,
 
   trapSpaceSDServ,
   generalStringsServ,
@@ -22,33 +27,36 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
 
   trapSpaceSDStatusStore,
   helpHoverStore,
-}) => {
-  const [trapSpacesOpened, setTrapSpacesOpened] = useState(false);
-  const trapSpaces = trapSpaceSDStatusStore(
+}: DecisionTableProps<Element>): ReactElement {
+  const [decisionsOpened, setDecisionsOpened] = useState(false);
+  const decisionsWithParentInfo = trapSpaceSDStatusStore(
     (state) => state.availableDecisions
   );
 
-  const [trapSpacesOnPage, setTrapSpacesOnPage] = useState<Array<NodeDataTSSD>>(
-    []
-  );
-  const [trapSpaceFilter, setTrapSpaceFilter] =
+  const [decisionsOnPage, setDecisionsOnPage] = useState<Array<Element>>([]);
+  const [decisionFilters, setDecisionFilters] =
     useState<TSSDVariableTrapSpaceFilterStateArray>([]);
 
-  const filteredTrapSpaces = useMemo(() => {
-    if (trapSpaces == null || trapSpaces.parentType != 'stable-motif') {
+  const filteredTrapSpaces: Element[] | null = useMemo(() => {
+    if (
+      decisionsWithParentInfo == null ||
+      decisionsWithParentInfo.parentType != parentType
+    ) {
       return null;
     }
 
-    return trapSpaceFilter.length < 1
-      ? trapSpaces.nodes
-      : trapSpaces.nodes.filter((trapSpace) =>
-          trapSpaceFilter.every(
-            (filterTrapSpace) =>
-              trapSpace.variableValues[filterTrapSpace.varName] ===
-              filterTrapSpace.trapSpaceValue
+    const allDecisions = decisionsWithParentInfo.nodes as Element[];
+
+    return decisionFilters.length < 1
+      ? allDecisions
+      : allDecisions.filter((decision) =>
+          decisionFilters.every(
+            (decisionFilter) =>
+              decision.variableValues[decisionFilter.varName] ===
+              decisionFilter.trapSpaceValue
           )
         );
-  }, [trapSpaces, trapSpaceFilter]);
+  }, [decisionsWithParentInfo, decisionFilters]);
 
   const renderGetTrapSpaceButton = () => {
     return (
@@ -62,10 +70,10 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
         iconAlt="Plus Icon"
         iconSrc={PlusIcon}
         handleClick={() => {
-          if (!trapSpaces) {
-            trapSpaceSDServ.getDecisions(selectedNodeId, 'stable-motif');
+          if (!decisionsWithParentInfo) {
+            trapSpaceSDServ.getDecisions(selectedNodeId, parentType);
           }
-          setTrapSpacesOpened(true);
+          setDecisionsOpened(true);
           helpHoverStore.getState().clear();
         }}
         onMouseEnter={(e: React.MouseEvent) =>
@@ -83,23 +91,15 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
     );
   };
 
-  const renderTable = (availableTrapSpaces: NodeDataTSSD[]) => {
+  const renderTable = (availableTrapSpaces: Element[]) => {
     return (
       <section
         className="flex flex-col w-full min-h-[150px] gap-2 overflow-y-auto"
         style={{ maxHeight: 'calc(70vh - 300px)' }}
       >
-        {availableTrapSpaces.map((trapSpace, index) => (
-          <TrapSpaceRow
-            key={index}
-            nodeId={selectedNodeId}
-            trapSpaceData={trapSpace}
-            trapSpaceSDServ={trapSpaceSDServ}
-            generalStringsServ={generalStringsServ}
-            tooltipStringsServ={tooltipStringsServ}
-            helpHoverStore={helpHoverStore}
-          />
-        ))}
+        {availableTrapSpaces.map((trapSpace, index) =>
+          renderRow(trapSpace, index)
+        )}
       </section>
     );
   };
@@ -111,9 +111,9 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
         textColor="var(--color-primary-text)"
         width="100%"
       >
-        <TrapSpaceTableFilters
+        <MakeDecisionFilters
           variableNames={variableNames}
-          setFilteredVariables={setTrapSpaceFilter.bind(this)}
+          setFilteredVariables={(filter) => setDecisionFilters(filter)}
           generalStringProviderServ={generalStringsServ}
           tooltipStringProviderServ={tooltipStringsServ}
           searchAndFilterHelpersServ={searchAndFilterHelpersServ}
@@ -126,26 +126,28 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
         textColor="var(--color-primary-text)"
         width="100%"
       >
-        {!trapSpacesOpened ||
-        !trapSpaces ||
+        {!decisionsOpened ||
+        !decisionsWithParentInfo ||
         !filteredTrapSpaces ||
-        trapSpaces.parentType != 'stable-motif' ? (
+        decisionsWithParentInfo.parentType != parentType ? (
           renderGetTrapSpaceButton()
         ) : (
           <PagingWrapper
             wrapperWidth="100%"
             elements={filteredTrapSpaces}
             numberOfElementsOnPage={15}
-            setElementsOnPage={setTrapSpacesOnPage.bind(this)}
+            setElementsOnPage={(elementsOnPage) =>
+              setDecisionsOnPage(elementsOnPage)
+            }
             tooltipStringsServ={tooltipStringsServ}
             helpHoverStore={helpHoverStore}
           >
             <BasicTable
-              elements={trapSpacesOnPage}
+              elements={decisionsOnPage}
               noRowsPlaceholder={generalStringsServ.noAvailableStableMotifs()}
               noRowsTextColor="var(--color-primary-text)"
-              renderRowsWithContainer={(trapSpaces: NodeDataTSSD[]) =>
-                renderTable(trapSpaces)
+              renderRowsWithContainer={(decisions: Element[]) =>
+                renderTable(decisions)
               }
             />
           </PagingWrapper>
@@ -153,6 +155,6 @@ const TrapSpaceTable: React.FC<TrapSpaceTableProps> = ({
       </SectionWithDotHeader>
     </>
   );
-};
+}
 
-export default TrapSpaceTable;
+export default DecisionTable;
