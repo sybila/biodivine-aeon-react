@@ -1,12 +1,14 @@
 import NoDataText from '../../../global/NoDataText/NoDataText';
+import type { OverviewTabContentProps } from './OverviewTabContentProp';
 import StableMotifOverview from './StableMotifOverview/StableMotifOverview';
 import TrapSpaceOverview from './TrapSpaceOverview/TrapSpaceOverview';
-import type { OverviewTabContentProps } from './OverviewTabContentProp';
 
 const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   generalStringsServ,
+  tooltipStringsServ,
 
   trapSpaceSDStatusStore,
+  helpHoverStore,
 }) => {
   const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
 
@@ -21,11 +23,15 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         <TrapSpaceOverview
           trapSpace={selectedItem.nodeInfo}
           generalStringsServ={generalStringsServ}
+          tooltipStringsServ={tooltipStringsServ}
+          helpHoverStore={helpHoverStore}
         />
       ) : selectedItem.type === 'stable-motif' ? (
         <StableMotifOverview
           stableMotif={selectedItem.nodeInfo}
           generalStringsServ={generalStringsServ}
+          tooltipStringsServ={tooltipStringsServ}
+          helpHoverStore={helpHoverStore}
         />
       ) : null}
     </div>

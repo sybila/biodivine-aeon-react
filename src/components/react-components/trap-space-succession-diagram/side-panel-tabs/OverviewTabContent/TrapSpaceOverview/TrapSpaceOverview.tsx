@@ -5,8 +5,12 @@ import StatTableReact from '../../../../lit-wrappers/StatTableReact';
 import type { TrapSpaceOverviewProps } from './TrapSpaceOverviewProps';
 
 const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
-  trapSpace: selectedNode,
+  trapSpace,
+
   generalStringsServ,
+  tooltipStringsServ,
+
+  helpHoverStore,
 }) => {
   const selectedItem = trapSpaceSDStatusStore((state) => state.selectedItem);
 
@@ -16,11 +20,11 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
     nameWidth: string;
     valueWidth: string;
   }[] = useMemo(() => {
-    if (!selectedNode) return [];
+    if (!trapSpace) return [];
 
     // Counts how many variables are fixed (have state 0 or 1) and how many are free (have state undefined/*)
     const stateNumbers: [number, number] = Object.values(
-      selectedNode.variableValues
+      trapSpace.variableValues
     ).reduce<[number, number]>(
       (acc, value) =>
         value === 0 || value === 1
@@ -31,7 +35,7 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
     return [
       {
         name: generalStringsServ.numberOfInterpretationsStatName(),
-        value: selectedNode.numberOfInterpretations.toString(),
+        value: trapSpace.numberOfInterpretations.toString(),
         nameWidth: '60%',
         valueWidth: '39%',
       },
@@ -48,10 +52,10 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
         valueWidth: '39%',
       },
     ];
-  }, [selectedNode]);
+  }, [trapSpace]);
 
   const words: { text: string; color: string; weight: string }[] =
-    Object.entries(selectedNode.variableValues).map(([key, value]) => ({
+    Object.entries(trapSpace.variableValues).map(([key, value]) => ({
       text: stateAsText ? `${key}: ${value ?? '*'}` : `${key}`,
       color: `${value === 0 ? 'var(--color-negative)' : value === 1 ? 'var(--color-positive)' : 'var(--color-neutral)'}`,
       weight: `${value === 0 || value === 1 ? 'bold' : 'normal'}`,
@@ -76,6 +80,17 @@ const TrapSpaceOverview: React.FC<TrapSpaceOverviewProps> = ({
           contMinWidth="98%"
           lineHeight="25px"
           fontSize="24px"
+          onMouseEnter={(e: React.MouseEvent) =>
+            helpHoverStore
+              .getState()
+              .setHelpHoverAtMouse(
+                e.nativeEvent,
+                tooltipStringsServ.toggleStateVisualization(),
+                true,
+                -50
+              )
+          }
+          onMouseLeave={() => helpHoverStore.getState().clear()}
         />
       </div>
 
