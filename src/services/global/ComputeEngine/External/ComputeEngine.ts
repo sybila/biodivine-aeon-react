@@ -19,7 +19,8 @@ import type {
 } from '../../../../types/types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { ComputeEngineInt } from '../ComputeEngineInt';
-import type { TrapSpaceSuccessionDiagramInt } from '../module-interfaces/TrapSpaceSuccessionDiagramInt';
+import type { TrapSpaceSuccessionDiagramInt } from '../module-interfaces/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
+import type { TrapSpaceResponse } from '../module-interfaces/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramTypes';
 import type {
   AttractorResponse,
   ComputationInfo,
@@ -310,7 +311,7 @@ class ComputeEngine implements ComputeEngineInt {
     } else {
       this.backendRequest(
         '/ping',
-        (error: string | undefined, response: AttractorResponse | undefined) =>
+        (error: string | undefined, response: AttractorResponse | TrapSpaceResponse | undefined) =>
           this.pingCallback(
             keepAlive,
             interval,

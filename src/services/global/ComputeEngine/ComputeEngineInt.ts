@@ -12,7 +12,7 @@ import type {
   UpdateFunctionStatus,
   WrappedModelString,
 } from '../../../types/types';
-import type { TrapSpaceSuccessionDiagramInt } from './module-interfaces/TrapSpaceSuccessionDiagramInt';
+import type { TrapSpaceSuccessionDiagramInt } from './module-interfaces/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 
 /**
  * Interface for ComputeEngine class used inside ComputationManager. Provides direct communication with the compute engine.

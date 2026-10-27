@@ -9,7 +9,7 @@ import type {
   StableMotifInfo,
   TimestampResponse,
 } from '../../../../../types/types';
-import type { TrapSpaceSuccessionDiagramInt } from '../../module-interfaces/TrapSpaceSuccessionDiagramInt';
+import type { TrapSpaceSuccessionDiagramInt } from '../../module-interfaces/TrapSpaceSuccessionDiagram/TrapSpaceSuccessionDiagramInt';
 
 class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   // #region --- Props + Constructor ---
@@ -70,6 +70,19 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
   // #region --- Computation ---
 
+  /** Start computation endpoint:
+   *     -- /start_computation_trap_space
+   *     -- POST
+   *     -- starts trap space succession diagram computation, returns timestamp when the computation started
+   *     -- callback = (error: string | undefined, response: TimestampResponse | undefined) => void
+   *     -- post data = 'model' in the form of aeon string
+   *     -- callback - (error: string | undefined, response: TimestampResponse | undefined) => void
+   *     -- TimestampResponse object is object containing timestamp when the computation started, it has thi sstructure:
+   *              export type TimestampResponse = {
+                        timestamp: number | undefined;
+                  };    
+   *     -- error is string containing error message => if there was no error, error should be undefined, if there was an response object should be undefined
+   */
   public startComputation(
     model: string,
     callback:
@@ -84,13 +97,18 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   ) {
     this.setWaitingForResult(true);
 
+    /**
+     * Example backend request:
+
     this.backendRequestFunction(
-      '/start_computation',
+      '/start_computation_trap_space',
       (error: string | undefined, response: TimestampResponse | undefined) =>
         this.startComputationCallback(error, response, 'Trap Space', callback),
       'POST',
       model
     );
+
+    */
   }
 
   // #endregion
@@ -107,7 +125,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
         SciP: undefined,
         DnaA: undefined,
       },
-      numberOfInterpretations: 16, // Increased to support more branches/motifs
+      numberOfInterpretations: 16,
       stableMotifs: [
         {
           id: 1,
@@ -245,8 +263,32 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     return undefined;
   }
 
+  /**
+   * getTrapSpaceSuccessionDiagram endpoint:
+   *    -- /get_trap_space_succession_diagram
+   *    -- GET
+   *    -- gets the current state of succession diagram (returns all nodes, currently present in the diagram in the form of tree - as recursive object structure), returns rootNode of the recursive object structure (this node should always be the root node of the succession diagram == trap space with all variables unpercolated)
+   *    -- callback = callback: (error: string | undefined, rootNode: NodeDataTSSDWithMotifs | undefined) => void
+   *    -- response rootNode is root of tree structure constructed recursively from objects of types NodeDataTSSDWithMotifs and StableMotifWithTrapSpaces
+   *    -- NodeDataTSSDWithMotifs is defined like this:
+   *            type NodeDataTSSDWithMotifs = {
+                    id: number;
+                    variableValues: TSSDNodeVariableValues;
+                    numberOfInterpretations: number;
+                    type: TrapSpaceType;
+                    stableMotifs: Array<StableMotifWithTrapSpaces>;
+                  };
+        -- StableMotifWithTrapSpaces is defined like this:
+              type StableMotifWithTrapSpaces = {
+                  id: number;
+                  variableValues: TSSDNodeVariableValues;
+                  numberOfInterpretations: number;
+                  numberOfMinTrapSpaces: number;
+                  targetTrapSpaces: Array<NodeDataTSSDWithMotifs>;
+                };
+        -- error is string containing error message => if there was no error, error should be undefined, if there was an error rootNode should be undefined
+   */
   public getTrapSpaceSuccessionDiagram(
-    model: string,
     callback: (
       error: string | undefined,
       rootNode: NodeDataTSSDWithMotifs | undefined
@@ -254,15 +296,43 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   ): void {
     // TODO - remove this mock data when the endpoint is implemented in the compute engine. This is just to be able to work on the frontend part of the succession diagram before the backend is ready.
     callback(undefined, this.tssdNodes);
-    // TODO - implement this endpoint in the compute engine and uncomment the backend request. For now, this function will return an error to avoid confusion.
-    // this.backendRequest(
-    //   '/get_trap_space_succession_diagram',
-    //   callback,
-    //   'GET',
-    //   null
-    // );
+
+    /**
+    Example call of the backend request:
+
+    this.backendRequest(
+      '/get_trap_space_succession_diagram',
+      callback,
+      'GET',
+      null
+    );
+    */
   }
 
+  /**
+   * getDecisionsTSSD callback:
+   *    -- /get_decisions_tssd/{sourceType}/{sourceId}
+   *    -- GET
+   *    -- returns all possible children nodes of the node with parentId (type of child nodes depends on the parent node -> if parent node is stable-motif, then children are trap-spaces, else if parent node is trap-space, then children are stable-motifs)
+   *    -- sourceId is number indentifying trap-space or stable-motif for which we want to compute decisions = should be unique 
+   *    -- sourceType is string identifying type of node for which we want to compute decisions, possible values are "trap-space-decision" and "stable-motif"
+   *    -- callback: (error: string | undefined, decisions: NodesWithParentInfoTSSD | undefined) => void
+   *    -- response are decisions in form of NodeWithParentInfoTSSD object, which has structure:
+   *        
+   *    type NodesWithParentInfoTSSD =
+   *               | {
+                      parentId: number;
+                      parentType: 'trap-space-decision';
+                      nodes: Array<StableMotifInfo>;
+                    }
+                  | {
+                      parentId: number;
+                      parentType: 'stable-motif';
+                      nodes: Array<NodeDataTSSD>;
+                    };
+  
+        -- error is string containing error message => if there was no error, error should be undefined, if there was an error decisions object should be undefined
+   */
   public getDecisionsTSSD(
     sourceId: number,
     sourceType: DecisionNodeTypeTSSD,
@@ -299,15 +369,48 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
     // TODO - implement this endpoint in the compute engine and uncomment the backend request.
     callback(undefined, decisions);
-    // this.backendRequest(
-    //   '/get_attributes_tssd/' + nodeId,
-    //   (error: string | undefined, response: DecisionsTSSD | undefined) => {
-    //     callback?.(error, response);
-    //   },
-    //   'GET'
-    // );
+
+    /**
+     Example backend request call:
+
+    this.backendRequest(
+      '/get_decisions_tssd/' + sourceType + '/' nodeId ,
+      (error: string | undefined, decisions: NodesWithParentInfoTSSD | undefined) => {
+        callback?.(error, decisions);
+      },
+      'GET'
+    );
+
+     */
   }
 
+  /**
+   * makeDecisionTSSD endpoint:
+   *    -- /make_decision_tssd/' + sourceId + '/' + sourceType
+   *    -- POST
+   *    -- selects children nodes (defined by targetIds) of parentId node and adds them to succession diagram, returns list of node information about newly added nodes
+   *    -- sourceId is id of node (trap-space or stable-motif) for which we are making decision
+   *    -- sourceType is type of node for which we are making decision possible values are "trap-space-decision" and "stable-motif"
+   *    -- post data = targetIds is array of node ids with which the diagram should be extended
+   *    -- nodes corresponding to the targetIds ids should be:
+   *          - stable motif nodes for sourceType "trap-space-decision"
+   *          - trap space nodes (trap-space-decision" | "leaf") for source type "stable-motif"
+   *    -- callback = (error: string | undefined, nodesToAdd: NodesWithParentInfoTSSD | undefined) => void
+   *    -- response nodesToAdd is object of type NodesWithParentInfoTSSD containing information about source node and target nodes (target nodes should correspond to the targetIds)
+   *    -- NodesWithParentInfoTSSD has structure:
+   *          type NodesWithParentInfoTSSD =
+   *               | {
+                      parentId: number;
+                      parentType: 'trap-space-decision';
+                      nodes: Array<StableMotifInfo>;
+                    }
+                  | {
+                      parentId: number;
+                      parentType: 'stable-motif';
+                      nodes: Array<NodeDataTSSD>;
+                    };
+        -- error is string containing error message => if there was no error, error should be undefined, if there was an error nodesToAdd object should be undefined
+   */
   public makeDecisionTSSD(
     sourceId: number,
     sourceType: DecisionNodeTypeTSSD,
@@ -351,45 +454,67 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
 
     callback(undefined, nodes);
 
-    // TODO - implement this endpoint in the compute engine and uncomment the backend request.
-    // this.backendRequest(
-    //   '/make_decision_tssd/' + nodeId + '/' + decisionId,
-    //   (
-    //     error: string | undefined,
-    //     response: NodeDataTSSD[] | undefined
-    //   ) => {
-    //     if (callback !== undefined) {
-    //       callback(error, response);
-    //     }
-    //   },
-    //   'POST'
-    // );
+    /**
+    Example request function call: 
+     
+    this.backendRequest(
+      '/make_decision_tssd/' + sourceId + '/' + sourceType ,
+      (
+         error: string | undefined,
+         nodesToAdd: NodesWithParentInfoTSSD | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, nodesToAdd);
+        }
+      },
+      'POST',
+       targetIds
+    );
+*/
   }
 
+  /**
+   * deleteNodeTSSD endpoint:
+   *    -- /delete_node_tssd/' + nodeType + '/' + nodeId
+   *    -- POST
+   *    -- removes node from the diagram, returns id and type of removed node
+   *    -- callback = (
+            error: string | undefined,
+            removedNodeId: number,
+            removedNodeType: NodeTypeTSSD) => void
+        -- removedNodeId is id of removed node (should be the same as nodeId)
+        -- removedNodeType is type of removed node (should be the same as nodeType)
+        -- error is string containing error message => if there was no error, error should be undefined, if there was an error removedNodeId and removedNodeType should be undefined
+   */
   public deleteNodeTSSD(
     nodeId: number,
     nodeType: NodeTypeTSSD,
     callback: (
       error: string | undefined,
-      nodeId: number,
-      nodeType: NodeTypeTSSD,
-      removedNodeId: number
+      removedNodeId: number | undefined,
+      removedNodeType: NodeTypeTSSD | undefined
     ) => void
   ): void {
-    callback(undefined, nodeId, nodeType, nodeId);
-    // TODO - implement this endpoint in the compute engine and uncomment the backend request.
-    // this.backendRequest(
-    //   '/revert_decision_tssd/' + nodeId,
-    //   (
-    //     error: string | undefined,
-    //     response: DeleteBifDecisionResponse | undefined
-    //   ) => {
-    //     if (callback !== undefined) {
-    //       callback(error, response?.node ?? undefined, response?.removed ?? []);
-    //     }
-    //   },
-    //   'POST'
-    // );
+    callback(undefined, nodeId, nodeType);
+
+    /**
+    Example request function call: 
+
+    this.backendRequest(
+      /delete_node_tssd/' + nodeType + '/' + nodeId,
+      (
+        error: string | undefined,
+        removedNodeId: number | undefined,
+        removedNodeType: NodeTypeTSSD | undefined
+      ) => {
+        if (callback !== undefined) {
+          callback(error, removedNodeId, removedNodeType);
+        }
+      },
+      'POST'
+    );
+
+    */
   }
 
   // #endregion

@@ -4,7 +4,7 @@ import type {
   NodeDataTSSDWithMotifs,
   NodesWithParentInfoTSSD,
   NodeTypeTSSD,
-} from '../../../../types/types';
+} from '../../../../../types/types';
 
 /** Compute Engine module which contains function used for computing and working with Trap Space Succession Diagram. */
 export interface TrapSpaceSuccessionDiagramInt {
@@ -43,7 +43,6 @@ export interface TrapSpaceSuccessionDiagramInt {
 
   /** Gets the trap space succession diagram for a specific model. */
   getTrapSpaceSuccessionDiagram(
-    model: string,
     callback: (
       error: string | undefined,
       rootNode: NodeDataTSSDWithMotifs | undefined
@@ -87,15 +86,14 @@ export interface TrapSpaceSuccessionDiagramInt {
    *  @param callback - (function) This function is used to remove the deleted node and its child nodes from the visualization.
    */
   deleteNodeTSSD(
-      nodeId: number,
-      nodeType: NodeTypeTSSD,
-      callback: (
-        error: string | undefined,
-        nodeId: number | undefined,
-        nodeType: NodeTypeTSSD | undefined,
-        removedNodeId: number
-      ) => void
-    ): void
+    nodeId: number,
+    nodeType: NodeTypeTSSD,
+    callback: (
+      error: string | undefined,
+      removedNodeId: number | undefined,
+      removedNodeType: NodeTypeTSSD | undefined
+    ) => void
+  ): void;
 
   // #endregion
 }

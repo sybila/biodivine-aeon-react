@@ -6,6 +6,15 @@ import type {
 } from '../../../../types/types';
 
 export interface TrapSpaceSuccessionDiagramInt {
+  /* #region --- Computation --- */
+
+  /** Starts the computation of trap space succession diagram. */
+  startComputation(): void;
+
+  /* #endregion */
+
+  /* #region --- Trap Space Succession Diagram --- */
+
   /** Fetches whole succession diagram for the TrapSpaceSuccessionDiagram page. */
   getTrapSpaceSuccessionDiagram(
     insertSuccessionDiagramFunction: (rootNode: NodeDataTSSDWithMotifs) => void
@@ -41,6 +50,11 @@ export interface TrapSpaceSuccessionDiagramInt {
   deleteNode(
     nodeId: number,
     nodeType: NodeTypeTSSD,
-    removeNodesFromVisualizationFunction: (removedNodeId: number, removedNodeType: NodeTypeTSSD) => void
+    removeNodesFromVisualizationFunction: (
+      removedNodeId: number,
+      removedNodeType: NodeTypeTSSD
+    ) => void
   ): void;
+
+  /* #endregion */
 }

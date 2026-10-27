@@ -1,4 +1,5 @@
 import type {
+  ComputationStatus,
   DecisionNodeTypeTSSD,
   NodeDataTSSDWithMotifs,
   NodesWithParentInfoTSSD,
@@ -21,12 +22,27 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     model: string | undefined
   ) => asserts model is string;
 
+  private setComputationStatus: (
+    warning: string | undefined,
+    error: string | undefined,
+    computeEngineStatus: string | undefined,
+    computationStatus: ComputationStatus | undefined,
+    color: string | undefined
+  ) => void;
+
   constructor(
     messageServ: MessageInt,
     loadingServ: LoadingInt,
     computeEngine: ComputeEngineInt,
     getModelString: () => string | undefined,
-    computationCanStart: (model: string | undefined) => asserts model is string
+    computationCanStart: (model: string | undefined) => asserts model is string,
+    setComputationStatus: (
+      warning: string | undefined,
+      error: string | undefined,
+      computeEngineStatus: string | undefined,
+      computationStatus: ComputationStatus | undefined,
+      color: string | undefined
+    ) => void
   ) {
     this.messageServ = messageServ;
     this.loadingServ = loadingServ;
@@ -34,9 +50,31 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.getModelString = getModelString;
 
     this.computationCanStart = computationCanStart;
+    this.setComputationStatus = setComputationStatus;
   }
 
   // #endregion
+
+  /* #region --- Computation --- */
+
+  public startComputation(): void {
+    const model = this.getModelString();
+
+    try {
+      // Todo - change the mode string to a specific one for TSSD when we have more computations using TSSD
+      this.computationCanStart(model);
+    } catch (error: unknown) {
+      this.messageServ.showError((error as Error).message);
+      return;
+    }
+
+    this.computeEngine.TrapSpaceSuccessionDiagram.startComputation(
+      model,
+      this.setComputationStatus.bind(this)
+    );
+  }
+
+  /* #endregion */
 
   // #region --- Trap Space Succession Diagram ---
 
@@ -59,18 +97,7 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
   public getTrapSpaceSuccessionDiagram(
     insertSuccessionDiagramFunction: (rootNode: NodeDataTSSDWithMotifs) => void
   ): void {
-    const model = this.getModelString();
-
-    try {
-      // Todo - change the mode string to a specific one for TSSD when we have more computations using TSSD
-      this.computationCanStart(model);
-    } catch (error: unknown) {
-      this.messageServ.showError((error as Error).message);
-      return;
-    }
-
     this.computeEngine.TrapSpaceSuccessionDiagram.getTrapSpaceSuccessionDiagram(
-      model,
       (
         error: string | undefined,
         rootNode: NodeDataTSSDWithMotifs | undefined
@@ -192,10 +219,10 @@ class TrapSpaceSuccessionDiagram implements TrapSpaceSuccessionDiagramInt {
     this.computeEngine.TrapSpaceSuccessionDiagram.deleteNodeTSSD(
       nodeId,
       nodeType,
-      (error, originalNodeId, removedNodeType, removedNodeId) => {
+      (error, removedNodeId, removedNodeType) => {
         this.deleteNodeCallback(
           error,
-          originalNodeId,
+          nodeId,
           removedNodeType,
           removedNodeId,
           removeNodesFromVisualizationFunction
