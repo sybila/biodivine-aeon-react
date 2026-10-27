@@ -140,7 +140,8 @@ class ComputationManager implements ComputationManagerInt {
       this.computeEngine,
       getModelString,
       // TODO -- change when trap space diagram is fully designed
-      (model) => true
+      (model) => true,
+      this.setComputationStatus.bind(this)
     );
 
     this.Model = new Model(
