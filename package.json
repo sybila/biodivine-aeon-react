@@ -1,13 +1,22 @@
 {
   "name": "biodivine-aeon-react",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.6.2",
+  "main": "electron/main.ts",
+  "electron": {
+    "main": "./electron/main.ts",
+    "renderer": "./src/main.tsx",
+    "preload": "./electron/preload.ts"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev-el": "electron-vite dev -c vite.electron.config.ts",
+    "build-el": "electron-vite build -c vite.electron.config.ts",
+    "preview-el": "electron-vite preview -c vite.electron.config.ts"
   },
   "dependencies": {
     "@lit/react": "^1.0.7",
@@ -38,6 +47,9 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
+    "cross-env": "^10.1.0",
+    "electron": "^45.0.0",
+    "electron-vite": "^6.0.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
