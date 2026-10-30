@@ -1,8 +1,14 @@
 {
   "name": "biodivine-aeon-react",
+  "productName": "Biodivine Aeon",
+  "desktopName": "biodivine-aeon",
+  "author": {
+    "name": "Sybila",
+    "email": "536558@mail.muni.cz"
+  },
   "private": true,
   "version": "0.6.2",
-  "main": "electron/main.ts",
+  "main": "dist-el/main/index.js",
   "electron": {
     "main": "./electron/main.ts",
     "renderer": "./src/main.tsx",
@@ -17,7 +23,11 @@
     "preview": "vite preview",
     "dev-el": "electron-vite dev -c vite.electron.config.ts",
     "build-el": "electron-vite build -c vite.electron.config.ts",
-    "preview-el": "electron-vite preview -c vite.electron.config.ts"
+    "preview-el": "electron-vite preview -c vite.electron.config.ts",
+    "package": "npm run build-el && electron-builder",
+    "package-linux": "npm run build-el && electron-builder --linux",
+    "package-windows": "npm run build-el && electron-builder --win",
+    "package-mac": "npm run build-el && electron-builder --mac"
   },
   "dependencies": {
     "@lit/react": "^1.0.7",
@@ -50,6 +60,7 @@
     "@vitejs/plugin-react": "^4.5.2",
     "cross-env": "^10.1.0",
     "electron": "^45.0.0",
+    "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",

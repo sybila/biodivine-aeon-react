@@ -1,0 +1,32 @@
+appId: com.biodivine.aeon
+productName: Biodivine Aeon
+
+asar: true
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist-el/**/*
+  - package.json
+
+linux:
+  syncDesktopName: true
+  target:
+    - AppImage
+    - deb
+  category: Science
+  icon: electron/icons/linux-icons
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: electron/icons/Aeon-windows-icon.ico
+
+mac:
+  target:
+    - dmg
+  icon: electron/icons/Aeon-mac-icon.icns
