@@ -1,10 +1,15 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  Menu,
+} from 'electron';
 import * as path from 'node:path';
 
 /** Function responsible for definition and creation of the electron app window. */
 function createWindow() {
-  const win = new BrowserWindow({
-    title: 'Biodivine/Aeon',
+  const windowOptions: BrowserWindowConstructorOptions = {
+    title: 'Biodivine Aeon',
     width: 1200,
     height: 800,
     // Hides top menu bar, can be accessible by pressing alt
@@ -13,7 +18,23 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
     },
-  });
+  };
+
+  if (process.platform === 'linux') {
+    windowOptions.icon = app.isPackaged
+      ? path.join(process.resourcesPath, 'icons', 'linux-icons', '512x512.png')
+      : path.join(app.getAppPath(), 'electron/icons/linux-icons/512x512.png');
+  } else if (process.platform === 'win32') {
+    windowOptions.icon = app.isPackaged
+      ? path.join(process.resourcesPath, 'icons', 'Aeon-windows-icon.ico')
+      : path.join(app.getAppPath(), 'electron/icons/Aeon-windows-icon.ico');
+  } else if (process.platform === 'darwin') {
+    windowOptions.icon = app.isPackaged
+      ? path.join(process.resourcesPath, 'icons', 'Aeon-mac-icon.icns')
+      : path.join(app.getAppPath(), 'electron/icons/Aeon-mac-icon.icns');
+  }
+
+  const win = new BrowserWindow(windowOptions);
 
   // Make the app windowed full screen on startup
   win.maximize();
@@ -79,7 +100,6 @@ function createTopMenu() {
 
   Menu.setApplicationMenu(menu);
 }
-
 // Start Electron
 app
   .whenReady()
