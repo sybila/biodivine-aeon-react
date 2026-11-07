@@ -63,7 +63,8 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
 - Ctrl + Shift + M → Open Model Editor menu  
 - Ctrl + Shift + C → Open Control-Enabled Editor menu
 - Ctrl + Shift + P → Open Phenotype Editor menu   
-- Ctrl + Shift + V → Open Visual Options menu  
+- Ctrl + Shift + V → Open Visual Options menu
+- Ctrl + Shift + H → Open Help menu
 - Ctrl + Shift + U → Open Utilities menu
 
 ### Navigation & Search
@@ -104,7 +105,7 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
 4.  **Analyze:** Run computations with \`Ctrl+Shift+S\`.
 
 ### Need more help?
-- [Open help menu](#) – Located in the left menu under the **?** button.
+- [Open help menu](#) – Located in the left menu under the **?** button or use the shortcut **\`Ctrl+Shift+H\`**.
 
 > *Note: This message disappears once you create your first variable.*
 `;
