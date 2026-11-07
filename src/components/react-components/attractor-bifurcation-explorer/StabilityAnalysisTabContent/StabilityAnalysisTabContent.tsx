@@ -31,10 +31,9 @@ const StabilityAnalysisTabContent: React.FC<
         helpHoverStore={helpHoverStore}
       />
       <StabilityAnalysisTable
-        maxTableHeight='calc(70vh - 200px)'
-        minTableHeight='100px'
-        tableWidth='100%'
-
+        maxTableHeight="calc(70vh - 200px)"
+        minTableHeight="100px"
+        tableWidth="100%"
         attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
         pageStringProviderServ={pageStringProviderServ}
         messageServ={messageServ}
