@@ -225,6 +225,9 @@ const ModelEditorTabContent: React.FC<ModelEditorTabContentProps> = ({
           />
 
           <ModelEditorVariableTable
+            minTableHeight='50px'
+            maxTableHeight='calc(70vh - 320px)'
+            tableWidth='98%'
             searchText={variableSearchText}
             exposeSetExtend={(extendFunction) =>
               setExtendFunctions.push(extendFunction)
