@@ -39,6 +39,9 @@ const ControlEnabledEditorTabContent: React.FC<
       </section>
 
       <ControlEnabledVariablesTable
+        maxTableHeight="calc(70vh - 150px)"
+        minTableHeight="50px"
+        tableWidth="100%"
         controlEnabledEditorServ={controlEnabledEditorServ}
         searchAndFilterHelpersServ={searchAndFilterHelpersServ}
         pageStringProviderServ={pageStringProviderServ}

@@ -10,6 +10,10 @@ import type { ModelEditorStatus } from '../../../../../stores/ModelEditor/ModelE
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type ControlEnabledVariablesTableProps = {
+  maxTableHeight: string;
+  minTableHeight: string;
+  tableWidth: string;
+
   controlEnabledEditorServ: ControlEnabledEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   pageStringProviderServ: ModelEditorPageStringsInt;
