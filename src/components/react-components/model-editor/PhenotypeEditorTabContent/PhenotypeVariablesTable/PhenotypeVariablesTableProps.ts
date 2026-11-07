@@ -10,6 +10,10 @@ import type { ModelEditorStatus } from '../../../../../stores/ModelEditor/ModelE
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type PhenotypeVariablesTableProps = {
+  maxTableHeight: string;
+  minTableHeight: string;
+  tableWidth: string;
+
   phenotypeEditorServ: PhenotypeEditorInt;
   searchAndFilterHelpersServ: SearchAndFilterHelpersInt;
   pageStringProviderServ: ModelEditorPageStringsInt;

@@ -10,6 +10,10 @@ import type { PhenotypeVariablesTableProps } from './PhenotypeVariablesTableProp
 import VariablePhenotypeInfo from './VariablePhenotypeInfo/VariablePhenotypeInfo';
 
 const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   phenotypeEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
@@ -136,64 +140,71 @@ const PhenotypeVariablesTable: React.FC<PhenotypeVariablesTableProps> = ({
   ];
 
   return (
-    <section className="flex flex-col items-center w-full h-fit gap-1 mb-3">
-      <SearchTable<Variable>
-        elements={variables}
-        noRowsPlaceholder={'No Variables'}
-        noRowsTextColor="var(--color-secondary-text)"
-        getSearchText={() => phenotypeEditorServ.getVariableSearch()}
-        setSearchText={(newText: string) =>
-          phenotypeEditorServ.setVariableSearch(newText)
-        }
-        searchPlaceholder={'Search variables...'}
-        filterElements={(
-          elements: Variable[],
-          searchTerm: string
-        ): Variable[] => {
-          return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
-            elements,
-            searchTerm
-          );
-        }}
-        textInputTextColor="var(--color-tertiary-text)"
-        textInputColor="var(--color-tertiary-text-inputs)"
-        textInputBorderColor="var(--color-tertiary-text-inputs-border)"
-        buttons={statusButtons}
-        selectionButtonsConfig={{
-          buttonColor: 'var(--color-tertiary-buttons)',
-          buttonHoverColor: 'var(--color-tertiary-buttons-hover)',
-          selectedElementsIds: selectedVariablesIds,
-          setSelectedElements: (newSelectedElements) => {
-            updateSelectedVariables(newSelectedElements);
-          },
-          allElementIds: variableIds,
-          selectionButtonsTooltips: pageStringProviderServ.Tooltips,
-          helpHoverStore: helpHoverStore,
-        }}
-        renderRowsWithContainer={(variables: Variable[]): ReactNode => {
-          return (
-            <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
-              {variables.map((variable: Variable) => (
-                <VariablePhenotypeInfo
-                  key={variable.id}
-                  id={variable.id}
-                  name={variable.name ?? 'Unknown Variable'}
-                  hover={hoverVariableId === variable.id}
-                  selected={selectedVariablesIds.has(variable.id) ?? false}
-                  toggleSelect={toggleVariableSelect}
-                  phenotypeEditorServ={phenotypeEditorServ}
-                  messageServ={messageServ}
-                  pageStringProviderServ={pageStringProviderServ}
-                  controlStore={controlStore}
-                  helpHoverStore={helpHoverStore}
-                />
-              ))}
-            </section>
-          );
-        }}
-        hideTooltipFunction={() => helpHoverStore.getState().clear()}
-      />
-    </section>
+    <SearchTable<Variable>
+      elements={variables}
+      containerHeight="fit-content"
+      containerWidth={tableWidth}
+      noRowsPlaceholder={'No Variables'}
+      noRowsTextColor="var(--color-secondary-text)"
+      getSearchText={() => phenotypeEditorServ.getVariableSearch()}
+      setSearchText={(newText: string) =>
+        phenotypeEditorServ.setVariableSearch(newText)
+      }
+      searchPlaceholder={'Search variables...'}
+      filterElements={(
+        elements: Variable[],
+        searchTerm: string
+      ): Variable[] => {
+        return searchAndFilterHelpersServ.filterVariablesBySearchTerms(
+          elements,
+          searchTerm
+        );
+      }}
+      textInputTextColor="var(--color-tertiary-text)"
+      textInputColor="var(--color-tertiary-text-inputs)"
+      textInputBorderColor="var(--color-tertiary-text-inputs-border)"
+      buttons={statusButtons}
+      selectionButtonsConfig={{
+        buttonColor: 'var(--color-tertiary-buttons)',
+        buttonHoverColor: 'var(--color-tertiary-buttons-hover)',
+        selectedElementsIds: selectedVariablesIds,
+        setSelectedElements: (newSelectedElements) => {
+          updateSelectedVariables(newSelectedElements);
+        },
+        allElementIds: variableIds,
+        selectionButtonsTooltips: pageStringProviderServ.Tooltips,
+        helpHoverStore: helpHoverStore,
+      }}
+      renderRowsWithContainer={(variables: Variable[]): ReactNode => {
+        return (
+          <section
+            className="flex flex-col overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1"
+            style={{
+              maxHeight: maxTableHeight,
+              minHeight: minTableHeight,
+              height: 'auto',
+            }}
+          >
+            {variables.map((variable: Variable) => (
+              <VariablePhenotypeInfo
+                key={variable.id}
+                id={variable.id}
+                name={variable.name ?? 'Unknown Variable'}
+                hover={hoverVariableId === variable.id}
+                selected={selectedVariablesIds.has(variable.id) ?? false}
+                toggleSelect={toggleVariableSelect}
+                phenotypeEditorServ={phenotypeEditorServ}
+                messageServ={messageServ}
+                pageStringProviderServ={pageStringProviderServ}
+                controlStore={controlStore}
+                helpHoverStore={helpHoverStore}
+              />
+            ))}
+          </section>
+        );
+      }}
+      hideTooltipFunction={() => helpHoverStore.getState().clear()}
+    />
   );
 };
 
