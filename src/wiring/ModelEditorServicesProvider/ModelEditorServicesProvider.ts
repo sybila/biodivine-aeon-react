@@ -32,6 +32,7 @@ class ModelEditorServicesProvider implements ModelEditorServicesProviderInt {
     this.modelVisualizationServ = new CytoscapeME(
       liveModelServ,
       messageServ,
+      storesProvider.variablesStore,
       storesProvider.controlStore,
       storesProvider.modelEditorStatusStore,
       storesProvider.modelUndoRedoStore,

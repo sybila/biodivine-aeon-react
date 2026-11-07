@@ -7,6 +7,7 @@ import dagre from 'cytoscape-dagre';
 import edgehandles from 'cytoscape-edgehandles';
 import type { ControlStatus } from '../../../stores/LiveModel/ControlStore/ControlStatus';
 import type { VariablePositionsState } from '../../../stores/LiveModel/VariablePositions/VariablePostionsState';
+import type { VariablesStatus } from '../../../stores/LiveModel/VariablesStore/VariablesStatus';
 import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorStatus';
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
@@ -61,6 +62,7 @@ class CytoscapeME implements ModelVisualizationInt {
   private liveModel: LiveModelInt;
   private messageServ: MessageInt;
 
+  private variablesStore: ZustandStore<VariablesStatus>;
   private controlStore: ZustandStore<ControlStatus>;
   private modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
   private modelUndoRedoStore: ZustandStore<UndoRedoState>;
@@ -69,6 +71,7 @@ class CytoscapeME implements ModelVisualizationInt {
   constructor(
     liveModel: LiveModelInt,
     messageServ: MessageInt,
+    variablesStore: ZustandStore<VariablesStatus>,
     controlStore: ZustandStore<ControlStatus>,
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>,
@@ -77,6 +80,7 @@ class CytoscapeME implements ModelVisualizationInt {
     this.liveModel = liveModel;
     this.messageServ = messageServ;
 
+    this.variablesStore = variablesStore;
     this.controlStore = controlStore;
     this.modelEditorStatusStore = modelEditorStatusStore;
     this.modelUndoRedoStore = modelUndoRedoStore;
@@ -153,7 +157,9 @@ class CytoscapeME implements ModelVisualizationInt {
     );
     this.liveModel.Control.addOnPhenotypeChangeCallback(
       (inputNodes?: [number, PhenotypeStatus][] | null) => {
-        this.highlightPhenotype(inputNodes);
+        if (this.isPhenotypeHighlighted()) {
+          this.highlightPhenotype(false, inputNodes);
+        }
       }
     );
 
@@ -1158,52 +1164,97 @@ class CytoscapeME implements ModelVisualizationInt {
     return this.controlEnabledShown ?? false;
   }
 
-  public highlightPhenotype(
-    inputNodes: Array<[number, PhenotypeStatus]> | null = null
+  /** Changes highlight by phenotype for one variable specified by the id. */
+  private highlightPhenotypeForVariable(
+    id: number,
+    phenotypeStatus: PhenotypeStatus,
+    colors: {
+      trueColor: string;
+      falseColor: string;
+      notInTextColor: string;
+      notInBorderColor: string;
+    }
   ) {
-    var nodes: Array<[number, PhenotypeStatus]> | undefined = undefined;
+    const variableNode = this.cytoscape.getElementById(id);
 
-    if (inputNodes == null) {
-      nodes = this.controlStore.getState().getAllCurrentPhenotypeIds();
-      this.phenotypeShown = !this.phenotypeShown;
-    } else {
-      nodes = inputNodes;
+    if (!variableNode) {
+      return;
     }
 
-    const trueColor = getComputedStyle(document.documentElement)
-      .getPropertyValue('--color-in-phenotype-true')
-      .trim();
-    const falseColor = getComputedStyle(document.documentElement)
-      .getPropertyValue('--color-in-phenotype-false')
-      .trim();
-    const notInText = getComputedStyle(document.documentElement)
-      .getPropertyValue('--color-model-node-text')
-      .trim();
-    const notInBorder = getComputedStyle(document.documentElement)
-      .getPropertyValue('---color-model-node-border')
-      .trim();
+    if (
+      !this.phenotypeShown ||
+      phenotypeStatus == PHENOTYPE_STATUS.NotInPhenotype
+    ) {
+      variableNode.style('border-color', colors.notInBorderColor);
+      variableNode.style('color', colors.notInTextColor);
+      variableNode.style('border-width', '1px');
+    } else if (phenotypeStatus == PHENOTYPE_STATUS.InPhenotypeTrue) {
+      variableNode.style('border-color', colors.trueColor);
+      variableNode.style('color', colors.trueColor);
+      variableNode.style('border-width', '2px');
+    } else if (phenotypeStatus == PHENOTYPE_STATUS.InPhenotypeFalse) {
+      variableNode.style('border-color', colors.falseColor);
+      variableNode.style('color', colors.falseColor);
+      variableNode.style('border-width', '2px');
+    }
+  }
 
-    nodes.forEach(([id, variablePhenotype]) => {
-      if (
-        this.phenotypeShown &&
-        variablePhenotype == PHENOTYPE_STATUS.InPhenotypeTrue
-      ) {
-        this.cytoscape.getElementById(id).style('border-color', trueColor);
-        this.cytoscape.getElementById(id).style('color', trueColor);
-        this.cytoscape.getElementById(id).style('border-width', '2px');
-      } else if (
-        this.phenotypeShown &&
-        variablePhenotype == PHENOTYPE_STATUS.InPhenotypeFalse
-      ) {
-        this.cytoscape.getElementById(id).style('border-color', falseColor);
-        this.cytoscape.getElementById(id).style('color', falseColor);
-        this.cytoscape.getElementById(id).style('border-width', '2px');
-      } else {
-        this.cytoscape.getElementById(id).style('border-color', notInBorder);
-        this.cytoscape.getElementById(id).style('color', notInText);
-        this.cytoscape.getElementById(id).style('border-width', '1px');
-      }
-    });
+  /** Returns colors used in the phenotype highlighting. */
+  private getPhenotypeColors(): {
+    trueColor: string;
+    falseColor: string;
+    notInTextColor: string;
+    notInBorderColor: string;
+  } {
+    return {
+      trueColor: getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-in-phenotype-true')
+        .trim(),
+      falseColor: getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-in-phenotype-false')
+        .trim(),
+      notInTextColor: getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-model-node-text')
+        .trim(),
+      notInBorderColor: getComputedStyle(document.documentElement)
+        .getPropertyValue('---color-model-node-border')
+        .trim(),
+    };
+  }
+
+  public highlightPhenotype(
+    toggleHighlight: boolean,
+    inputNodes: Array<[number, PhenotypeStatus]> | null = null
+  ) {
+    if (toggleHighlight) {
+      this.phenotypeShown = !this.phenotypeShown;
+    }
+
+    const colors = this.getPhenotypeColors();
+
+    if (inputNodes == null) {
+      const allVariables = this.variablesStore.getState().getAllVariables();
+
+      allVariables.forEach((variable) => {
+        const phenotype = this.controlStore
+          .getState()
+          .getVariablePhenotype(variable.id);
+
+        this.highlightPhenotypeForVariable(
+          variable.id,
+          phenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
+          colors
+        );
+      });
+    } else {
+      inputNodes.forEach(([id, variablePhenotype]) => {
+        this.highlightPhenotypeForVariable(
+          id,
+          variablePhenotype ?? PHENOTYPE_STATUS.NotInPhenotype,
+          colors
+        );
+      });
+    }
   }
 
   public isPhenotypeHighlighted() {
