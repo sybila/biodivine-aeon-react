@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import DotHeaderReact from '../../lit-wrappers/DotHeaderReact';
+import SectionWithDotHeader from '../../global/SectionWithDotHeader/SectionWithDotHeader';
 import TextButtonReact from '../../lit-wrappers/TextButtonReact';
 import ChangeUpdateFunctionInput from '../ChangeUpdateFunctionInput/ChangeUpdateFunctionInput';
 import RegulationInfoList from '../RegulationInfoList/RegulationInfoList';
@@ -93,58 +93,55 @@ const ChangeUpFunOverlayContent: React.FC<ChangeUpFunOverlayContentProps> = ({
   });
 
   return (
-    <div className="flex flex-col gap-4 p-2 justify-center items-center max-h-[40vh] w-[50vw]">
-      <DotHeaderReact
+    <div className="flex flex-col gap-4 p-2 justify-start items-center min-h-[200px] max-h-[80vh] w-[80vw]">
+      <SectionWithDotHeader
         textColor="var(--color-primary-text)"
-        headerText="Regulators"
-        compHeight="15px"
-        compWidth="100%"
-        justifyHeader="start"
-        textFontSize="12px"
-      />
-
-      <RegulationInfoList
-        height="77px"
+        text="Regulators"
+        height="fit-content"
         width="100%"
-        variableRegulations={regulations}
-        hoverRegulation={undefined}
-        selectedRegulatorIds={undefined}
-        modelEditorServ={modelEditorServ}
-        pageStringProviderServ={pageStringProviderServ}
-        variablesStore={variablesStore}
-        helpHoverStore={helpHoverStore}
-      />
-
-      <DotHeaderReact
-        textColor="var(--color-primary-text)"
-        headerText="Update Function"
-        compHeight="15px"
-        compWidth="100%"
-        justifyHeader="start"
-        textFontSize="12px"
-      />
-
-      <div className="h-fit w-full bg-[var(--color-secondary)] rounded-[15px] p-2">
-        <ChangeUpdateFunctionInput
-          varName={varName}
-          updateFunction={updateFunction}
-          updateFunctionStatus={updateFunctionStatus}
-          compHeight="fit-content"
-          compWidth="95%"
-          inputFontSize="20px"
-          inputHeight="100px"
-          inputWidth="100%"
-          validationMinHeight="40px"
-          validationMaxHeight="50px"
-          setUpdateFunction={(fun: string) => setUpdateFunction(fun)}
-          exposeInputRef={(ref) => setInputReference(ref)}
+      >
+        <RegulationInfoList
+          maxListHeight="10vh"
+          minListHeight="30px"
+          listWidth="100%"
+          variableRegulations={regulations}
+          hoverRegulation={undefined}
+          selectedRegulatorIds={undefined}
           modelEditorServ={modelEditorServ}
           pageStringProviderServ={pageStringProviderServ}
+          variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
         />
-      </div>
+      </SectionWithDotHeader>
 
-      <section className="flex flex-row justify-around items-center w-full h-[12%]">
+      <SectionWithDotHeader
+        textColor="var(--color-primary-text)"
+        text="Update Function"
+        height="fit-content"
+        width="100%"
+      >
+        <div className="h-fit w-full bg-(--color-secondary) rounded-[15px] p-2">
+          <ChangeUpdateFunctionInput
+            varName={varName}
+            updateFunction={updateFunction}
+            updateFunctionStatus={updateFunctionStatus}
+            compHeight="fit-content"
+            compWidth="95%"
+            inputFontSize="20px"
+            inputHeight="calc(70vh - 350px)"
+            inputWidth="100%"
+            validationMinHeight="40px"
+            validationMaxHeight="50px"
+            setUpdateFunction={(fun: string) => setUpdateFunction(fun)}
+            exposeInputRef={(ref) => setInputReference(ref)}
+            modelEditorServ={modelEditorServ}
+            pageStringProviderServ={pageStringProviderServ}
+            helpHoverStore={helpHoverStore}
+          />
+        </div>
+      </SectionWithDotHeader>
+
+      <section className="flex flex-row justify-around items-center w-full h-[30px]">
         <TextButtonReact
           buttonColor="var(--color-secondary-buttons)"
           textColor="var(--color-secondary-text)"

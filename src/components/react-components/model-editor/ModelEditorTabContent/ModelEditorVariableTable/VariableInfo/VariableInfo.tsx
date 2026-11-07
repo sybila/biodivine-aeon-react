@@ -185,8 +185,10 @@ const VariableInfo: React.FC<VariableInfoProps> = ({
 
       <section slot="extended-content" className="h-fit w-full">
         <RegulationInfoList
-          height="100px"
-          width="100%"
+          minListHeight="100px"
+          maxListHeight="100px"
+          listWidth='100%'
+          rowFontSize='17px'
           variableRegulations={regulations}
           hoverRegulation={hoverRegulation}
           selectedRegulatorIds={selectedRegulatorIds}
