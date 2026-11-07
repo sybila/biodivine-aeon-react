@@ -235,6 +235,8 @@ class ControlLM implements ControlLMInt {
       return err("Phenotype doesn't exist.");
     }
 
+    this.runCallbacks(this.onPhenotypeChange);
+
     return ok(result);
   }
 
@@ -281,6 +283,8 @@ class ControlLM implements ControlLMInt {
         onUndoFailErrorPrefix: 'Failed to remove phenotype.',
       });
     }
+
+    this.runCallbacks(this.onPhenotypeChange);
 
     return ok(result.value);
   }

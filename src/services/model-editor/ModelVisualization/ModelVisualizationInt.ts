@@ -119,8 +119,15 @@ export interface ModelVisualizationInt {
   /** Returns true if the control-enabled highlighting is currently active. */
   isControlEnabledHighlighted(): boolean;
 
-  /** Changes borders of all nodes which are in the phenotype. */
-  highlightPhenotype(inputNodes?: Array<[number, any]> | null): void;
+  /**
+ * Changes the highlight state of nodes in the phenotype.
+ * @param toggleHighlight Whether to toggle the highlight state or just refresh it.
+ * @param inputNodes Optional array of variable IDs to highlight/refresh; if omitted, all variables are affected.
+ */
+  highlightPhenotype(
+    toggleHightlight: boolean,
+    inputNodes?: Array<[number, any]> | null
+  ): void;
 
   /** Returns true if the phenotype highlighting is currently active. */
   isPhenotypeHighlighted(): boolean;
