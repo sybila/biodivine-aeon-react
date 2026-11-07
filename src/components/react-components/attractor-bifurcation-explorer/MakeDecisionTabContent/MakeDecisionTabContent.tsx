@@ -35,7 +35,7 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
           compWidth="100%"
           justifyHeader="start"
           headerText="Auto-Expand"
-          textColor='var(--color-primary-text)'
+          textColor="var(--color-primary-text)"
         />
 
         <AutoExpandSection
@@ -54,11 +54,14 @@ const MakeDecisionTabContent: React.FC<MakeDecisionTabContentProps> = ({
           compWidth="100%"
           justifyHeader="start"
           headerText="Decisions"
-          textColor='var(--color-primary-text)'
+          textColor="var(--color-primary-text)"
         />
         <DecisionTable
           nodeId={selectedNode.id}
           nodeCardinality={selectedNode.cardinality}
+          maxTableHeight="calc(70vh - 100px)"
+          minTableHeight="100px"
+          tableWidth="98%"
           attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
           behaviorClassOperationsServ={behaviorClassOperationsServ}
           pageStringProviderServ={pageStringProviderServ}

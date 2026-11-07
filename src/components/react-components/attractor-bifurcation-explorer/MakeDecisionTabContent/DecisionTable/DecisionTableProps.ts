@@ -9,6 +9,10 @@ export type DecisionTableProps = {
   nodeId: number;
   nodeCardinality: number;
 
+  maxTableHeight: string;
+  minTableHeight: string;
+  tableWidth: string;
+
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
   pageStringProviderServ: AttractorBifurcationExplorerPageStringsInt;
