@@ -9,6 +9,10 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
   nodeId,
   nodeCardinality,
 
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
   pageStringProviderServ,
@@ -28,9 +32,9 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
         className="mb-2"
         compWidth="95%"
         text="Get Decisions"
-        textColor='var(--color-secondary-text)'
-        buttonColor='var(--color-secondary-buttons)'
-        buttonHoverColor='var(--color-secondary-buttons-hover)'
+        textColor="var(--color-secondary-text)"
+        buttonColor="var(--color-secondary-buttons)"
+        buttonHoverColor="var(--color-secondary-buttons-hover)"
         iconAlt="Plus Icon"
         iconSrc={PlusIcon}
         handleClick={() => {
@@ -74,7 +78,15 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
   };
 
   return (
-    <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
+    <section
+      className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden"
+      style={{
+        maxHeight: maxTableHeight,
+        height: 'auto',
+        minHeight: minTableHeight,
+        width: tableWidth,
+      }}
+    >
       {renderTable()}
     </section>
   );
