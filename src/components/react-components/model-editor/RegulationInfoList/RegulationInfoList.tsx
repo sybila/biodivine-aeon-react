@@ -1,12 +1,15 @@
-import { useMemo } from 'react';
 import type { Regulation } from '../../../../types/types';
 import SimpleHeaderReact from '../../lit-wrappers/SimpleHeaderReact';
 import RegulationInfo from './RegulationInfo/RegulationInfo';
 import type { RegulationInfoListProps } from './RegulationInfoListProps';
 
 const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
-  height,
-  width,
+  maxListHeight,
+  minListHeight,
+  listWidth,
+
+  rowFontSize,
+
   variableRegulations,
   hoverRegulation,
   selectedRegulatorIds,
@@ -21,7 +24,7 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
     return (
       <section
         className="flex justify-center items-center"
-        style={{ height: height, width: width }}
+        style={{ height: '100px', width: listWidth }}
       >
         <SimpleHeaderReact
           compHeight="20px"
@@ -35,7 +38,15 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
   }
 
   return (
-    <section className="overflow-auto" style={{ height: height, width: width }}>
+    <section
+      className="overflow-auto"
+      style={{
+        maxHeight: maxListHeight,
+        height: 'auto',
+        minHeight: minListHeight,
+        width: listWidth,
+      }}
+    >
       {variableRegulations.map((regulation: Regulation) => (
         <RegulationInfo
           key={`${regulation.regulator.toString()}+${regulation.target.toString()}`}
@@ -53,9 +64,10 @@ const RegulationInfoList: React.FC<RegulationInfoListProps> = ({
           pageStringProviderServ={pageStringProviderServ}
           variablesStore={variablesStore}
           helpHoverStore={helpHoverStore}
-          normalTextColor='var(--color-primary-text)'
-          hoverColor='var(--color-secondary-light-highlight)'
-          selectedColor='var(--color-secondary-highlight)'
+          fontSize={rowFontSize}
+          normalTextColor="var(--color-primary-text)"
+          hoverColor="var(--color-secondary-light-highlight)"
+          selectedColor="var(--color-secondary-highlight)"
           {...regulation}
         ></RegulationInfo>
       ))}

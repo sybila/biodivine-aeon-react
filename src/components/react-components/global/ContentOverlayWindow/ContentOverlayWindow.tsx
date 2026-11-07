@@ -30,6 +30,8 @@ const ContentOverlayWindow: React.FC<ContentOverlayWindowProps> = ({
       compZIndex={zIndex}
       windMaxWidth="90vw"
       windMaxHeight="90vh"
+      compHeight='100vh'
+      compWidth='100vw'
     >
       {currentContent.content}
     </OverlayWindowReact>

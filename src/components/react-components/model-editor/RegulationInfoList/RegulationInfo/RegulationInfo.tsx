@@ -9,6 +9,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   hover,
   selected,
 
+  fontSize = '19px',
   normalTextColor,
   hoverColor,
   selectedColor,
@@ -45,7 +46,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
     return (
       <span
         className="h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer"
-        style={{ color: color }}
+        style={{ color: color, fontSize: fontSize }}
         onClick={() => {
           modelEditorServ.toggleRegulationObservability(regulator, target);
         }}
@@ -84,7 +85,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
     return (
       <span
         className="h-fit w-[30%] max-w-[30%] overflow-x-auto overflow-y-hidden text-center hover:font-(family-name:--font-family-fira-bold) cursor-pointer"
-        style={{ color: color }}
+        style={{ color: color, fontSize: fontSize }}
         onClick={() => {
           modelEditorServ.toggleRegulationMonocity(regulator, target);
         }}
@@ -120,7 +121,7 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
   return (
     <div
       className="min-h-[24px] max-h-[40px] w-full flex justify-start items-center font-(family-name:--font-family-fira-mono) 
-        leading-[100%] text-[98%] select-none"
+        leading-[100%] select-none"
       style={{ backgroundColor: getRegulationBgColor() }}
       onMouseEnter={() => {
         modelEditorServ.hoverRegulationCytoscape({ regulator, target }, true);
@@ -132,14 +133,18 @@ const RegulationInfo: React.FC<RegulationInfoProps> = ({
       }}
     >
       <span
-        className="h-auto w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end text-[16px]"
-        style={{ scrollbarWidth: 'thin', color: normalTextColor }}
+        className="h-auto w-[26%] max-w-[26%] overflow-x-auto overflow-y-hidden text-end"
+        style={{
+          scrollbarWidth: 'thin',
+          color: normalTextColor,
+          fontSize: fontSize,
+        }}
       >
         {regulatorVar.name ?? 'Unknown'}
       </span>
       <span
         className="h-auto w-[8%] max-w-[8%] overflow-x-auto overflow-y-hidden text-center"
-        style={{ color: normalTextColor }}
+        style={{ color: normalTextColor, fontSize: fontSize }}
       >
         {getRegulationIcon()}
       </span>
