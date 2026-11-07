@@ -9,6 +9,10 @@ import type { ControlEnabledVariablesTableProps } from './ControlEnabledVariable
 import VariableControlEnabledInfo from './VariableControlEnabledInfo/VariableControlEnabledInfo';
 
 const ControlVariablesTable: React.FC<ControlEnabledVariablesTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   controlEnabledEditorServ,
   searchAndFilterHelpersServ,
   pageStringProviderServ,
@@ -122,6 +126,8 @@ const ControlVariablesTable: React.FC<ControlEnabledVariablesTableProps> = ({
   return (
     <SearchTable<Variable>
       elements={variables}
+      containerHeight="fit-content"
+      containerWidth={tableWidth}
       noRowsPlaceholder={'No Variables'}
       noRowsTextColor="var(--color-primary-text)"
       getSearchText={() => controlEnabledEditorServ.getVariableSearch()}
@@ -155,7 +161,14 @@ const ControlVariablesTable: React.FC<ControlEnabledVariablesTableProps> = ({
       }}
       renderRowsWithContainer={(variables: Variable[]): ReactNode => {
         return (
-          <section className="flex flex-col min-h-[50px] h-auto max-h-[152px] md:max-h-[252px] xl:max-h-[352px] 2xl:max-h-[452px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1">
+          <section
+            className="flex flex-col overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1"
+            style={{
+              maxHeight: maxTableHeight,
+              height: 'auto',
+              minHeight: minTableHeight,
+            }}
+          >
             {variables.map((variable: Variable) => {
               return (
                 <VariableControlEnabledInfo
