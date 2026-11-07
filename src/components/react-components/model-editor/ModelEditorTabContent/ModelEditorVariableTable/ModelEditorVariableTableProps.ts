@@ -9,6 +9,10 @@ import type { ModelEditorStatus } from '../../../../../stores/ModelEditor/ModelE
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type ModelEditorVariableTableProps = {
+  maxTableHeight: string,
+  minTableHeight: string,
+  tableWidth: string,
+
   searchText: string | undefined;
   exposeSetExtend: (extendFunction: (extend: boolean) => void) => void;
 
