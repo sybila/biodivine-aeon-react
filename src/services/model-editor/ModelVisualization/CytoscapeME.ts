@@ -255,7 +255,8 @@ class CytoscapeME implements ModelVisualizationInt {
       wheelSensitivity: 1,
       maxZoom: 18,
       minZoom: 0.5,
-      boxSelectionEnabled: false,
+      boxSelectionEnabled: true,
+      autounselectify: false,
       selectionType: 'single',
       style: [
         {

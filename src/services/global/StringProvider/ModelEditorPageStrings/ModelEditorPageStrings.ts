@@ -21,6 +21,15 @@ The **Model Editor** page allows you to create, edit, and manage Boolean network
 
 ---
 
+### How to Multiselect Elements
+
+In the **Model Visualization** view, you can **multiselect** elements (variables and regulations) 
+
+- **Click and drag** a selection square over the visualization canvas to select multiple elements.
+- **Hold down the Ctrl key** and **click** on individual elements to select multiple items.
+
+---
+
 ## Menus Overview
 
 ### Start Computation Menu
