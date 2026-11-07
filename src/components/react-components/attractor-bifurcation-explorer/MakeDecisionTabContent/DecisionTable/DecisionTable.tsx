@@ -79,7 +79,7 @@ const DecisionTable: React.FC<DecisionTableProps> = ({
 
   return (
     <section
-      className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden"
+      className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden p-1.5"
       style={{
         maxHeight: maxTableHeight,
         height: 'auto',
