@@ -1,8 +1,12 @@
-import DotHeaderReact from '../../../lit-wrappers/DotHeaderReact';
+import SectionWithDotHeader from '../../../global/SectionWithDotHeader/SectionWithDotHeader';
 import SimpleHeaderReact from '../../../lit-wrappers/SimpleHeaderReact';
 import type { NecessaryConditionTableProps } from './NecessaryConditionTableProps';
 
 const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   nodeId,
   attractorBifurcationExplorerServ,
 }) => {
@@ -10,14 +14,20 @@ const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
     attractorBifurcationExplorerServ.getNodeNecessaryConditions(nodeId);
 
   return (
-    <section className="flex flex-col justify-center items-center h-fit w-full gap-1 mb-2">
-      <DotHeaderReact
-        compHeight="30px"
-        compWidth="100%"
-        justifyHeader="start"
-        headerText="Necessary Conditions"
-      />
-      <div className="w-[99%] min-h-[100px] max-h-[100px] xl:max-h-[150px] overflow-auto bg-(--color-secondary) rounded-md p-2">
+    <SectionWithDotHeader
+      height="fit-content"
+      text="Necessary Conditions"
+      textColor="var(--color-primary-text)"
+      width={tableWidth}
+    >
+      <div
+        className="w-[99%] overflow-auto bg-(--color-secondary) rounded-md p-2"
+        style={{
+          maxHeight: maxTableHeight,
+          height: 'auto',
+          minHeight: minTableHeight,
+        }}
+      >
         {necessaryConditions.map((condition, index) => (
           <div
             key={index}
@@ -39,7 +49,7 @@ const NecessaryConditionsTable: React.FC<NecessaryConditionTableProps> = ({
           </div>
         ))}
       </div>
-    </section>
+    </SectionWithDotHeader>
   );
 };
 

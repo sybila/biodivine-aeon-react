@@ -3,9 +3,12 @@ import type { BehaviorClassOperationsInt } from '../../../../../services/utiliti
 import type { AttractorClassBE } from '../../../../../types/types';
 
 export type BehaviorClassTableProps = {
+  maxTableHeight: string;
+  minTableHeight: string;
+  tableWidth: string;
+
   classes: AttractorClassBE[];
   nodeCardinality: number;
-  isLeaf: boolean;
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
   behaviorClassOperationsServ: BehaviorClassOperationsInt;
 };
