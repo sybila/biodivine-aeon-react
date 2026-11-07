@@ -12,7 +12,7 @@ const config = {
     defaultURL: 'http://localhost:8000',
     /** URL with instructions for downloading and running the compute engine. **/
     downloadLink:
-      'https://github.com/sybila/biodivine-aeon-server/releases/tag/v0.7.1',
+      'https://github.com/sybila/biodivine-aeon-server/releases/latest',
   },
   /** Local storage key for the last model. */
   localStorageModelName: 'lastModel',
