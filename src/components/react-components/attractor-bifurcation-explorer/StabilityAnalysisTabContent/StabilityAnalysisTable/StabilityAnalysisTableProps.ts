@@ -6,6 +6,10 @@ import type { HelpHoverState } from '../../../../../stores/HelpHover/HelpHoverSt
 import type { ZustandStore } from '../../../../../stores/ZustandStoreType';
 
 export type StabilityAnalysisTableProps = {
+  maxTableHeight: string;
+  minTableHeight: string;
+  tableWidth: string;
+
   attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt;
   messageServ: MessageInt;
   pageStringProviderServ: AttractorBifurcationExplorerPageStringsInt;

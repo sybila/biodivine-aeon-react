@@ -4,6 +4,10 @@ import type { StabilityAnalysisTableProps } from './StabilityAnalysisTableProps'
 import StabilityAnalysisTableRow from './StabilityAnalysisTableRow/StabilityAnalysisTableRow';
 
 const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   attractorBifurcationExplorerServ,
   messageServ,
   pageStringProviderServ,
@@ -17,7 +21,7 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
 
   const renderNoResults = () => {
     return (
-      <div className="max-h-[100px] h-[100px] md:max-h-[150px] md:h-[150px] w-full flex justify-center items-center">
+      <div className="h-[100px] w-full flex justify-center items-center">
         <SimpleHeaderReact
           headerText="No Computed Data"
           textColor="var(--color-primary-text)"
@@ -29,7 +33,15 @@ const StabilityAnalysisTable: React.FC<StabilityAnalysisTableProps> = ({
 
   const renderTable = () => {
     return (
-      <section className="flex flex-col w-full max-h-[100px] md:max-h-[200px] xl:max-h-[300px] 2xl:max-h-[400px] gap-2 overflow-y-auto">
+      <section
+        className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden p-1.5"
+        style={{
+          maxHeight: maxTableHeight,
+          height: 'auto',
+          minHeight: minTableHeight,
+          width: tableWidth,
+        }}
+      >
         {stabilityResults?.stabilityAnalysis.map(
           (variableStabilityData, index) => (
             <StabilityAnalysisTableRow
