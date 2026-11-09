@@ -1,5 +1,5 @@
 import type { StabilityAnalysisModes } from '../../../../types/types';
-import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../../attractor-visualizer/AttractorVisualizerInt';
 
 export interface AttractorAnalysisInt {

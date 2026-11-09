@@ -1,4 +1,4 @@
-import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../../../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { ComputationManagerInt } from '../../../../../services/global/ComputationManager/ComputationManagerInt';
 import type { GlobalStringsInt } from '../../../../../services/global/StringProvider/GlobalStrings/GlobalStringsInt';
