@@ -10,7 +10,7 @@ import type {
   StabilityAnalysisVariable,
   WrappedModelString,
 } from '../../../../types/types';
-import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorBifurcationExplorerInt } from '../../../attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../../attractor-visualizer/AttractorVisualizerInt';
 import type { ComputeEngineInt } from '../../ComputeEngine/ComputeEngineInt';
 import type { LiveModelInt } from '../../LiveModel/LiveModelInt';

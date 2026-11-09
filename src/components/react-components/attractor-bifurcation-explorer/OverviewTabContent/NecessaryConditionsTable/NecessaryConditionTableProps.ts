@@ -1,4 +1,4 @@
-import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer./AttractorBifurcationExplorerInt';
+import type { AttractorBifurcationExplorerInt } from '../../../../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 
 export type NecessaryConditionTableProps = {
   nodeId: number;
