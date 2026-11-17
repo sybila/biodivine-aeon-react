@@ -61,7 +61,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
   ];
 
   return (
-    <div className="flex flex-col items-center w-full h-fit gap-3">
+    <div className="flex flex-col items-center justify-around w-full h-[60vh] gap-3">
       <section className="flex justify-around items-center h-[30px] w-full">
         {buttons.map((button, index) => (
           <TextButtonReact
@@ -83,7 +83,7 @@ const TextEditorTabContent: React.FC<TextEditorTabContentProps> = ({
       </section>
 
       <InvisibleInputReact
-        compHeight="50vh"
+        compHeight="calc(60vh - 100px)"
         compWidth="98%"
         placeholder="Model In Aeon Format"
         textAlign="start"
