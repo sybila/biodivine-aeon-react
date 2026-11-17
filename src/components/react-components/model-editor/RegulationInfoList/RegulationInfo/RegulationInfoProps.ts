@@ -9,6 +9,7 @@ export type RegulationInfoProps = Regulation & {
   hover: boolean;
   selected: boolean;
 
+  fontSize?: string;
   normalTextColor: string;
   hoverColor: string;
   selectedColor: string;

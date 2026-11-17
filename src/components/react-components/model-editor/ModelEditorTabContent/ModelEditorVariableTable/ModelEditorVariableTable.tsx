@@ -9,6 +9,10 @@ import type { ModelEditorVariableTableProps } from './ModelEditorVariableTablePr
 import VariableInfo from './VariableInfo/VariableInfo';
 
 const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   searchText,
   exposeSetExtend,
 
@@ -78,12 +82,22 @@ const ModelEditorVariableTable: React.FC<ModelEditorVariableTableProps> = ({
 
   return !filteredVariables || filteredVariables.length === 0 ? (
     <section className="flex h-[200px] w-[98%] justify-center items-center">
-      <SimpleHeaderReact textColor='var(--color-primary-text)' headerText="No Variables" textFontWeight="normal" />
+      <SimpleHeaderReact
+        textColor="var(--color-primary-text)"
+        headerText="No Variables"
+        textFontWeight="normal"
+      />
     </section>
   ) : (
     <section
       ref={VariableListRef}
-      className="flex flex-col min-h-[50px] h-auto max-h-[100px] md:max-h-[200px] lg:max-h-[280px] xl:max-h-[290px] 2xl:max-h-[470px] overflow-auto w-[98%] px-[2%] pb-1 mb-1 gap-1"
+      className="flex flex-col overflow-auto px-[2%] pb-1 mb-1 gap-1"
+      style={{
+        maxHeight: maxTableHeight,
+        height: 'auto',
+        minHeight: minTableHeight,
+        width: tableWidth,
+      }}
     >
       {filteredVariables.map((variable: Variable) => (
         <VariableInfo

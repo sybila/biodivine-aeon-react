@@ -5,9 +5,12 @@ import type { BehaviorClassTableProps } from './BehaviorClassTableProps';
 import BehaviorClassTableRow from './BehaviorClassTableRow/BehaviorClassTableRow';
 
 const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
+  maxTableHeight,
+  minTableHeight,
+  tableWidth,
+
   classes,
   nodeCardinality,
-  isLeaf,
   attractorBifurcationExplorerServ,
   behaviorClassOperationsServ,
 }) => {
@@ -46,11 +49,13 @@ const BehaviorClassTable: React.FC<BehaviorClassTableProps> = ({
         </div>
 
         <section
-          className={`flex flex-col w-full h-fit  ${
-            !isLeaf
-              ? 'max-h-[100px]xl:max-h-[170px] 2xl:max-h-[200px]'
-              : 'max-h-[50px] xl:max-h-[100px] 2xl:max-h-[150px]'
-          } gap-1 overflow-auto`}
+          className="flex flex-col gap-1 overflow-auto"
+          style={{
+            maxHeight: maxTableHeight,
+            height: 'auto',
+            minHeight: minTableHeight,
+            width: tableWidth,
+          }}
         >
           {classes?.map((behaviorClass, index) => (
             <BehaviorClassTableRow

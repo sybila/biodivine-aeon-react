@@ -96,7 +96,7 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
           justifyHeader="start"
         />
 
-        <div className="flex flex-col gap-3 h-fit w-full bg-(--color-secondary) rounded-md p-2">
+        <div className="flex flex-col gap-3 w-full bg-(--color-secondary) rounded-md p-2">
           <span
             className="h-fit pb-1 px-2 w-full bg-(--color-tertiary-lighter) text-center select-none overflow-hidden text-(--color-secondary-text) text-[20px] font-(family-name:--font-family-fira-mono) rounded-md text-ellipsis"
             onMouseEnter={(e: React.MouseEvent) =>
@@ -154,6 +154,9 @@ const PhenotypeEditorTabContent: React.FC<PhenotypeEditorTabContentProps> = ({
           </section>
 
           <PhenotypeVariablesTable
+            minTableHeight="50px"
+            maxTableHeight="calc(70vh - 500px)"
+            tableWidth="100%"
             phenotypeEditorServ={phenotypeEditorServ}
             searchAndFilterHelpersServ={searchAndFilterHelpersServ}
             pageStringProviderServ={pageStringProviderServ}

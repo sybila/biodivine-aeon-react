@@ -62,9 +62,13 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
 
         {selectedNode.classes ? (
           <BehaviorClassTable
+            maxTableHeight={
+              selectedNode.type === 'leaf' ? '100px' : 'calc(70vh - 300px)'
+            }
+            minTableHeight="50px"
+            tableWidth="100%"
             classes={selectedNode.classes ?? []}
             nodeCardinality={selectedNode.cardinality}
-            isLeaf={selectedNode.type === 'leaf'}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
             behaviorClassOperationsServ={behaviorClassOperationsServ}
           />
@@ -72,6 +76,9 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
 
         {selectedNode.type === 'leaf' ? (
           <NecessaryConditionsTable
+            maxTableHeight="calc(70vh - 300px)"
+            minTableHeight="50px"
+            tableWidth="100%"
             nodeId={selectedNode.id}
             attractorBifurcationExplorerServ={attractorBifurcationExplorerServ}
           />

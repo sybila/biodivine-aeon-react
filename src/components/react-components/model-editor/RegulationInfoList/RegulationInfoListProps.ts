@@ -6,8 +6,12 @@ import type { ZustandStore } from '../../../../stores/ZustandStoreType';
 import type { Regulation, RegulationVariables } from '../../../../types/types';
 
 export type RegulationInfoListProps = {
-  height: string;
-  width: string;
+  maxListHeight: string;
+  minListHeight: string;
+  listWidth: string;
+
+  rowFontSize?: string;
+
   variableRegulations: Regulation[];
 
   hoverRegulation: RegulationVariables | undefined;

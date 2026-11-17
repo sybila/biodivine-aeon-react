@@ -21,6 +21,15 @@ The **Model Editor** page allows you to create, edit, and manage Boolean network
 
 ---
 
+### How to Multiselect Elements
+
+In the **Model Visualization** view, you can **multiselect** elements (variables and regulations) 
+
+- **Click and drag** a selection square over the visualization canvas to select multiple elements.
+- **Hold down the Ctrl key** and **click** on individual elements to select multiple items.
+
+---
+
 ## Menus Overview
 
 ### Start Computation Menu
@@ -63,7 +72,8 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
 - Ctrl + Shift + M → Open Model Editor menu  
 - Ctrl + Shift + C → Open Control-Enabled Editor menu
 - Ctrl + Shift + P → Open Phenotype Editor menu   
-- Ctrl + Shift + V → Open Visual Options menu  
+- Ctrl + Shift + V → Open Visual Options menu
+- Ctrl + Shift + H → Open Help menu
 - Ctrl + Shift + U → Open Utilities menu
 
 ### Navigation & Search
@@ -104,7 +114,7 @@ The Model Editor supports keyboard shortcuts to quickly access menus and perform
 4.  **Analyze:** Run computations with \`Ctrl+Shift+S\`.
 
 ### Need more help?
-- [Open help menu](#) – Located in the left menu under the **?** button.
+- [Open help menu](#) – Located in the left menu under the **?** button or use the shortcut **\`Ctrl+Shift+H\`**.
 
 > *Note: This message disappears once you create your first variable.*
 `;

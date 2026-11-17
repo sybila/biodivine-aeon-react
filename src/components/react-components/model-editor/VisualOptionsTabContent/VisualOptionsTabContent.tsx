@@ -143,7 +143,7 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
       [
         'Phenotype',
         () => {
-          modelVisualization.highlightPhenotype();
+          modelVisualization.highlightPhenotype(true);
           setActiveButtons((prev) => ({
             ...prev,
             Phenotype: !prev['Phenotype'],
@@ -207,7 +207,9 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
         <section className="flex flex-row items-center justify-between w-full h-fit gap-1 mb-2 overflow-visible">
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
             {firstHalf.map(([label, onClick, onMouseEnter, isActive]) => (
-              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
+              <TextButtonReact
+                buttonColor="var(--color-secondary-buttons)"
+                textColor="var(--color-secondary-text)"
                 key={label}
                 text={label}
                 handleClick={onClick}
@@ -220,7 +222,9 @@ const VisualOptionsTabContent: React.FC<VisualOptionsTabContentProps> = ({
           </div>
           <div className="flex flex-col items-start w-[49%] h-fit gap-2">
             {secondHalf.map(([label, onClick, onMouseEnter, isActive]) => (
-              <TextButtonReact buttonColor='var(--color-secondary-buttons)' textColor='var(--color-secondary-text)'
+              <TextButtonReact
+                buttonColor="var(--color-secondary-buttons)"
+                textColor="var(--color-secondary-text)"
                 key={label}
                 text={label}
                 handleClick={onClick}

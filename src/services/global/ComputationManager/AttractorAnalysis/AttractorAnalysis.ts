@@ -423,6 +423,7 @@ class AttractorAnalysis implements AttractorAnalysisInt {
         () => {
           this.getLiveModel()!.Models.loadModel(modelId);
         },
+        () => {},
         () => this.getLiveModel()!.Models.removeModel(modelId)
       );
     }

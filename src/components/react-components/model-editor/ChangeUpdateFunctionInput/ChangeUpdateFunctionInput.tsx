@@ -56,7 +56,7 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
         )}
         value={updateFunction}
         handleKeyUp={(fun) => setUpdateFunction(fun)}
-        contBgColor='transparent'
+        contBgColor="transparent"
         textColor="var(--color-secondary-text)"
         contFocusBgColor="transparent"
         placeholderColor="var(--color-secondary-placeholder-text)"
@@ -66,8 +66,8 @@ const ChangeUpdateFunctionInput: React.FC<ChangeUpdateFunctionInputProps> = ({
       <UpdateFunctionValidation
         compMinHeight={validationMinHeight}
         compMaxHeight={validationMaxHeight}
-        compWidth={'95%'}
-        textColor='var(--color-secondary-text)'
+        compWidth="95%"
+        textColor="var(--color-secondary-text)"
         updateFunctionStatus={updateFunctionStatus}
       />
     </div>
