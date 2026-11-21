@@ -195,7 +195,13 @@ class ModelEditor implements ModelEditorInt {
   }
 
   public zoomOnVariable(id: number) {
-    this.modelVisualizationServ.showNode(id);
+    const variable = this.variablesStore.getState().variableFromId(id);
+
+    if (!variable) {
+      return;
+    }
+
+    this.modelVisualizationServ.fit([variable]);
   }
 
   // #endregion
