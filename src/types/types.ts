@@ -264,14 +264,16 @@ export type TabInfo<T extends PossibleTabsTypes, R extends PossibleTabIds> = {
 
 // #region --- Bifurcation Explorer ---
 
-/** Tab type for the Attractor Bifurcation Explorer */
-export type MenuTabTypeABE =
+/** Tab type for the Attractor Bifurcation Explorer without null*/
+export type MenuTabTypeABENotNull =
   | 'Overview'
   | 'Stability Analysis'
   | 'Make Decision'
   | 'Visual Options'
-  | 'Help'
-  | null;
+  | 'Help';
+
+/** Tab type for the Attractor Bifurcation Explorer */
+export type MenuTabTypeABE = MenuTabTypeABENotNull | null;
 
 /** Possible Node Stability Analysis Modes */
 export type FullStabilityAnalysisMode =

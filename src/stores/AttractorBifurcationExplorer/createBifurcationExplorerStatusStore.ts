@@ -12,6 +12,15 @@ function createBifurcationExplorerStatusStore(): ZustandStore<BifurcationExplore
     stabilityData: null,
     availableDecisions: null,
 
+    menuTabButtonsRef: {},
+    setMenuTabButtonRef: (tab, el) =>
+      set((state) => ({
+        menuTabButtonsRef: {
+          ...state.menuTabButtonsRef,
+          [tab]: el,
+        },
+      })),
+
     utilitiesMenuRef: null,
     setUtilitiesMenuRef: (ref) => set({ utilitiesMenuRef: ref }),
 
