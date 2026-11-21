@@ -41,9 +41,9 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
     storesProvider: StoresProviderInt,
-    successMessageFunction: (message: string, duration?: number) => void,
-    infoMessageFunction: (message: string, duration?: number) => void,
-    errorMessageFunction: (message: string, duration?: number) => void,
+    successMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
+    infoMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
+    errorMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
     startLoadingFunction: () => void,
     endLoadingFunction: () => void
   ) {
