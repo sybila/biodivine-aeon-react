@@ -10,6 +10,14 @@ function createAttractorVisualizerStatusStore(): ZustandStore<AttractorVisualize
         selectedNodeState: state,
       });
     },
+    menuTabButtonsRef: {},
+    setMenuTabButtonRef: (tab, el) =>
+      set((state) => ({
+        menuTabButtonsRef: {
+          ...state.menuTabButtonsRef,
+          [tab]: el,
+        },
+      })),
     clear: () =>
       set({
         selectedNodeState: null,
