@@ -3,6 +3,8 @@ import type { MessageInt } from './MessageInt';
 
 /** Class which implements global message management. */
 class Message implements MessageInt {
+  /* #region --- Properties + Constructor --- */
+
   private successFunction: (message: string, duration?: number) => void;
   private infoFunction: (message: string, duration?: number) => void;
   private errorFunction: (message: string, duration?: number) => void;
@@ -17,19 +19,44 @@ class Message implements MessageInt {
     this.errorFunction = errorFunction;
   }
 
-  showSuccess(message: string, duration: number = 3000): void {
-    this.successFunction(message, duration);
+  /* #endregion */
+
+  /* #region --- Utilities --- */
+
+  /** For message string computes how long this message should be displayed in ms. */
+  private computeMessageDuration(message: string): number {
+    const characterPerMinute = 1000;
+    const minDuration = 2000;
+    const maxDuration = 10000;
+
+    const duration = (message.length / characterPerMinute) * 60 * 1000;
+
+    return Math.min(maxDuration, Math.max(minDuration, duration));
   }
 
-  showInfo(message: string, duration: number = 3000): void {
-    this.infoFunction(message, duration);
+  /* #endregion */
+
+  /* #region --- Show functions --- */
+
+  public showSuccess(message: string, duration?: number): void {
+    const computedDuration = duration ?? this.computeMessageDuration(message);
+
+    this.successFunction(message, computedDuration);
   }
 
-  showError(message: string, duration: number = 3000): void {
-    this.errorFunction(message, duration);
+  public showInfo(message: string, duration?: number): void {
+    const computedDuration = duration ?? this.computeMessageDuration(message);
+
+    this.infoFunction(message, computedDuration);
   }
 
-  showFromResult<T>(
+  public showError(message: string, duration?: number): void {
+    const computedDuration = duration ?? this.computeMessageDuration(message);
+
+    this.errorFunction(message, computedDuration);
+  }
+
+  public showFromResult<T>(
     result: Result<T>,
     errorPrefix: string,
     successMessage?: string
@@ -42,6 +69,8 @@ class Message implements MessageInt {
 
     return result;
   }
+
+  /* #endregion */
 }
 
 export default Message;
