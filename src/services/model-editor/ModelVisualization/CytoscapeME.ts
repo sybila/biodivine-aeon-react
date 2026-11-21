@@ -851,9 +851,9 @@ class CytoscapeME implements ModelVisualizationInt {
         .nodes()
         .filter((node: any) => variableSet.has(Number(node.data().id)));
       this.fitHighlightSubset(nodes);
-      this.cytoscape.fit(nodes, 100);
+      this.cytoscape.fit(nodes, 300);
     } else {
-      this.cytoscape.fit(undefined, 5);
+      this.cytoscape.fit(undefined, 100);
     }
 
     //this.cytoscape.zoom(this.cytoscape.zoom() * 0.8); // zoom out a bit to have some padding
