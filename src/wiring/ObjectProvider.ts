@@ -80,6 +80,8 @@ class ObjectProviderClass implements ObjectProviderInt {
 
     this.GlobalServicesProvider.initializeShortcutManager(
       this.ModelEditorServicesProvider.modelEditorServ,
+      this.AttractorBifurcationExplorerServicesProvider
+        .attractorBifurcationExplorerServ,
       this.StoresProvider.modelEditorStatusStore,
       this.StoresProvider.modelUndoRedoStore
     );

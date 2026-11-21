@@ -2,6 +2,7 @@ import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorS
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { TabType } from '../../../types/types';
+import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import type { ModelEditorInt } from '../../model-editor/ModelEditor/ModelEditorInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import AttractorBifurcationExplorerShortcuts from './PageShortcuts/AttractorBifurcationExplorerShortcuts';
@@ -17,6 +18,7 @@ class ShortcutManager implements ShortcutManagerInt {
   constructor(
     liveModelServ: LiveModelInt,
     modelEditorServ: ModelEditorInt,
+    attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt,
 
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>
@@ -30,7 +32,9 @@ class ShortcutManager implements ShortcutManagerInt {
         modelUndoRedoStore
       ),
       'Attractor Bifurcation Explorer':
-        new AttractorBifurcationExplorerShortcuts(),
+        new AttractorBifurcationExplorerShortcuts(
+          attractorBifurcationExplorerServ
+        ),
       'Control Perturbations Table': new ControlPerturbationTableShortcuts(),
     };
   }

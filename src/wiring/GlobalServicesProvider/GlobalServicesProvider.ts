@@ -1,3 +1,4 @@
+import type { AttractorBifurcationExplorerInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import ComputationManager from '../../services/global/ComputationManager/ComputationManager';
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import LiveModel from '../../services/global/LiveModel/LiveModel';
@@ -113,6 +114,7 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
 
   public initializeShortcutManager(
     modelEditorServ: ModelEditorInt,
+    attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt,
 
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>
@@ -120,6 +122,7 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
     this.shortcutManagerServ = new ShortcutManager(
       this.liveModelServ,
       modelEditorServ,
+      attractorBifurcationExplorerServ,
       modelEditorStatusStore,
       modelUndoRedoStore
     );

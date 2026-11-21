@@ -88,6 +88,9 @@ export const AttractorBifurcationExplorerRoute = createRoute({
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .AttractorBifurcationExplorerPage
       }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+      }
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
       }
