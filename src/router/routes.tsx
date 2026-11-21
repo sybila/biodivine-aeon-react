@@ -113,6 +113,9 @@ export const AttractorVisualizerRoute = createRoute({
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .AttractorVisualizerPage
       }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+      }
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
       }

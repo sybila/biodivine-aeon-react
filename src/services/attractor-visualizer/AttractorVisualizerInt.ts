@@ -1,3 +1,4 @@
+import type { MenuTabTypeAVNotNull } from '../../types/attractorVisualizer';
 import type { AttractorVisualizerInput } from '../../types/types';
 
 /**
@@ -34,6 +35,16 @@ export interface AttractorVisualizerInt {
   getWitness(): Array<[string, string]> | undefined;
 
   // #endregion
+
+  /* #region --- Side Panel Tab Operations --- */
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns True if the tab was opened successfully, false otherwise.
+   */
+  openMenuTab(tabType: MenuTabTypeAVNotNull): boolean;
+
+  /* #endregion */
 
   // #region --- Clear ---
 

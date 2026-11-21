@@ -8,6 +8,7 @@ export type AttractorVisualizerProps = {
   attractorVisualizerServ: AttractorVisualizerInt;
   messageServ: MessageInt;
   pageStringProviderServ: AttractorVisualizerPageStringsInt;
+  shortcutManagerServ?: ShortcutManagerInt;
 
   attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
 };
