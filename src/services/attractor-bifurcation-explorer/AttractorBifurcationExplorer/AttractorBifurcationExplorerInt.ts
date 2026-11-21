@@ -1,6 +1,7 @@
 import type { Result } from '../../../types/result';
 import type {
   Decisions,
+  MenuTabTypeABENotNull,
   NodeDataBE,
   NodeNecessaryConditions,
   StabilityAnalysisModes,
@@ -241,10 +242,26 @@ global stability analysis.
 
   // #endregion
 
+  /* #region --- Side Panel Tab Operations --- */
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns True if the tab was opened successfully, false otherwise.
+   */
+  openMenuTab(tabType: MenuTabTypeABENotNull): boolean;
+
+  /* #endregion */
+
+  /* #region --- Utilities Menu Actions --- */
+
+  /** Opens utilities menu of the Attractor Bifurcation Explorer page. */
+  openUtilitiesMenu(): void;
+
+  /* #endregion */
+
   // #region --- Reset ---
 
   clear(): void;
 
   // #endregion
-  
 }

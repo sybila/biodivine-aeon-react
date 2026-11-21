@@ -54,6 +54,19 @@ This menu allows you to customize the visualization of the bifurcation tree.
 You can for example reset layout of the tree or set the precision of the tree.
 
 ---
+
+## Keyboard Shortcuts
+
+### Menu Navigation
+
+- Ctrl + Shift + O → Open Overview menu
+- Ctrl + Shift + D → Open Make Decision menu
+- Ctrl + Shift + A → Open Stability Analysis menu
+- Ctrl + Shift + V → Open Visual Options menu
+- Ctrl + Shift + H → Open Help menu
+- Ctrl + Shift + U → Open Utilities menu
+
+---
 `.trim();
   }
 }
