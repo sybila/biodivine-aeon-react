@@ -23,6 +23,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
   messageServ,
   pageStringProviderServ,
+  shortcutManagerServ,
 
   attractorVisualizerStatusStore,
 }) => {
@@ -41,6 +42,14 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
       setOverviewAutoOpened(false);
     }
   }, [selectedNodeState]);
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Attractor Visualizer');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
 
   const commonButtonProps = {
     buttonColor: 'var(--color-primary-buttons)',

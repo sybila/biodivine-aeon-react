@@ -82,6 +82,7 @@ class ObjectProviderClass implements ObjectProviderInt {
       this.ModelEditorServicesProvider.modelEditorServ,
       this.AttractorBifurcationExplorerServicesProvider
         .attractorBifurcationExplorerServ,
+      this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
       this.StoresProvider.modelEditorStatusStore,
       this.StoresProvider.modelUndoRedoStore
     );
