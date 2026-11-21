@@ -823,27 +823,6 @@ class CytoscapeME implements ModelVisualizationInt {
 
   // #region --- Graph Actions ---
 
-  public showNode(id: number) {
-    let node = this.cytoscape.getElementById(id);
-    if (node !== undefined) {
-      // Taken from https://github.com/cytoscape/cytoscape.js/issues/1691
-      let zoom = 1.1;
-      let bb = node.boundingBox();
-      let w = this.cytoscape.width();
-      let h = this.cytoscape.height();
-      var pan = {
-        // add some random padding so it does not end up under the editor panel
-        x: (w - zoom * (bb.x1 + bb.x2)) / 2 + 250,
-        y: (h - zoom * (bb.y1 + bb.y2)) / 2,
-      };
-
-      this.cytoscape.animate({
-        zoom: 1.1,
-        pan: pan,
-      });
-    }
-  }
-
   public fit(variables?: Variable[]) {
     if (variables !== undefined && variables.length > 0) {
       const variableSet = new Set(variables.map((variable) => variable.id));
