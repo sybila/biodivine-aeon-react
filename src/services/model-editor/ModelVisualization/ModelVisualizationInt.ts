@@ -71,9 +71,6 @@ export interface ModelVisualizationInt {
 
   // #region --- Graph Actions ---
 
-  /** Zoom and pan the editor to ensure that given node is visible. */
-  showNode(id: number): void;
-
   /** Pan and zoom the graph to show the whole model.
    *  @param variables (Variable[]) If provided, fit only the given nodes instead of the whole graph.
    */
