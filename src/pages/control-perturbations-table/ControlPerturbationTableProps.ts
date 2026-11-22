@@ -6,6 +6,7 @@ import type { ControlPerturbationTablePageStringsInt } from '../../services/glob
 import type { DataFormatersInt } from '../../services/utilities/DataFormaters/DataFormatersInt';
 import type { SearchAndFilterHelpersInt } from '../../services/utilities/SearchAndFilterHelpers/SearchAndFilterHelpersInt';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
+import type { ControlPerturbationsTableStatusState } from '../../stores/ControlPerturbationsTable/ControlPerturbationsTableStatus/ControlPerturbationsTableStatusState';
 import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
 import type { HelpHoverState } from '../../stores/HelpHover/HelpHoverState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
@@ -20,6 +21,7 @@ export type ControlPerturbationTableProps = {
   shortcutManagerServ?: ShortcutManagerInt;
 
   resultsStatusStore: ZustandStore<ResultsStatus>;
+  controlPerturbationTableStatusStore: ZustandStore<ControlPerturbationsTableStatusState>;
   perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;
   helpHoverStore: ZustandStore<HelpHoverState>;
 };

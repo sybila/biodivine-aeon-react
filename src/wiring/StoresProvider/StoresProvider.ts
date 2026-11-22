@@ -9,6 +9,8 @@ import createResultsStatusStore from '../../stores/ComputationManager/ResultStat
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import createOverlayWindowStore from '../../stores/ContentOverlayWindow/createOverlayWindowStore';
 import type { OverlayWindowState } from '../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { ControlPerturbationsTableStatusState } from '../../stores/ControlPerturbationsTable/ControlPerturbationsTableStatus/ControlPerturbationsTableStatusState';
+import createControlPerturbationsTableStatusStore from '../../stores/ControlPerturbationsTable/ControlPerturbationsTableStatus/createControlPerturbationsTableStatusStore';
 import createPerturbationFilterSortStore from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/createPerturbationsFilterSortStore';
 import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
 import createHelpHoverStore from '../../stores/HelpHover/createHelpHoverStore';
@@ -46,6 +48,7 @@ class StoresProvider implements StoresProviderInt {
   public bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
   public attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
   public modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  public controlPerturbationTableStatusStore: ZustandStore<ControlPerturbationsTableStatusState>;
   public perturbationFiltersSortStore: ZustandStore<PerturbationFiltersSortState>;
   public trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 
@@ -91,6 +94,8 @@ class StoresProvider implements StoresProviderInt {
     this.attractorVisualizerStatusStore =
       createAttractorVisualizerStatusStore();
     this.modelEditorStatusStore = createModelEditorStatusStore();
+    this.controlPerturbationTableStatusStore =
+      createControlPerturbationsTableStatusStore();
     this.perturbationFiltersSortStore = createPerturbationFilterSortStore();
     this.trapSpaceSDStatusStore = createTrapSpaceSDStatusStore();
 

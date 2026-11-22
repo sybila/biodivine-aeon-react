@@ -69,6 +69,7 @@ class ObjectProviderClass implements ObjectProviderInt {
       );
     this.ControlPerturbationsTableServicesProvider =
       new ControlPerturbationsTableServicesProvider(
+        this.StoresProvider.controlPerturbationTableStatusStore,
         this.StoresProvider.perturbationFiltersSortStore
       );
     this.TrapSpaceSuccessionDiagramnServicesProvider =
@@ -83,6 +84,8 @@ class ObjectProviderClass implements ObjectProviderInt {
       this.AttractorBifurcationExplorerServicesProvider
         .attractorBifurcationExplorerServ,
       this.AttractorVisualizerServicesProvider.attractorVisualizerServ,
+      this.ControlPerturbationsTableServicesProvider
+        .controlPerturbationsTableServ,
       this.StoresProvider.modelEditorStatusStore,
       this.StoresProvider.modelUndoRedoStore
     );

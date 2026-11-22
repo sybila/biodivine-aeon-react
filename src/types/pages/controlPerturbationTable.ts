@@ -1,8 +1,8 @@
-export type TabTypeCPTNotNull =
+export type MenuTabTypeCPTNotNull =
   | 'Overview'
   | 'Filters'
   | 'Sorting'
   | 'Pages'
   | 'Help';
 
-export type TabTypeCPT = TabTypeCPTNotNull | null;
+export type MenuTabTypeCPT = MenuTabTypeCPTNotNull | null;

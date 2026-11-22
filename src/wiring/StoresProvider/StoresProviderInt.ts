@@ -4,6 +4,7 @@ import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisua
 import type { ComputeEngineStatusState } from '../../stores/ComputationManager/ComputeEngineStatusStore/ComputeEngineStatusState';
 import type { ResultsStatus } from '../../stores/ComputationManager/ResultStatus/ResultStatus';
 import type { OverlayWindowState } from '../../stores/ContentOverlayWindow/OverlayWindowState';
+import type { ControlPerturbationsTableStatusState } from '../../stores/ControlPerturbationsTable/ControlPerturbationsTableStatus/ControlPerturbationsTableStatusState';
 import type { PerturbationFiltersSortState } from '../../stores/ControlPerturbationsTable/PerturbationsFilterSortStore/PerturbationsFilterSortState';
 import type { HelpHoverState } from '../../stores/HelpHover/HelpHoverState';
 import type { ControlStatus } from '../../stores/LiveModel/ControlStore/ControlStatus';
@@ -27,6 +28,7 @@ export interface StoresProviderInt {
   bifurcationExplorerStatusStore: ZustandStore<BifurcationExplorerStatusState>;
   attractorVisualizerStatusStore: ZustandStore<AttractorVisualizerStatusState>;
   modelEditorStatusStore: ZustandStore<ModelEditorStatus>;
+  controlPerturbationTableStatusStore: ZustandStore<ControlPerturbationsTableStatusState>;
   perturbationFiltersSortStore: ZustandStore<PerturbationFiltersSortState>;
   trapSpaceSDStatusStore: ZustandStore<TrapSpaceSDStatusState>;
 

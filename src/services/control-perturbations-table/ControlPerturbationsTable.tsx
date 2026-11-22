@@ -4,11 +4,14 @@ import type { ZustandStore } from '../../stores/ZustandStoreType';
 import {
   PertVariableFilterStatus,
   type ControlResult,
+  type MenuTabButton,
   type PertTableSort,
   type Perturbation,
   type PhenotypeStatus,
 } from '../../types/types';
 import type { ControlPerturbationsTableInt } from './ControlPerturbationsTableInt';
+import type { MenuTabTypeCPTNotNull } from '../../types/pages/controlPerturbationTable';
+import type { ControlPerturbationsTableStatusState } from '../../stores/ControlPerturbationsTable/ControlPerturbationsTableStatus/ControlPerturbationsTableStatusState';
 
 class ControlPerturbationsTable implements ControlPerturbationsTableInt {
   // #region --- Properties + Constructor ---
@@ -16,11 +19,14 @@ class ControlPerturbationsTable implements ControlPerturbationsTableInt {
   /** Current max number of perturbations on a page in the Perturbations Table */
   private pageSize: number = 100;
 
+  private controlPerturbationTableStatusStore: ZustandStore<ControlPerturbationsTableStatusState>;
   private perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>;
 
   constructor(
+    controlPerturbationTableStatusStore: ZustandStore<ControlPerturbationsTableStatusState>, 
     perturbationFilterSortStore: ZustandStore<PerturbationFiltersSortState>
   ) {
+    this.controlPerturbationTableStatusStore = controlPerturbationTableStatusStore;
     this.perturbationFilterSortStore = perturbationFilterSortStore;
   }
 
@@ -321,6 +327,24 @@ class ControlPerturbationsTable implements ControlPerturbationsTableInt {
   }
 
   // #endregion
+
+  /* #region --- Side Panel Tab Operations --- */
+
+  public openMenuTab(tabType: MenuTabTypeCPTNotNull) {
+    const button: MenuTabButton | undefined =
+      this.controlPerturbationTableStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /* #endregion */
 
   // #region --- Clear ---
 
