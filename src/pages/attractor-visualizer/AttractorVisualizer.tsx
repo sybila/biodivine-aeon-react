@@ -15,7 +15,7 @@ import HelpTabContent from '../../components/react-components/global/HelpTabCont
 import type {
   MenuTabTypeAV,
   MenuTabTypeAVNotNull,
-} from '../../types/attractorVisualizer';
+} from '../../types/pages/attractorVisualizer';
 import type { MenuTabButton } from '../../types/types';
 import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
 
