@@ -117,6 +117,10 @@ function getComputeEngineBinaryName(): string {
 }
 
 function getComputeEngineBinaryPath(): string {
+  const platform =
+    process.platform === 'win32' ? 'windows' :
+    process.platform === 'darwin' ? 'mac' : 'linux';
+
   return app.isPackaged
     ? path.join(
         process.resourcesPath,
@@ -126,6 +130,7 @@ function getComputeEngineBinaryPath(): string {
     : path.join(
         app.getAppPath(),
         'electron/compute-engine-binaries',
+        platform,
         getComputeEngineBinaryName()
       );
 }
