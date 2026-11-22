@@ -1,5 +1,6 @@
 import type { AttractorBifurcationExplorerInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
 import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
+import type { ControlPerturbationsTableInt } from '../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import type { LiveModelInt } from '../../services/global/LiveModel/LiveModelInt';
 import type { LoadingInt } from '../../services/global/Loading/LoadingInt';
@@ -32,6 +33,7 @@ export interface GlobalServicesProviderInt {
     modelEditorServ: ModelEditorInt,
     attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt,
     attractorVisualizerServ: AttractorVisualizerInt,
+    controlPerturbationsTableServ: ControlPerturbationsTableInt,
 
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>

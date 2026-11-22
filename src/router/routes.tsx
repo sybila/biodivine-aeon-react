@@ -150,7 +150,13 @@ export const ControlPerturbationsTableRoute = createRoute({
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .ControlPerturbationTablePage
       }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+      }
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
+      controlPerturbationTableStatusStore={
+        ObjectProvider.StoresProvider.controlPerturbationTableStatusStore
+      }
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
       }
