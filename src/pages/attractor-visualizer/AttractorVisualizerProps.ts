@@ -1,5 +1,6 @@
 import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
 import type { MessageInt } from '../../services/global/Message/MessageInt';
+import type { ShortcutManagerInt } from '../../services/global/ShortcutManager/ShortcutManagerInt';
 import type { AttractorVisualizerPageStringsInt } from '../../services/global/StringProvider/AttractorVisualizerPageStrings/AttractorVisualizerPageStringsInt';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
