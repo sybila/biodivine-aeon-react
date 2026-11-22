@@ -4,7 +4,10 @@ import {
   BrowserWindowConstructorOptions,
   Menu,
 } from 'electron';
+import { ChildProcess, spawn } from 'node:child_process';
 import * as path from 'node:path';
+
+/* #region --- Window Creation + Window Style --- */
 
 /** Function responsible for definition and creation of the electron app window. */
 function createWindow() {
@@ -100,10 +103,52 @@ function createTopMenu() {
 
   Menu.setApplicationMenu(menu);
 }
+
+/* #endregion */
+
+/* #region --- Start Compute Engine --- */
+
+let computeEngineProcess: ChildProcess | null = null;
+
+function getComputeEngineBinaryName(): string {
+  return process.platform === 'win32'
+    ? 'biodivine-aeon-server.exe'
+    : 'biodivine-aeon-server';
+}
+
+function getComputeEngineBinaryPath(): string {
+  return app.isPackaged
+    ? path.join(
+        process.resourcesPath,
+        'compute-engine',
+        getComputeEngineBinaryName()
+      )
+    : path.join(
+        app.getAppPath(),
+        'electron/compute-engine-binaries',
+        getComputeEngineBinaryName()
+      );
+}
+
+function startComputeEngine(): void {
+  computeEngineProcess = spawn(getComputeEngineBinaryPath(), [], {
+    stdio: 'inherit',
+  });
+
+  computeEngineProcess.on('error', (err) => {
+    console.error('Failed to start compute engine:', err);
+  });
+}
+
+/* #endregion */
+
+/* #region --- Main --- */
+
 // Start Electron
 app
   .whenReady()
   .then(() => {
+    startComputeEngine();
     createTopMenu();
     createWindow();
 
@@ -125,3 +170,9 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('will-quit', () => {
+  computeEngineProcess?.kill();
+});
+
+/* #endregion */
