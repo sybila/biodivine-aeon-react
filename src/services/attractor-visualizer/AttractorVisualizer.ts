@@ -2,7 +2,7 @@ import * as vis from 'vis-network';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
-import type { MenuTabTypeAVNotNull } from '../../types/attractorVisualizer';
+import type { MenuTabTypeAVNotNull } from '../../types/pages/attractorVisualizer';
 import { err, ok, type Result } from '../../types/result';
 import type {
   AttractorData,

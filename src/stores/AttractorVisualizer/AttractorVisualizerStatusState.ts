@@ -1,4 +1,4 @@
-import type { MenuTabTypeAVNotNull } from '../../types/attractorVisualizer';
+import type { MenuTabTypeAVNotNull } from '../../types/pages/attractorVisualizer';
 import type { MenuTabButton } from '../../types/types';
 
 /** Zustand store for managing Attractor Visualizer status. */

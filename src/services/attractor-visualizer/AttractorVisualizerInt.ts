@@ -1,4 +1,4 @@
-import type { MenuTabTypeAVNotNull } from '../../types/attractorVisualizer';
+import type { MenuTabTypeAVNotNull } from '../../types/pages/attractorVisualizer';
 import type { AttractorVisualizerInput } from '../../types/types';
 
 /**
