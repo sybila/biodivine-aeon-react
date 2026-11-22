@@ -15,9 +15,11 @@ import PerturbationTable from '../../components/react-components/control-perturb
 import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
+import type {
+  TabTypeCPT,
+  TabTypeCPTNotNull,
+} from '../../types/pages/controlPerturbationTable';
 import type { ControlPerturbationTableProps } from './ControlPerturbationTableProps';
-
-type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | 'Help' | null;
 
 const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   liveModelServ,
@@ -101,8 +103,16 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
     }
   };
 
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
+  };
+
   const topMenuButtons: Array<{
-    id: TabTypeCPT;
+    id: TabTypeCPTNotNull;
     iconSrc: string;
     tagText: string;
   }> = [
@@ -123,16 +133,12 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
             style={{ zIndex: topMenuButtons.length - index }}
           >
             <IconButtonReact
+              {...commonButtonProps}
               isActive={activeTab === button.id}
               onClick={() => showHideTab(button.id)}
               iconSrc={button.iconSrc}
               iconAlt={button.tagText}
-              showTag={true}
               tagText={button.tagText}
-              buttonColor="var(--color-primary-buttons)"
-              buttonHoverColor="var(--color-primary-buttons-hover)"
-              buttonActiveColor="var(--color-primary-buttons-active)"
-              tagTextColor="var(--color-primary-text)"
             />
           </div>
         ))}
