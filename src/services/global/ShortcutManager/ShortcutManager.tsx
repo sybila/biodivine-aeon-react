@@ -2,9 +2,13 @@ import type { ModelEditorStatus } from '../../../stores/ModelEditor/ModelEditorS
 import type { UndoRedoState } from '../../../stores/UndoRedo/UndoRedoState';
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import type { TabType } from '../../../types/types';
+import type { AttractorBifurcationExplorerInt } from '../../attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
+import type { AttractorVisualizerInt } from '../../attractor-visualizer/AttractorVisualizerInt';
+import type { ControlPerturbationsTableInt } from '../../control-perturbations-table/ControlPerturbationsTableInt';
 import type { ModelEditorInt } from '../../model-editor/ModelEditor/ModelEditorInt';
 import type { LiveModelInt } from '../LiveModel/LiveModelInt';
 import AttractorBifurcationExplorerShortcuts from './PageShortcuts/AttractorBifurcationExplorerShortcuts';
+import AttractorVisualizerShortcuts from './PageShortcuts/AttractorVisualizerShortcuts';
 import ControlPerturbationTableShortcuts from './PageShortcuts/ControlPerturbationTableShortcuts';
 import ModelEditorShortcuts from './PageShortcuts/ModelEditorShortcuts';
 import type { PageShortcutsInt } from './PageShortcuts/PageShortcutsInt';
@@ -17,6 +21,9 @@ class ShortcutManager implements ShortcutManagerInt {
   constructor(
     liveModelServ: LiveModelInt,
     modelEditorServ: ModelEditorInt,
+    attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt,
+    attractorVisualizerServ: AttractorVisualizerInt,
+    controlPerturbationsTableServ: ControlPerturbationsTableInt,
 
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>
@@ -30,8 +37,15 @@ class ShortcutManager implements ShortcutManagerInt {
         modelUndoRedoStore
       ),
       'Attractor Bifurcation Explorer':
-        new AttractorBifurcationExplorerShortcuts(),
-      'Control Perturbations Table': new ControlPerturbationTableShortcuts(),
+        new AttractorBifurcationExplorerShortcuts(
+          attractorBifurcationExplorerServ
+        ),
+      'Attractor Visualizer': new AttractorVisualizerShortcuts(
+        attractorVisualizerServ
+      ),
+      'Control Perturbations Table': new ControlPerturbationTableShortcuts(
+        controlPerturbationsTableServ
+      ),
     };
   }
 

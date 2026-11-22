@@ -1,4 +1,5 @@
 import type { JSX } from 'react';
+import type { MenuTabTypeCPTNotNull } from '../../types/pages/controlPerturbationTable';
 import type {
   ControlResult,
   PertVariableFilterStatus,
@@ -75,6 +76,16 @@ export interface ControlPerturbationsTableInt {
   sortPerturbations(perturbations: Array<ControlResult>): Array<ControlResult>;
 
   // #endregion
+
+  /* #region --- Side Panel Tab Operations --- */
+
+  /** Opens a menu tab by its type.
+   *  @param tabType - The type of the menu tab to open.
+   *  @returns True if the tab was opened successfully, false otherwise.
+   */
+  openMenuTab(tabType: MenuTabTypeCPTNotNull): boolean;
+
+  /* #endregion */
 
   // #region --- Clear ---
 

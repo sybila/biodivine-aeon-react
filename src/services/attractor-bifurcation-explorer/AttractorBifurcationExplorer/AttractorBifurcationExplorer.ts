@@ -2,7 +2,10 @@ import type { BifurcationExplorerStatusState } from '../../../stores/AttractorBi
 import type { ZustandStore } from '../../../stores/ZustandStoreType';
 import { err, ok } from '../../../types/result';
 import type {
+  ContentVisibleComponent,
   Decisions,
+  MenuTabButton,
+  MenuTabTypeABENotNull,
   NodeDataBE,
   StabilityAnalysisModes,
   VisualizationStatus,
@@ -310,7 +313,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   public removeNode(nodeId: number) {
-    this.computationManagerServ.AttractorAnalysis.deleteBifurcationDecision(nodeId, this);
+    this.computationManagerServ.AttractorAnalysis.deleteBifurcationDecision(
+      nodeId,
+      this
+    );
   }
 
   public getNodeNecessaryConditions(nodeId: number) {
@@ -327,7 +333,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   public getStabilityData(nodeId: number, behavior: StabilityAnalysisModes) {
     this.bifurcationExplorerStatusStore.getState().loadStabilityData(null);
-    this.computationManagerServ.AttractorAnalysis.getStabilityData(nodeId, behavior);
+    this.computationManagerServ.AttractorAnalysis.getStabilityData(
+      nodeId,
+      behavior
+    );
   }
 
   // #endregion
@@ -367,7 +376,11 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   public makeDecision(nodeId: number, decisionId: number) {
-    this.computationManagerServ.AttractorAnalysis.makeDecision(nodeId, decisionId, this);
+    this.computationManagerServ.AttractorAnalysis.makeDecision(
+      nodeId,
+      decisionId,
+      this
+    );
   }
 
   // #endregion
@@ -413,7 +426,10 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
 
   public setPrecision(precision: number) {
     this.precision = precision;
-    this.computationManagerServ.AttractorAnalysis.setBifurcationTreePrecision(precision, this);
+    this.computationManagerServ.AttractorAnalysis.setBifurcationTreePrecision(
+      precision,
+      this
+    );
   }
 
   public toggleSnapNodesToLayers() {
@@ -437,7 +453,9 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
       return err('Internal error (Missing node ID).');
     }
 
-    this.computationManagerServ.AttractorAnalysis.openWitnessBifurcationExplorer(nodeId);
+    this.computationManagerServ.AttractorAnalysis.openWitnessBifurcationExplorer(
+      nodeId
+    );
 
     return ok(true);
   }
@@ -526,6 +544,43 @@ class AttractorBifurcationExplorer implements AttractorBifurcationExplorerInt {
   }
 
   // #endregion
+
+  /* #region --- Side Panel Tab Operations --- */
+
+  public openMenuTab(tabType: MenuTabTypeABENotNull) {
+    const button: MenuTabButton | undefined =
+      this.bifurcationExplorerStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /* #endregion */
+
+  /* #region --- Utilities Menu Actions --- */
+
+  public openUtilitiesMenu() {
+    const reference: ContentVisibleComponent | null =
+      this.bifurcationExplorerStatusStore.getState().utilitiesMenuRef;
+
+    if (reference === null) {
+      console.warn(
+        'Error: Could not open the Attractor Bifurcation Explorer Utilities Menu. Missing reference.'
+      );
+
+      return;
+    }
+
+    reference.contentVisible = true;
+  }
+
+  /* #endregion */
 
   // #region --- Reset ---
 

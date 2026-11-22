@@ -60,6 +60,18 @@ Available sorting criteria include:
 This menu allows you to navigate through different pages of control perturbations. Each page displays a limited number of perturbations, and you can use this menu to move to the next or previous page.
 
 ---
+
+## Keyboard Shortcuts
+
+### Menu Navigation
+
+- Ctrl + Shift + O → Open Overview menu
+- Ctrl + Shift + F → Open Filters menu
+- Ctrl + Shift + S → Open Sorting menu
+- Ctrl + Shift + G → Open Pages menu
+- Ctrl + Shift + H → Open Help menu
+
+---
 `.trim();
   }
 }

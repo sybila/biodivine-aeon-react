@@ -19,7 +19,9 @@ import HelpTabContent from '../../components/react-components/global/HelpTabCont
 import type {
   DecisionMixedNode,
   LeafNode,
+  MenuTabButton,
   MenuTabTypeABE,
+  MenuTabTypeABENotNull,
 } from '../../types/types';
 import type { AttractorBifurcationExplorerProps } from './AttractorBifurcationExplorerProps';
 
@@ -74,6 +76,30 @@ const AttractorBifurcationExplorer: React.FC<
       attractorBifurcationExplorerServ.openBifurcationTree();
     }
   }, [initialized]);
+
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
+  };
+
+  const sidePanelButtons: Array<{
+    tab: MenuTabTypeABENotNull;
+    icon: string;
+    alt: string;
+  }> = [
+    { tab: 'Overview', icon: StateIcon, alt: 'State' },
+    { tab: 'Stability Analysis', icon: StabilityIcon, alt: 'Stability' },
+    {
+      tab: 'Make Decision',
+      icon: DecisionIcon,
+      alt: 'Decision',
+    },
+    { tab: 'Visual Options', icon: EyeIcon, alt: 'Visual' },
+    { tab: 'Help', icon: HelpIcon, alt: 'Help' },
+  ];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -133,6 +159,11 @@ const AttractorBifurcationExplorer: React.FC<
     bifurcationExplorerStatusStore.getState().setActiveMenuTab(tabType);
   };
 
+  const setTabRef = (tabName: MenuTabTypeABENotNull) => (el: any) =>
+    bifurcationExplorerStatusStore
+      .getState()
+      .setMenuTabButtonRef(tabName, el as MenuTabButton);
+
   return (
     <>
       <UtilitiesMenu
@@ -143,67 +174,20 @@ const AttractorBifurcationExplorer: React.FC<
       />
 
       <SideButtonMenu>
-        <IconButtonReact
-          isActive={activeTab === 'Overview'}
-          onClick={() => showHideTab('Overview')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={StateIcon}
-          iconAlt="State"
-          showTag={true}
-          tagText="Overview"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Stability Analysis'}
-          onClick={() => showHideTab('Stability Analysis')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={StabilityIcon}
-          iconAlt="Stability"
-          showTag={true}
-          tagText="Stability Analysis"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Make Decision'}
-          onClick={() => showHideTab('Make Decision')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={DecisionIcon}
-          iconAlt="Decision"
-          iconSize="88%"
-          showTag={true}
-          tagText="Make Decision"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Visual Options'}
-          onClick={() => showHideTab('Visual Options')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={EyeIcon}
-          iconAlt="Visual"
-          showTag={true}
-          tagText="Visual Options"
-        ></IconButtonReact>
-        <IconButtonReact
-          isActive={activeTab === 'Help'}
-          onClick={() => showHideTab('Help')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={HelpIcon}
-          iconAlt="Help"
-          showTag={true}
-          tagText="Help"
-        />
+        {sidePanelButtons.map(({ tab, icon, alt }) => {
+          return (
+            <IconButtonReact
+              key={tab}
+              {...commonButtonProps}
+              ref={setTabRef(tab)}
+              isActive={activeTab === tab}
+              onClick={() => showHideTab(tab)}
+              iconSrc={icon}
+              iconAlt={alt}
+              tagText={tab}
+            />
+          );
+        })}
       </SideButtonMenu>
 
       <ContentTab

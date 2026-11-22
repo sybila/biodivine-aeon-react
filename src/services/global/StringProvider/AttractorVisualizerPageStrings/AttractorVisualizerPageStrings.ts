@@ -26,6 +26,16 @@ The **Attractor Visualizer** page enables you to explore the attractors of your 
 - Understand how the state of each variable is determined based on the states of other variables.
 
 ---
+
+## Keyboard Shortcuts
+
+### Menu Navigation
+
+- Ctrl + Shift + O → Open State Overview menu
+- Ctrl + Shift + U → Open Witness Update Functions menu
+- Ctrl + Shift + H → Open Help menu
+
+---
 `.trim();
   }
 }

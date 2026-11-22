@@ -12,18 +12,22 @@ import StateIcon from '../../assets/icons/state_overview.svg';
 import UpdateFunctionsIcon from '../../assets/icons/update_functions.svg';
 
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
+import type {
+  MenuTabTypeAV,
+  MenuTabTypeAVNotNull,
+} from '../../types/pages/attractorVisualizer';
+import type { MenuTabButton } from '../../types/types';
 import type { AttractorVisualizerProps } from './AttractorVisualizerProps';
-
-type TabTypeAV = 'State Overview' | 'Witness Update Functions' | 'Help' | null;
 
 const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
   attractorVisualizerServ,
   messageServ,
   pageStringProviderServ,
+  shortcutManagerServ,
 
   attractorVisualizerStatusStore,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabTypeAV>(null);
+  const [activeTab, setActiveTab] = useState<MenuTabTypeAV>(null);
   const [overviewAutoOpened, setOverviewAutoOpened] = useState(false);
 
   const selectedNodeState = attractorVisualizerStatusStore(
@@ -38,6 +42,36 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
       setOverviewAutoOpened(false);
     }
   }, [selectedNodeState]);
+
+  useEffect(() => {
+    shortcutManagerServ?.setShortcuts('Attractor Visualizer');
+
+    return () => {
+      shortcutManagerServ?.clearShortcuts();
+    };
+  }, []);
+
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
+  };
+
+  const sidePanelButtons: Array<{
+    tab: MenuTabTypeAVNotNull;
+    icon: string;
+    alt: string;
+  }> = [
+    { tab: 'State Overview', icon: StateIcon, alt: 'State' },
+    {
+      tab: 'Witness Update Functions',
+      icon: UpdateFunctionsIcon,
+      alt: 'Update Functions',
+    },
+    { tab: 'Help', icon: HelpIcon, alt: 'Help' },
+  ];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -62,7 +96,7 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
     }
   };
 
-  const showHideTab = (tabType: TabTypeAV) => {
+  const showHideTab = (tabType: MenuTabTypeAV) => {
     if (activeTab === tabType) {
       setActiveTab(null);
       return;
@@ -71,45 +105,28 @@ const AttractorVisualizer: React.FC<AttractorVisualizerProps> = ({
     setActiveTab(tabType);
   };
 
+  const setTabRef = (tabName: MenuTabTypeAVNotNull) => (el: any) =>
+    attractorVisualizerStatusStore
+      .getState()
+      .setMenuTabButtonRef(tabName, el as MenuTabButton);
+
   return (
     <>
       <SideButtonMenu>
-        <IconButtonReact
-          isActive={activeTab === 'State Overview'}
-          onClick={() => showHideTab('State Overview')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={StateIcon}
-          iconAlt="State"
-          showTag={true}
-          tagText="State Overview"
-        />
-        <IconButtonReact
-          isActive={activeTab === 'Witness Update Functions'}
-          onClick={() => showHideTab('Witness Update Functions')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={UpdateFunctionsIcon}
-          iconAlt="Update Functions"
-          showTag={true}
-          tagText="Witness Update Functions"
-        />
-        <IconButtonReact
-          isActive={activeTab === 'Help'}
-          onClick={() => showHideTab('Help')}
-          buttonColor="var(--color-primary-buttons)"
-          buttonHoverColor="var(--color-primary-buttons-hover)"
-          buttonActiveColor="var(--color-primary-buttons-active)"
-          tagTextColor="var(--color-primary-text)"
-          iconSrc={HelpIcon}
-          iconAlt="Help"
-          showTag={true}
-          tagText="Help"
-        />
+        {sidePanelButtons.map(({ tab, icon, alt }) => {
+          return (
+            <IconButtonReact
+              key={tab}
+              {...commonButtonProps}
+              ref={setTabRef(tab)}
+              isActive={activeTab === tab}
+              onClick={() => showHideTab(tab)}
+              iconSrc={icon}
+              iconAlt={alt}
+              tagText={tab}
+            />
+          );
+        })}
       </SideButtonMenu>
 
       <ContentTab

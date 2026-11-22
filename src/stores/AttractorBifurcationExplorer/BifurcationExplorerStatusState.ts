@@ -4,7 +4,9 @@ import type {
   Decisions,
   FullStabilityAnalysisMode,
   LeafNode,
+  MenuTabButton,
   MenuTabTypeABE,
+  MenuTabTypeABENotNull,
   NodeStabilityData,
   VisualizationStatus,
 } from '../../types/types';
@@ -26,6 +28,18 @@ export type BifurcationExplorerStatusState = {
   stabilityData: NodeStabilityData | null;
   /** Decisions available for the selected node */
   availableDecisions: Decisions | null;
+
+  /** Reference to the menu tab buttons. */
+  menuTabButtonsRef: Partial<Record<MenuTabTypeABENotNull, MenuTabButton>>;
+
+  /** Sets the reference to a menu tab button.
+   *  @param tab - The menu tab type.
+   *  @param el - The HTML button element, or null to clear the reference.
+   */
+  setMenuTabButtonRef: (
+    tab: MenuTabTypeABENotNull,
+    el: MenuTabButton | null
+  ) => void;
 
   /** Reference to the utilities menu component. */
   utilitiesMenuRef: ContentVisibleComponent | null;

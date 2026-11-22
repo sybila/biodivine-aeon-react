@@ -2,10 +2,12 @@ import * as vis from 'vis-network';
 import type { AttractorVisualizerStatusState } from '../../stores/AttractorVisualizer/AttractorVisualizerStatusState';
 import type { TabsState } from '../../stores/Navigation/TabState';
 import type { ZustandStore } from '../../stores/ZustandStoreType';
+import type { MenuTabTypeAVNotNull } from '../../types/pages/attractorVisualizer';
 import { err, ok, type Result } from '../../types/result';
 import type {
   AttractorData,
   AttractorVisualizerInput,
+  MenuTabButton,
   VisEdge,
   VisNode,
 } from '../../types/types';
@@ -309,6 +311,24 @@ class AttractorVisualizer implements AttractorVisualizerInt {
   }
 
   // #endregion
+
+  /* #region --- Side Panel Tab Operations --- */
+
+  public openMenuTab(tabType: MenuTabTypeAVNotNull) {
+    const button: MenuTabButton | undefined =
+      this.attractorVisualizerStatusStore.getState().menuTabButtonsRef[tabType];
+
+    if (button) {
+      if (!button.isActive) {
+        button.click();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /* #endregion */
 
   // #region --- Clear ---
 

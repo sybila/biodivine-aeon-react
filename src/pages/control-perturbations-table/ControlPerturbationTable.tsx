@@ -15,9 +15,12 @@ import PerturbationTable from '../../components/react-components/control-perturb
 import SortTabContent from '../../components/react-components/control-perturbations-table/SortTabContent/SortTabContent';
 import HelpTabContent from '../../components/react-components/global/HelpTabContent/HelpTabContent';
 import TopButtonMenu from '../../components/react-components/global/TopButtonMenu/TopButtonMenu';
+import type {
+  MenuTabTypeCPT,
+  MenuTabTypeCPTNotNull,
+} from '../../types/pages/controlPerturbationTable';
+import type { MenuTabButton } from '../../types/types';
 import type { ControlPerturbationTableProps } from './ControlPerturbationTableProps';
-
-type TabTypeCPT = 'Overview' | 'Filters' | 'Sorting' | 'Pages' | 'Help' | null;
 
 const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   liveModelServ,
@@ -29,10 +32,11 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
   shortcutManagerServ,
 
   resultsStatusStore,
+  controlPerturbationTableStatusStore,
   perturbationFilterSortStore,
   helpHoverStore,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabTypeCPT>(null);
+  const [activeTab, setActiveTab] = useState<MenuTabTypeCPT>(null);
 
   /** Trigger which is used to start filtering of perturbations. */
   const [startFilter, setStartFilter] = useState<boolean>(true);
@@ -101,46 +105,27 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
     }
   };
 
-  const topMenuButtons: Array<{
-    id: TabTypeCPT;
-    iconSrc: string;
-    tagText: string;
-  }> = [
-    { id: 'Overview', iconSrc: OverviewIcon, tagText: 'Overview' },
-    { id: 'Filters', iconSrc: FilterIcon, tagText: 'Filters' },
-    { id: 'Sorting', iconSrc: SortingIcon, tagText: 'Sorting' },
-    { id: 'Pages', iconSrc: PagesIcon, tagText: 'Pages' },
-    { id: 'Help', iconSrc: HelpIcon, tagText: 'Help' },
-  ];
-
-  const renderMenuButtons = () => {
-    return (
-      <>
-        {topMenuButtons.map((button, index) => (
-          <div
-            key={button.id}
-            className="overflow-visible max-w-[67px] max-h-67px"
-            style={{ zIndex: topMenuButtons.length - index }}
-          >
-            <IconButtonReact
-              isActive={activeTab === button.id}
-              onClick={() => showHideTab(button.id)}
-              iconSrc={button.iconSrc}
-              iconAlt={button.tagText}
-              showTag={true}
-              tagText={button.tagText}
-              buttonColor="var(--color-primary-buttons)"
-              buttonHoverColor="var(--color-primary-buttons-hover)"
-              buttonActiveColor="var(--color-primary-buttons-active)"
-              tagTextColor="var(--color-primary-text)"
-            />
-          </div>
-        ))}
-      </>
-    );
+  const commonButtonProps = {
+    buttonColor: 'var(--color-primary-buttons)',
+    buttonHoverColor: 'var(--color-primary-buttons-hover)',
+    buttonActiveColor: 'var(--color-primary-buttons-active)',
+    tagTextColor: 'var(--color-primary-text)',
+    showTag: true,
   };
 
-  const showHideTab = (tabType: TabTypeCPT) => {
+  const topMenuButtons: Array<{
+    tab: MenuTabTypeCPTNotNull;
+    icon: string;
+    alt: string;
+  }> = [
+    { tab: 'Overview', icon: OverviewIcon, alt: 'Overview' },
+    { tab: 'Filters', icon: FilterIcon, alt: 'Filters' },
+    { tab: 'Sorting', icon: SortingIcon, alt: 'Sorting' },
+    { tab: 'Pages', icon: PagesIcon, alt: 'Pages' },
+    { tab: 'Help', icon: HelpIcon, alt: 'Help' },
+  ];
+
+  const showHideTab = (tabType: MenuTabTypeCPT) => {
     if (activeTab === tabType) {
       setActiveTab(null);
       return;
@@ -149,9 +134,32 @@ const ControlPerturbationsTable: React.FC<ControlPerturbationTableProps> = ({
     setActiveTab(tabType);
   };
 
+  const setTabRef = (tabName: MenuTabTypeCPTNotNull) => (el: any) =>
+    controlPerturbationTableStatusStore
+      .getState()
+      .setMenuTabButtonRef(tabName, el as MenuTabButton);
+
   return (
     <>
-      <TopButtonMenu> {renderMenuButtons()} </TopButtonMenu>
+      <TopButtonMenu>
+        {topMenuButtons.map((button, index) => (
+          <div
+            key={button.tab}
+            className="overflow-visible max-w-[67px] max-h-67px"
+            style={{ zIndex: topMenuButtons.length - index }}
+          >
+            <IconButtonReact
+              {...commonButtonProps}
+              isActive={activeTab === button.tab}
+              ref={setTabRef(button.tab)}
+              onClick={() => showHideTab(button.tab)}
+              iconSrc={button.icon}
+              iconAlt={button.alt}
+              tagText={button.tab}
+            />
+          </div>
+        ))}
+      </TopButtonMenu>
 
       <ContentTab
         showTab={activeTab !== null}

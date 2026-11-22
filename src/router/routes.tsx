@@ -88,6 +88,9 @@ export const AttractorBifurcationExplorerRoute = createRoute({
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .AttractorBifurcationExplorerPage
       }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+      }
       bifurcationExplorerStatusStore={
         ObjectProvider.StoresProvider.bifurcationExplorerStatusStore
       }
@@ -109,6 +112,9 @@ export const AttractorVisualizerRoute = createRoute({
       pageStringProviderServ={
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .AttractorVisualizerPage
+      }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
       }
       attractorVisualizerStatusStore={
         ObjectProvider.StoresProvider.attractorVisualizerStatusStore
@@ -144,7 +150,13 @@ export const ControlPerturbationsTableRoute = createRoute({
         ObjectProvider.GlobalServicesProvider.stringProviderServ
           .ControlPerturbationTablePage
       }
+      shortcutManagerServ={
+        ObjectProvider.GlobalServicesProvider.shortcutManagerServ
+      }
       resultsStatusStore={ObjectProvider.StoresProvider.resultsStatusStore}
+      controlPerturbationTableStatusStore={
+        ObjectProvider.StoresProvider.controlPerturbationTableStatusStore
+      }
       perturbationFilterSortStore={
         ObjectProvider.StoresProvider.perturbationFiltersSortStore
       }

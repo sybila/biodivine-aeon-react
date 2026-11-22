@@ -1,3 +1,6 @@
+import type { AttractorBifurcationExplorerInt } from '../../services/attractor-bifurcation-explorer/AttractorBifurcationExplorer/AttractorBifurcationExplorerInt';
+import type { AttractorVisualizerInt } from '../../services/attractor-visualizer/AttractorVisualizerInt';
+import type { ControlPerturbationsTableInt } from '../../services/control-perturbations-table/ControlPerturbationsTableInt';
 import ComputationManager from '../../services/global/ComputationManager/ComputationManager';
 import type { ComputationManagerInt } from '../../services/global/ComputationManager/ComputationManagerInt';
 import LiveModel from '../../services/global/LiveModel/LiveModel';
@@ -41,9 +44,21 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
   constructor(
     utilitiesServiceProvider: UtilitiesServiceProviderInt,
     storesProvider: StoresProviderInt,
-    successMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
-    infoMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
-    errorMessageFunction: (message: string, duration?: number, floodDuration?: number) => void,
+    successMessageFunction: (
+      message: string,
+      duration?: number,
+      floodDuration?: number
+    ) => void,
+    infoMessageFunction: (
+      message: string,
+      duration?: number,
+      floodDuration?: number
+    ) => void,
+    errorMessageFunction: (
+      message: string,
+      duration?: number,
+      floodDuration?: number
+    ) => void,
     startLoadingFunction: () => void,
     endLoadingFunction: () => void
   ) {
@@ -113,6 +128,9 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
 
   public initializeShortcutManager(
     modelEditorServ: ModelEditorInt,
+    attractorBifurcationExplorerServ: AttractorBifurcationExplorerInt,
+    attractorVisualizerServ: AttractorVisualizerInt,
+    controlPerturbationsTableServ: ControlPerturbationsTableInt,
 
     modelEditorStatusStore: ZustandStore<ModelEditorStatus>,
     modelUndoRedoStore: ZustandStore<UndoRedoState>
@@ -120,6 +138,9 @@ class GlobalServicesProvider implements GlobalServicesProviderInt {
     this.shortcutManagerServ = new ShortcutManager(
       this.liveModelServ,
       modelEditorServ,
+      attractorBifurcationExplorerServ,
+      attractorVisualizerServ,
+      controlPerturbationsTableServ,
       modelEditorStatusStore,
       modelUndoRedoStore
     );
