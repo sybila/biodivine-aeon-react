@@ -1,10 +1,14 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'electron-vite';
+import { readFileSync } from 'fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+const version = JSON.stringify(pkg.version);
 
 export default defineConfig({
   main: {
@@ -16,6 +20,7 @@ export default defineConfig({
         },
       },
     },
+    define: { 'import.meta.env.VITE_APP_VERSION': version },
   },
 
   preload: {
@@ -27,6 +32,7 @@ export default defineConfig({
         },
       },
     },
+    define: { 'import.meta.env.VITE_APP_VERSION': version },
   },
 
   renderer: {
@@ -46,5 +52,6 @@ export default defineConfig({
         },
       },
     },
+    define: { 'import.meta.env.VITE_APP_VERSION': version },
   },
 });

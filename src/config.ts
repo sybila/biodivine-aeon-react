@@ -1,6 +1,6 @@
 const config = {
   /** AEON frontend version. */
-  version: '0.6.3',
+  version: import.meta.env.VITE_APP_VERSION,
   computeEngine: {
     /** Compute Engine version. */
     version: '0.7.2',
