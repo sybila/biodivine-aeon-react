@@ -37,14 +37,33 @@ Clone or download this repository, then install dependencies:
 npm install
 ```
 
-### Available Scripts
+## Available Commands
 
-| Command          | Description                                          |
-|------------------|------------------------------------------------------|
-| `npm run dev`    | Starts the development server with hot module replacement |
-| `npm run build`  | Builds the production version into the `/dist` folder |
-| `npm run preview`| Serves the built project from `/dist`                |
-| `npm run lint`   | Runs ESLint checks                                   |
+### Web App
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Starts the web development server with hot module replacement (HMR). |
+| `npm run build` | Builds the production web app into the `/dist` directory. |
+| `npm run preview` | Serves the production web app from the `/dist` directory. |
+
+### Desktop App (Electron)
+
+| Command | Description |
+|---|---|
+| `npm run dev-el` | Starts the Electron app in development mode with hot module replacement (HMR). |
+| `npm run build-el` | Builds the production Electron app into the `/dist-el` directory. |
+| `npm run preview-el` | Runs the built Electron app from the `/dist-el` directory. |
+| `npm run package` | Packages the application for the current operating system and architecture. |
+| `npm run package-linux` | Packages the application for 64-bit Linux (x64). |
+| `npm run package-windows` | Packages the application for 64-bit Windows (x64). |
+| `npm run package-mac` | Packages the application for Apple Silicon Macs (ARM64). |
+
+### Development
+
+| Command | Description |
+|---|---|
+| `npm run lint` | Runs ESLint to check the project for code quality and style issues. |
 
 ## ⚙️ Compute Engine
 
@@ -56,10 +75,7 @@ following the instructions in the\
 
 ## 📥 Download Precompiled Compute Engines
 
-### Linux (x86-64) <a href="https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/Linux-x86-64bit-Compute-Engine.zip">Download here</a>
-### Windows (x86-64) <a href="https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/Windows-x86-64bit-Compute-Engine.zip">Download here</a>
-### MacOs (x86-64 - Intel-based) <a href="https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/MacOs-x86-64bit-Compute-Engine.zip">Download here</a>
-### MacOS (arm64 - Apple Silicon) <a href="https://github.com/sybila/biodivine-control-tool/raw/refs/heads/main/ComputeEngine/MacOs-arm64-Compute-Engine.zip">Download here</a>
+➡️ <a href="https://github.com/sybila/biodivine-aeon-server/releases/latest"> Biodivine Aeon Server latest compute engine release
 
 ## 🔧 Compute Engine Setup Guide
 
