@@ -1,9 +1,9 @@
 const config = {
   /** AEON frontend version. */
-  version: '0.6.1',
+  version: '0.6.3',
   computeEngine: {
     /** Compute Engine version. */
-    version: '0.7.1',
+    version: '0.7.2',
     /** Initial status of the compute engine. */
     initialStatus: 'Disconnected',
     /** Initial color of the compute engine status. */
