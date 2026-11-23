@@ -11,13 +11,13 @@ import type {
   ControlResults,
   Decisions,
   DecisionsTSSD,
-  WrappedModelString,
   NodeDataBE,
   NodeDataTSSD,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   TimestampResponse,
   UpdateFunctionStatus,
+  WrappedModelString,
 } from '../../../../types/types';
 import type { LoadingInt } from '../../Loading/LoadingInt';
 import type { ComputeEngineInt } from '../ComputeEngineInt';
@@ -104,6 +104,23 @@ class ComputeEngine implements ComputeEngineInt {
   // #endregion
 
   // #region --- Connection Management ---
+
+  public async isComputeEngineAvailable(): Promise<boolean> {
+    if (!this.address) return false;
+
+    return new Promise((resolve) => {
+      this.backendRequest(
+        '/ping',
+        (
+          error: string | undefined,
+          _: AttractorResponse | ControlResponse | undefined
+        ) => {
+          resolve(!error);
+        },
+        'GET'
+      );
+    });
+  }
 
   public toggleConnection(
     succesfulConnectionCallback: (() => void) | undefined = undefined,
@@ -259,7 +276,7 @@ class ComputeEngine implements ComputeEngineInt {
 
   /** Send a ping request. If interval is set, the ping will be repeated
 		 until connection is closed. (Callback is called only once) */
-  private ping(
+  private async ping(
     keepAlive: boolean = false,
     interval: number = 2000,
     succesfulConnectionCallback: (() => void) | undefined = undefined,

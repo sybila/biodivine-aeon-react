@@ -4,12 +4,12 @@ import type {
   ControlPreComputationInfo,
   Decisions,
   DecisionsTSSD,
-  WrappedModelString,
   NodeDataBE,
   NodeDataTSSD,
   StabilityAnalysisModes,
   StabilityAnalysisVariable,
   UpdateFunctionStatus,
+  WrappedModelString,
 } from '../../../types/types';
 
 /**
@@ -31,6 +31,9 @@ export interface ComputeEngineInt {
   // #endregion
 
   // #region --- Connection Management ---
+
+  /** Returns true if a compute engine is reachable on the currently configured port. */
+  isComputeEngineAvailable(): Promise<boolean>;
 
   /** Open or close connection connection, depending on current status.
    *  @param succesfulConnectionCallback (() => void | undefined) function which runs after succesful connection to compute engine.
