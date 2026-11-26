@@ -20,6 +20,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: false,
+      preload: path.join(app.getAppPath(), 'dist-el', 'preload', 'index.mjs'),
     },
   };
 
@@ -137,7 +139,7 @@ function getComputeEngineBinaryPath(): string {
 
 function startComputeEngine(): void {
   computeEngineProcess = spawn(getComputeEngineBinaryPath(), [], {
-    stdio: 'inherit',
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
 
   computeEngineProcess.on('error', (err) => {
@@ -155,7 +157,19 @@ app
   .then(() => {
     startComputeEngine();
     createTopMenu();
-    createWindow();
+    const mainWindow = createWindow();
+
+    computeEngineProcess?.stdout?.setEncoding('utf8');
+    computeEngineProcess?.stderr?.setEncoding('utf8');
+
+    computeEngineProcess?.stdout?.on('data', (data: string) => {
+      mainWindow?.webContents.send('compute-engine-log', data);
+    });
+
+    computeEngineProcess?.stderr?.on('data', (data: string) => {
+      mainWindow?.webContents.send('compute-engine-log', data);
+    });
+
 
     // Re-create the window when activated on macOS.
     app.on('activate', () => {
