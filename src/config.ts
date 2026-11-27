@@ -1,9 +1,11 @@
 const config = {
-  /** AEON frontend version. */
-  version: '0.6.1',
+  /** AEON frontend version. (defined in package.json) */
+  version: import.meta.env.VITE_APP_VERSION as string,
+  /** True if the app is running as a desktop (Electron) build, false if running as a web build. */
+  isDesktopApp: import.meta.env.VITE_IS_ELECTRON as boolean,
   computeEngine: {
     /** Compute Engine version. */
-    version: '0.7.1',
+    version: '0.7.2',
     /** Initial status of the compute engine. */
     initialStatus: 'Disconnected',
     /** Initial color of the compute engine status. */

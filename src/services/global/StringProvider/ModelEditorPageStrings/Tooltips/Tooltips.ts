@@ -2,7 +2,7 @@ import {
   PHENOTYPE_STATUS,
   type PhenotypeStatus,
 } from '../../../../../types/types';
-import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtonTooltips';
+import SelectionButtonsTooltips from '../../common-tooltips/SelectionButtons/SelectionButtonTooltips';
 import type { TooltipsInt } from './TooltipsInt';
 
 class Tooltips extends SelectionButtonsTooltips implements TooltipsInt {

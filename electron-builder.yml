@@ -22,6 +22,9 @@ linux:
     - AppImage
   category: Science
   icon: electron/icons/linux-icons
+  extraResources:
+    - from: electron/compute-engine-binaries/linux
+      to: compute-engine
 
 win:
   target:
@@ -29,9 +32,15 @@ win:
       arch:
         - x64
   icon: electron/icons/Aeon-windows-icon.ico
+  extraResources:
+    - from: electron/compute-engine-binaries/windows
+      to: compute-engine
 
 mac:
   target:
     - target: dmg
       arch: arm64
   icon: electron/icons/Aeon-mac-icon.icns
+  extraResources:
+    - from: electron/compute-engine-binaries/mac
+      to: compute-engine

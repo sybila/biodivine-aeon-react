@@ -4,7 +4,12 @@ import {
   BrowserWindowConstructorOptions,
   Menu,
 } from 'electron';
+import { ChildProcess, spawn } from 'node:child_process';
 import * as path from 'node:path';
+
+/* #region --- Window Creation + Window Style --- */
+
+let mainWindow: BrowserWindow | null = null;
 
 /** Function responsible for definition and creation of the electron app window. */
 function createWindow() {
@@ -17,6 +22,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: false,
+      preload: path.join(app.getAppPath(), 'dist-el', 'preload', 'index.mjs'),
     },
   };
 
@@ -57,7 +64,7 @@ function createWindow() {
     void win.loadFile(rendererPath);
   }
 
-  return win;
+  mainWindow = win;
 }
 
 /** Function defining the top menu of the electron app. */
@@ -100,12 +107,117 @@ function createTopMenu() {
 
   Menu.setApplicationMenu(menu);
 }
+
+/* #endregion */
+
+/* #region --- Start Compute Engine --- */
+
+let computeEngineProcess: ChildProcess | null = null;
+
+function getComputeEngineBinaryName(): string {
+  return process.platform === 'win32'
+    ? 'biodivine-aeon-server.exe'
+    : 'biodivine-aeon-server';
+}
+
+function getComputeEngineBinaryPath(): string {
+  const platform =
+    process.platform === 'win32'
+      ? 'windows'
+      : process.platform === 'darwin'
+        ? 'mac'
+        : 'linux';
+
+  return app.isPackaged
+    ? path.join(
+        process.resourcesPath,
+        'compute-engine',
+        getComputeEngineBinaryName()
+      )
+    : path.join(
+        app.getAppPath(),
+        'electron/compute-engine-binaries',
+        platform,
+        getComputeEngineBinaryName()
+      );
+}
+
+function startComputeEngine(): void {
+  computeEngineProcess = spawn(getComputeEngineBinaryPath(), [], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+
+  computeEngineProcess.on('error', (err) => {
+    console.error('Failed to start compute engine:', err);
+  });
+}
+
+/* #endregion */
+
+/* #region --- Connect Compute Engine Output --- */
+
+/** Function which sends lines from the compute engine stderr or stdout to the frontend.
+ *  Lines should be cut into string[] by line splitter object {@link createLineSplitter}
+ */
+function sendLines(lines: string[]) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('compute-engine-log', lines);
+  }
+}
+
+/**
+ * Splits a stream of text chunks into complete lines.
+ * Text after the last newline is kept until the next chunk completes it.
+ * Used for splitting stdout and stderr output from the compute engine into lines.
+ */
+function createLineSplitter() {
+  let rest = '';
+  return {
+    write(chunk: string) {
+      const parts = (rest + chunk).split(/\r?\n/);
+      rest = parts.pop() ?? '';
+      if (parts.length > 0) sendLines(parts);
+    },
+    end() {
+      if (rest) sendLines([rest]);
+      rest = '';
+    },
+  };
+}
+
+function createComputeEngineFrontendPipeline() {
+  const stdoutSplitter = createLineSplitter();
+  const stderrSplitter = createLineSplitter();
+
+  computeEngineProcess?.stdout?.setEncoding('utf8');
+  computeEngineProcess?.stderr?.setEncoding('utf8');
+
+  computeEngineProcess?.stdout?.on('data', (data: string) => {
+    stdoutSplitter.write(data);
+  });
+
+  computeEngineProcess?.stderr?.on('data', (data: string) => {
+    stderrSplitter.write(data);
+  });
+
+  computeEngineProcess?.on('exit', () => {
+    stdoutSplitter.end();
+    stderrSplitter.end();
+  });
+}
+
+/* #endregion */
+
+/* #region --- Main --- */
+
 // Start Electron
 app
   .whenReady()
   .then(() => {
+    startComputeEngine();
     createTopMenu();
     createWindow();
+    createComputeEngineFrontendPipeline();
 
     // Re-create the window when activated on macOS.
     app.on('activate', () => {
@@ -125,3 +237,9 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('will-quit', () => {
+  computeEngineProcess?.kill();
+});
+
+/* #endregion */

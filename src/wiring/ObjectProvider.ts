@@ -93,6 +93,14 @@ class ObjectProviderClass implements ObjectProviderInt {
     this.StoresProvider.initializeUndoRedoStore(
       this.GlobalServicesProvider.messageServ
     );
+
+    this.runOnStartup();
+  }
+
+  /** Runs functions which should run right after the startup of the application. */
+  private runOnStartup() {
+    /** Attempt to establish a connection to the compute engine on application startup. */
+    this.GlobalServicesProvider.computationManagerServ.tryToConnect();
   }
 }
 

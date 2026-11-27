@@ -54,6 +54,12 @@ export interface ComputationManagerInt {
 
   toggleConnection(): void;
 
+  /** Checks if compute engine is available and if it is attempts to connect to it.
+   *  If compute engine is already connected does nothing.
+   *  @returns True if compute engine is available (doesn't mean that the frontend succesfully connected to the compute engine), else returns false.
+   */
+  tryToConnect(): Promise<boolean>;
+
   computationIsRunning(): boolean;
 
   // #endregion

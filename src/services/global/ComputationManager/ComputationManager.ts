@@ -228,6 +228,23 @@ class ComputationManager implements ComputationManagerInt {
     );
   }
 
+  public async tryToConnect() {
+    if (this.isComputeEngineConnected()) {
+      return true;
+    }
+
+    const isComputeEngineAvailable: boolean =
+      await this.computeEngine.isComputeEngineAvailable();
+
+    if (!isComputeEngineAvailable) {
+      return false;
+    }
+
+    this.toggleConnection();
+
+    return true;
+  }
+
   public computationIsRunning() {
     return this.computeEngine.isWaitingForResults();
   }

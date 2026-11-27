@@ -7,7 +7,7 @@
     "email": "536558@mail.muni.cz"
   },
   "private": true,
-  "version": "0.6.2",
+  "version": "0.6.3",
   "main": "dist-el/main/index.js",
   "electron": {
     "main": "./electron/main.ts",
