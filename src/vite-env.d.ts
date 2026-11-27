@@ -2,6 +2,6 @@
 
 interface Window {
   computeEngine: {
-    onLog: (callback: (text: string) => void) => () => void;
+    onLog: (callback: (lines: string[]) => void) => () => void;
   };
 }

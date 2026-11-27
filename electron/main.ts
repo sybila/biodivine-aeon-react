@@ -9,6 +9,8 @@ import * as path from 'node:path';
 
 /* #region --- Window Creation + Window Style --- */
 
+let mainWindow: BrowserWindow | null = null;
+
 /** Function responsible for definition and creation of the electron app window. */
 function createWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
@@ -62,7 +64,7 @@ function createWindow() {
     void win.loadFile(rendererPath);
   }
 
-  return win;
+  mainWindow = win;
 }
 
 /** Function defining the top menu of the electron app. */
@@ -120,8 +122,11 @@ function getComputeEngineBinaryName(): string {
 
 function getComputeEngineBinaryPath(): string {
   const platform =
-    process.platform === 'win32' ? 'windows' :
-    process.platform === 'darwin' ? 'mac' : 'linux';
+    process.platform === 'win32'
+      ? 'windows'
+      : process.platform === 'darwin'
+        ? 'mac'
+        : 'linux';
 
   return app.isPackaged
     ? path.join(
@@ -149,6 +154,60 @@ function startComputeEngine(): void {
 
 /* #endregion */
 
+/* #region --- Connect Compute Engine Output --- */
+
+/** Function which sends lines from the compute engine stderr or stdout to the frontend.
+ *  Lines should be cut into string[] by line splitter object {@link createLineSplitter}
+ */
+function sendLines(lines: string[]) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('compute-engine-log', lines);
+  }
+}
+
+/**
+ * Splits a stream of text chunks into complete lines.
+ * Text after the last newline is kept until the next chunk completes it.
+ * Used for splitting stdout and stderr output from the compute engine into lines.
+ */
+function createLineSplitter() {
+  let rest = '';
+  return {
+    write(chunk: string) {
+      const parts = (rest + chunk).split(/\r?\n/);
+      rest = parts.pop() ?? '';
+      if (parts.length > 0) sendLines(parts);
+    },
+    end() {
+      if (rest) sendLines([rest]);
+      rest = '';
+    },
+  };
+}
+
+function createComputeEngineFrontendPipeline() {
+  const stdoutSplitter = createLineSplitter();
+  const stderrSplitter = createLineSplitter();
+
+  computeEngineProcess?.stdout?.setEncoding('utf8');
+  computeEngineProcess?.stderr?.setEncoding('utf8');
+
+  computeEngineProcess?.stdout?.on('data', (data: string) => {
+    stdoutSplitter.write(data);
+  });
+
+  computeEngineProcess?.stderr?.on('data', (data: string) => {
+    stderrSplitter.write(data);
+  });
+
+  computeEngineProcess?.on('exit', () => {
+    stdoutSplitter.end();
+    stderrSplitter.end();
+  });
+}
+
+/* #endregion */
+
 /* #region --- Main --- */
 
 // Start Electron
@@ -157,19 +216,8 @@ app
   .then(() => {
     startComputeEngine();
     createTopMenu();
-    const mainWindow = createWindow();
-
-    computeEngineProcess?.stdout?.setEncoding('utf8');
-    computeEngineProcess?.stderr?.setEncoding('utf8');
-
-    computeEngineProcess?.stdout?.on('data', (data: string) => {
-      mainWindow?.webContents.send('compute-engine-log', data);
-    });
-
-    computeEngineProcess?.stderr?.on('data', (data: string) => {
-      mainWindow?.webContents.send('compute-engine-log', data);
-    });
-
+    createWindow();
+    createComputeEngineFrontendPipeline();
 
     // Re-create the window when activated on macOS.
     app.on('activate', () => {
