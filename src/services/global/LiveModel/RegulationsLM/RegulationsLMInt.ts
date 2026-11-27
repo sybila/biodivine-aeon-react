@@ -33,7 +33,7 @@ export interface RegulationsLMInt {
    * @returns A `Result` object detailing the outcome of the operation.
    * - If the operation is successful, returns a `Success` object with `true`.
    * - If the operation is blocked, returns a `Success` object with `false`.
-   * - If an error occurs, returns an `Err` object containing an error message.
+   * - If an error occurs, returns an `Err` object containing an error message. (eg. regulation between variables already exists)
    */
   addRegulation(
     force: boolean,
