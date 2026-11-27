@@ -83,7 +83,16 @@ class RegulationsLM implements RegulationsLMInt {
     if (
       this.regulationsStore.getState().getRegulationId(regulatorId, targetId)
     ) {
-      return ok(true);
+      const regulatorName = this.variablesStore
+        .getState()
+        .getVariableName(regulatorId);
+      const targetName = this.variablesStore
+        .getState()
+        .getVariableName(targetId);
+
+      return err(
+        `Regulation between variables ${regulatorName} and ${targetName} already exists.`
+      );
     }
 
     if (!force && !this.liveModel.modelCanBeModified()) {
