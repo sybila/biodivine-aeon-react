@@ -1,4 +1,4 @@
-import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtonsTooltipsInt';
+import type { SelectionButtonsTooltipsInt } from '../../common-tooltips/SelectionButtons/SelectionButtonsTooltipsInt';
 
 /** Class which provides tooltips for the control perturbation table page. */
 export interface TooltipsInt extends SelectionButtonsTooltipsInt {
