@@ -11,6 +11,16 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const version = JSON.stringify(pkg.version);
 
+/** Function which strips google analytics tag from index.html in the electron version of the app.
+ *  Part of the index.html which enables google analytics has to be wrapped in <!-- gtag:start --> and <!-- gtag:end --> for the script to work.
+ */
+const stripGtag = () => ({
+  name: 'strip-gtag',
+  transformIndexHtml(html: string) {
+    return html.replace(/<!-- gtag:start -->[\s\S]*?<!-- gtag:end -->/, '');
+  },
+});
+
 export default defineConfig({
   main: {
     build: {
@@ -39,7 +49,7 @@ export default defineConfig({
   renderer: {
     root: rootDir,
     base: './',
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), stripGtag()],
     resolve: {
       alias: {
         '@': path.resolve(rootDir, 'src'),
